@@ -13,10 +13,6 @@ use Yii;
 
 class AsideToggleButton extends Widget
 {
-    /**
-     * Every item of {@see AsideMenu} is guarded by the identity, so a guest's aside is empty and hides itself
-     * through `hidden-empty` — the toggle would open nothing.
-     */
     #[Override]
     public function isVisible(): bool
     {

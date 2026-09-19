@@ -15,10 +15,6 @@ class NavBarTest extends TestCase
 {
     use UserFixtureTrait;
 
-    /**
-     * The anakin bundle points the container at a subclass rendering its logo beside the items, and this is the
-     * skeleton's own navbar under test.
-     */
     #[Override]
     protected function setUp(): void
     {

@@ -29,10 +29,6 @@ class NavBar extends Widget
             : '';
     }
 
-    /**
-     * Every item is guarded — the search and the toggle by the identity, the language dropdown by the number of
-     * admin languages — so a logged out view is left with a bar containing nothing at all.
-     */
     protected function getItems(): ?Stringable
     {
         $content = implode('', array_map(strval(...), array_filter([
