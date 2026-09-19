@@ -43,15 +43,25 @@ class AdminLanguageUrlTest extends TestCase
         self::assertLanguageSame('en');
     }
 
-    public function testTheDropdownKeepsTheQueryParameter(): void
+    /**
+     * The language travels in the body rather than as `Request::$languageParam`, which the URL manager would turn
+     * into the path prefix of the frontend language.
+     */
+    public function testTheDropdownPostsToTheAdminsOwnRoute(): void
     {
         $this->login();
         $this->open('admin/user/index');
 
-        self::assertSelectorExists('a.i18n-dropdown-option[href="/admin/user/index?language=de"][hx-boost="false"]');
-        self::assertSelectorExists('a.i18n-dropdown-option[href="/admin/user/index?language=en-US"][hx-boost="false"]');
+        self::assertSelectorExists('button.i18n-dropdown-option[hx-post="/en/admin/account/language"][hx-vals=\'{"language":"de"}\']');
 
-        $this->click('a.i18n-dropdown-option[href="/admin/user/index?language=de"]');
+        $request = $this->getWebRequest();
+
+        self::$crawler = self::$client->request('POST', 'https://www.test.localhost/en/admin/account/language', [
+            'language' => 'de',
+            $request->csrfParam => $request->getCsrfToken(),
+        ]);
+
+        $this->open('admin/user/index');
         self::assertLanguageSame('de');
     }
 

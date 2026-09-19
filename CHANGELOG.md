@@ -1,5 +1,14 @@
 ## 3.0.0 (in development)
 
+- **The admin language is picked through `Modules\Admin\Controllers\AccountController::actionLanguage()`**
+  (monorepo issue #194), a POST-only route carrying the language in its body, rather than by appending
+  `Request::$languageParam` to the current URL. `Modules\Admin\Module::setLanguage()` no longer reads that
+  parameter and takes no argument, and `Widgets\Buttons\LanguageDropdownButton` renders a `<button>` per
+  language instead of an `<a>`. The navbar sits outside `#wrap`, so the URL it was rendered with is not the one
+  the flag is clicked on — the link pointed back at whichever page the last full load had shown, and the
+  parameter it carried stayed in the address bar afterwards. The answer to an htmx request is `HX-Refresh`, the
+  whole document being what a language change redraws; a plain request redirects to the referrer.
+
 - **`Log\FileTarget` stamps its lines in UTC** (monorepo issue #192). Yii writes the timestamp with `date()`,
   which answers in the process time zone, and `Models\User::findIdentity()` pins that to the account behind the
   request — so a file held one zone per user, was not in chronological order, and the admin read every line of it

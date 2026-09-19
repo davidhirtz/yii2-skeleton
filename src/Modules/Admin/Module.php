@@ -90,7 +90,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
             }
         }
 
-        $this->setLanguage($request instanceof Request ? $request : null);
+        $this->setLanguage();
 
         return parent::beforeAction($action);
     }
@@ -109,25 +109,19 @@ class Module extends \Hirtz\Skeleton\Base\Module
     }
 
     /**
-     * The language picked via {@see Widgets\Buttons\LanguageDropdownButton} is kept in the session, so it outlives
-     * the request that set it — the login page included, where there is no account to fall back to yet and the
-     * language the URL manager resolved stands. That language is the frontend's — with `UrlManager::$i18nUrl` the
-     * path's, with a tenant its own — and never the admin's, which belongs to the account and not to the content
-     * it edits.
+     * The language {@see Controllers\AccountController::actionLanguage()} wrote is kept in the session, so it
+     * outlives the request that set it — the login page included, where there is no account to fall back to yet and
+     * the language the URL manager resolved stands. That language is the frontend's — with `UrlManager::$i18nUrl`
+     * the path's, with a tenant its own — and never the admin's, which belongs to the account and not to the
+     * content it edits.
      */
-    protected function setLanguage(?Request $request): void
+    protected function setLanguage(): void
     {
         $languages = $this->getLanguages();
 
         if (count($languages) === 1) {
             Yii::$app->language = reset($languages);
             return;
-        }
-
-        $language = $request?->getQueryParam($request->languageParam);
-
-        if (is_string($language) && $this->hasLanguage($language)) {
-            $this->setSessionLanguage($language);
         }
 
         $identity = WebUser::current()?->getIdentity();

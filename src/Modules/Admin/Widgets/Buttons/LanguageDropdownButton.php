@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Buttons;
 
-use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\ModuleTrait;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
-use Hirtz\Skeleton\Widgets\Navs\DropdownOptionLink;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
 
+/**
+ * @see AccountController::actionLanguage()
+ */
 class LanguageDropdownButton extends Widget
 {
     use ModuleTrait;
@@ -29,10 +31,11 @@ class LanguageDropdownButton extends Widget
         }
 
         $i18n = Yii::$app->getI18n();
+        $current = Yii::$app->language;
 
         $icon = Icon::make()
             ->collection(Icon::ICON_COLLECTION_FLAG)
-            ->name(Yii::$app->language);
+            ->name($current);
 
         $button = Button::make()
             ->class('btn')
@@ -40,40 +43,35 @@ class LanguageDropdownButton extends Widget
 
         $dropdown = Dropdown::make()
             ->button($button)
+            // The navbar renders outside `#wrap`, so nothing here inherits its CSRF header.
+            ->attribute('hx-headers:inherited', $this->getCsrfHeaders())
             ->popover(fn (Div $tag) => $tag->attribute('id', 'i18n'));
 
         foreach ($languages as $language) {
-            $label = $i18n->getLabel($language);
-
-            $link = DropdownOptionLink::make()
-                ->addClass('i18n-dropdown-option')
-                ->content(
-                    Icon::make()
-                        ->collection(Icon::ICON_COLLECTION_FLAG)
-                        ->name($language),
-                    Div::make()->addText($label)
-                );
-
-            // The navbar sits outside `#wrap`, so a boosted swap would leave the flag and the labels in the
-            // previous language.
-            $link->href($this->getUrl($language))
-                ->attribute('hx-boost', 'false');
-
-            $dropdown->addItem($link);
+            $dropdown->addItem($this->getLanguageButton($language, $i18n->getLabel($language)));
         }
 
         return $dropdown;
     }
 
-    /**
-     * With `UrlManager::$i18nUrl` the language parameter is turned into a path prefix, which is the language of the
-     * frontend URL and not the one the admin runs in — so the parameter is appended to the plain current URL here.
-     */
-    protected function getUrl(string $language): string
+    protected function getLanguageButton(string $language, string $label): Stringable
     {
-        $param = Application::current()->getRequest()->languageParam;
-        $url = Url::current([$param => null]);
+        return Button::make()
+            ->addClass('dropdown-option i18n-dropdown-option')
+            ->type('button')
+            ->content(
+                Icon::make()
+                    ->collection(Icon::ICON_COLLECTION_FLAG)
+                    ->name($language),
+                Div::make()->addText($label)
+            )
+            ->post(['/admin/account/language'])
+            ->attribute('hx-vals', (string)json_encode(['language' => $language]));
+    }
 
-        return $url . (str_contains($url, '?') ? '&' : '?') . http_build_query([$param => $language]);
+    protected function getCsrfHeaders(): string
+    {
+        $token = Application::current()->getRequest()->getCsrfToken();
+        return (string)json_encode(['X-CSRF-TOKEN' => $token]);
     }
 }

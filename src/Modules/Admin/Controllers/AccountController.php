@@ -66,6 +66,7 @@ class AccountController extends Controller
                         'actions' => [
                             'confirm',
                             'create',
+                            'language',
                             'login',
                             'recover',
                             'resend',
@@ -81,6 +82,7 @@ class AccountController extends Controller
                     'delete' => ['post'],
                     'disable-authenticator' => ['post'],
                     'enable-authenticator' => ['post'],
+                    'language' => ['post'],
                     'logout' => ['post'],
                     'logout-other-sessions' => ['post'],
                     'token' => ['post'],
@@ -398,6 +400,31 @@ class AccountController extends Controller
         }
 
         return $this->redirect(['security']);
+    }
+
+    /**
+     * The dropdown renders in the navbar, which sits outside `#wrap` and therefore holds whichever page it was last
+     * rendered with — so the language cannot travel as a parameter of the current URL. It is posted to this route
+     * instead, and the answer is a reload of whatever page the click happened on.
+     *
+     * @see \Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\LanguageDropdownButton
+     */
+    public function actionLanguage(): Response
+    {
+        $language = $this->request->post('language');
+        $module = static::getModule();
+
+        if (!is_string($language) || !$module->hasLanguage($language)) {
+            throw new BadRequestHttpException();
+        }
+
+        $module->setSessionLanguage($language);
+
+        if ($this->request->isHtmxRequest()) {
+            return Application::current()->getResponse()->setHtmxRefresh();
+        }
+
+        return $this->redirect($this->request->getReferrer() ?? ['/admin/dashboard/index']);
     }
 
     /**

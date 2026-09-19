@@ -45,15 +45,14 @@ class AdminLanguageTest extends TestCase
      * The admin list is independent of the content languages, so a language the content is written in is not
      * automatically one the admin is offered in.
      */
-    public function testALanguageOutsideTheAdminListIsIgnored(): void
+    public function testALanguageOutsideTheAdminListIsRefused(): void
     {
         self::getAdminModule()->languages = ['en-US'];
         $this->login();
 
-        $this->open('admin?language=de');
+        $this->postLanguage('de');
 
-        self::assertResponseIsSuccessful();
-        self::assertLanguageSame('en');
+        self::assertResponseStatusCodeSame(400);
         self::assertNull(self::getAdminModule()->getSessionLanguage());
     }
 
@@ -70,24 +69,52 @@ class AdminLanguageTest extends TestCase
 
         self::assertResponseIsSuccessful();
         self::assertLanguageSame('de');
-        self::assertSelectorNotExists('a.i18n-dropdown-option');
+        self::assertSelectorNotExists('.i18n-dropdown-option');
         self::assertSelectorNotExists('select[name$="[language]"]');
     }
 
-    public function testTheLanguageParamOutlivesTheRequestThatSetIt(): void
+    public function testThePickedLanguageOutlivesTheRequestThatSetIt(): void
     {
         $this->login();
 
-        $this->open('admin?language=de');
+        $this->postLanguage('de');
+        self::assertSame('de', self::getAdminModule()->getSessionLanguage());
 
+        $this->open('admin');
         self::assertResponseIsSuccessful();
         self::assertLanguageSame('de');
 
-        $this->open('admin');
-        self::assertLanguageSame('de');
+        $this->postLanguage('en-US');
 
-        $this->open('admin?language=en-US');
+        $this->open('admin');
         self::assertLanguageSame('en');
+    }
+
+    /**
+     * The navbar renders outside `#wrap`, so the page the flag was rendered with is not the page it is clicked
+     * on — the whole document is reloaded rather than swapped, and the URL is the browser's own.
+     */
+    public function testAnHtmxRequestIsAnsweredWithARefresh(): void
+    {
+        $this->login();
+
+        $this->postLanguage('de', ['HTTP_HX_REQUEST' => 'true']);
+
+        self::assertResponseIsSuccessful();
+        self::assertResponseHeaderSame('hx-refresh', 'true');
+        self::assertResponseNotHasHeader('hx-location');
+        self::assertSame('de', self::getAdminModule()->getSessionLanguage());
+    }
+
+    public function testAPlainRequestRedirectsToTheReferrer(): void
+    {
+        $this->login();
+
+        self::$client->followRedirects(false);
+        $this->postLanguage('de', ['HTTP_REFERER' => 'https://www.test.localhost/admin/user/index']);
+
+        self::assertResponseStatusCodeSame(302);
+        self::assertResponseHeaderSame('location', 'https://www.test.localhost/admin/user/index');
     }
 
     /**
@@ -95,7 +122,8 @@ class AdminLanguageTest extends TestCase
      */
     public function testTheLoginPageSwitchesTheLanguage(): void
     {
-        $this->open('admin/account/login?language=de');
+        $this->open('admin/account/login');
+        $this->postLanguage('de');
 
         self::assertResponseIsSuccessful();
         self::assertLanguageSame('de');
@@ -110,25 +138,28 @@ class AdminLanguageTest extends TestCase
     }
 
     /**
-     * The navbar is outside `#wrap` and would keep its previous language after a boosted swap.
+     * The route is fixed and the language travels in the body, because the navbar holds whichever page it was last
+     * rendered with — the current URL is only known to the browser.
      */
-    public function testTheDropdownLinksToTheCurrentUrlWithoutBoost(): void
+    public function testTheDropdownPostsTheLanguageToTheFixedRoute(): void
     {
         $this->login();
         $this->open('admin/user/index');
 
-        self::assertSelectorExists('a.i18n-dropdown-option[href="/admin/user/index?language=de"][hx-boost="false"]');
-        self::assertSelectorExists('a.i18n-dropdown-option[href="/admin/user/index?language=en-US"][hx-boost="false"]');
+        self::assertSelectorExists('button.i18n-dropdown-option[hx-post="/admin/account/language"][hx-vals=\'{"language":"de"}\']');
+        self::assertSelectorExists('button.i18n-dropdown-option[hx-post="/admin/account/language"][hx-vals=\'{"language":"en-US"}\']');
+
+        // nothing outside `#wrap` inherits its CSRF header
+        self::assertSelectorExists('.dropdown[hx-headers\\:inherited]');
     }
 
-    public function testAnUnknownLanguageIsIgnored(): void
+    public function testAnUnknownLanguageIsRefused(): void
     {
         $this->login();
 
-        $this->open('admin?language=fr');
+        $this->postLanguage('fr');
 
-        self::assertResponseIsSuccessful();
-        self::assertLanguageSame('en');
+        self::assertResponseStatusCodeSame(400);
         self::assertNull(self::getAdminModule()->getSessionLanguage());
     }
 
@@ -136,8 +167,8 @@ class AdminLanguageTest extends TestCase
     {
         $user = $this->login();
 
-        $this->open('admin?language=de');
-        self::assertLanguageSame('de');
+        $this->postLanguage('de');
+        self::assertSame('de', self::getAdminModule()->getSessionLanguage());
 
         $this->open('admin/account/update');
         $this->submit(values: $this->prefixFormValues($user, [
@@ -146,6 +177,19 @@ class AdminLanguageTest extends TestCase
 
         self::assertLanguageSame('en');
         self::assertNull(self::getAdminModule()->getSessionLanguage());
+    }
+
+    /**
+     * @param array<string, mixed> $server
+     */
+    private function postLanguage(string $language, array $server = []): void
+    {
+        $request = $this->getWebRequest();
+
+        self::$crawler = self::$client->request('POST', 'https://www.test.localhost/admin/account/language', [
+            'language' => $language,
+            $request->csrfParam => $request->getCsrfToken(),
+        ], [], $server);
     }
 
     private function login(): User

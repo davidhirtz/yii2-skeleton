@@ -8,6 +8,7 @@ use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
@@ -29,7 +30,9 @@ class AdminGermanRbacTest extends TestCase
     public function testThePermissionsPageReadsGerman(): void
     {
         $this->login();
-        $this->open('admin/auth/index?language=de');
+
+        self::switchToGerman();
+        $this->open('admin/auth/index');
 
         self::assertResponseIsSuccessful();
 
@@ -55,7 +58,8 @@ class AdminGermanRbacTest extends TestCase
             $user->id
         );
 
-        $this->open('admin/trail/index?language=de');
+        self::switchToGerman();
+        $this->open('admin/trail/index');
 
         self::assertResponseIsSuccessful();
 
@@ -66,6 +70,13 @@ class AdminGermanRbacTest extends TestCase
         self::assertStringContainsString('Gelöscht</div> gelöscht', $html);
         self::assertStringContainsString('Update entries', $html);
         self::assertStringContainsString('Benutzer verwalten', $html);
+    }
+
+    private static function switchToGerman(): void
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('admin');
+        $module->setSessionLanguage('de');
     }
 
     private function createTrail(User $user, int $type, ?string $message = null): void
