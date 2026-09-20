@@ -13,7 +13,11 @@
   item is reachable; the next click outside, or Escape, closes it. The pin state is a host-only `_aside` cookie
   plus `data-aside-collapsed` on `<html>`, resolved by `Module::isAsideCollapsed()` and rendered by the layout,
   for the reasons the colour scheme entry below gives; the latch is `data-aside-open` beside it, written by
-  `includes/asideLatch.ts` and never persisted. Three things a project extending any of it should know:
+  `includes/aside.ts` and never persisted. **The mobile drawer moved onto the same mechanism**: `.main` and
+  `.aside` translate themselves where `.wrap` used to carry it for the whole page, so the navbar stays put
+  instead of leaving the screen with the toggle that had just opened the drawer. `.navbar` and `.aside-close`
+  therefore carry z-indexes of their own (`39` and `38`, under the drawer's `40`), and a project restyling
+  either keeps them in that order. Three things a project extending any of it should know:
   **`AsideMenu::getHeader()` is the new first child of the aside**, holding the pin button, and a theme putting
   its own logo there overrides that method rather than `renderContent()` (`AsideMenu::getContent()` is the list
   the aside renders); **`Widgets\Navs\NavItem` wraps its label in `<span class="nav-link-label">`**, which is

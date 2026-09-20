@@ -7,8 +7,7 @@ import 'htmx.org/dist/ext/hx-head.js';
 import type {TinyMCE} from 'tinymce';
 import 'x-timeago';
 
-import aside from './includes/aside';
-import asidePin from './includes/asidePin';
+import {asidePin, asideToggle} from './includes/aside';
 import autocomplete from './includes/autocomplete';
 import busy from './includes/busy';
 import collapse from './includes/collapse';
@@ -22,7 +21,6 @@ import sticky from './includes/sticky';
 import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
 
-import './includes/asideLatch';
 import './includes/FlashAlert';
 
 declare global {
@@ -36,7 +34,7 @@ onLoad(($container) => {
         ($container as HTMLElement).querySelectorAll(selector).forEach(($el: Element) => method($el));
     };
 
-    queryAll('[data-aside]', aside);
+    queryAll('[data-aside]', asideToggle);
     queryAll('[data-aside-pin]', asidePin);
     queryAll('[data-autocomplete]', autocomplete);
     queryAll('[data-busy]', busy);

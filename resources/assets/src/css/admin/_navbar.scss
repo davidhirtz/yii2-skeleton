@@ -10,6 +10,9 @@
   padding: 1rem;
   // The containing block of the search overlay below `md`, where the bar is still in flow.
   position: relative;
+  // Above `.aside-close` and below the drawer: the drawer covers the bar's left, and what is left of it — the
+  // toggle among it — stays clickable rather than being dimmed out with the content.
+  z-index: 39;
 
   @include media-breakpoint-up(md) {
     position: absolute;

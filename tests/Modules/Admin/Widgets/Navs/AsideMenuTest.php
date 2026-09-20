@@ -62,7 +62,7 @@ class AsideMenuTest extends TestCase
     }
 
     /**
-     * The cookie is written by `includes/asidePin.ts` and read straight out of `$_COOKIE`, the layout rendering
+     * The cookie is written by `includes/aside.ts` and read straight out of `$_COOKIE`, the layout rendering
      * the attribute the CSS keys on — so a collapsed aside never unfolds for a frame on a full load.
      */
     public function testTheCookieCollapsesThePinButton(): void

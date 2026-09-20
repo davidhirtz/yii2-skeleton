@@ -24,7 +24,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
     final public const string AUTH_SYSTEM = 'system';
 
     /**
-     * The value the aside cookie and the layout's `data-aside` attribute carry, `includes/asidePin.ts` writing
+     * The value the aside cookie and the layout's `data-aside` attribute carry, `includes/aside.ts` writing
      * the same literal.
      */
     final public const string ASIDE_COLLAPSED = 'collapsed';
@@ -69,7 +69,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
 
     /**
      * @var string the cookie holding whether the aside is collapsed to its icons on this device. Written by
-     * `includes/asidePin.ts`, so it carries no signature — see {@see isAsideCollapsed()}.
+     * `includes/aside.ts`, so it carries no signature — see {@see isAsideCollapsed()}.
      */
     public string $asideCookieName = '_aside';
 
