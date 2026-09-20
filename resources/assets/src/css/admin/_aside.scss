@@ -37,7 +37,7 @@
     // Over the navbar, which stays where it is, and over the backdrop below it.
     z-index: 40;
 
-    .has-aside & {
+    [data-aside-open] & {
       translate: var(--aside-width) 0;
     }
   }
@@ -259,7 +259,7 @@
   background: rgba(0, 0, 0, .3);
 
   @include media-breakpoint-down(sm) {
-    .has-aside & {
+    [data-aside-open] & {
       display: block;
     }
   }

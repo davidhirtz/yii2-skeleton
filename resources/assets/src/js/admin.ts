@@ -7,7 +7,7 @@ import 'htmx.org/dist/ext/hx-head.js';
 import type {TinyMCE} from 'tinymce';
 import 'x-timeago';
 
-import {asidePin, asideToggle} from './includes/aside';
+import {asidePin} from './includes/aside';
 import autocomplete from './includes/autocomplete';
 import busy from './includes/busy';
 import collapse from './includes/collapse';
@@ -34,7 +34,6 @@ onLoad(($container) => {
         ($container as HTMLElement).querySelectorAll(selector).forEach(($el: Element) => method($el));
     };
 
-    queryAll('[data-aside]', asideToggle);
     queryAll('[data-aside-pin]', asidePin);
     queryAll('[data-autocomplete]', autocomplete);
     queryAll('[data-busy]', busy);
@@ -52,8 +51,6 @@ onLoad(($container) => {
     queryAll('[aria-invalid]', ($input: HTMLElement) => {
         $input.addEventListener('input', () => $input.removeAttribute('aria-invalid'));
     });
-
-    document.body.classList.remove('has-aside');
 });
 
 

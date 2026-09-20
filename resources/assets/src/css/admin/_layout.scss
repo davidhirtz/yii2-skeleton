@@ -20,7 +20,7 @@
   @include media-breakpoint-down(sm) {
     transition: translate .2s;
 
-    .has-aside & {
+    [data-aside-open] & {
       translate: var(--aside-width) 0;
     }
   }

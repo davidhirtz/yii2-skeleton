@@ -17,7 +17,9 @@
   `.aside` translate themselves where `.wrap` used to carry it for the whole page, so the navbar stays put
   instead of leaving the screen with the toggle that had just opened the drawer. `.navbar` and `.aside-close`
   therefore carry z-indexes of their own (`39` and `38`, under the drawer's `40`), and a project restyling
-  either keeps them in that order. Three things a project extending any of it should know:
+  either keeps them in that order. **`body.has-aside` is gone**: `data-aside-open` is the aside's open state at
+  every width now, so the drawer stays open across the navigation a tap on a nav item triggers, the same way
+  the rail does, and a project keying anything on that class moves it to the attribute. Three things a project extending any of it should know:
   **`AsideMenu::getHeader()` is the new first child of the aside**, holding the pin button, and a theme putting
   its own logo there overrides that method rather than `renderContent()` (`AsideMenu::getContent()` is the list
   the aside renders); **`Widgets\Navs\NavItem` wraps its label in `<span class="nav-link-label">`**, which is

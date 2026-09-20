@@ -5,13 +5,6 @@ const COLLAPSED_ATTRIBUTE = 'data-aside-collapsed';
 const OPEN_ATTRIBUTE = 'data-aside-open';
 
 /**
- * The drawer below `md`, where the aside is out of flow and the toggle in the navbar is the only way to it.
- */
-export const asideToggle = ($btn: HTMLButtonElement) => {
-    $btn.addEventListener('click', () => document.body.classList.toggle('has-aside'));
-};
-
-/**
  * Collapsing the aside re-renders nothing, so nothing here is an htmx request: the attribute sits on `<html>`,
  * which no swap of `#wrap` touches, and the cookie is what the layout reads back on the next full load. It is
  * host-only and carries the `Secure` flag the server rendered, for the reason `includes/colorScheme.ts` gives.
@@ -55,15 +48,24 @@ export const asidePin = ($btn: HTMLButtonElement) => {
 };
 
 /**
- * A collapsed aside opens on hover, which is gone the moment the pointer leaves — so a click inside it latches
- * it open until the next click outside, which is what makes a submenu item reachable. The attribute is on
- * `<html>`, outside `#wrap`, so the swap the click triggers leaves it standing.
+ * `data-aside-open` is the whole of it, at every width: the drawer below `md`, and the collapsed rail above it
+ * where hover opens the menu but is gone the moment the pointer leaves. A click inside the aside latches it
+ * open, which is what makes a submenu item reachable on the page that click navigates to — the attribute is on
+ * `<html>`, outside `#wrap`, so the swap leaves it standing.
  *
- * These two are registered at module scope rather than per element: a module is evaluated once per document
- * while `onLoad` runs again for every swap, which would otherwise stack a copy per navigation.
+ * One listener for the three cases, registered at module scope rather than per element: a module is evaluated
+ * once per document while `onLoad` runs again for every swap, which would otherwise stack a copy per
+ * navigation. It is also why the toggle and the backdrop are read here rather than bound individually — a
+ * handler of their own would set the state this listener then cleared, both being outside the aside.
  */
 document.addEventListener('click', (event: MouseEvent) => {
     const $target = event.target instanceof Element ? event.target : null;
+
+    // The navbar toggle and the backdrop behind the drawer, which both carry `data-aside`.
+    if ($target?.closest('[data-aside]')) {
+        document.documentElement.toggleAttribute(OPEN_ATTRIBUTE);
+        return;
+    }
 
     // The pin button is inside the aside but is the one control that means "stop showing this", so a click on
     // it must not latch what it just collapsed.
