@@ -168,12 +168,13 @@
   --card-border-color: transparent;
   --card-bg: var(--color-white);
   --card-color: var(--color-black);
-  --card-header-bg: var(--color-slate-500);
-  --card-header-color: var(--color-white);
+  --card-header-bg: transparent;
+  --card-header-color: var(--color-black);
   --card-danger-header-bg: var(--color-red-200);
   --card-danger-header-color: var(--color-white);
   --card-stack-link-bg: var(--color-gray-100);
   --card-stack-link-hover-bg: var(--color-gray-200);
+  --card-centered-border-color: var(--border-color);
 
   // Dropdown
   --dropdown-bg: var(--color-white);
@@ -202,7 +203,6 @@
   --dropdown-active-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
   --dropup-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" d="m2 11 6-6 6 6"/></svg>')};
   --dropup--active-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m2 11 6-6 6 6"/></svg>')};
-
 
   // Form
   --form-footer-border-color: transparent;
@@ -320,9 +320,4 @@
   // Tooltip
   --tooltip-bg: var(--color-gray-700);
   --tooltip-color: var(--color-white);
-
-  @include media-breakpoint-down(md) {
-    --form-padding-y: .4375rem;
-    --form-font-size: #{1rem};
-  }
 }

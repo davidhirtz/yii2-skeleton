@@ -7,6 +7,10 @@
   color: var(--card-color);
   position: relative;
   word-wrap: break-word;
+
+  .container-centered & {
+    --card-border-color: var(--card-centered-border-color);
+  }
 }
 
 [data-card="danger"] {
@@ -16,16 +20,19 @@
 
 .card-header {
   --btn-color: var(--card-header-color);
-  padding: 0.8125rem 1rem;
-  color: var(--card-header-color);
   background: var(--card-header-bg);
+  border-bottom: 1px solid var(--card-border-color);
+  color: var(--card-header-color);
+  padding: 0.8125rem 1rem;
 }
 
 .card-title {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
+  display: flex;
+  font-family: Bebas Neue, sans-serif;
   font-weight: 700;
+  justify-content: space-between;
+  letter-spacing: .0625em;
 }
 
 

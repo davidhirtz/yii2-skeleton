@@ -38,6 +38,7 @@
 .container-centered {
   margin-inline: auto;
   display: flex;
+  padding-top: 10vh;
   flex-direction: column;
   flex-grow: 1;
   gap: 1rem;
