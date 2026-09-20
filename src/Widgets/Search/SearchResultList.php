@@ -92,11 +92,11 @@ class SearchResultList extends Widget
 
         $link->addContent($text);
 
-        if ($result->badge) {
-            $link->addContent(Span::make()
-                ->class('search-result-badge')
-                ->text($result->badge));
-        }
+//        if ($result->badge) {
+//            $link->addContent(Span::make()
+//                ->class('search-result-badge')
+//                ->text($result->badge));
+//        }
 
         return Li::make()
             ->class('search-result-item')

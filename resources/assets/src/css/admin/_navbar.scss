@@ -36,16 +36,18 @@
   display: flex;
 }
 
+.navbar-btn {
+  padding-inline: 0;
+  min-width: 2.5rem;
+}
+
 .i18n-icon {
   aspect-ratio: 1;
   background-repeat: no-repeat;
   background-size: contain;
   display: block;
   height: 1lh;
-
-  .btn:has(&) {
-    padding-inline: 0.75rem;
-  }
+  margin-inline: auto;
 
   &.de {
     //noinspection CssUnknownTarget

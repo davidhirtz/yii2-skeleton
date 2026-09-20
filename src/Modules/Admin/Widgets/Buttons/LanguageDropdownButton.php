@@ -38,7 +38,7 @@ class LanguageDropdownButton extends Widget
             ->name($current);
 
         $button = Button::make()
-            ->class('btn')
+            ->class('btn navbar-btn')
             ->content($icon);
 
         $dropdown = Dropdown::make()
@@ -59,12 +59,8 @@ class LanguageDropdownButton extends Widget
         return Button::make()
             ->addClass('dropdown-option i18n-dropdown-option')
             ->type('button')
-            ->content(
-                Icon::make()
-                    ->collection(Icon::ICON_COLLECTION_FLAG)
-                    ->name($language),
-                Div::make()->addText($label)
-            )
+            ->icon(Icon::ICON_COLLECTION_FLAG . ':' . $language)
+            ->text($label)
             ->post(['/admin/account/language'])
             ->attribute('hx-vals', (string)json_encode(['language' => $language]));
     }

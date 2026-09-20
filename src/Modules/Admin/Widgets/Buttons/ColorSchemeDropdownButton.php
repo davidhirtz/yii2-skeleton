@@ -38,7 +38,7 @@ class ColorSchemeDropdownButton extends Widget
         $current = $module->getColorScheme();
 
         $button = Button::make()
-            ->class('btn')
+            ->class('btn navbar-btn')
             ->attribute('data-color-scheme-icon', true)
             ->content(Icon::make()->name($this->getIconName($current)));
 
@@ -68,13 +68,11 @@ class ColorSchemeDropdownButton extends Widget
     protected function getColorSchemeButton(string $scheme, string $label, ?string $current): Stringable
     {
         return Button::make()
+            ->attribute('data-color-scheme-value', $scheme)
             ->addClass($scheme === (string)$current ? 'dropdown-option selected' : 'dropdown-option')
             ->type('button')
-            ->content(
-                Icon::make()->name($this->getIconName($scheme ?: null)),
-                Div::make()->addText($label)
-            )
-            ->attribute('data-color-scheme-value', $scheme);
+            ->icon($this->getIconName($scheme ?: null))
+            ->text($label);
     }
 
     protected function getIconName(?string $scheme): string

@@ -29,8 +29,6 @@ class AccountActiveForm extends ActiveForm
             [
                 $this->getLanguageField(),
                 $this->getTimezoneField(),
-            ],
-            [
                 $this->getColorSchemeField(),
             ],
             [

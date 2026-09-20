@@ -136,10 +136,7 @@ class RedirectGridView extends GridView
     protected function getButtonColumnContent(Redirect $redirect): array
     {
         return [
-            ViewGridButton::make()
-                ->model($redirect),
-            DeleteGridButton::make()
-                ->model($redirect),
+            ViewGridButton::make()->model($redirect),
         ];
     }
 

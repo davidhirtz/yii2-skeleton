@@ -38,7 +38,7 @@ class Icon extends Widget
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     protected function configure(): void
     {
         $this->addClass(match ($this->collection) {
