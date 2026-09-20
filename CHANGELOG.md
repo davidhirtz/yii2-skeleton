@@ -5,15 +5,22 @@
   what they came to, so a guest gets no `<aside>` at all — the `hidden-empty` class it carried only hid an empty
   one, which a theme rendering a logo into it (`Hirtz\Anakin`) defeated. From the `md` breakpoint up, where the
   aside is in flow and costs a laptop screen a good part of its width, the new
-  `Modules\Admin\Widgets\Buttons\AsidePinButton` collapses it to the icons alone and hovering overlays the
-  full panel rather than pushing the page. The state is a host-only `_aside` cookie plus `data-aside-collapsed`
-  on `<html>`, resolved by `Module::isAsideCollapsed()` and rendered by the layout, for the reasons the colour
-  scheme entry below gives. Two things a project subclassing either should know: **`AsideMenu::getHeader()` is
-  the new first child of the aside**, holding the pin button, and a theme putting its own logo there overrides
-  that method rather than `renderContent()` (`AsideMenu::getContent()` is the list the aside renders); and
-  **`Widgets\Navs\NavItem` wraps its label in `<span class="nav-link-label">`**, which is what the collapsed
-  rail hides — a nav link built by hand, as the logout button used to be, needs `nav-link-icon` and
-  `nav-link-label` on its two parts or it renders unreadable there.
+  `Modules\Admin\Widgets\Buttons\AsidePinButton` collapses it to a rail holding the icons alone. **Nothing
+  inside the aside moves for that**: `.main` is pulled back over it with a negative margin and paints on top,
+  so the rail is the part of the menu the content does not cover, and opening it is one transform on `.main` —
+  the content is pushed right, the way `.wrap` already translates for the mobile drawer. It opens on hover and
+  **a click inside latches it open**, so the page that click navigates to still shows the menu and a submenu
+  item is reachable; the next click outside, or Escape, closes it. The pin state is a host-only `_aside` cookie
+  plus `data-aside-collapsed` on `<html>`, resolved by `Module::isAsideCollapsed()` and rendered by the layout,
+  for the reasons the colour scheme entry below gives; the latch is `data-aside-open` beside it, written by
+  `includes/asideLatch.ts` and never persisted. Three things a project extending any of it should know:
+  **`AsideMenu::getHeader()` is the new first child of the aside**, holding the pin button, and a theme putting
+  its own logo there overrides that method rather than `renderContent()` (`AsideMenu::getContent()` is the list
+  the aside renders); **`Widgets\Navs\NavItem` wraps its label in `<span class="nav-link-label">`**, which is
+  what the rail fades out — a nav link built by hand, as the logout button used to be, needs `nav-link-icon`
+  and `nav-link-label` on its two parts or its label bleeds into the rail; and **`--aside-open` is the state
+  token** anything of a project's own inside the aside reads (`opacity: var(--aside-open, 1)`), the three ways
+  of being open being spelled out in one place only.
 
 - **The admin follows the operating system's light/dark setting, and a navbar dropdown overrides it** (monorepo
   issue #201, `docs/plans/color-scheme.md`). The value is tri-state — `auto | light | dark`, `auto` being the

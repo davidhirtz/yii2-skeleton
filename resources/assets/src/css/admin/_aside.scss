@@ -1,10 +1,18 @@
 @use "../shared/breakpoints" as *;
 @use "../shared/svg" as *;
 
-.aside {
+// On `:root` rather than on `.aside`, because `.main` is a sibling and a custom property only inherits down.
+// The rail is wide enough to centre a nav link's icon, which sits 2rem into the aside.
+:root {
   --aside-width: 14rem;
-  --aside-collapsed-width: 3.5rem;
+  --aside-collapsed-width: 5rem;
 
+  @include media-breakpoint-up(lg) {
+    --aside-width: 16rem;
+  }
+}
+
+.aside {
   background-color: var(--aside-bg);
   border-right: 1px solid var(--border-color);
   display: flex;
@@ -26,10 +34,6 @@
     position: fixed;
     top: 0;
     z-index: 40;
-  }
-
-  @include media-breakpoint-up(lg) {
-    --aside-width: 16rem;
   }
 
   .nav-link {
@@ -75,54 +79,62 @@
 }
 
 // From `md` up the aside is in flow and costs a laptop screen a good part of its width, which the pin trades
-// for the icons alone. Hovering overlays the full panel rather than pushing the page: the width grows while a
-// negative inline margin keeps the flex item's outer size, so nothing around it reflows.
+// for a rail wide enough to hold the icons. Nothing inside the aside changes: `.main` is pulled back over it
+// with a negative margin and paints on top, so the rail is simply the part of the menu the content does not
+// cover — and opening it is one transform on `.main`, never a relayout of either.
 @include media-breakpoint-up(md) {
-  [data-aside-collapsed] .aside {
-    transition: margin-inline-end .2s, width .2s;
-    width: var(--aside-collapsed-width);
-    z-index: 30;
-
-    &:hover,
-    &:focus-within {
-      // It is over the page rather than beside it, so it needs an edge of its own.
-      box-shadow: 0 0 1rem rgba(0, 0, 0, .15);
-      margin-inline-end: calc(var(--aside-collapsed-width) - var(--aside-width));
-      width: var(--aside-width);
+  [data-aside-collapsed] {
+    .main {
+      background: var(--body-bg);
+      // The aside's own border is under the content now, so the rail needs an edge of its own. A shadow rather
+      // than a border, which would be a pixel of layout.
+      box-shadow: -1px 0 0 var(--border-color);
+      margin-inline-start: calc(var(--aside-collapsed-width) - var(--aside-width));
+      position: relative;
+      transition: translate .2s;
+      z-index: 1;
     }
 
-    &:not(:hover, :focus-within) {
-      .aside-header {
-        justify-content: center;
-        padding-inline: .5rem;
-      }
+    // `--aside-open` is the state everything inside the aside reads — a label here, the anakin logo there —
+    // since the selectors around it are the only place the three ways of being open are spelled out. A rail
+    // wide enough to centre an icon that sits 2rem in also shows the first letters of the label beside it, so
+    // the label cannot simply be left to the content covering it.
+    .aside {
+      --aside-open: 0;
+    }
 
-      // `.aside-nav` is named so these beat the arrow markers and the open `.subnav`, which are as specific.
-      .aside-nav {
-        & > .nav-item {
-          padding-inline: .5rem;
-        }
+    .aside:hover,
+    .aside:focus-within {
+      --aside-open: 1;
+    }
 
-        .nav-link {
-          justify-content: center;
-          min-width: 0;
-          padding-inline: 0;
+    .nav-link-label,
+    .aside-badge {
+      opacity: var(--aside-open);
+      transition: opacity .2s;
+    }
 
-          &:after,
-          &:before {
-            content: none;
-          }
+    .aside:hover ~ .main,
+    .aside:focus-within ~ .main {
+      translate: calc(var(--aside-width) - var(--aside-collapsed-width)) 0;
+    }
+  }
 
-          .nav-link-label,
-          .aside-badge {
-            display: none;
-          }
-        }
+  // Faded out the subnav would leave a gap in the rail where the active section's children are, so it is the
+  // one thing that goes rather than dims — closed being the absence of all three ways of being open.
+  [data-aside-collapsed]:not([data-aside-open]) .aside:not(:hover, :focus-within) .subnav {
+    display: none;
+  }
 
-        .subnav {
-          display: none;
-        }
-      }
+  // A click inside the menu latches it open, so the page that click navigates to still shows it and a submenu
+  // item is reachable — hover alone is gone the moment the pointer leaves. `includes/asideLatch.ts` owns it.
+  [data-aside-collapsed][data-aside-open] {
+    .aside {
+      --aside-open: 1;
+    }
+
+    .main {
+      translate: calc(var(--aside-width) - var(--aside-collapsed-width)) 0;
     }
   }
 }

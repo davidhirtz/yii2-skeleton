@@ -10,11 +10,20 @@ const COLLAPSED = 'collapsed';
 export default ($btn: HTMLButtonElement) => {
     const secure = $btn.hasAttribute('data-aside-pin-secure') ? '; secure' : '';
 
-    $btn.addEventListener('click', () => {
+    $btn.addEventListener('click', (event: MouseEvent) => {
         const collapsed = !document.documentElement.hasAttribute('data-aside-collapsed');
         const label = (collapsed ? $btn.dataset.asidePinLabelCollapsed : $btn.dataset.asidePinLabel) ?? '';
 
         document.documentElement.toggleAttribute('data-aside-collapsed', collapsed);
+        // `includes/asideLatch.ts` skips this button, but a latch from an earlier click would still be standing.
+        document.documentElement.removeAttribute('data-aside-open');
+
+        // The button keeps focus after a pointer click, and `.aside:focus-within` is one of the three ways the
+        // collapsed menu is open — so collapsing would appear to do nothing until the next click elsewhere. A
+        // keyboard activation reports no detail and keeps its focus, where staying open is the right answer.
+        if (collapsed && event.detail > 0) {
+            $btn.blur();
+        }
         document.cookie = `${COOKIE_NAME}=${collapsed ? COLLAPSED : ''}; path=/; max-age=${collapsed ? COOKIE_MAX_AGE : 0}; samesite=lax${secure}`;
 
         $btn.setAttribute('aria-pressed', collapsed ? 'false' : 'true');

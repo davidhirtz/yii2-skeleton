@@ -22,6 +22,7 @@ import sticky from './includes/sticky';
 import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
 
+import './includes/asideLatch';
 import './includes/FlashAlert';
 
 declare global {

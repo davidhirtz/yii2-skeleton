@@ -6,7 +6,7 @@
 
   .has-aside & {
     @include media-breakpoint-down(sm) {
-      translate: 14rem 0;
+      translate: var(--aside-width) 0;
     }
   }
 }
