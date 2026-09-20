@@ -8,7 +8,9 @@
   layout renders `data-theme` on `<html>`, or no attribute at all for `auto`; `Module::current()` is the new
   static accessor the views reach it through, and `Modules\ModuleTrait::getModule()` now delegates to it.
   `Modules\Admin\Widgets\Buttons\ColorSchemeDropdownButton` is in the navbar beside the language picker and
-  `AccountController::actionColorScheme()` persists the choice for an account. Three things a project should know:
+  `AccountController::actionColorScheme()` persists the choice for an account, while `actionUpdate()` answers
+  `HX-Refresh` when the save changed the scheme — `data-theme` sits on `<html>`, which every swap leaves
+  standing, so the document would otherwise keep the old one until a full load. Three things a project should know:
   **a guest now gets a navbar**, holding that dropdown alone, because the login page is where the scheme is first
   picked; **the cookie is read straight out of `$_COOKIE`**, since it is written by a script and
   `Request::getCookies()` silently drops every cookie that fails Yii's HMAC; and **the cookie is host-only on

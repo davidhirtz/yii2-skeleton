@@ -106,6 +106,44 @@ class ColorSchemeTest extends TestCase
         self::assertNull(User::findOne($user->id)->color_scheme);
     }
 
+    /**
+     * `data-theme` is on `<html>`, which every swap leaves standing — so a scheme the account form changed only
+     * reaches the document on a full load, and the save has to ask for one.
+     */
+    public function testTheAccountFormRefreshesTheDocumentWhenTheSchemeChanged(): void
+    {
+        $this->login('owner');
+        $this->open('admin/account/update');
+
+        $this->submit(
+            values: $this->prefixFormValues($this->getUserFromFixture('owner'), [
+                'color_scheme' => User::COLOR_SCHEME_DARK,
+            ]),
+            server: ['HTTP_HX_REQUEST' => 'true'],
+        );
+
+        self::assertResponseHeaderSame('hx-refresh', 'true');
+    }
+
+    /**
+     * A save that left the scheme where it was answers the ordinary refresh, or every account save would reload
+     * the whole document.
+     */
+    public function testTheAccountFormDoesNotRefreshWhenTheSchemeIsUnchanged(): void
+    {
+        $this->login('owner');
+        $this->open('admin/account/update');
+
+        $this->submit(
+            values: $this->prefixFormValues($this->getUserFromFixture('owner'), [
+                'name' => 'updated',
+            ]),
+            server: ['HTTP_HX_REQUEST' => 'true'],
+        );
+
+        self::assertResponseNotHasHeader('hx-refresh');
+    }
+
     public function testAnUnknownSchemeIsRefused(): void
     {
         $this->login('owner');
