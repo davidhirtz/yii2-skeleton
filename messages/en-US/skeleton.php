@@ -55,6 +55,8 @@ return [
     'ACCOUNT_UPDATE_UNCONFIRMED_EMAIL_LINK' => 'here',
     'ACCOUNT_WARNING_NOSCRIPT' => 'Please enable JavaScript on your browser or upgrade to a JavaScript-capable browser to sign up.',
     'ACCOUNT_WELCOME_BACK' => 'Welcome back, {name}!',
+    'ASIDE_PIN' => 'Pin menu',
+    'ASIDE_UNPIN' => 'Unpin menu',
     'ASSET_REFRESH' => 'Refresh',
     'AUTH_AUTH_UPDATE_DESCRIPTION' => 'Assign and revoke user permissions',
     'AUTH_INDEX_HINT' => 'A role is a flat list of permissions and never contains another role, so an administrator and a manager are granted separately. Nobody can hand out an item they do not hold themselves.',

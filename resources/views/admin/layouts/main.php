@@ -20,11 +20,13 @@ use yii\helpers\Html;
 
 AdminAssetBundle::register($this);
 
-$colorScheme = Module::current()->getColorScheme();
+$module = Module::current();
+$colorScheme = $module->getColorScheme();
+$asideCollapsed = $module->isAsideCollapsed();
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
-    <html lang="<?= Yii::$app->getI18n()->getLanguageCode(); ?>"<?= $colorScheme ? ' data-theme="' . $colorScheme . '"' : ''; ?>>
+    <html lang="<?= Yii::$app->getI18n()->getLanguageCode(); ?>"<?= $colorScheme ? ' data-theme="' . $colorScheme . '"' : ''; ?><?= $asideCollapsed ? ' data-aside-collapsed' : ''; ?>>
     <head>
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1">

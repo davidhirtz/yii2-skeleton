@@ -1,5 +1,20 @@
 ## 3.0.0 (in development)
 
+- **The aside is left out of the document when it holds nothing, and can be collapsed to its icons.**
+  `Modules\Admin\Widgets\Navs\AsideMenu` renders both menus in `configure()` and answers `isVisible()` from
+  what they came to, so a guest gets no `<aside>` at all — the `hidden-empty` class it carried only hid an empty
+  one, which a theme rendering a logo into it (`Hirtz\Anakin`) defeated. From the `md` breakpoint up, where the
+  aside is in flow and costs a laptop screen a good part of its width, the new
+  `Modules\Admin\Widgets\Buttons\AsidePinButton` collapses it to the icons alone and hovering overlays the
+  full panel rather than pushing the page. The state is a host-only `_aside` cookie plus `data-aside-collapsed`
+  on `<html>`, resolved by `Module::isAsideCollapsed()` and rendered by the layout, for the reasons the colour
+  scheme entry below gives. Two things a project subclassing either should know: **`AsideMenu::getHeader()` is
+  the new first child of the aside**, holding the pin button, and a theme putting its own logo there overrides
+  that method rather than `renderContent()` (`AsideMenu::getContent()` is the list the aside renders); and
+  **`Widgets\Navs\NavItem` wraps its label in `<span class="nav-link-label">`**, which is what the collapsed
+  rail hides — a nav link built by hand, as the logout button used to be, needs `nav-link-icon` and
+  `nav-link-label` on its two parts or it renders unreadable there.
+
 - **The admin follows the operating system's light/dark setting, and a navbar dropdown overrides it** (monorepo
   issue #201, `docs/plans/color-scheme.md`). The value is tri-state — `auto | light | dark`, `auto` being the
   default and the absence of the other two — and lives in three places: the new `user.color_scheme` column is the

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Helpers\Url;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -66,16 +68,21 @@ class AccountMenu extends Widget
      */
     protected function getLogoutItem(): ?NavItem
     {
+        // The icon and the label are passed as content rather than through `icon()` and `text()`, which would
+        // wrap them in an `.icon-text` of their own: the markup has to match every other nav link, or the aside
+        // has no label to hide while it is collapsed to its icons.
         return !$this->webuser->getIsGuest()
             ? NavItem::make()
                 ->content(Button::make()
-                    ->text(Yii::t('skeleton', 'ACCOUNT_MENU_LOGOUT'))
+                    ->content(
+                        Icon::make()->name('sign-out-alt')->addClass('nav-link-icon'),
+                        Span::make()->class('nav-link-label')->text(Yii::t('skeleton', 'ACCOUNT_MENU_LOGOUT')),
+                    )
                     ->addAttributes([
                         'hx-post' => Url::toRoute(['/admin/account/logout']),
                         'hx-push-url' => 'true',
                         'hx-target' => 'body',
                     ])
-                    ->icon('sign-out-alt')
                     ->class('nav-link nav-logout-link'))
             : null;
     }

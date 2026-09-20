@@ -8,6 +8,7 @@ import type {TinyMCE} from 'tinymce';
 import 'x-timeago';
 
 import aside from './includes/aside';
+import asidePin from './includes/asidePin';
 import autocomplete from './includes/autocomplete';
 import busy from './includes/busy';
 import collapse from './includes/collapse';
@@ -35,6 +36,7 @@ onLoad(($container) => {
     };
 
     queryAll('[data-aside]', aside);
+    queryAll('[data-aside-pin]', asidePin);
     queryAll('[data-autocomplete]', autocomplete);
     queryAll('[data-busy]', busy);
     queryAll('[data-collapse]', collapse);

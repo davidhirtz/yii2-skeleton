@@ -41,7 +41,7 @@ class NavTest extends TestCase
                 ->url('/'))
             ->render();
 
-        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span>Home</span></a></li></ul>', $content);
+        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span class="nav-link-label">Home</span></a></li></ul>', $content);
     }
 
     public function testItemVisibility(): void
@@ -73,7 +73,7 @@ class NavTest extends TestCase
             ])
             ->render();
 
-        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span>Home</span></a></li></ul>', $content);
+        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span class="nav-link-label">Home</span></a></li></ul>', $content);
     }
 
     public function testAuthenticatedItemRole(): void
@@ -103,7 +103,7 @@ class NavTest extends TestCase
                 ->link(fn (A $link) => $link->addClass('home')))
             ->render();
 
-        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active home" href="/"><span class="hidden nav-link-icon fas fa-home"></span><span>Home</span><span class="badge">New</span></a></li></ul>', $content);
+        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active home" href="/"><span class="hidden nav-link-icon fas fa-home"></span><span class="nav-link-label">Home</span><span class="badge">New</span></a></li></ul>', $content);
     }
 
     public function testActiveItemFromUrl(): void
@@ -115,7 +115,7 @@ class NavTest extends TestCase
             ])
             ->render();
 
-        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span>Home</span></a></li><li class="nav-item"><a class="nav-link" href="/site/test"><span>Test</span></a></li></ul>', $content);
+        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span class="nav-link-label">Home</span></a></li><li class="nav-item"><a class="nav-link" href="/site/test"><span class="nav-link-label">Test</span></a></li></ul>', $content);
     }
 
     public function testActiveItemWithRoutes(): void
@@ -132,7 +132,7 @@ class NavTest extends TestCase
             ])
             ->render();
 
-        $needle = '<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>';
+        $needle = '<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span class="nav-link-label">Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span class="nav-link-label">Test</span></a></li></ul>';
         self::assertStringContainsString($needle, $content);
     }
 
@@ -150,7 +150,7 @@ class NavTest extends TestCase
             ])
             ->render();
 
-        self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/"><span>Test</span></a></li></ul>', $content);
+        self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/"><span class="nav-link-label">Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/"><span class="nav-link-label">Test</span></a></li></ul>', $content);
     }
 
     public function testActiveItemWithRequestQueryParameters(): void
@@ -174,7 +174,7 @@ class NavTest extends TestCase
             ])
             ->render();
 
-        self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span>Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span>Test</span></a></li></ul>', $content);
+        self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span class="nav-link-label">Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span class="nav-link-label">Test</span></a></li></ul>', $content);
     }
 
     public function testNamedItemIsReplacedAndRemoved(): void
@@ -193,9 +193,9 @@ class NavTest extends TestCase
                 ->url('/contact'))
             ->render();
 
-        self::assertStringContainsString('<span>Home</span>', $content);
-        self::assertStringContainsString('<span>Contact</span>', $content);
-        self::assertStringNotContainsString('<span>About</span>', $content);
+        self::assertStringContainsString('<span class="nav-link-label">Home</span>', $content);
+        self::assertStringContainsString('<span class="nav-link-label">Contact</span>', $content);
+        self::assertStringNotContainsString('<span class="nav-link-label">About</span>', $content);
 
         $content = Nav::make()
             ->addItem(
@@ -209,7 +209,7 @@ class NavTest extends TestCase
             ->removeItem('about')
             ->render();
 
-        self::assertStringContainsString('<span>Home</span>', $content);
-        self::assertStringNotContainsString('<span>About</span>', $content);
+        self::assertStringContainsString('<span class="nav-link-label">Home</span>', $content);
+        self::assertStringNotContainsString('<span class="nav-link-label">About</span>', $content);
     }
 }

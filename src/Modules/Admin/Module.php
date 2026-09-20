@@ -24,6 +24,12 @@ class Module extends \Hirtz\Skeleton\Base\Module
     final public const string AUTH_SYSTEM = 'system';
 
     /**
+     * The value the aside cookie and the layout's `data-aside` attribute carry, `includes/asidePin.ts` writing
+     * the same literal.
+     */
+    final public const string ASIDE_COLLAPSED = 'collapsed';
+
+    /**
      * Only a production request reaches it, so nothing but {@see \Hirtz\Skeleton\Tests\Modules\Admin\ModuleTest}
      * notices the day the view moves.
      */
@@ -60,6 +66,17 @@ class Module extends \Hirtz\Skeleton\Base\Module
      * host that answers on both schemes, for the reason {@see \Hirtz\Skeleton\Web\User::$cookieSecure} gives.
      */
     public ?bool $colorSchemeCookieSecure = null;
+
+    /**
+     * @var string the cookie holding whether the aside is collapsed to its icons on this device. Written by
+     * `includes/asidePin.ts`, so it carries no signature — see {@see isAsideCollapsed()}.
+     */
+    public string $asideCookieName = '_aside';
+
+    /**
+     * @var bool|null whether the aside cookie is `Secure`, `null` derives it from the request.
+     */
+    public ?bool $asideCookieSecure = null;
 
     /**
      * @var int|false how long a `trail` record is kept, in seconds. Set it and run `trail/clear` console command.
@@ -212,6 +229,30 @@ class Module extends \Hirtz\Skeleton\Base\Module
     {
         $scheme = $_COOKIE[$this->colorSchemeCookieName] ?? null;
         return is_string($scheme) && in_array($scheme, User::COLOR_SCHEMES, true) ? $scheme : null;
+    }
+
+    /**
+     * Whether the aside renders collapsed to its icons, read straight out of `$_COOKIE` for the reason
+     * {@see getCookieColorScheme()} gives. The value is a single literal, so the comparison is the validation.
+     */
+    public function isAsideCollapsed(): bool
+    {
+        return ($_COOKIE[$this->asideCookieName] ?? null) === self::ASIDE_COLLAPSED;
+    }
+
+    /**
+     * Built with `new` rather than through the container, for the reason {@see getColorSchemeCookie()} gives.
+     */
+    public function getAsideCookie(): Cookie
+    {
+        $cookie = new Cookie();
+        $cookie->name = $this->asideCookieName;
+        $cookie->httpOnly = false;
+        $cookie->sameSite = Cookie::SAME_SITE_LAX;
+        $cookie->secure = $this->asideCookieSecure
+            ?? Application::current()->getRequest()->getIsSecureConnection();
+
+        return $cookie;
     }
 
     /**

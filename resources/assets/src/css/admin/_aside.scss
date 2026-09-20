@@ -2,6 +2,9 @@
 @use "../shared/svg" as *;
 
 .aside {
+  --aside-width: 14rem;
+  --aside-collapsed-width: 3.5rem;
+
   background-color: var(--aside-bg);
   border-right: 1px solid var(--border-color);
   display: flex;
@@ -16,17 +19,17 @@
   position: sticky;
   scrollbar-width: none;
   top: 0;
-  width: 14rem;
+  width: var(--aside-width);
 
   @include media-breakpoint-down(sm) {
-    left: -14rem;
+    left: calc(var(--aside-width) * -1);
     position: fixed;
     top: 0;
     z-index: 40;
   }
 
   @include media-breakpoint-up(lg) {
-    width: 16rem;
+    --aside-width: 16rem;
   }
 
   .nav-link {
@@ -36,6 +39,91 @@
 
   .nav-link-icon {
     min-width: 1rem;
+  }
+}
+
+.aside-header {
+  align-items: center;
+  display: flex;
+  gap: .5rem;
+  justify-content: flex-end;
+  min-height: 2rem;
+  padding-inline: 1rem;
+}
+
+.aside-pin {
+  min-width: 2rem;
+  opacity: 0;
+  padding-block: .25rem;
+  transition: opacity .15s;
+
+  // Below `md` the aside is a drawer the toggle already opens, so there is nothing here to collapse.
+  @include media-breakpoint-down(sm) {
+    display: none;
+  }
+
+  // Revealed on hover, so the first thing the eye lands on is still the menu. A device with no hover has no way
+  // of revealing it and would be left tapping an invisible button.
+  @media (hover: none) {
+    opacity: 1;
+  }
+
+  .aside:hover &,
+  &:focus-visible {
+    opacity: 1;
+  }
+}
+
+// From `md` up the aside is in flow and costs a laptop screen a good part of its width, which the pin trades
+// for the icons alone. Hovering overlays the full panel rather than pushing the page: the width grows while a
+// negative inline margin keeps the flex item's outer size, so nothing around it reflows.
+@include media-breakpoint-up(md) {
+  [data-aside-collapsed] .aside {
+    transition: margin-inline-end .2s, width .2s;
+    width: var(--aside-collapsed-width);
+    z-index: 30;
+
+    &:hover,
+    &:focus-within {
+      // It is over the page rather than beside it, so it needs an edge of its own.
+      box-shadow: 0 0 1rem rgba(0, 0, 0, .15);
+      margin-inline-end: calc(var(--aside-collapsed-width) - var(--aside-width));
+      width: var(--aside-width);
+    }
+
+    &:not(:hover, :focus-within) {
+      .aside-header {
+        justify-content: center;
+        padding-inline: .5rem;
+      }
+
+      // `.aside-nav` is named so these beat the arrow markers and the open `.subnav`, which are as specific.
+      .aside-nav {
+        & > .nav-item {
+          padding-inline: .5rem;
+        }
+
+        .nav-link {
+          justify-content: center;
+          min-width: 0;
+          padding-inline: 0;
+
+          &:after,
+          &:before {
+            content: none;
+          }
+
+          .nav-link-label,
+          .aside-badge {
+            display: none;
+          }
+        }
+
+        .subnav {
+          display: none;
+        }
+      }
+    }
   }
 }
 

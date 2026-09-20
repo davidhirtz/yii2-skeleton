@@ -104,7 +104,7 @@ class NavItem extends Widget
         $link->addContent($this->getIcon()?->addClass('nav-link-icon'));
 
         if ($this->label) {
-            $link->addContent(Span::make()->text($this->label));
+            $link->addContent(Span::make()->class('nav-link-label')->text($this->label));
         }
 
         if ($this->badge) {
