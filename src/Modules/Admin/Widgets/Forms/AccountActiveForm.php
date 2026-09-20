@@ -31,6 +31,9 @@ class AccountActiveForm extends ActiveForm
                 $this->getTimezoneField(),
             ],
             [
+                $this->getColorSchemeField(),
+            ],
+            [
                 $this->getShowHintsField(),
             ],
             [

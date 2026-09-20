@@ -1,5 +1,21 @@
 ## 3.0.0 (in development)
 
+- **The admin follows the operating system's light/dark setting, and a navbar dropdown overrides it** (monorepo
+  issue #201, `docs/plans/color-scheme.md`). The value is tri-state — `auto | light | dark`, `auto` being the
+  default and the absence of the other two — and lives in three places: the new `user.color_scheme` column is the
+  durable one, a host-only `_theme` cookie is this device's override, and `prefers-color-scheme` answers when
+  neither pins anything. `Modules\Admin\Module::getColorScheme()` resolves the three in that order and the
+  layout renders `data-theme` on `<html>`, or no attribute at all for `auto`; `Module::current()` is the new
+  static accessor the views reach it through, and `Modules\ModuleTrait::getModule()` now delegates to it.
+  `Modules\Admin\Widgets\Buttons\ColorSchemeDropdownButton` is in the navbar beside the language picker and
+  `AccountController::actionColorScheme()` persists the choice for an account. Three things a project should know:
+  **a guest now gets a navbar**, holding that dropdown alone, because the login page is where the scheme is first
+  picked; **the cookie is read straight out of `$_COOKIE`**, since it is written by a script and
+  `Request::getCookies()` silently drops every cookie that fails Yii's HMAC; and **the cookie is host-only on
+  purpose**, built with `new Cookie()` rather than through the container, whose definition carries a `Domain` and
+  would reintroduce the twin of monorepo issue #195. The dark palette itself is not in this entry — the tokens
+  still have to be written.
+
 - **`Widgets\Buttons\AdminButton` is invisible to a guest** (monorepo issue #198). It declared no `roles`, and
   `Widgets\Traits\VisibilityTrait::isVisible()` answers `true` for an unset list — so a project rendering the cms
   `site/view.php` unchanged put a floating link to `/admin/dashboard/index`, and the environment badge beside it,

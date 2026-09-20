@@ -44,6 +44,7 @@ use yii\web\IdentityInterface;
  * @property string $language
  * @property string|null $timezone
  * @property bool|int $show_hints
+ * @property string|null $color_scheme `light`, `dark`, or `null` to follow the browser
  * @property string|null $auth_key
  * @property string|null $two_factor_secret the encrypted secret, reached through
  *     {@see static::getTwoFactorAuthenticationSecret()}
@@ -93,6 +94,15 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
      * configured pepper is outdated, not broken, and the next successful login rewrites it.
      */
     final public const string PASSWORD_PEPPER = 'pepper';
+
+    /**
+     * The two schemes a request can pin. Anything else — `null`, an empty column, a cookie holding a value no
+     * longer offered — means the browser's own `prefers-color-scheme` decides, which is why there is no third
+     * constant: the absence *is* the third state.
+     */
+    final public const string COLOR_SCHEME_LIGHT = 'light';
+    final public const string COLOR_SCHEME_DARK = 'dark';
+    final public const array COLOR_SCHEMES = [self::COLOR_SCHEME_LIGHT, self::COLOR_SCHEME_DARK];
 
     /**
      * Marks a secret written by {@see static::encryptTwoFactorAuthenticationSecret()}, so a row that predates the
@@ -178,6 +188,11 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             [
                 ['show_hints'],
                 'boolean',
+            ],
+            [
+                ['color_scheme'],
+                DynamicRangeValidator::class,
+                'integerOnly' => false,
             ],
             [
                 ['name'],
@@ -684,6 +699,29 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return (bool)$this->show_hints;
     }
 
+    /**
+     * The scheme this account pins, or `null` for the browser's own.
+     */
+    public function getColorScheme(): ?string
+    {
+        return in_array($this->color_scheme, self::COLOR_SCHEMES, true) ? $this->color_scheme : null;
+    }
+
+    /**
+     * Read by {@see DynamicRangeValidator} and {@see \Hirtz\Skeleton\Widgets\Forms\Fields\SelectField}, both
+     * of which resolve `get<Plural>()` off the model. The empty value is the select's prompt, not an item here.
+     *
+     * @noinspection PhpUnused
+     * @return array<string, string>
+     */
+    public static function getColorSchemes(): array
+    {
+        return [
+            self::COLOR_SCHEME_LIGHT => Yii::t('skeleton', 'USER_COLOR_SCHEME_LIGHT'),
+            self::COLOR_SCHEME_DARK => Yii::t('skeleton', 'USER_COLOR_SCHEME_DARK'),
+        ];
+    }
+
     public function isUnconfirmed(): bool
     {
         return $this->email_confirmed_at === null;
@@ -721,6 +759,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return [
             ...parent::attributeHints(),
             'show_hints' => Yii::t('skeleton', 'USER_SHOW_HINTS_HINT'),
+            'color_scheme' => Yii::t('skeleton', 'USER_COLOR_SCHEME_HINT'),
         ];
     }
 
@@ -736,6 +775,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             'language' => Yii::t('skeleton', 'USER_LANGUAGE_LABEL'),
             'timezone' => Yii::t('skeleton', 'USER_TIMEZONE_LABEL'),
             'show_hints' => Yii::t('skeleton', 'USER_SHOW_HINTS_LABEL'),
+            'color_scheme' => Yii::t('skeleton', 'USER_COLOR_SCHEME_LABEL'),
             'login_count' => Yii::t('skeleton', 'USER_LOGIN_COUNT_LABEL'),
             'last_login' => Yii::t('skeleton', 'USER_LAST_LOGIN_LABEL'),
             'is_owner' => Yii::t('skeleton', 'USER_IS_OWNER_LABEL'),

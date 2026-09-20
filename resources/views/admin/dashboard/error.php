@@ -8,6 +8,7 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\View;
 use yii\base\UserException;
 use yii\helpers\Html;
@@ -27,10 +28,12 @@ $message = $exception instanceof UserException
 
 AdminAssetBundle::register($this);
 
+$colorScheme = Module::current()->getColorScheme();
+
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
-    <html lang="<?= Yii::$app->getI18n()->getLanguageCode(); ?>">
+    <html lang="<?= Yii::$app->getI18n()->getLanguageCode(); ?>"<?= $colorScheme ? ' data-theme="' . $colorScheme . '"' : ''; ?>>
     <head>
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1">

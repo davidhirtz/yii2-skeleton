@@ -14,6 +14,7 @@ use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
 use Hirtz\Skeleton\Models\Forms\PasswordResetForm;
 use Hirtz\Skeleton\Models\Forms\SignupForm;
 use Hirtz\Skeleton\Models\Forms\TwoFactorAuthenticatorForm;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\ModuleTrait;
@@ -49,6 +50,7 @@ class AccountController extends Controller
                     [
                         'allow' => true,
                         'actions' => [
+                            'color-scheme',
                             'credentials',
                             'delete',
                             'disable-authenticator',
@@ -79,6 +81,7 @@ class AccountController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
+                    'color-scheme' => ['post'],
                     'delete' => ['post'],
                     'disable-authenticator' => ['post'],
                     'enable-authenticator' => ['post'],
@@ -295,6 +298,7 @@ class AccountController extends Controller
             if ($form->save()) {
                 // The account's language is what the admin falls back to, so the session override must not outlive it.
                 static::getModule()->setSessionLanguage(null);
+                static::getModule()->removeColorSchemeCookie();
                 Yii::$app->language = $form->user->language;
 
                 $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
@@ -425,6 +429,28 @@ class AccountController extends Controller
         }
 
         return $this->redirect($this->request->getReferrer() ?? ['/admin/dashboard/index']);
+    }
+
+    /**
+     * The device already applied the scheme itself — the script writes the cookie and the attribute before it
+     * posts — so this only persists the choice on the account, and the answer carries nothing to render.
+     *
+     * @see \Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\ColorSchemeDropdownButton
+     */
+    public function actionColorScheme(): Response
+    {
+        $colorScheme = $this->request->post('colorScheme');
+
+        if (!is_string($colorScheme) || ('' !== $colorScheme && !in_array($colorScheme, User::COLOR_SCHEMES, true))) {
+            throw new BadRequestHttpException();
+        }
+
+        $user = $this->webuser->getIdentity();
+        $user->color_scheme = $colorScheme ?: null;
+        $user->update();
+
+        $this->response->setStatusCode(204);
+        return $this->response;
     }
 
     /**

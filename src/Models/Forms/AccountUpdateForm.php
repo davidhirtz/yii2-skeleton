@@ -29,6 +29,7 @@ class AccountUpdateForm extends Model
             'language',
             'timezone',
             'show_hints',
+            'color_scheme',
             ...$this->user->getCustomAttributeNames(),
         ];
     }

@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Widgets\Forms\Fields\SelectField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\TimezoneSelectField;
 use Hirtz\Skeleton\Widgets\Forms\Traits\CustomAttributeFieldsTrait;
 use Stringable;
+use Yii;
 
 trait UserActiveFormTrait
 {
@@ -81,6 +82,17 @@ trait UserActiveFormTrait
         return TimezoneSelectField::make()
             ->model($this->model->user)
             ->property('timezone');
+    }
+
+    /**
+     * The empty option is the third state: no scheme pinned, so the browser's own decides.
+     */
+    protected function getColorSchemeField(): string|Stringable
+    {
+        return SelectField::make()
+            ->model($this->model->user)
+            ->property('color_scheme')
+            ->prompt(Yii::t('skeleton', 'USER_COLOR_SCHEME_AUTO'));
     }
 
     /**

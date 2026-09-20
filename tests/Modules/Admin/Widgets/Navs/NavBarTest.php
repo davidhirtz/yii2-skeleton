@@ -35,16 +35,23 @@ class NavBarTest extends TestCase
     }
 
     /**
-     * Every item is guarded, so a logged out view was left with an empty bar carrying a toggle for an aside that
-     * had already hidden itself (monorepo issue #190).
+     * Every other item is guarded, so a logged out view used to be left with an empty bar carrying a toggle for
+     * an aside that had already hidden itself (monorepo issue #190). The colour scheme dropdown is the one item
+     * a guest always has — the login page is where the scheme is first picked — so what #190 asks of the bar now
+     * is that nothing *else* survives into it.
      */
-    public function testAGuestGetsNoNavbarAtAll(): void
+    public function testAGuestGetsTheColorSchemeAndNothingElse(): void
     {
-        self::assertSame('', NavBar::make()->render());
+        $navbar = NavBar::make()->render();
+
+        self::assertStringContainsString('data-color-scheme', $navbar);
+        self::assertStringNotContainsString('navbar-search', $navbar);
+        self::assertStringNotContainsString('aside-toggle', $navbar);
+        self::assertStringNotContainsString('i18n-dropdown-option', $navbar);
     }
 
     /**
-     * The login page is where the admin language is first picked, so the bar stays for the one item a guest has.
+     * The login page is where the admin language is first picked, so a guest gets the picker too.
      */
     public function testAGuestPicksALanguageWithoutGettingTheAsideToggle(): void
     {

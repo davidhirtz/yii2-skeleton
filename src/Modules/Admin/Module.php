@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
 use Override;
 use Yii;
+use yii\web\Cookie;
 use yii\web\NotFoundHttpException;
 use yii\web\Session;
 
@@ -48,6 +49,19 @@ class Module extends \Hirtz\Skeleton\Base\Module
     public string $languageSessionKey = 'language';
 
     /**
+     * @var string the cookie holding the colour scheme picked on this device. It is written by
+     * `includes/colorScheme.ts` and therefore carries no signature, which is what {@see getCookieColorScheme()}
+     * is about.
+     */
+    public string $colorSchemeCookieName = '_theme';
+
+    /**
+     * @var bool|null whether the colour scheme cookie is `Secure`, `null` derives it from the request. Pin it on a
+     * host that answers on both schemes, for the reason {@see \Hirtz\Skeleton\Web\User::$cookieSecure} gives.
+     */
+    public ?bool $colorSchemeCookieSecure = null;
+
+    /**
      * @var int|false how long a `trail` record is kept, in seconds. Set it and run `trail/clear` console command.
      * {@see TrailController::actionClear()}
      */
@@ -63,6 +77,17 @@ class Module extends \Hirtz\Skeleton\Base\Module
 
     public $defaultRoute = 'dashboard';
     public $layout = 'main';
+
+    /**
+     * The admin module whether or not this request is being handled by it — {@see getInstance()} answers `null`
+     * outside it, and the error view renders outside.
+     */
+    public static function current(): self
+    {
+        /** @var self $module */
+        $module = Yii::$app->getModule('admin');
+        return $module;
+    }
 
     #[Override]
     public function beforeAction($action): bool
@@ -165,6 +190,55 @@ class Module extends \Hirtz\Skeleton\Base\Module
         }
 
         $session?->set($this->languageSessionKey, $language);
+    }
+
+    /**
+     * The scheme this request renders in: the device's cookie, the account's column, or `null` for the browser's
+     * own `prefers-color-scheme`, which no request can answer — `Sec-CH-Prefers-Color-Scheme` is Chromium-only
+     * and needs an `Accept-CH` round trip first, so the layout emits no attribute and the CSS decides.
+     */
+    public function getColorScheme(): ?string
+    {
+        return $this->getCookieColorScheme() ?? WebUser::current()?->getIdentity()?->getColorScheme();
+    }
+
+    /**
+     * Read straight out of `$_COOKIE`, because {@see Request::getCookies()} cannot see this one at all: with
+     * `enableCookieValidation` on, {@see \yii\web\Request::loadCookies()} HMAC-validates every entry and
+     * silently skips the ones that do not verify — which a cookie `document.cookie` wrote never does. The
+     * allow-list is complete validation here, the value being one of two literals.
+     */
+    public function getCookieColorScheme(): ?string
+    {
+        $scheme = $_COOKIE[$this->colorSchemeCookieName] ?? null;
+        return is_string($scheme) && in_array($scheme, User::COLOR_SCHEMES, true) ? $scheme : null;
+    }
+
+    /**
+     * Sent when the account form wrote the column, so the device's override does not outlive the setting it was
+     * overriding — {@see Controllers\AccountController::actionUpdate()} does the same for the session language.
+     */
+    public function removeColorSchemeCookie(): void
+    {
+        Application::current()->getResponse()->getCookies()->remove($this->getColorSchemeCookie());
+    }
+
+    /**
+     * Built with `new`, never through the container: {@see \Hirtz\Skeleton\Web\Application::setDefaultCookieConfig()}
+     * and {@see \Hirtz\Tenant\Web\UrlManager} put a `Domain` on the container's {@see Cookie}, and a scoped
+     * twin of a host-only cookie is the one `$_COOKIE` hides behind (monorepo issue #195). This one is host-only
+     * at both ends — the script writes no domain either.
+     */
+    public function getColorSchemeCookie(): Cookie
+    {
+        $cookie = new Cookie();
+        $cookie->name = $this->colorSchemeCookieName;
+        $cookie->httpOnly = false;
+        $cookie->sameSite = Cookie::SAME_SITE_LAX;
+        $cookie->secure = $this->colorSchemeCookieSecure
+            ?? Application::current()->getRequest()->getIsSecureConnection();
+
+        return $cookie;
     }
 
     private function getSession(): ?Session

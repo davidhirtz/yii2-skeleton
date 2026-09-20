@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\AsideToggleButton;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\ColorSchemeDropdownButton;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\LanguageDropdownButton;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -33,6 +34,7 @@ class NavBar extends Widget
     {
         $content = implode('', array_map(strval(...), array_filter([
             $this->getSearchItem(),
+            $this->getColorSchemeDropdownItem(),
             $this->getLanguageDropdownItem(),
             $this->getMobileToggle(),
         ])));
@@ -47,6 +49,11 @@ class NavBar extends Widget
     protected function getSearchItem(): ?Stringable
     {
         return NavBarSearch::make();
+    }
+
+    protected function getColorSchemeDropdownItem(): ?Stringable
+    {
+        return ColorSchemeDropdownButton::make();
     }
 
     protected function getLanguageDropdownItem(): ?Stringable
