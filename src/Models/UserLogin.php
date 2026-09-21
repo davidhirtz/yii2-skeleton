@@ -8,7 +8,6 @@ use davidhirtz\yii2\datetime\DateTime;
 use davidhirtz\yii2\datetime\DateTimeBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
-use Hirtz\Skeleton\Migrations\M260914180000UserLoginType;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Types\Type;
@@ -33,7 +32,7 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
 
     /**
      * Deliberately {@see TypeAttributeInterface::TYPE_DEFAULT}: a login whose caller named no type has told us
-     * nothing, which is what "other" means. It is also where {@see M260914180000UserLoginType} collects the
+     * nothing, which is what "other" means. It is also where the upgrade's `M260914180000UserLoginType` collects the
      * provider names the removed social login wrote.
      */
     public const int TYPE_OTHER = self::TYPE_DEFAULT;

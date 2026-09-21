@@ -237,6 +237,67 @@ class M260101000000SkeletonBaseline extends Migration
         $this->execute(<<<'SQL'
             ALTER TABLE `session` ADD CONSTRAINT `session_user_id_ibfk` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
             SQL);
+
+        $this->execute(<<<'SQL'
+            INSERT INTO `auth_item` (`name`, `type`, `description`, `rule_name`, `data`, `updated_at`, `created_at`) VALUES
+              ('admin', '1', NULL, NULL, NULL, '1789985566', '1789985566'),
+              ('author', '1', NULL, NULL, NULL, '1789985567', '1789985567'),
+              ('authUpdate', '2', '{\"category\":\"skeleton\",\"key\":\"AUTH_AUTH_UPDATE_DESCRIPTION\"}', NULL, NULL, '1789985566', '1789985566'),
+              ('block', '2', '{\"category\":\"cms\",\"key\":\"AUTH_BLOCK_DESCRIPTION\"}', NULL, NULL, '1789985584', '1789985584'),
+              ('category', '2', '{\"category\":\"cms\",\"key\":\"AUTH_CATEGORY_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581'),
+              ('config', '2', '{\"category\":\"config\",\"key\":\"AUTH_CONFIG_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581'),
+              ('entry', '2', '{\"category\":\"cms\",\"key\":\"AUTH_ENTRY_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581'),
+              ('file', '2', '{\"category\":\"media\",\"key\":\"AUTH_FILE_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581'),
+              ('folder', '2', '{\"category\":\"media\",\"key\":\"AUTH_FOLDER_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581'),
+              ('location', '2', '{\"category\":\"location\",\"key\":\"AUTH_LOCATION_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581'),
+              ('manager', '1', NULL, NULL, NULL, '1789985582', '1789985582'),
+              ('redirect', '2', '{\"category\":\"skeleton\",\"key\":\"AUTH_REDIRECT_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581'),
+              ('shopifyProduct', '2', '{\"category\":\"shopify\",\"key\":\"AUTH_SHOPIFY_PRODUCT_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581'),
+              ('shopifyWebhook', '2', '{\"category\":\"shopify\",\"key\":\"AUTH_SHOPIFY_WEBHOOK_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581'),
+              ('system', '2', '{\"category\":\"skeleton\",\"key\":\"AUTH_SYSTEM_DESCRIPTION\"}', NULL, NULL, '1789985582', '1789985582'),
+              ('tag', '2', '{\"category\":\"location\",\"key\":\"AUTH_TAG_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581'),
+              ('tenant', '2', '{\"category\":\"tenant\",\"key\":\"AUTH_TENANT_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581'),
+              ('trailIndex', '2', '{\"category\":\"skeleton\",\"key\":\"AUTH_TRAIL_INDEX_DESCRIPTION\"}', NULL, NULL, '1789985570', '1789985570'),
+              ('user', '2', '{\"category\":\"skeleton\",\"key\":\"AUTH_USER_DESCRIPTION\"}', NULL, NULL, '1789985581', '1789985581')
+            SQL);
+
+        $this->execute(<<<'SQL'
+            INSERT INTO `auth_item_child` (`parent`, `child`) VALUES
+              ('admin', 'authUpdate'),
+              ('manager', 'authUpdate'),
+              ('admin', 'block'),
+              ('manager', 'block'),
+              ('admin', 'category'),
+              ('author', 'category'),
+              ('manager', 'category'),
+              ('admin', 'config'),
+              ('manager', 'config'),
+              ('admin', 'entry'),
+              ('author', 'entry'),
+              ('manager', 'entry'),
+              ('admin', 'file'),
+              ('author', 'file'),
+              ('manager', 'file'),
+              ('admin', 'folder'),
+              ('author', 'folder'),
+              ('manager', 'folder'),
+              ('admin', 'location'),
+              ('manager', 'location'),
+              ('admin', 'redirect'),
+              ('manager', 'redirect'),
+              ('admin', 'shopifyProduct'),
+              ('manager', 'shopifyProduct'),
+              ('admin', 'shopifyWebhook'),
+              ('manager', 'shopifyWebhook'),
+              ('admin', 'system'),
+              ('admin', 'tag'),
+              ('manager', 'tag'),
+              ('admin', 'tenant'),
+              ('admin', 'trailIndex'),
+              ('manager', 'trailIndex'),
+              ('admin', 'user'),
+              ('manager', 'user')
+            SQL);
     }
 
     public function safeDown(): bool
