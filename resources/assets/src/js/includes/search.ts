@@ -114,6 +114,14 @@ export default ($container: HTMLElement) => {
         next < 0 ? $input.focus() : $items[Math.min(next, $items.length - 1)].focus();
     });
 
+    // A click outside closes the box but keeps the results it holds, so focus returning to the input has to reopen
+    // it — otherwise the box stays shut until the next keystroke answers with a fresh list.
+    $input.addEventListener('focus', () => {
+        if ($results.childElementCount) {
+            open();
+        }
+    });
+
     // A click on a result has to land before the blur collapses the input again.
     $container.addEventListener('focusout', () => {
         requestAnimationFrame(() => {
