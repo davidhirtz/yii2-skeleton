@@ -91,9 +91,13 @@
   }
 
   [data-aside-collapsed]:has(.aside) {
+    // The content is the width of the rail's share of the page and grows back into it, rather than sliding
+    // off to the right — so opening the menu reflows `.main` instead of moving it, and nothing leaves the
+    // viewport. The mobile drawer still translates: shrinking a 390px viewport by the drawer's width would
+    // reflow the page into a column too narrow to read.
     .main {
       margin-inline-start: calc(var(--aside-collapsed-width) - var(--aside-width));
-      transition: translate .2s;
+      transition: margin-inline-start .2s;
     }
 
     // `--aside-open` is the state everything inside the aside reads — a label here, the anakin logo there —
@@ -126,7 +130,7 @@
 
     .aside:hover ~ .main,
     .aside:focus-within ~ .main {
-      translate: calc(var(--aside-width) - var(--aside-collapsed-width)) 0;
+      margin-inline-start: 0;
     }
   }
 
@@ -144,7 +148,7 @@
     }
 
     .main {
-      translate: calc(var(--aside-width) - var(--aside-collapsed-width)) 0;
+      margin-inline-start: 0;
     }
   }
 }

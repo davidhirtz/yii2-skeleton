@@ -15,8 +15,11 @@
   aside is in flow and costs a laptop screen a good part of its width, the new
   `Modules\Admin\Widgets\Buttons\AsidePinButton` collapses it to a rail holding the icons alone. **Nothing
   inside the aside moves for that**: `.main` is pulled back over it with a negative margin and paints on top,
-  so the rail is the part of the menu the content does not cover, and opening it is one transform on `.main` —
-  the content is pushed right, the way `.wrap` already translates for the mobile drawer. It opens on hover and
+  so the rail is the part of the menu the content does not cover, and opening it moves one margin on `.main` —
+  the content is the width of the rail's share of the page and grows back into it, rather than sliding off to
+  the right, so nothing leaves the viewport. The mobile drawer is the exception and still translates, since
+  shrinking a phone viewport by the drawer's width would reflow the page into a column too narrow to read. It
+  opens on hover and
   **a click inside latches it open**, so the page that click navigates to still shows the menu and a submenu
   item is reachable; the next click outside, or Escape, closes it. The pin state is a host-only `_aside` cookie
   plus `data-aside-collapsed` on `<html>`, resolved by `Module::isAsideCollapsed()` and rendered by the layout,
