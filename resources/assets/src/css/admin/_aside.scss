@@ -14,10 +14,8 @@
 
 .aside {
   background-color: var(--aside-bg);
-  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  // A wide grid gives `.main` a min-content width of its own, and the aside is the flex item that gives way.
   flex-shrink: 0;
   gap: 1rem;
   height: 100dvh;
@@ -84,21 +82,18 @@
   }
 }
 
-// From `md` up the aside is in flow and costs a laptop screen a good part of its width, which the pin trades
-// for a rail wide enough to hold the icons. Nothing inside the aside changes: `.main` is pulled back over it
-// with a negative margin and paints on top, so the rail is simply the part of the menu the content does not
-// cover — and opening it is one transform on `.main`, never a relayout of either.
 @include media-breakpoint-up(md) {
-  [data-aside-collapsed] {
+  .main {
+    position: relative;
+    background: var(--body-bg);
+    border-left: 1px solid var(--border-color);
+    z-index: 1;
+  }
+
+  [data-aside-collapsed]:has(.aside) {
     .main {
-      background: var(--body-bg);
-      // The aside's own border is under the content now, so the rail needs an edge of its own. A shadow rather
-      // than a border, which would be a pixel of layout.
-      box-shadow: -1px 0 0 var(--border-color);
       margin-inline-start: calc(var(--aside-collapsed-width) - var(--aside-width));
-      position: relative;
       transition: translate .2s;
-      z-index: 1;
     }
 
     // `--aside-open` is the state everything inside the aside reads — a label here, the anakin logo there —
