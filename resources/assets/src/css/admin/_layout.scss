@@ -14,16 +14,6 @@
   flex: 1;
   min-height: 100dvh;
   max-width: 100%;
-
-  // The drawer pushes the content and nothing else, the way the rail does from `md` up — `.wrap` used to carry
-  // this, which took the navbar with it and left the toggle that opened the drawer off the screen.
-  @include media-breakpoint-down(sm) {
-    transition: translate .2s;
-
-    [data-aside-open] & {
-      translate: var(--aside-width) 0;
-    }
-  }
 }
 
 .container {
