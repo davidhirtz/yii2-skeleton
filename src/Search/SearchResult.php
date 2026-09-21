@@ -23,7 +23,6 @@ final readonly class SearchResult
         public ?string $description = null,
         public ?string $url = null,
         public ?string $icon = null,
-        public ?string $badge = null,
         public ?DateTime $updated = null,
     ) {
     }

@@ -114,7 +114,6 @@ trait SearchableTrait
             route: $this->getAdminRoute(),
             description: $this->getSearchDescription(),
             icon: $this->getAdminIcon(),
-            badge: $this->getAdminType(),
             updated: $updated instanceof DateTime ? $updated : null,
         );
     }
