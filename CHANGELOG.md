@@ -17,7 +17,9 @@
   inside the aside moves for that**: `.main` is pulled back over it with a negative margin and paints on top,
   so the rail is the part of the menu the content does not cover, and opening it moves one margin on `.main` —
   the content is the width of the rail's share of the page and grows back into it, rather than sliding off to
-  the right, so nothing leaves the viewport. The mobile drawer is the exception and still translates, since
+  the right, so nothing leaves the viewport. The rail drops its `view-transition-name` for that state, since a
+  named region is painted above the root group `.main` sits in and the full-width menu would otherwise flash
+  over the content on every navigation. The mobile drawer is the exception and still translates, since
   shrinking a phone viewport by the drawer's width would reflow the page into a column too narrow to read. It
   opens on hover and
   **a click inside latches it open**, so the page that click navigates to still shows the menu and a submenu

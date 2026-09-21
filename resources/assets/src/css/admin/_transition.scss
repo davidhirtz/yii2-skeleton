@@ -22,6 +22,14 @@
   view-transition-name: aside;
 }
 
+// A named region is lifted out of the root group for the length of the transition and painted above it, and
+// `.main` — which covers everything of a collapsed aside but the rail — is *inside* that root group, its
+// `z-index` with it. So the full-width menu flashed over the content on every navigation. A closed rail has
+// nothing to morph anyway: it is the same on both pages but for its active item, which the cut renders.
+[data-aside-collapsed]:not([data-aside-open]) .aside:not(:hover, :focus-within) {
+  view-transition-name: none;
+}
+
 .breadcrumbs {
   view-transition-name: breadcrumbs;
 }
