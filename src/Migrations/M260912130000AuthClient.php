@@ -21,6 +21,11 @@ class M260912130000AuthClient extends Migration
 
     public function safeUp(): void
     {
+        // the table is gone on a fresh install, which is what this migration is for.
+        if (!$this->hasTable(self::TABLE_NAME)) {
+            return;
+        }
+
         $this->deleteTrails();
         $this->dropTable(self::TABLE_NAME);
     }

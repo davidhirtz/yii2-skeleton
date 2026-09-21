@@ -19,7 +19,10 @@ class M260913180000PasswordScheme extends Migration
 
     public function safeUp(): void
     {
-        $this->renameColumn(User::tableName(), 'password_salt', 'password_scheme');
+        // The rename has already happened on a fresh install, where the baseline carries the v3 name.
+        if ($this->hasColumn(User::tableName(), 'password_salt')) {
+            $this->renameColumn(User::tableName(), 'password_salt', 'password_scheme');
+        }
         $this->invalidateLegacyPasswords();
     }
 

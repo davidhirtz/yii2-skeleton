@@ -17,7 +17,7 @@ class M260920100000ColorScheme extends Migration
 
     public function safeUp(): void
     {
-        $this->addColumn(
+        $this->addColumnIfMissing(
             User::tableName(),
             'color_scheme',
             (string)$this->string(5)->after('show_hints')

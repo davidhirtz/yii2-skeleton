@@ -23,17 +23,19 @@ class M260914190000ManagerRole extends Migration
     {
         $auth = $this->getAuthManager();
 
-        $manager = $auth->createRole(User::AUTH_ROLE_MANAGER);
-        $auth->add($manager);
+        // A fresh install has the role from the baseline already.
+        $manager = $auth->getRole(User::AUTH_ROLE_MANAGER);
+
+        if ($manager === null) {
+            $manager = $auth->createRole(User::AUTH_ROLE_MANAGER);
+            $auth->add($manager);
+        }
 
         $admin = $auth->getRole(User::AUTH_ROLE_ADMIN);
 
         foreach ($auth->getPermissions() as $permission) {
-            $auth->addChild($manager, $permission);
-
-            if (!$auth->hasChild($admin, $permission)) {
-                $auth->addChild($admin, $permission);
-            }
+            $this->addChildIfMissing($manager, $permission);
+            $this->addChildIfMissing($admin, $permission);
         }
 
         $auth->invalidateCache();

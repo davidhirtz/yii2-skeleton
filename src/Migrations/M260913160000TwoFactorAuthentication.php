@@ -18,9 +18,14 @@ class M260913160000TwoFactorAuthentication extends Migration
 
     public function safeUp(): void
     {
+        // the v2 column is already `two_factor_secret` on a fresh install.
+        if (!$this->hasColumn(User::tableName(), 'google_2fa_secret')) {
+            return;
+        }
+
         $this->alterColumn(User::tableName(), 'google_2fa_secret', (string)$this->string()->null());
 
-        $this->addColumn(
+        $this->addColumnIfMissing(
             User::tableName(),
             'google_2fa_recovery_codes',
             (string)$this->json()->null()->after('google_2fa_secret')

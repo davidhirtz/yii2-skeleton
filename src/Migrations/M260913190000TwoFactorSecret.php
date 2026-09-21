@@ -17,7 +17,10 @@ class M260913190000TwoFactorSecret extends Migration
 
     public function safeUp(): void
     {
-        $this->renameColumn(User::tableName(), 'google_2fa_secret', 'two_factor_secret');
+        // The rename has already happened on a fresh install, where the baseline carries the v3 name.
+        if ($this->hasColumn(User::tableName(), 'google_2fa_secret')) {
+            $this->renameColumn(User::tableName(), 'google_2fa_secret', 'two_factor_secret');
+        }
     }
 
     public function safeDown(): void

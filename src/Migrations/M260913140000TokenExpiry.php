@@ -17,13 +17,18 @@ class M260913140000TokenExpiry extends Migration
 
     public function safeUp(): void
     {
-        $this->addColumn(
+        // a fresh install has the token columns from the baseline and no v2 `verification_token` to sit after.
+        if (!$this->hasColumn(User::tableName(), 'verification_token')) {
+            return;
+        }
+
+        $this->addColumnIfMissing(
             User::tableName(),
             'verification_token_created_at',
             (string)$this->dateTime()->null()->after('verification_token')
         );
 
-        $this->addColumn(
+        $this->addColumnIfMissing(
             User::tableName(),
             'password_reset_token_created_at',
             (string)$this->dateTime()->null()->after('password_reset_token')

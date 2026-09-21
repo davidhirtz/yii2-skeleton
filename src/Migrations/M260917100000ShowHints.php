@@ -17,7 +17,7 @@ class M260917100000ShowHints extends Migration
 
     public function safeUp(): void
     {
-        $this->addColumn(
+        $this->addColumnIfMissing(
             User::tableName(),
             'show_hints',
             (string)$this->boolean()->unsigned()->notNull()->defaultValue(1)->after('timezone')

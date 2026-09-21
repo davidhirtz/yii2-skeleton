@@ -28,6 +28,11 @@ class M260913170000UserToken extends Migration
 
     public function safeUp(): void
     {
+        // A fresh install has the user_token table from the baseline already.
+        if ($this->hasTable(UserToken::tableName())) {
+            return;
+        }
+
         $this->createTable(UserToken::tableName(), [
             'id' => $this->bigPrimaryKey()->unsigned(),
             'user_id' => $this->integer()->unsigned()->notNull(),

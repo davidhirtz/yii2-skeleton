@@ -24,6 +24,11 @@ class M260913120000Search extends Migration
 
     public function safeUp(): void
     {
+        // A fresh install has the search table from the baseline already.
+        if ($this->hasTable(Search::tableName())) {
+            return;
+        }
+
         $this->createTable(Search::tableName(), [
             'id' => $this->primaryKey()->unsigned(),
             'model_class' => $this->string()->notNull(),

@@ -19,6 +19,11 @@ class M260910100000Translation extends Migration
 
     public function safeUp(): void
     {
+        // A fresh install has the translation table from the baseline already.
+        if ($this->hasTable(Translation::tableName())) {
+            return;
+        }
+
         $this->createTable(Translation::tableName(), [
             'id' => $this->primaryKey()->unsigned(),
             'model' => $this->string()->notNull(),

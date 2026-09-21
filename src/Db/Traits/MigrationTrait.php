@@ -36,16 +36,39 @@ trait MigrationTrait
             ?? throw new RuntimeException("Auth item \"$name\" does not exist.");
     }
 
-    protected function addPermission(string $name, Message $description, string ...$parents): Permission
+    /**
+     * Adds the permission if it is not there, and hangs it under each parent it is not already under.
+     *
+     * `DbManager::add()` and `addChild()` are plain inserts, so both are a duplicate-key error on a second
+     * run — and after the squash there always is one: a fresh install gets these items from the baseline and
+     * then runs the migration that created them.
+     */
+    protected function addChildIfMissing(Item $parent, Item $child): void
     {
         $auth = $this->getAuthManager();
 
-        $permission = $auth->createPermission($name);
-        $permission->description = $description->toJson();
-        $auth->add($permission);
+        if (!$auth->hasChild($parent, $child)) {
+            $auth->addChild($parent, $child);
+        }
+    }
+
+    protected function addPermission(string $name, Message $description, string ...$parents): Permission
+    {
+        $auth = $this->getAuthManager();
+        $permission = $auth->getPermission($name);
+
+        if ($permission === null) {
+            $permission = $auth->createPermission($name);
+            $permission->description = $description->toJson();
+            $auth->add($permission);
+        }
 
         foreach ($parents as $parent) {
-            $auth->addChild($this->getAuthItem($parent), $permission);
+            $item = $this->getAuthItem($parent);
+
+            if (!$auth->hasChild($item, $permission)) {
+                $auth->addChild($item, $permission);
+            }
         }
 
         $auth->invalidateCache();
@@ -167,7 +190,7 @@ trait MigrationTrait
             $type->after($after);
         }
 
-        $this->addColumn($table, $column, (string)$type);
+        $this->addColumnIfMissing($table, $column, (string)$type);
     }
 
     protected function dropCustomAttributesColumn(string $table, string $column = 'custom_attributes'): void
@@ -193,6 +216,42 @@ trait MigrationTrait
         $columns = array_values(array_diff($columns, [$column]));
 
         $this->moveCustomAttributesColumn($table, (string)end($columns), $column);
+    }
+
+    /**
+     * The three mirrors of the `…IfExists` guards below, and they exist for one reason: after the squash a
+     * migration runs against **two** starting schemas. An upgraded project brings the v2 shape, and a fresh
+     * install brings a baseline that already holds the whole v3 schema — so every kept migration has to add
+     * what is missing and skip what is there, on both paths.
+     *
+     * `Db\MigrationIdempotencyTest` re-applies every kept migration against the finished schema and fails on
+     * one that is not safe to run twice, so this is checked rather than remembered.
+     */
+    protected function addColumnIfMissing(string $table, string $column, string $type): void
+    {
+        if (!$this->hasColumn($table, $column)) {
+            $this->addColumn($table, $column, $type);
+        }
+    }
+
+    /**
+     * @param array<string, string> $columns
+     */
+    protected function createTableIfMissing(string $table, array $columns, ?string $options = null): void
+    {
+        if ($this->getDb()->getSchema()->getTableSchema($table, true) === null) {
+            $this->createTable($table, $columns, $options ?? $this->getTableOptions());
+        }
+    }
+
+    /**
+     * @param list<string>|string $columns
+     */
+    protected function createIndexIfMissing(string $name, string $table, array|string $columns, bool $unique = false): void
+    {
+        if (!$this->hasIndex($table, $name)) {
+            $this->createIndex($name, $table, $columns, $unique);
+        }
     }
 
     protected function dropColumnIfExists(string $table, string $column): void
@@ -587,6 +646,11 @@ trait MigrationTrait
     {
         return $this->getDb()->getSchema()->getTableSchema($table, true)
             ?? throw new RuntimeException("Table \"$table\" does not exist.");
+    }
+
+    protected function hasTable(string $table): bool
+    {
+        return $this->getDb()->getSchema()->getTableSchema($table, true) !== null;
     }
 
     protected function hasColumn(string $table, string $column): bool
