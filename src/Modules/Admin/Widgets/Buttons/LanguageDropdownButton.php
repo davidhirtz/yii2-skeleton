@@ -48,16 +48,16 @@ class LanguageDropdownButton extends Widget
             ->popover(fn (Div $tag) => $tag->attribute('id', 'i18n'));
 
         foreach ($languages as $language) {
-            $dropdown->addItem($this->getLanguageButton($language, $i18n->getLabel($language)));
+            $dropdown->addItem($this->getLanguageButton($language, $i18n->getLabel($language), $current));
         }
 
         return $dropdown;
     }
 
-    protected function getLanguageButton(string $language, string $label): Stringable
+    protected function getLanguageButton(string $language, string $label, ?string $current): Stringable
     {
         return Button::make()
-            ->addClass('dropdown-option i18n-dropdown-option')
+            ->addClass('dropdown-option i18n-dropdown-option', $language === $current ? 'selected' : null)
             ->type('button')
             ->icon(Icon::ICON_COLLECTION_FLAG . ':' . $language)
             ->text($label)
