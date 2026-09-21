@@ -8,33 +8,12 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
-use Override;
 use Yii;
 use yii\web\Cookie;
 
 class ColorSchemeTest extends TestCase
 {
     use UserFixtureTrait;
-
-    /**
-     * @var array<string, mixed>
-     */
-    private array $cookies = [];
-
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->cookies = $_COOKIE;
-    }
-
-    #[Override]
-    protected function tearDown(): void
-    {
-        // `$_COOKIE` is process-wide and outlives the application the test built.
-        $_COOKIE = $this->cookies;
-        parent::tearDown();
-    }
 
     public function testWithoutACookieOrAnAccountTheBrowserDecides(): void
     {

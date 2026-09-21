@@ -8,30 +8,10 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\ColorSchemeDropdownButton;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
-use Override;
 
 class ColorSchemeDropdownButtonTest extends TestCase
 {
     use UserFixtureTrait;
-
-    /**
-     * @var array<string, mixed>
-     */
-    private array $cookies = [];
-
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->cookies = $_COOKIE;
-    }
-
-    #[Override]
-    protected function tearDown(): void
-    {
-        $_COOKIE = $this->cookies;
-        parent::tearDown();
-    }
 
     public function testTheDropdownOffersAllThreeStates(): void
     {

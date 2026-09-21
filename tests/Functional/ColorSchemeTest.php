@@ -9,32 +9,12 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
-use Override;
 use Symfony\Component\BrowserKit\Cookie;
 
 class ColorSchemeTest extends TestCase
 {
     use FunctionalTestTrait;
     use UserFixtureTrait;
-
-    /**
-     * @var array<string, mixed>
-     */
-    private array $cookies = [];
-
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->cookies = $_COOKIE;
-    }
-
-    #[Override]
-    protected function tearDown(): void
-    {
-        $_COOKIE = $this->cookies;
-        parent::tearDown();
-    }
 
     /**
      * No attribute is the third state: nothing pinned, so `prefers-color-scheme` decides in the stylesheet. The

@@ -20,23 +20,25 @@ use yii\base\UserException;
 class Browser extends AbstractBrowser
 {
     /**
-     * `$_COOKIE`, `$_GET`, `$_POST` and `$_REQUEST` are replaced per request and `$_SERVER` has to be too, or a
-     * header one request sends — an `HTTP_HX_REQUEST` — is sent by every request after it, in this browser and
-     * in the next one the test opens. The snapshot is process-wide because `$_SERVER` is: what it holds before
-     * the first request is PHPUnit's own environment, which no request may change.
-     *
-     * Named for the superglobal rather than after {@see AbstractBrowser::$server}, the browser's own default
-     * bag, which a property of that name would redeclare as static — a fatal at class load that PHPUnit reports
-     * only as "Premature end of PHP process".
-     *
-     * @var array<string, mixed>|null
+     * A request replaces `$_COOKIE`, `$_GET`, `$_POST` and `$_REQUEST` and is merged into `$_SERVER`, and none of
+     * that may outlive it: an `HTTP_HX_REQUEST` would otherwise be sent by every request after it, in this browser
+     * and in the next one the test opens (#187), and the cookies and query string of a test's last request would
+     * be read by the rest of it — which
+     * {@see \Hirtz\Skeleton\Modules\Admin\Module::getCookieColorScheme()} does, having to (#202).
      */
-    private static ?array $superglobal = null;
-
     protected function doRequest(object $request): Response
     {
-        $_SERVER = self::$superglobal ??= $_SERVER;
+        $superglobals = [$_SERVER, $_COOKIE, $_GET, $_POST, $_REQUEST];
 
+        try {
+            return $this->sendRequest($request);
+        } finally {
+            [$_SERVER, $_COOKIE, $_GET, $_POST, $_REQUEST] = $superglobals;
+        }
+    }
+
+    private function sendRequest(Request $request): Response
+    {
         $content = $request->getContent();
         $uri = $request->getUri();
         $path = parse_url($uri, PHP_URL_PATH);

@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- **`Test\Browser` puts the superglobals back when a request ends** (monorepo issue #202) — `$_SERVER`,
+  `$_COOKIE`, `$_GET`, `$_POST` and `$_REQUEST`, all of which it writes. They are process-wide while the
+  application is rebuilt per test, so whatever a test's last request left in them was read by the rest of that
+  test — which matters now that `Modules\Admin\Module::getCookieColorScheme()` reads `$_COOKIE` directly,
+  having to. The snapshot is taken per request rather than being the process-wide one #187 introduced, so a
+  value the test itself put in `$_SERVER` survives its own requests instead of being reset to whatever the first
+  request in the process happened to find.
+
 - **The aside is left out of the document when it holds nothing, and can be collapsed to its icons.**
   `Modules\Admin\Widgets\Navs\AsideMenu` renders both menus in `configure()` and answers `isVisible()` from
   what they came to, so a guest gets no `<aside>` at all — the `hidden-empty` class it carried only hid an empty
