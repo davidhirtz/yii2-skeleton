@@ -7,7 +7,8 @@ const OPEN_ATTRIBUTE = 'data-aside-open';
 /**
  * Collapsing the aside re-renders nothing, so nothing here is an htmx request: the attribute sits on `<html>`,
  * which no swap of `#wrap` touches, and the cookie is what the layout reads back on the next full load. It is
- * host-only and carries the `Secure` flag the server rendered, for the reason `includes/colorScheme.ts` gives.
+ * host-only and carries the `Secure` flag the server rendered, rather than deriving it from the protocol: a host
+ * answering on both would otherwise be left with a twin no plain-http response can overwrite.
  */
 export const asidePin = ($btn: HTMLButtonElement) => {
     const secure = $btn.hasAttribute('data-aside-pin-secure') ? '; secure' : '';

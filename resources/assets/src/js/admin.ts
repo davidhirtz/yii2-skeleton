@@ -11,7 +11,6 @@ import {asidePin} from './includes/aside';
 import autocomplete from './includes/autocomplete';
 import busy from './includes/busy';
 import collapse from './includes/collapse';
-import colorScheme from './includes/colorScheme';
 import dropdown from './includes/dropdown';
 import filter from './includes/filter';
 import {closeModal, createModal} from './includes/modals';
@@ -38,7 +37,6 @@ onLoad(($container) => {
     queryAll('[data-autocomplete]', autocomplete);
     queryAll('[data-busy]', busy);
     queryAll('[data-collapse]', collapse);
-    queryAll('[data-color-scheme]', colorScheme);
     queryAll('[popovertarget]', dropdown);
     queryAll('[data-filter]', filter);
     queryAll('[data-modal]', closeModal);

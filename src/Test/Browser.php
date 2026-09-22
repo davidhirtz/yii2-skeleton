@@ -24,7 +24,7 @@ class Browser extends AbstractBrowser
      * that may outlive it: an `HTTP_HX_REQUEST` would otherwise be sent by every request after it, in this browser
      * and in the next one the test opens (#187), and the cookies and query string of a test's last request would
      * be read by the rest of it — which
-     * {@see \Hirtz\Skeleton\Modules\Admin\Module::getCookieColorScheme()} does, having to (#202).
+     * {@see \Hirtz\Skeleton\Modules\Admin\Module::isAsideCollapsed()} does, having to (#202).
      */
     protected function doRequest(object $request): Response
     {

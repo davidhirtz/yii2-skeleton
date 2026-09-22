@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- **The colour scheme is picked in the account settings and nowhere else** (monorepo issue #210).
+  `Modules\Admin\Widgets\Buttons\ColorSchemeDropdownButton` is gone from the navbar and from the bundle, with
+  `includes/colorScheme.ts` and the `admin/account/color-scheme` route it posted to. The device override goes with
+  it: `Modules\Admin\Module::$colorSchemeCookieName`, `$colorSchemeCookieSecure`, `getCookieColorScheme()`,
+  `getColorSchemeCookie()` and `removeColorSchemeCookie()` are removed, and `getColorScheme()` now answers the
+  account's `color_scheme` column alone — so a guest follows `prefers-color-scheme` and a stale `_theme` cookie is
+  ignored. The account form is unchanged and still asks for a full document load when the save changed the scheme.
+
 - **The pin moved out of the aside's header and into its main menu.**
   `Modules\Admin\Widgets\Buttons\AsidePinButton` is gone; `Modules\Admin\Widgets\Navs\AsidePinNavItem` is a
   `Widgets\Navs\NavItem` `MainMenu` adds last, above `SystemNavItem`'s order so a bundle adding to the menu

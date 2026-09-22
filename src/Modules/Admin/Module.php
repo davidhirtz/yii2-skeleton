@@ -55,19 +55,6 @@ class Module extends \Hirtz\Skeleton\Base\Module
     public string $languageSessionKey = 'language';
 
     /**
-     * @var string the cookie holding the colour scheme picked on this device. It is written by
-     * `includes/colorScheme.ts` and therefore carries no signature, which is what {@see getCookieColorScheme()}
-     * is about.
-     */
-    public string $colorSchemeCookieName = '_theme';
-
-    /**
-     * @var bool|null whether the colour scheme cookie is `Secure`, `null` derives it from the request. Pin it on a
-     * host that answers on both schemes, for the reason {@see \Hirtz\Skeleton\Web\User::$cookieSecure} gives.
-     */
-    public ?bool $colorSchemeCookieSecure = null;
-
-    /**
      * @var string the cookie holding whether the aside is collapsed to its icons on this device. Written by
      * `includes/aside.ts`, so it carries no signature — see {@see isAsideCollapsed()}.
      */
@@ -210,58 +197,25 @@ class Module extends \Hirtz\Skeleton\Base\Module
     }
 
     /**
-     * The scheme this request renders in: the device's cookie, the account's column, or `null` for the browser's
-     * own `prefers-color-scheme`, which no request can answer — `Sec-CH-Prefers-Color-Scheme` is Chromium-only
-     * and needs an `Accept-CH` round trip first, so the layout emits no attribute and the CSS decides.
+     * The scheme this request renders in: the account's column, or `null` for the browser's own
+     * `prefers-color-scheme`, which no request can answer — `Sec-CH-Prefers-Color-Scheme` is Chromium-only and
+     * needs an `Accept-CH` round trip first, so the layout emits no attribute and the CSS decides.
      */
     public function getColorScheme(): ?string
     {
-        return $this->getCookieColorScheme() ?? WebUser::current()?->getIdentity()?->getColorScheme();
+        return WebUser::current()?->getIdentity()?->getColorScheme();
     }
 
     /**
-     * Read straight out of `$_COOKIE`, because {@see Request::getCookies()} cannot see this one at all: with
-     * `enableCookieValidation` on, {@see \yii\web\Request::loadCookies()} HMAC-validates every entry and
-     * silently skips the ones that do not verify — which a cookie `document.cookie` wrote never does. The
-     * allow-list is complete validation here, the value being one of two literals.
-     */
-    public function getCookieColorScheme(): ?string
-    {
-        $scheme = $_COOKIE[$this->colorSchemeCookieName] ?? null;
-        return is_string($scheme) && in_array($scheme, User::COLOR_SCHEMES, true) ? $scheme : null;
-    }
-
-    /**
-     * Whether the aside renders collapsed to its icons, read straight out of `$_COOKIE` for the reason
-     * {@see getCookieColorScheme()} gives. The value is a single literal, so the comparison is the validation.
+     * Whether the aside renders collapsed to its icons, read straight out of `$_COOKIE`, because
+     * {@see Request::getCookies()} cannot see this one at all: with `enableCookieValidation` on,
+     * {@see \yii\web\Request::loadCookies()} HMAC-validates every entry and silently skips the ones that do not
+     * verify — which a cookie `document.cookie` wrote never does. The value is a single literal, so the
+     * comparison is the validation.
      */
     public function isAsideCollapsed(): bool
     {
         return ($_COOKIE[$this->asideCookieName] ?? null) === self::ASIDE_COLLAPSED;
-    }
-
-    /**
-     * Built with `new` rather than through the container, for the reason {@see getColorSchemeCookie()} gives.
-     */
-    public function getAsideCookie(): Cookie
-    {
-        $cookie = new Cookie();
-        $cookie->name = $this->asideCookieName;
-        $cookie->httpOnly = false;
-        $cookie->sameSite = Cookie::SAME_SITE_LAX;
-        $cookie->secure = $this->asideCookieSecure
-            ?? Application::current()->getRequest()->getIsSecureConnection();
-
-        return $cookie;
-    }
-
-    /**
-     * Sent when the account form wrote the column, so the device's override does not outlive the setting it was
-     * overriding — {@see Controllers\AccountController::actionUpdate()} does the same for the session language.
-     */
-    public function removeColorSchemeCookie(): void
-    {
-        Application::current()->getResponse()->getCookies()->remove($this->getColorSchemeCookie());
     }
 
     /**
@@ -270,13 +224,13 @@ class Module extends \Hirtz\Skeleton\Base\Module
      * twin of a host-only cookie is the one `$_COOKIE` hides behind (monorepo issue #195). This one is host-only
      * at both ends — the script writes no domain either.
      */
-    public function getColorSchemeCookie(): Cookie
+    public function getAsideCookie(): Cookie
     {
         $cookie = new Cookie();
-        $cookie->name = $this->colorSchemeCookieName;
+        $cookie->name = $this->asideCookieName;
         $cookie->httpOnly = false;
         $cookie->sameSite = Cookie::SAME_SITE_LAX;
-        $cookie->secure = $this->colorSchemeCookieSecure
+        $cookie->secure = $this->asideCookieSecure
             ?? Application::current()->getRequest()->getIsSecureConnection();
 
         return $cookie;
