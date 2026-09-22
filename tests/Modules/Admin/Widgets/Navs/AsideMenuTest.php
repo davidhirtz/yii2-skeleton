@@ -86,9 +86,11 @@ class AsideMenuTest extends TestCase
 
         $aside = AsideMenu::make()->render();
 
-        self::assertSame(1, preg_match('~<button[^>]*class="nav-link nav-logout-link"[^>]*>~', $aside, $trigger));
-        self::assertStringContainsString('data-modal="#', $trigger[0]);
-        self::assertStringNotContainsString('hx-post', $trigger[0]);
+        preg_match('~<button[^>]*class="nav-link nav-logout-link"[^>]*>~', $aside, $trigger);
+        $link = $trigger[0] ?? self::fail('The aside renders no logout link.');
+
+        self::assertStringContainsString('data-modal="#', $link);
+        self::assertStringNotContainsString('hx-post', $link);
         self::assertMatchesRegularExpression(
             '~<dialog[^>]*class="modal">.*?hx-post="[^"]*/admin/account/logout".*?</dialog>~s',
             $aside,
