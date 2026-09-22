@@ -135,8 +135,7 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertStringContainsString('name="FieldRecord[links][' . GroupField::TEMPLATE_INDEX . '][label]"', $content);
         self::assertStringContainsString('id="fieldrecord-links---index---label"', $content);
 
-        self::assertStringContainsString('data-group-add', $content);
-        self::assertStringNotContainsString('data-group-add hidden', $content);
+        self::assertStringNotContainsString('hidden', $this->findAddButton($content));
     }
 
     public function testAddButtonIsHiddenAtMaxCount(): void
@@ -153,7 +152,7 @@ class CustomAttributeFieldsTest extends TestCase
             ->rows(['links'])
             ->render();
 
-        self::assertStringContainsString('data-group-add hidden', $content);
+        self::assertStringContainsString('hidden', $this->findAddButton($content));
     }
 
     public function testMinCountRendersItsRowsUpFront(): void
@@ -203,6 +202,90 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertStringNotContainsString('data-group-template', $content);
         self::assertStringNotContainsString('data-group-add', $content);
         self::assertStringNotContainsString('data-group-remove', $content);
+    }
+
+    public function testTheGroupLabelsTheRowItRendersInto(): void
+    {
+        $content = $this->renderGroup(FieldRecord::TYPE_LINKS);
+
+        self::assertStringContainsString('<div class="form-group form-row" data-id="fieldrecord-links">', $content);
+
+        self::assertStringContainsString(
+            '<div class="form-label"><div id="fieldrecord-links" class="label">Links</div></div>',
+            $content
+        );
+
+        // A group labels every input it holds, so it names them through the container rather than as a `<label for>`.
+        self::assertStringContainsString('aria-labelledby="fieldrecord-links"', $content);
+        self::assertStringNotContainsString('for="fieldrecord-links"', $content);
+    }
+
+    public function testASingleFieldGroupDropsTheFieldsOwnLabel(): void
+    {
+        $content = $this->renderGroup(FieldRecord::TYPE_REQUIRED_LINKS);
+
+        self::assertStringContainsString('custom-attribute-group custom-attribute-group-single', $content);
+        self::assertStringContainsString('class="custom-attribute-group-item form-action"', $content);
+
+        self::assertStringContainsString('name="FieldRecord[links][0][label]"', $content);
+        self::assertStringNotContainsString('for="fieldrecord-links-0-label"', $content);
+    }
+
+    /**
+     * What decides the layout is the field count, not the attribute count: a translatable attribute is a field
+     * per configured language.
+     */
+    public function testATranslatedAttributeIsMoreThanOneField(): void
+    {
+        $content = $this->renderGroup(FieldRecord::TYPE_TRANSLATED_LINKS);
+
+        self::assertStringNotContainsString('custom-attribute-group-single', $content);
+        self::assertStringContainsString('for="fieldrecord-links---index---label-de"', $content);
+    }
+
+    public function testTheCountTheGroupIsBoundByIsShownBesideTheAddButton(): void
+    {
+        self::assertStringContainsString(
+            '<div class="form-hint">Between 1 and 3 entries</div>',
+            $this->renderGroup(FieldRecord::TYPE_BOUNDED_LINKS)
+        );
+
+        self::assertStringContainsString(
+            '<div class="form-hint">At most 2 entries</div>',
+            $this->renderGroup(FieldRecord::TYPE_LINKS)
+        );
+
+        self::assertStringContainsString(
+            '<div class="form-hint">At least 2 entries</div>',
+            $this->renderGroup(FieldRecord::TYPE_REQUIRED_LINKS)
+        );
+
+        $content = $this->renderGroup(FieldRecord::TYPE_TRANSLATED_LINKS);
+
+        self::assertStringContainsString('data-group-add', $content);
+        self::assertStringNotContainsString('form-hint', $content);
+    }
+
+    /**
+     * The button is icon-only, so it carries an `aria-label` and a tooltip between `data-group-add` and the
+     * `hidden` a maximum count adds — asserting on the two next to each other pinned the attribute order.
+     */
+    protected function findAddButton(string $content): string
+    {
+        preg_match('/<button[^>]*data-group-add[^>]*>/', $content, $matches);
+
+        return $matches[0] ?? self::fail('The group renders no add button.');
+    }
+
+    protected function renderGroup(int $type): string
+    {
+        $model = $this->createRecord();
+        $model->type = $type;
+
+        return Fieldset::make()
+            ->model($model)
+            ->rows(['links', 'meta'])
+            ->render();
     }
 
     /**
@@ -318,6 +401,8 @@ class FieldRecord extends ActiveRecord implements
     final public const int TYPE_LINKS = 2;
     final public const int TYPE_META = 3;
     final public const int TYPE_REQUIRED_LINKS = 4;
+    final public const int TYPE_BOUNDED_LINKS = 5;
+    final public const int TYPE_TRANSLATED_LINKS = 6;
 
     #[Override]
     public function getTypes(): array
@@ -364,6 +449,22 @@ class FieldRecord extends ActiveRecord implements
                         ->multiple()
                         ->minCount(2)
                         ->attributes([TextCustomAttribute::make('label')]),
+                ]),
+            Type::make(self::TYPE_BOUNDED_LINKS)
+                ->name('Bounded links')
+                ->customAttributes(fn (): array => [
+                    GroupCustomAttribute::make('links')
+                        ->multiple()
+                        ->minCount(1)
+                        ->maxCount(3)
+                        ->attributes([TextCustomAttribute::make('label')]),
+                ]),
+            Type::make(self::TYPE_TRANSLATED_LINKS)
+                ->name('Translated links')
+                ->customAttributes(fn (): array => [
+                    GroupCustomAttribute::make('links')
+                        ->multiple()
+                        ->attributes([TextCustomAttribute::make('label')->translatable()]),
                 ]),
         ];
     }

@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hirtz\Skeleton\Widgets\Grids\Columns\Buttons;
+namespace Hirtz\Skeleton\Widgets\Buttons;
 
-use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 
-class DraggableSortGridButton extends Widget
+class DraggableSortButton extends Widget
 {
     use IconTrait;
 

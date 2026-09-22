@@ -1,5 +1,22 @@
 ## 3.0.0 (in development)
 
+- **A custom attribute group renders as an ordinary form row, and a group of one field as a single line.**
+  `Widgets\Forms\Fields\GroupField` no longer renders a `<fieldset>` with a `<legend>` of its own: the group's
+  label sits in the row's `form-label` and everything it holds in the `form-content`, like every other field, and
+  the container names its inputs through `role="group"` plus `aria-labelledby` rather than a `<label for>` that
+  matches none of them. The add button moved below the rows on the right and is icon-only (`plus`), so it stands
+  at the size of the row buttons above it, with the count the group is bound by beside it — the new
+  `CUSTOM_ATTRIBUTE_HINT_MIN_COUNT` / `_MAX_COUNT` / `_MIN_MAX_COUNT` keys. It and the remove button carry their
+  label as an `aria-label` and a tooltip. A group whose item
+  renders exactly one field — the field count, so a translatable attribute is not one — drops that field's own
+  label, the group's naming it already, and lays the input out beside the row's buttons through `.form-action`.
+  The item's buttons moved from `.custom-attribute-group-item-header` into `.custom-attribute-group-item-buttons`,
+  and `.custom-attribute-group-container` is gone: the container is `.custom-attribute-group` itself, carrying
+  `.custom-attribute-group-single` for the one-field layout.
+
+- **`Widgets\Grids\Columns\Buttons\DraggableSortGridButton` is `Widgets\Buttons\DraggableSortButton`.** It is
+  not a grid column button — the custom attribute group rows use it too — so it sits with the other buttons.
+
 - **A duplicate is named after its source** (monorepo issue #219).
   `Models\Actions\DuplicateActiveRecord::prefixDuplicateName()` renders the new `COMMON_DUPLICATE_NAME` key
   over the duplicate's name — per language, in that language, for a translated attribute — and truncates the

@@ -3,28 +3,55 @@
   gap: 1rem;
 }
 
-.custom-attribute-group-container {
-  display: grid;
-  gap: 1rem;
-  justify-items: start;
-}
-
 .custom-attribute-group-items {
   display: grid;
   gap: 1rem;
-  width: 100%;
 }
 
-.custom-attribute-group-item {
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius, .25rem);
-  display: grid;
-  gap: 1rem;
-  padding: 1rem;
-}
-
-.custom-attribute-group-item-header {
+.custom-attribute-group-item-buttons {
   display: flex;
   gap: .5rem;
   justify-content: flex-end;
+}
+
+// The add button sits below the rows on the right, the count the group is bound by beside it.
+.custom-attribute-group-footer {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+// A group of more than one field boxes each of its rows and keeps the buttons in the box's top right corner.
+.custom-attribute-group:not(.custom-attribute-group-single) {
+  .custom-attribute-group-item {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius, .25rem);
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+  }
+}
+
+// A group rendering a single field lays it out beside the row's buttons and drops its label, the group's own
+// naming it already. `.form-action` on the item is the flex row; these keep the field stretching inside it.
+.custom-attribute-group-single {
+  .custom-attribute-group-item {
+    gap: .5rem;
+  }
+
+  // `.fieldset` carries a `display` of its own, so only the flex sizing is set here.
+  .fieldset {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .form-row {
+    grid-template-columns: auto;
+    max-width: none;
+  }
+
+  .form-content {
+    grid-column-start: auto;
+  }
 }

@@ -6,14 +6,14 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
 use Hirtz\Skeleton\Assets\CustomAttributesAssetBundle;
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Div;
-use Hirtz\Skeleton\Html\Legend;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
 use Hirtz\Skeleton\Models\CustomAttributes\GroupCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Buttons\DraggableSortButton;
 use Hirtz\Skeleton\Widgets\Forms\Fieldset;
-use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DraggableSortGridButton;
 use Override;
 use Stringable;
 use Yii;
@@ -29,24 +29,31 @@ class GroupField extends Field
 
     protected GroupCustomAttribute $group;
 
+    /**
+     * Resolved in {@see getInput()}, which is the first point the owner is known to hold custom attributes.
+     */
+    protected bool $single = false;
+
     public function group(GroupCustomAttribute $group): static
     {
         $this->group = $group;
         return $this;
     }
 
+    /**
+     * A group labels several inputs at once, so its own label is not a `<label for>` — the container names it
+     * through `aria-labelledby` instead.
+     */
     #[Override]
-    protected function renderContent(): string|Stringable
+    protected function getLabel(): ?Tag
     {
-        $legend = Legend::make()
-            ->addClass('form-label')
-            ->text($this->label);
-
-        return \Hirtz\Skeleton\Html\Fieldset::make()
-            ->attributes($this->rowAttributes)
-            ->addClass('form-group custom-attribute-group')
-            ->legend($legend)
-            ->content($this->getError(), $this->getHint(), $this->getInput());
+        return $this->label
+            ? Div::make()
+                ->attributes($this->labelAttributes)
+                ->addClass('label')
+                ->attribute('id', $this->getId())
+                ->text($this->label)
+            : null;
     }
 
     #[Override]
@@ -59,14 +66,21 @@ class GroupField extends Field
         }
 
         $items = $this->getItems($owner);
+        $this->single = $this->isSingleField($items[0] ?? $this->group->createItem($owner, '0'));
 
         $container = Div::make()
-            ->addClass('custom-attribute-group-container')
+            ->addClass('custom-attribute-group')
+            ->attribute('role', 'group')
+            ->attribute('aria-labelledby', $this->label ? $this->getId() : null)
             ->attribute('data-group', $this->property)
             ->content(Div::make()
                 ->addClass('custom-attribute-group-items')
                 ->attribute('data-group-items', true)
                 ->content(...array_map($this->getItem(...), $items)));
+
+        if ($this->single) {
+            $container->addClass('custom-attribute-group-single');
+        }
 
         if (!$this->group->isMultiple()) {
             return $container;
@@ -83,7 +97,24 @@ class GroupField extends Field
 
         $this->view->registerAssetBundle(CustomAttributesAssetBundle::class);
 
-        return $container->addContent($this->getTemplate($owner), $this->getAddButton(count($items)));
+        return $container->addContent($this->getTemplate($owner), $this->getFooter(count($items)));
+    }
+
+    /**
+     * What decides the layout is how many fields an item *renders*, not how many attributes the group declares: a
+     * translatable one is a field per configured language.
+     */
+    protected function isSingleField(CustomAttributeGroupItem $item): bool
+    {
+        $count = 0;
+
+        foreach ($item->getCustomAttributeDefinitions() as $definition) {
+            if ($definition->isVisible($item)) {
+                $count += count($definition->getAttributeNames($item));
+            }
+        }
+
+        return $count === 1;
     }
 
     /**
@@ -111,29 +142,58 @@ class GroupField extends Field
             ->form($this->form)
             ->rows(array_keys($item->getCustomAttributeDefinitions()));
 
-        return \Hirtz\Skeleton\Html\Fieldset::make()
+        if ($this->single) {
+            // The group's own label names the field, so the field drops its own. A `prepare()` closure runs after
+            // `Fieldset::configure()` resolved the rows into fields and before any of them configures itself,
+            // which is what keeps the empty label — `Field::configure()` only fills in a `null` one.
+            $fieldset->prepare(static function (Fieldset $fieldset): void {
+                foreach ($fieldset->getRows() as $row) {
+                    if ($row instanceof Field) {
+                        $row->label('');
+                    }
+                }
+            });
+        }
+
+        $content = $this->single
+            ? [$fieldset, $this->getItemButtons()]
+            : [$this->getItemButtons(), $fieldset];
+
+        $element = \Hirtz\Skeleton\Html\Fieldset::make()
             ->addClass('custom-attribute-group-item')
             ->attribute('data-group-item', true)
-            ->content($this->getItemHeader(), $fieldset);
+            ->content(...$content);
+
+        return $this->single ? $element->addClass('form-action') : $element;
     }
 
-    protected function getItemHeader(): ?Stringable
+    protected function getItemButtons(): ?Stringable
     {
         if (!$this->group->isMultiple()) {
             return null;
         }
 
         return Div::make()
-            ->addClass('custom-attribute-group-item-header')
+            ->addClass('custom-attribute-group-item-buttons')
             ->content(
-                $this->group->isSortable() ? DraggableSortGridButton::make() : null,
-                Button::make()
-                    ->secondary()
-                    ->icon('trash')
-                    ->type('button')
-                    ->attribute('data-group-remove', true)
-                    ->attribute('aria-label', Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_REMOVE')),
+                $this->group->isSortable() ? DraggableSortButton::make() : null,
+                $this->getRemoveButton(),
             );
+    }
+
+    protected function getRemoveButton(): Button
+    {
+        $label = Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_REMOVE');
+
+        return Button::make()
+            ->secondary()
+            ->icon('trash')
+            ->type('button')
+            ->attribute('data-group-remove', true)
+            // `includes/tooltips.ts` moves the `title` into an element of its own and removes the attribute, so
+            // the button would otherwise be left without an accessible name.
+            ->attribute('aria-label', $label)
+            ->tooltip($label);
     }
 
     protected function getTemplate(Model $owner): string
@@ -143,15 +203,50 @@ class GroupField extends Field
         return Html::tag('template', (string)$this->getItem($item), ['data-group-template' => true]);
     }
 
+    protected function getFooter(int $count): Stringable
+    {
+        return Div::make()
+            ->addClass('custom-attribute-group-footer')
+            ->content($this->getCountHint(), $this->getAddButton($count));
+    }
+
+    /**
+     * One `Yii::t()` call per key, repetition included: `yii message` reads the literal arguments of a call site
+     * and evaluates nothing, so a key reached through a ternary is deleted on the next regeneration.
+     */
+    protected function getCountHint(): ?Stringable
+    {
+        $min = $this->group->getMinCount();
+        $max = $this->group->getMaxCount();
+
+        $text = match (true) {
+            $min > 0 && $max !== null => Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_HINT_MIN_MAX_COUNT', [
+                'min' => $min,
+                'max' => $max,
+            ]),
+            $min > 0 => Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_HINT_MIN_COUNT', ['min' => $min]),
+            $max !== null => Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_HINT_MAX_COUNT', ['max' => $max]),
+            default => null,
+        };
+
+        return $text ? Div::make()->addClass('form-hint')->text($text) : null;
+    }
+
+    /**
+     * Icon-only, so it sits at the size of the row buttons above it rather than towering over them.
+     */
     protected function getAddButton(int $count): Stringable
     {
         $max = $this->group->getMaxCount();
+        $label = Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_ADD');
 
         $button = Button::make()
             ->secondary()
-            ->text(Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_ADD'))
+            ->icon('plus')
             ->type('button')
-            ->attribute('data-group-add', true);
+            ->attribute('data-group-add', true)
+            ->attribute('aria-label', $label)
+            ->tooltip($label);
 
         return $max !== null && $count >= $max ? $button->attribute('hidden', true) : $button;
     }
