@@ -1,3 +1,17 @@
+// A group is a set of rows of its own, so it is spaced off the plain fields around it — the form's own gap is
+// what the first and last one already have.
+.custom-attribute-group-fieldset {
+  margin-block: 1rem;
+
+  &:first-child {
+    margin-block-start: 0;
+  }
+
+  &:last-child {
+    margin-block-end: 0;
+  }
+}
+
 .custom-attribute-group {
   display: grid;
   gap: 1rem;

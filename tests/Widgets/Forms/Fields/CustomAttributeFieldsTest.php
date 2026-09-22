@@ -224,7 +224,10 @@ class CustomAttributeFieldsTest extends TestCase
             $content
         );
 
-        self::assertStringContainsString('aria-labelledby="fieldrecord-links"', $content);
+        self::assertStringContainsString(
+            '<fieldset class="custom-attribute-group-fieldset" aria-labelledby="fieldrecord-links">',
+            $content
+        );
     }
 
     /**

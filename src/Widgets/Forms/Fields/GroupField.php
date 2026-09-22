@@ -48,9 +48,23 @@ class GroupField extends Field
     }
 
     /**
+     * A group is a set of rows of its own, so it sits in a `<fieldset>` that spaces it off the plain fields
+     * around it — and the element is what says the controls inside belong together, which the row's
+     * `<label for>` cannot: that one labels the field it points at.
+     */
+    #[Override]
+    protected function renderContent(): string|Stringable
+    {
+        return \Hirtz\Skeleton\Html\Fieldset::make()
+            ->addClass('custom-attribute-group-fieldset')
+            ->attribute('aria-labelledby', $this->label ? $this->getId() : null)
+            ->content(parent::renderContent());
+    }
+
+    /**
      * The label points at the first field of the first row, so clicking it puts the cursor where typing starts.
-     * It cannot name the group that way — a `<label for>` labels one control — so the container carries
-     * `aria-labelledby` beside it, and a group with no row to point at keeps that alone.
+     * It cannot name the group that way — a `<label for>` labels one control — so the `<fieldset>` around it
+     * carries `aria-labelledby` instead, and a group with no row to point at renders a plain `div`.
      */
     #[Override]
     protected function getLabel(): ?Tag
@@ -99,8 +113,6 @@ class GroupField extends Field
 
         $container = Div::make()
             ->addClass('custom-attribute-group')
-            ->attribute('role', 'group')
-            ->attribute('aria-labelledby', $this->label ? $this->getId() : null)
             ->attribute('data-group', $this->property)
             ->content(Div::make()
                 ->addClass('custom-attribute-group-items')

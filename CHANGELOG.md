@@ -4,8 +4,9 @@
   `Widgets\Forms\Fields\GroupField` no longer renders a `<fieldset>` with a `<legend>` of its own: the group's
   label sits in the row's `form-label` and everything it holds in the `form-content`, like every other field,
   and points at the first field of the first row, so clicking it puts the cursor where typing starts. It cannot
-  name the group that way — a `<label for>` labels one control — so the container carries `role="group"` plus
-  `aria-labelledby` beside it, and a group with no row to point at is a plain `div` naming the group alone. The
+  name the group that way — a `<label for>` labels one control — so the `<fieldset>` the whole row sits in
+  carries `aria-labelledby` instead, and a group with no row to point at is a plain `div`. That
+  `.custom-attribute-group-fieldset` is also what spaces a group off the plain fields around it. The
   add button moved below the rows on the right and is icon-only (`plus`), so it stands at the size of the row
   buttons above it, with the count the group is bound by beside it — the new `CUSTOM_ATTRIBUTE_HINT_MIN_COUNT` /
   `_MAX_COUNT` / `_MIN_MAX_COUNT` keys. It and the remove button carry their label as an `aria-label` and a
