@@ -8,7 +8,9 @@
   the collapsed rail fades out — so the label carries the accessible name and the tooltip and `aria-label` are
   gone with it; `includes/aside.ts` swaps that text instead. `AsideMenu::getHeader()` now answers `null` and
   `getPinButton()` is gone with it: the skeleton's aside opens straight into its menu, and the header is the
-  extension point for a theme with a logo of its own.
+  extension point for a theme with a logo of its own. It reads as expanding and collapsing rather than pinning
+  now — `angle-double-right` / `angle-double-left`, and `ASIDE_PIN` / `ASIDE_UNPIN` retranslated in all four
+  languages; the keys and the class names still say pin.
 
 - **A login loads a fresh document instead of swapping into the page it was typed into** (monorepo issue #185).
   `Web\Response::setHtmxRefresh()` is now `setHtmxReload()` and covers both ways of ending a document: a redirect

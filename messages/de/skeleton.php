@@ -57,7 +57,7 @@ return [
     'ACCOUNT_WARNING_NOSCRIPT' => 'Bitte aktivieren Sie JavaScript in Ihrem Browser oder wechseln Sie zu einem Browser mit JavaScript-Unterstützung, um sich zu registrieren.',
     'ACCOUNT_WELCOME_BACK' => 'Willkommen zurück, {name}!',
     'ASIDE_PIN' => 'Menü anheften',
-    'ASIDE_UNPIN' => 'Menü lösen',
+    'ASIDE_UNPIN' => 'Menü verkleinern',
     'ASSET_REFRESH' => 'Aktualisieren',
     'AUTH_AUTH_UPDATE_DESCRIPTION' => 'Benutzerrechte zuteilen und aberkennen',
     'AUTH_INDEX_HINT' => 'Eine Rolle ist eine flache Liste von Berechtigungen und enthält nie eine andere Rolle – Administrator und Manager werden also getrennt vergeben. Niemand kann ein Element vergeben, das er nicht selbst besitzt.',

@@ -82,7 +82,7 @@ class AsideMenuTest extends TestCase
 
         self::assertStringContainsString('data-aside-pin', $aside);
         self::assertStringContainsString('aria-pressed="true"', $aside);
-        self::assertStringContainsString('fa-thumbtack"', $aside);
+        self::assertStringContainsString('fa-angle-double-left"', $aside);
         self::assertStringContainsString(
             '<span class="nav-link-label">' . Yii::t('skeleton', 'ASIDE_UNPIN') . '</span>',
             $aside,
@@ -102,7 +102,7 @@ class AsideMenuTest extends TestCase
 
         self::assertTrue($this->getAdminModule()->isAsideCollapsed());
         self::assertStringContainsString('aria-pressed="false"', $aside);
-        self::assertStringContainsString('fa-thumbtack-slash', $aside);
+        self::assertStringContainsString('fa-angle-double-right"', $aside);
     }
 
     /**

@@ -64,7 +64,7 @@ class AsidePinNavItem extends NavItem
         return Button::make()
             ->content(
                 Icon::make()
-                    ->name($collapsed ? 'thumbtack-slash' : 'thumbtack')
+                    ->name($collapsed ? 'angle-double-right' : 'angle-double-left')
                     ->addClass('nav-link-icon'),
                 Span::make()
                     ->class('nav-link-label')

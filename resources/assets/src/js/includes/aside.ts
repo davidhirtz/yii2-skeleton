@@ -32,8 +32,8 @@ export const asidePin = ($btn: HTMLButtonElement) => {
         $btn.setAttribute('aria-pressed', collapsed ? 'false' : 'true');
 
         const $icon = $btn.querySelector<HTMLElement>('.fas');
-        $icon?.classList.toggle('fa-thumbtack', !collapsed);
-        $icon?.classList.toggle('fa-thumbtack-slash', collapsed);
+        $icon?.classList.toggle('fa-angle-double-left', !collapsed);
+        $icon?.classList.toggle('fa-angle-double-right', collapsed);
 
         // The button is a nav link like any other, so its label is the visible text and the accessible name at
         // once — there is no `title` or `aria-label` beside it to keep in step.
