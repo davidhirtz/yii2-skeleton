@@ -125,10 +125,28 @@
     }
   }
 
-  // Faded out the subnav would leave a gap in the rail where the active section's children are, so it is the
-  // one thing that goes rather than dims — closed being the absence of all three ways of being open.
-  [data-aside-collapsed]:not([data-aside-open]) .aside:not(:hover, :focus-within) .subnav {
-    display: none;
+  // Closed is the absence of all three ways of being open, and everything the rail hides follows from the
+  // subnav being gone rather than faded: faded out it would leave a gap where the active section's children
+  // are, its connector would then point at nothing, and the section's own item is all that is left to say
+  // which page the rail is on.
+  [data-aside-collapsed]:not([data-aside-open]) .aside:not(:hover, :focus-within) {
+    .subnav {
+      display: none;
+    }
+
+    .nav-link:has(~.subnav .active) {
+      // `.nav-link.active`'s own declarations, repeated because the state this keys on is three ancestors up
+      // and `@extend` cannot cross the media query — a sixth active property belongs here too.
+      --badge-bg: var(--nav-link-active-badge-bg);
+      --badge-color: var(--nav-link-active-badge-color);
+      --nav-link-bg: var(--nav-link-active-bg);
+      --nav-link-border-color: var(--nav-link-active-border-color, var(--nav-link-bg));
+      --link-color: var(--nav-link-active-color);
+
+      &:after {
+        content: none;
+      }
+    }
   }
 
   // A click inside the menu latches it open, so the page that click navigates to still shows it and a submenu
@@ -163,7 +181,7 @@
     padding-inline: 1rem;
   }
 
-  .nav-link:has(~ .subnav .active):after {
+  .nav-link:has(~.subnav .active):after {
     position: absolute;
     top: 0;
     left: .5rem;
