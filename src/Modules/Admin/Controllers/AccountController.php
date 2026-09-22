@@ -310,7 +310,7 @@ class AccountController extends Controller
                 // `data-theme` is on `<html>`, which every swap leaves standing — so a scheme the save changed,
                 // by the field or by dropping the cookie, only reaches the document on a full load.
                 if ($colorScheme !== $form->user->getColorScheme() && $this->request->isHtmxRequest()) {
-                    return Application::current()->getResponse()->setHtmxRefresh();
+                    return Application::current()->getResponse()->setHtmxReload();
                 }
 
                 return $this->refresh();
@@ -433,7 +433,7 @@ class AccountController extends Controller
         $module->setSessionLanguage($language);
 
         if ($this->request->isHtmxRequest()) {
-            return Application::current()->getResponse()->setHtmxRefresh();
+            return Application::current()->getResponse()->setHtmxReload();
         }
 
         return $this->redirect($this->request->getReferrer() ?? ['/admin/dashboard/index']);

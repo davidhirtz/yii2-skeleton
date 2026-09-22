@@ -22,19 +22,19 @@ class Response extends \yii\web\Response
      */
     protected ?string $htmxRedirectTarget = self::HTMX_REDIRECT_TARGET;
 
-    private bool $isHtmxRefresh = false;
+    private bool $isHtmxReload = false;
 
     /**
      * Both htmx properties are per-response state, and `clear()` is what resets a response for the next one —
      * which only an application serving more than one request reaches, `Test\Browser` among them. Without this
-     * a single `setHtmxRefresh()` turned every later response of the same test into an empty 200 carrying
+     * a single `setHtmxReload()` turned every later response of the same test into an empty 200 carrying
      * `HX-Refresh`, so a login answered after one read as a login that had silently failed.
      */
     #[\Override]
     public function clear(): void
     {
         $this->htmxRedirectTarget = self::HTMX_REDIRECT_TARGET;
-        $this->isHtmxRefresh = false;
+        $this->isHtmxReload = false;
 
         parent::clear();
     }
@@ -46,8 +46,8 @@ class Response extends \yii\web\Response
             $this->getHeaders()->set('X-Robots-Tag', 'none');
         }
 
-        if ($this->isHtmxRefresh) {
-            $this->prepareHtmxRefresh();
+        if ($this->isHtmxReload && Application::current()->getRequest()->isHtmxRequest()) {
+            $this->prepareHtmxReload();
         }
 
         $this->removeHostOnlyCookies();
@@ -125,14 +125,18 @@ class Response extends \yii\web\Response
     }
 
     /**
-     * htmx reads `HX-Location` first and returns, so the redirect headers have to go for the refresh to happen.
+     * htmx reads `HX-Refresh` first and returns, so it must not be set beside the `HX-Redirect` a redirect issued
+     * after {@see setHtmxReload()} has already answered with; `HX-Location` is the navigation this is the opposite
+     * of and goes either way.
      */
-    protected function prepareHtmxRefresh(): void
+    protected function prepareHtmxReload(): void
     {
         $headers = $this->getHeaders();
         $headers->remove('HX-Location');
-        $headers->remove('HX-Redirect');
-        $headers->set('HX-Refresh', 'true');
+
+        if (!$headers->has('HX-Redirect')) {
+            $headers->set('HX-Refresh', 'true');
+        }
 
         $this->format = self::FORMAT_HTML;
         $this->data = null;
@@ -167,6 +171,11 @@ class Response extends \yii\web\Response
 
         $headers = $this->getHeaders();
 
+        if ($request->isHtmxRequest() && $this->isHtmxReload) {
+            $headers->set('HX-Redirect', $url);
+            return $this->setStatusCode(200);
+        }
+
         if ($request->isHtmxRequest() && $this->htmxRedirectTarget !== null) {
             $headers->set('HX-Location', Json::encode([
                 'path' => $url,
@@ -196,12 +205,16 @@ class Response extends \yii\web\Response
     }
 
     /**
-     * Answers an htmx request by reloading the page instead of swapping into it. The page was rendered for a session
-     * that is gone, down to the CSRF token it carries, so nothing of it can be kept.
+     * Answers an htmx request with a fresh document instead of swapping into the current one: `HX-Redirect` for a
+     * redirect issued after this, `HX-Refresh` for a response that stays where it is. The page was rendered for a
+     * session that is over — the navbar and the flashes outside `#wrap` that no swap reaches among it, down to the
+     * CSRF token it carries — so nothing of it can be kept.
+     *
+     * A request that is not htmx is answered as it would be anyway, so an action need not ask which it is.
      */
-    public function setHtmxRefresh(): static
+    public function setHtmxReload(): static
     {
-        $this->isHtmxRefresh = true;
+        $this->isHtmxReload = true;
         return $this;
     }
 }

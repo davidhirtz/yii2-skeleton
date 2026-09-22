@@ -149,7 +149,7 @@ class User extends \yii\web\User
         }
 
         if ($request->isHtmxRequest()) {
-            return Application::current()->getResponse()->setHtmxRefresh();
+            return Application::current()->getResponse()->setHtmxReload();
         }
 
         return parent::loginRequired($checkAjax, $checkAcceptHeader);
@@ -231,8 +231,15 @@ class User extends \yii\web\User
 
         // The login answers whatever {@see static::loginRequired()} flashed, and a flash removed after access is
         // removed only once something reads it — so one added to a response that renders none, an htmx request
-        // answered with a refresh among them, would surface on the page after the login.
+        // answered with a reload among them, would surface on the page after the login.
         $session->removeFlash('error');
+
+        // The page the login was typed into was rendered for a guest, and a swap only ever reaches `#wrap`: its
+        // navbar, and the login-required error already drawn into `#flashes`, would both outlive the login. A
+        // cookie login is exempt — it restores the identity the page was already rendered for.
+        if (!$cookieBased && Application::current()->getRequest()->isHtmxRequest()) {
+            Application::current()->getResponse()->setHtmxReload();
+        }
 
         if ($session instanceof MultiFieldSession) {
             $session->writeCallback = fn () => [
@@ -273,7 +280,7 @@ class User extends \yii\web\User
         }
 
         if (Application::current()->getRequest()->isHtmxRequest()) {
-            Application::current()->getResponse()->setHtmxRefresh();
+            Application::current()->getResponse()->setHtmxReload();
         }
 
         parent::afterLogout($identity);

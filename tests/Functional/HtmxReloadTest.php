@@ -8,24 +8,49 @@ use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Yii;
 
 /**
- * A page whose session is gone cannot be patched, so htmx is told to load it again instead.
+ * A page rendered for a session that is over — a guest's as much as a gone one — cannot be patched, because a swap
+ * only ever reaches `#wrap` and the navbar and the flashes sit outside it. So htmx is told to load a fresh document
+ * instead, at the URL the response redirects to or at the one it is already on.
  */
-class HtmxRefreshTest extends TestCase
+class HtmxReloadTest extends TestCase
 {
     use FunctionalTestTrait;
     use UserFixtureTrait;
 
     private const array HTMX_SERVER = ['HTTP_HX_REQUEST' => 'true'];
 
-    public function testLogoutRefreshesTheHtmxPage(): void
+    public function testLogoutSendsTheDocumentToTheLoginPage(): void
     {
         $this->login();
         $this->post('/admin/account/logout', self::HTMX_SERVER);
 
         self::assertResponseStatusCodeSame(200);
-        self::assertResponseHeaderSame('hx-refresh', 'true');
+        self::assertResponseHeaderSame('hx-redirect', 'https://www.test.localhost/admin/account/login');
+        self::assertResponseNotHasHeader('hx-refresh');
+        self::assertResponseNotHasHeader('hx-location');
+    }
+
+    /**
+     * A login that swapped left the guest navbar standing and the login-required error in `#flashes` behind it,
+     * where nothing removes it: only a success alert times out (monorepo issue #185).
+     */
+    public function testALoginSendsTheDocumentToTheReturnUrl(): void
+    {
+        $this->open('admin/user/index');
+        self::assertCurrentUrlEquals('https://www.test.localhost/admin/account/login');
+        self::assertAnyAlertErrorSame(Yii::t('skeleton', 'USER_ERROR_MUST_LOGIN_VIEW'));
+
+        $this->submit(values: $this->prefixFormValues(LoginForm::instance()->formName(), [
+            'email' => $this->getUserFromFixture('owner')->email,
+            'password' => 'password',
+        ]), server: self::HTMX_SERVER);
+
+        self::assertResponseStatusCodeSame(200);
+        self::assertResponseHeaderSame('hx-redirect', 'https://www.test.localhost/admin/user/index');
+        self::assertResponseNotHasHeader('hx-refresh');
         self::assertResponseNotHasHeader('hx-location');
     }
 
@@ -38,9 +63,14 @@ class HtmxRefreshTest extends TestCase
 
         self::assertResponseStatusCodeSame(302);
         self::assertResponseNotHasHeader('hx-refresh');
+        self::assertResponseNotHasHeader('hx-redirect');
         self::assertResponseHasHeader('location');
     }
 
+    /**
+     * The refresh is the whole of the answer here: a redirect to the login page would carry no return URL, since
+     * Yii records one for a GET alone, and would lose a form post to a session that lapsed under it.
+     */
     public function testAGuestHtmxRequestRefreshesInsteadOfLoggingIn(): void
     {
         $this->open('admin/user/index');

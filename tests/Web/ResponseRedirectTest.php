@@ -43,6 +43,39 @@ class ResponseRedirectTest extends TestCase
     }
 
     /**
+     * `HX-Redirect` is the browser's own navigation, which is what throws away everything a swap leaves standing.
+     */
+    public function testAnActionEndingTheDocumentIsRedirectedWithABrowserNavigation(): void
+    {
+        $this->getWebRequest()->getHeaders()->set('HX-Request', 'true');
+
+        $response = $this->getWebResponse();
+        $headers = $response->setHtmxReload()
+            ->redirect(['/admin/dashboard/index'])
+            ->getHeaders();
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertNull($headers->get('HX-Location'));
+        self::assertNull($headers->get('Location'));
+        self::assertStringEndsWith('/admin/dashboard/index', (string)$headers->get('HX-Redirect'));
+    }
+
+    /**
+     * The flag is inert outside htmx, so an action need not ask which kind of request it is answering.
+     */
+    public function testAnOrdinaryRequestIsRedirectedWithALocationHeaderEvenSo(): void
+    {
+        $response = $this->getWebResponse();
+        $headers = $response->setHtmxReload()
+            ->redirect(['/admin/dashboard/index'])
+            ->getHeaders();
+
+        self::assertSame(302, $response->getStatusCode());
+        self::assertNull($headers->get('HX-Redirect'));
+        self::assertStringEndsWith('/admin/dashboard/index', (string)$headers->get('Location'));
+    }
+
+    /**
      * Without a target the response says nothing about the swap, so the requesting element follows the redirect
      * itself and the attributes it declares apply to what comes back.
      */

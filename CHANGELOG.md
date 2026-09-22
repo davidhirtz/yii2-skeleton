@@ -1,5 +1,15 @@
 ## 3.0.0 (in development)
 
+- **A login loads a fresh document instead of swapping into the page it was typed into** (monorepo issue #185).
+  `Web\Response::setHtmxRefresh()` is now `setHtmxReload()` and covers both ways of ending a document: a redirect
+  issued after it is answered with `HX-Redirect`, a response staying where it is with `HX-Refresh`, and a request
+  that is not htmx is answered as it would be anyway, so an action need not ask which it is. `Web\User::afterLogin()`
+  asks for one, as `afterLogout()` already did — a swap only ever reaches `#wrap`, so the guest navbar outside it and
+  the login-required error already drawn into `#flashes` both used to survive the login, the second of them for good,
+  since only a success alert times out. The logout gains the redirect it always issued: it lands on the login page in
+  one request rather than reloading the protected page it was on and being sent there with a second, spurious
+  *You must login to view this page!*.
+
 - **The aside's logout asks first** (monorepo issue #208). `Modules\Admin\Widgets\Navs\AccountMenu` no longer
   posts `admin/account/logout` from the nav link itself — the link opens a `Widgets\Modal` and the request
   moves onto its confirm button, so the one nav item that ends the session cannot be fired by a misclick. The
