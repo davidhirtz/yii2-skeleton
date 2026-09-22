@@ -1,12 +1,8 @@
-// @ts-ignore
-import Sortable, {AutoScroll} from 'sortablejs/modular/sortable.core.esm.js';
 import {SortableEvent, SortableOptions} from "sortablejs";
-
-Sortable.mount(new AutoScroll());
-
 import htmx from "htmx.org";
 
 import onLoad from './includes/onLoad';
+import Sortable from './includes/sortable';
 
 onLoad(($node) => {
     ($node.querySelectorAll('[data-sort-url]') as NodeListOf<HTMLTableElement>).forEach(($el) => {

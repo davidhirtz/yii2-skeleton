@@ -1,11 +1,8 @@
-// @ts-ignore
-import Sortable, {AutoScroll} from 'sortablejs/modular/sortable.core.esm.js';
 import {SortableOptions} from "sortablejs";
 import htmx from "htmx.org";
 
 import onLoad from './includes/onLoad';
-
-Sortable.mount(new AutoScroll());
+import Sortable from './includes/sortable';
 
 // Matches `Widgets\Forms\Fields\GroupField::POSITION_PLACEHOLDER`.
 const POSITION_PLACEHOLDER = '__POSITION__';
