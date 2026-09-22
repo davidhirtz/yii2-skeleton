@@ -77,6 +77,24 @@ class AsideMenuTest extends TestCase
         self::assertStringContainsString('fa-thumbtack-slash', $aside);
     }
 
+    /**
+     * The logout posts from the modal's own button, so the nav link carries no `hx-post` a misclick could fire.
+     */
+    public function testTheLogoutAsksForConfirmation(): void
+    {
+        $this->login();
+
+        $aside = AsideMenu::make()->render();
+
+        self::assertSame(1, preg_match('~<button[^>]*class="nav-link nav-logout-link"[^>]*>~', $aside, $trigger));
+        self::assertStringContainsString('data-modal="#', $trigger[0]);
+        self::assertStringNotContainsString('hx-post', $trigger[0]);
+        self::assertMatchesRegularExpression(
+            '~<dialog[^>]*class="modal">.*?hx-post="[^"]*/admin/account/logout".*?</dialog>~s',
+            $aside,
+        );
+    }
+
     public function testAnUnknownCookieValueLeavesTheAsideExpanded(): void
     {
         $_COOKIE[$this->getAdminModule()->asideCookieName] = '1';

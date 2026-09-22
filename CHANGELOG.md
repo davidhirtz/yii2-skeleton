@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **The aside's logout asks first** (monorepo issue #208). `Modules\Admin\Widgets\Navs\AccountMenu` no longer
+  posts `admin/account/logout` from the nav link itself — the link opens a `Widgets\Modal` and the request
+  moves onto its confirm button, so the one nav item that ends the session cannot be fired by a misclick. The
+  link keeps its `.nav-link` markup with `.nav-link-icon` and `.nav-link-label`, so the collapsed rail still
+  hides its label. New key `ACCOUNT_CONFIRM_LOGOUT`; a functional test reaching the logout has to go through
+  the modal's button.
+
 - **`Test\Browser` puts the superglobals back when a request ends** (monorepo issue #202) — `$_SERVER`,
   `$_COOKIE`, `$_GET`, `$_POST` and `$_REQUEST`, all of which it writes. They are process-wide while the
   application is rebuilt per test, so whatever a test's last request left in them was read by the rest of that

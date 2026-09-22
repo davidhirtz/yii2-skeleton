@@ -9,6 +9,7 @@ return [
     'ACCOUNT_BACK_TO_LOGIN' => 'Zurück zum Login',
     'ACCOUNT_CONFIRM_CODE_LABEL' => 'E-Mail-Bestätigungscode',
     'ACCOUNT_CONFIRM_DELETE' => 'Sind Sie sicher, dass Sie Ihren Account löschen wollen?',
+    'ACCOUNT_CONFIRM_LOGOUT' => 'Sind Sie sicher, dass Sie sich abmelden wollen?',
     'ACCOUNT_CONFIRM_LOGOUT_OTHER_SESSIONS' => 'Damit werden alle anderen Sitzungen Ihres Accounts beendet, in jedem anderen Browser und auf jedem anderen Gerät. Die aktuell verwendete Sitzung bleibt angemeldet.',
     'ACCOUNT_CONFIRM_NAME_LABEL' => 'Benutzername',
     'ACCOUNT_CREATE_ERROR_SUMMARY' => 'Ihr Account konnte nicht erstellt werden',

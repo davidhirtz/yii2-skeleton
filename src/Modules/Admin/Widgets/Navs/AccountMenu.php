@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Helpers\Url;
+use Hirtz\Skeleton\Html\P;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Icon;
+use Hirtz\Skeleton\Widgets\Modal;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -78,12 +80,25 @@ class AccountMenu extends Widget
                         Icon::make()->name('sign-out-alt')->addClass('nav-link-icon'),
                         Span::make()->class('nav-link-label')->text(Yii::t('skeleton', 'ACCOUNT_MENU_LOGOUT')),
                     )
-                    ->addAttributes([
-                        'hx-post' => Url::toRoute(['/admin/account/logout']),
-                        'hx-push-url' => 'true',
-                        'hx-target' => 'body',
-                    ])
+                    ->modal($this->getLogoutModal())
                     ->class('nav-link nav-logout-link'))
             : null;
+    }
+
+    protected function getLogoutModal(): Modal
+    {
+        $button = Button::make()
+            ->danger()
+            ->text(Yii::t('skeleton', 'ACCOUNT_MENU_LOGOUT'))
+            ->addAttributes([
+                'hx-post' => Url::toRoute(['/admin/account/logout']),
+                'hx-push-url' => 'true',
+                'hx-target' => 'body',
+            ]);
+
+        return Modal::make()
+            ->title(Yii::t('skeleton', 'ACCOUNT_MENU_LOGOUT'))
+            ->content(P::make()->text(Yii::t('skeleton', 'ACCOUNT_CONFIRM_LOGOUT')))
+            ->footer($button);
     }
 }

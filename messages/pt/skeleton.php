@@ -9,6 +9,7 @@ return [
     'ACCOUNT_BACK_TO_LOGIN' => 'Voltar ao início de sessão',
     'ACCOUNT_CONFIRM_CODE_LABEL' => 'Código de verificação do e-mail',
     'ACCOUNT_CONFIRM_DELETE' => 'Tem a certeza de que pretende eliminar a sua conta?',
+    'ACCOUNT_CONFIRM_LOGOUT' => 'Tem a certeza de que pretende terminar a sessão?',
     'ACCOUNT_CONFIRM_LOGOUT_OTHER_SESSIONS' => 'Isto termina todas as outras sessões da sua conta, em todos os outros navegadores e dispositivos. A que está a utilizar agora permanece com sessão iniciada.',
     'ACCOUNT_CONFIRM_NAME_LABEL' => 'Nome de utilizador',
     'ACCOUNT_CREATE_ERROR_SUMMARY' => 'Não foi possível criar a sua conta',

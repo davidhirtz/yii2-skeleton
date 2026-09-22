@@ -9,6 +9,7 @@ return [
     'ACCOUNT_BACK_TO_LOGIN' => 'Retour à la connexion',
     'ACCOUNT_CONFIRM_CODE_LABEL' => 'Code de vérification de l’e-mail',
     'ACCOUNT_CONFIRM_DELETE' => 'Voulez-vous vraiment supprimer votre compte ?',
+    'ACCOUNT_CONFIRM_LOGOUT' => 'Voulez-vous vraiment vous déconnecter ?',
     'ACCOUNT_CONFIRM_LOGOUT_OTHER_SESSIONS' => 'Cela met fin à toutes les autres sessions de votre compte, sur tous les autres navigateurs et appareils. Celle que vous utilisez actuellement reste connectée.',
     'ACCOUNT_CONFIRM_NAME_LABEL' => 'Nom d’utilisateur',
     'ACCOUNT_CREATE_ERROR_SUMMARY' => 'Votre compte n’a pas pu être créé',

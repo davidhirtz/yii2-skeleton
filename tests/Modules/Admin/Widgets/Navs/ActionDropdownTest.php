@@ -34,10 +34,19 @@ class ActionDropdownTest extends TestCase
 
     private function assertModalTriggersAreButtons(string $html): void
     {
-        preg_match_all('~<button[^>]*data-modal="#[^"]+"[^>]*>~', $html, $matches);
-        self::assertNotEmpty($matches[0]);
+        preg_match_all('~<li class="dropdown-item">(.*?)</li>~s', $html, $items);
+        self::assertNotEmpty($items[1]);
 
-        foreach ($matches[0] as $trigger) {
+        $triggers = [];
+
+        foreach ($items[1] as $item) {
+            preg_match_all('~<button[^>]*data-modal="#[^"]+"[^>]*>~', $item, $matches);
+            $triggers = [...$triggers, ...$matches[0]];
+        }
+
+        self::assertNotEmpty($triggers);
+
+        foreach ($triggers as $trigger) {
             self::assertStringContainsString('class="btn ', $trigger);
         }
     }
