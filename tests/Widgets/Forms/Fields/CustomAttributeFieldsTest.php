@@ -346,6 +346,31 @@ class CustomAttributeFieldsTest extends TestCase
         );
     }
 
+    public function testAPlaceholderReachesTheFieldAndNamesTheRowsOfAGroup(): void
+    {
+        $model = $this->createRecord();
+        $model->type = FieldRecord::TYPE_NAMED_LINKS;
+        $model->links = [['url' => 'https://one.example.com']];
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['links'])
+            ->render();
+
+        self::assertStringContainsString('name="FieldRecord[links][0][url]" value="https://one.example.com" maxlength="255" placeholder="https://"', $content);
+        self::assertStringContainsString('<option value="">Network</option>', $content);
+
+        self::assertStringContainsString(
+            'data-group-position="Social media link #' . GroupField::POSITION_PLACEHOLDER . '"',
+            $content
+        );
+
+        self::assertStringContainsString(
+            '<span data-group-title data-group-title-position>Social media link #1</span>',
+            $content
+        );
+    }
+
     /**
      * A control the browser cannot focus blocks the submit with nothing on screen to say why, so the row a
      * failed validation left an error on arrives open.
@@ -556,6 +581,7 @@ class FieldRecord extends ActiveRecord implements
     final public const int TYPE_REQUIRED_LINKS = 4;
     final public const int TYPE_BOUNDED_LINKS = 5;
     final public const int TYPE_TRANSLATED_LINKS = 6;
+    final public const int TYPE_NAMED_LINKS = 7;
 
     #[Override]
     public function getTypes(): array
@@ -618,6 +644,19 @@ class FieldRecord extends ActiveRecord implements
                     GroupCustomAttribute::make('links')
                         ->multiple()
                         ->attributes([TextCustomAttribute::make('label')->translatable()]),
+                ]),
+            Type::make(self::TYPE_NAMED_LINKS)
+                ->name('Named links')
+                ->customAttributes(fn (): array => [
+                    GroupCustomAttribute::make('links')
+                        ->multiple()
+                        ->placeholder('Social media link')
+                        ->attributes([
+                            SelectCustomAttribute::make('label')
+                                ->options([1 => 'Instagram', 2 => 'TikTok'])
+                                ->placeholder('Network'),
+                            UrlCustomAttribute::make('url')->placeholder('https://'),
+                        ]),
                 ]),
         ];
     }

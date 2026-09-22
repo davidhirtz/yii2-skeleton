@@ -97,7 +97,9 @@ class SelectCustomAttribute extends CustomAttribute
             ->items($this->getOptions($owner))
             ->multiple($this->multiple);
 
-        if (!$this->isRequired($owner)) {
+        if ($this->placeholder !== null) {
+            $field->prompt($this->placeholder);
+        } elseif (!$this->isRequired($owner)) {
             $field->prompt('');
         }
 

@@ -20,6 +20,7 @@ abstract class CustomAttribute
 
     protected ?string $label = null;
     protected ?string $hint = null;
+    protected ?string $placeholder = null;
     protected bool $translatable = false;
     protected Closure|bool $required = false;
     protected Closure|bool $visible = true;
@@ -39,6 +40,12 @@ abstract class CustomAttribute
     public function hint(?string $hint): static
     {
         $this->hint = $hint;
+        return $this;
+    }
+
+    public function placeholder(?string $placeholder): static
+    {
+        $this->placeholder = $placeholder;
         return $this;
     }
 
@@ -80,6 +87,11 @@ abstract class CustomAttribute
     public function getHint(): ?string
     {
         return $this->hint;
+    }
+
+    public function getPlaceholder(): ?string
+    {
+        return $this->placeholder;
     }
 
     public function isTranslatable(): bool
@@ -232,6 +244,10 @@ abstract class CustomAttribute
     {
         $field->model($owner)
             ->property($this->name);
+
+        if ($this->placeholder !== null && method_exists($field, 'placeholder')) {
+            $field->placeholder($this->placeholder);
+        }
 
         if ($this->isRequired($owner)) {
             $field->attribute('required', true);

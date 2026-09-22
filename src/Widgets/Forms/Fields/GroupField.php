@@ -145,9 +145,7 @@ class GroupField extends Field
         }
 
         if ($this->collapsible) {
-            $container->attribute('data-group-position', Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ITEM_POSITION', [
-                'position' => self::POSITION_PLACEHOLDER,
-            ]));
+            $container->attribute('data-group-position', $this->getPositionTitle(self::POSITION_PLACEHOLDER));
         }
 
         $container->attribute('data-group-min', $this->group->getMinCount())
@@ -325,7 +323,7 @@ class GroupField extends Field
             ->attribute('data-group-title', true)
             // The script rewrites only the rows that fell back, the rest being what the user typed.
             ->attribute('data-group-title-position', $fallback ?: null)
-            ->text($fallback ? Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ITEM_POSITION', ['position' => $position]) : $value);
+            ->text($fallback ? $this->getPositionTitle($position) : $value);
 
         // `.input` rather than `.btn`: the row reads as the control it stands in for, the way a filled upload
         // field does.
@@ -336,6 +334,22 @@ class GroupField extends Field
             ->attribute('aria-controls', "$id-fields")
             ->attribute('aria-expanded', $expanded ? 'true' : 'false')
             ->content(Icon::make()->name('chevron-down'), $title);
+    }
+
+    /**
+     * What a row with nothing typed into it is called: its number, after the group's placeholder where it declares
+     * one. One `Yii::t()` call per key, since `yii message` evaluates nothing.
+     */
+    protected function getPositionTitle(int|string $position): string
+    {
+        $placeholder = $this->group->getPlaceholder();
+
+        return $placeholder === null
+            ? Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ITEM_POSITION', ['position' => $position])
+            : Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ITEM_PLACEHOLDER_POSITION', [
+                'placeholder' => $placeholder,
+                'position' => $position,
+            ]);
     }
 
     /**
