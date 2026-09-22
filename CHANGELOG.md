@@ -1,5 +1,23 @@
 ## 3.0.0 (in development)
 
+- **A custom attribute group row is an `.input-group`, and nothing about it is built twice.** A row of one field
+  is that field's control with the row's buttons appended, and a row of several is the same input group with the
+  collapse toggle standing in for the control — so the box, the radius and the hover and focus palette all come
+  from `.input-group` rather than from rules of the group's own, and a one-field group renders one `<fieldset>`
+  rather than three. `Widgets\Forms\Traits\InputGroupTrait::append()` and `prepend()` are variadic, each
+  argument becoming an `.input-group-append` / `-prepend` cell of its own, and the wrapping moved from
+  `Widgets\Forms\Fields\InputField` up to `Widgets\Forms\Fields\Field`, so every field type can take one.
+  The new `Field::showRow(bool)` drops the `FormRow` around a field a caller lays out itself.
+  `Widgets\Buttons\DraggableSortButton` takes its own classes now, `btn btn-secondary` being only the default,
+  and a group row asks for the `btn btn-icon icon` a filled upload field's remove button wears. Gone with all of
+  that: `.custom-attribute-group-single`, `.custom-attribute-group-item-buttons`,
+  `.custom-attribute-group-item-header`, `.custom-attribute-group-item-title` and the `--form-group-btn-*`
+  variables. `_custom-attributes.scss` is loaded after `_input.scss` and `_buttons.scss`, so its own rules no
+  longer have to be nested to win.
+
+- **The sort handle is hidden while a group holds one row**, there being nowhere to move it to — rendered hidden
+  so the first paint is right, and kept in step by the script as rows come and go, the way the remove button is.
+
 - **A custom attribute group row of several fields is previewed by its title and expands in place.** A
   collapsed row is its title, a chevron and its buttons; the fields sit in a `[data-group-body]` beside them
   that `custom-attributes.ts` shows and hides. Which attribute the title reads comes from the new

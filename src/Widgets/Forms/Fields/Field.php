@@ -11,7 +11,9 @@ use Hirtz\Skeleton\Html\Label;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Widgets\Forms\FormRow;
+use Hirtz\Skeleton\Widgets\Forms\InputGroup;
 use Hirtz\Skeleton\Widgets\Forms\Traits\FormWidgetTrait;
+use Hirtz\Skeleton\Widgets\Forms\Traits\InputGroupTrait;
 use Hirtz\Skeleton\Widgets\Forms\Traits\RowAttributesTrait;
 use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
@@ -25,6 +27,7 @@ use yii\base\Model;
 abstract class Field extends Widget
 {
     use FormWidgetTrait;
+    use InputGroupTrait;
     use LabelTrait;
     /**
      * @use ModelTrait<Model|null>
@@ -41,6 +44,7 @@ abstract class Field extends Widget
     protected array $labelAttributes = [];
 
     protected string $layout = '{input}{error}{hint}';
+    protected bool $showRow = true;
     public string $language;
 
     protected ?string $error = null;
@@ -74,6 +78,16 @@ abstract class Field extends Widget
         return $this;
     }
 
+    /**
+     * A field laid out by something else renders its control, error and hint without the {@see FormRow} around
+     * them — {@see GroupField} puts a single-field group's control in an input group with the row's buttons.
+     */
+    public function showRow(bool $showRow): static
+    {
+        $this->showRow = $showRow;
+        return $this;
+    }
+
     #[Override]
     protected function configure(): void
     {
@@ -102,15 +116,31 @@ abstract class Field extends Widget
     protected function renderContent(): string|Stringable
     {
         $content = strtr($this->layout, [
-            '{input}' => $this->getInput(),
+            '{input}' => $this->getControl(),
             '{hint}' => $this->getHint(),
             '{error}' => $this->getError(),
         ]);
 
-        return FormRow::make()
-            ->attributes($this->rowAttributes)
-            ->header($this->getLabel())
-            ->content($content);
+        return $this->showRow
+            ? FormRow::make()
+                ->attributes($this->rowAttributes)
+                ->header($this->getLabel())
+                ->content($content)
+            : $content;
+    }
+
+    /**
+     * The control, in an input group where the caller appended or prepended anything to it. A field building one
+     * of its own — the date, the colour picker — does that inside {@see getInput()} instead.
+     */
+    protected function getControl(): string|Stringable
+    {
+        return $this->append || $this->prepend
+            ? InputGroup::make()
+                ->append(...$this->append)
+                ->prepend(...$this->prepend)
+                ->content($this->getInput())
+            : $this->getInput();
     }
 
     protected function getLabel(): ?Tag

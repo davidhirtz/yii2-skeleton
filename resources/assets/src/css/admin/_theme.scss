@@ -232,11 +232,6 @@
   --radio-bg: var(--color-white);
   --radio-checked-bg: var(--color-white) #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 8 8"><circle r="2" fill="#000"/></svg>')} no-repeat center;
 
-  --form-group-btn-bg: transparent;
-  --form-group-btn-color: var(--color-gray-100);
-  --form-group-hover-btn-bg: transparent;
-  --form-group-btn-hover-color: var(--color-black);
-
   // Grid
   --grid-footer-border-color: var(--table-th-border-color);
   --grid-footer-sticky-border-color: var(--border-color);

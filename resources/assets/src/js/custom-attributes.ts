@@ -89,9 +89,14 @@ onLoad(($node) => {
                 $add.hidden = count >= max;
             }
 
-            // The server renders the rows a minimum count demands, so they cannot be removed either.
+            // The server renders the rows a minimum count demands, so they cannot be removed either, and one
+            // row has nowhere to move to.
             $items.querySelectorAll<HTMLElement>('[data-group-remove]').forEach(($remove) => {
                 $remove.hidden = count <= min;
+            });
+
+            $items.querySelectorAll<HTMLElement>('.sortable-handle').forEach(($handle) => {
+                $handle.hidden = count < 2;
             });
 
             renumber();

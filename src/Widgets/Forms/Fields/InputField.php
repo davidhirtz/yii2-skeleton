@@ -7,8 +7,6 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Hirtz\Skeleton\Html\Traits\TagPlaceholderTrait;
-use Hirtz\Skeleton\Widgets\Forms\InputGroup;
-use Hirtz\Skeleton\Widgets\Forms\Traits\InputGroupTrait;
 use Override;
 use Stringable;
 use yii\validators\NumberValidator;
@@ -16,7 +14,6 @@ use yii\validators\StringValidator;
 
 class InputField extends Field
 {
-    use InputGroupTrait;
     use TagInputTrait;
     use TagPlaceholderTrait;
 
@@ -57,15 +54,8 @@ class InputField extends Field
 
     protected function getInput(): string|Stringable
     {
-        $input = Input::make()
+        return Input::make()
             ->attributes($this->attributes)
             ->addClass('input');
-
-        return $this->append || $this->prepend
-            ? InputGroup::make()
-                ->append($this->append)
-                ->prepend($this->prepend)
-                ->content($input)
-            : $input;
     }
 }

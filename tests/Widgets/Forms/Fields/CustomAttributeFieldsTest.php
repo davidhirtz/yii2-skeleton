@@ -255,10 +255,18 @@ class CustomAttributeFieldsTest extends TestCase
     {
         $content = $this->renderGroup(FieldRecord::TYPE_REQUIRED_LINKS);
 
-        self::assertStringContainsString('custom-attribute-group custom-attribute-group-single', $content);
-        self::assertStringContainsString('class="custom-attribute-group-item form-action"', $content);
+        // The row is the input and its buttons, in one input group — no fieldset and no form row of its own.
+        self::assertStringContainsString(
+            '<div class="custom-attribute-group-item" data-group-item><div class="input-group">'
+            . '<input type="text" id="fieldrecord-links-0-label" class="input" name="FieldRecord[links][0][label]" maxlength="255">'
+            . '<div class="input-group-append">',
+            $content
+        );
 
-        self::assertStringContainsString('name="FieldRecord[links][0][label]"', $content);
+        // Two `<fieldset>`: the group's own, and the one this test renders it in. The only form row is the
+        // group's own — a one-field row has none.
+        self::assertSame(2, substr_count($content, '<fieldset'));
+        self::assertSame(1, substr_count($content, 'form-row'));
 
         // The field's own label is gone; the group's points at it.
         self::assertStringNotContainsString('<label class="label" for="fieldrecord-links-0-label">', $content);
@@ -319,19 +327,16 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertStringContainsString('data-group-position="#' . GroupField::POSITION_PLACEHOLDER . '"', $content);
         self::assertStringContainsString('name="FieldRecord[links][0][label]" value="One" maxlength="255" data-group-title-input', $content);
 
-        self::assertStringContainsString(
-            '<div class="custom-attribute-group-item-title" data-group-title>One</div>',
-            $content
-        );
+        self::assertStringContainsString('<span data-group-title>One</span>', $content);
 
         // The second row has no label, so it is its number — and says so, since the script rewrites only those.
-        self::assertStringContainsString(
-            '<div class="custom-attribute-group-item-title" data-group-title data-group-title-position>#2</div>',
-            $content
-        );
+        self::assertStringContainsString('<span data-group-title data-group-title-position>#2</span>', $content);
 
+        // The header is the same input group a one-field row is, the toggle standing in for the input.
         self::assertStringContainsString(
-            '<button type="button" id="fieldrecord-links-0-toggle" class="btn btn-link custom-attribute-group-item-toggle" data-group-toggle aria-controls="fieldrecord-links-0-fields" aria-expanded="false">',
+            '<div class="input-group"><button type="button" id="fieldrecord-links-0-toggle"'
+            . ' class="input custom-attribute-group-item-toggle" data-group-toggle'
+            . ' aria-controls="fieldrecord-links-0-fields" aria-expanded="false">',
             $content
         );
 
@@ -368,6 +373,39 @@ class CustomAttributeFieldsTest extends TestCase
             '<div id="fieldrecord-links-1-fields" class="custom-attribute-group-item-body" data-group-body>',
             $content
         );
+    }
+
+    /**
+     * A lone row has nowhere to move to. The script hides the handle again as rows come and go, so the server
+     * only has to get the first paint right.
+     */
+    public function testTheSortHandleIsHiddenWhileThereIsOneRow(): void
+    {
+        $model = $this->createRecord();
+        $model->type = FieldRecord::TYPE_LINKS;
+        $model->links = [['label' => 'One', 'url' => 'https://one.example.com']];
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['links'])
+            ->render();
+
+        self::assertStringContainsString('class="btn btn-icon icon sortable-handle" hidden>', $content);
+
+        // Not in the template: the row it stands for is never the only one.
+        self::assertSame(1, substr_count($content, 'sortable-handle" hidden'));
+
+        $model->links = [
+            ['label' => 'One', 'url' => 'https://one.example.com'],
+            ['label' => 'Two', 'url' => 'https://two.example.com'],
+        ];
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['links'])
+            ->render();
+
+        self::assertStringNotContainsString('sortable-handle" hidden', $content);
     }
 
     /**

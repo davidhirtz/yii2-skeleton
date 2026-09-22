@@ -9,12 +9,15 @@ use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Label;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
 use Hirtz\Skeleton\Models\CustomAttributes\GroupCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\DraggableSortButton;
 use Hirtz\Skeleton\Widgets\Forms\Fieldset;
+use Hirtz\Skeleton\Widgets\Forms\InputGroup;
+use Hirtz\Skeleton\Widgets\Icon;
 use Override;
 use Stringable;
 use Yii;
@@ -38,26 +41,18 @@ class GroupField extends Field
     protected GroupCustomAttribute $group;
 
     /**
-     * Resolved in {@see getInput()}, which is the first point the owner is known to hold custom attributes.
+     * Resolved in {@see getInput()}, which is the first point the owner is known to hold custom attributes: a row
+     * of one field is a line of its own, a row of several is previewed by its title and expands, and a group
+     * holding exactly one row has nothing to fold away.
      */
     protected bool $single = false;
-
-    /**
-     * Resolved beside {@see $single}: a row of several fields is previewed by its title and expands, one field
-     * is the whole row already, and a group holding exactly one row has nothing to fold away.
-     */
     protected bool $collapsible = false;
 
     /**
-     * The first row's fields, for the label to point at. {@see getInput()} assigns it and a template item never
-     * does — a template's ids are the placeholder and its inputs are not in the document.
+     * What the group's label points at, once the first row has rendered — a field carries the id its input went
+     * out with only from then. A collapsible row hides its fields, so there it is the toggle instead.
      */
-    protected ?Fieldset $firstFieldset = null;
-
-    /**
-     * The first row's toggle, which the label points at instead: a collapsible row hides its fields, and a
-     * `<label for>` naming a hidden control does nothing at all.
-     */
+    protected Fieldset|Field|null $firstControl = null;
     protected ?string $firstToggleId = null;
 
     public function group(GroupCustomAttribute $group): static
@@ -113,7 +108,9 @@ class GroupField extends Field
             return $this->firstToggleId;
         }
 
-        foreach ($this->firstFieldset?->getRows() ?? [] as $row) {
+        $rows = $this->firstControl instanceof Fieldset ? $this->firstControl->getRows() : [$this->firstControl];
+
+        foreach ($rows as $row) {
             if ($row instanceof Field && !$row->isDisabled() && $row->render() !== '') {
                 return $row->getId();
             }
@@ -142,10 +139,6 @@ class GroupField extends Field
                 ->addClass('custom-attribute-group-items')
                 ->attribute('data-group-items', true)
                 ->content(...$this->getItemElements($items)));
-
-        if ($this->single) {
-            $container->addClass('custom-attribute-group-single');
-        }
 
         if (!$this->group->isMultiple()) {
             return $container;
@@ -213,80 +206,52 @@ class GroupField extends Field
     protected function getItemElements(array $items): array
     {
         $elements = [];
+        $sortable = count($items) > 1;
 
+        // The first row's control is what the label points at, and the template is deliberately not one of
+        // these: its ids carry the placeholder and its inputs are not in the document.
         foreach ($items as $index => $item) {
-            $fieldset = $this->getFieldset($item);
-            $this->firstFieldset ??= $fieldset;
+            $control = $this->getItemControl($item, $sortable);
+            $this->firstControl ??= $control;
             $this->firstToggleId ??= $this->collapsible ? $this->getItemId($item) . '-toggle' : null;
-            $elements[] = $this->getItem($item, $fieldset, $index + 1, $item->hasErrors());
+
+            $elements[] = $this->getItem($item, $control, $index + 1, $item->hasErrors(), $sortable);
         }
 
         return $elements;
     }
 
-    protected function getFieldset(CustomAttributeGroupItem $item): Fieldset
-    {
-        $fieldset = Fieldset::make()
-            ->model($item)
-            ->form($this->form)
-            ->rows(array_keys($item->getCustomAttributeDefinitions()));
-
-        $single = $this->single;
-        $title = $this->collapsible ? $this->group->getTitleAttribute() : null;
-
-        // A `prepare()` closure runs after `Fieldset::configure()` resolved the rows into fields and before any
-        // of them configures itself, which is what keeps the empty label — `Field::configure()` only fills in a
-        // `null` one. The group's own label names a single field, so that one drops its own.
-        $fieldset->prepare(static function (Fieldset $fieldset) use ($single, $title): void {
-            foreach ($fieldset->getRows() as $row) {
-                if (!$row instanceof Field) {
-                    continue;
-                }
-
-                if ($single) {
-                    $row->label('');
-                }
-
-                if ($title !== null && $row->property === $title) {
-                    $row->attribute('data-group-title-input', true);
-                }
-            }
-        });
-
-        return $fieldset;
-    }
-
+    /**
+     * Every row is the same shell: the control it is collapsed to, in an input group with the row's buttons, and
+     * whatever hangs below it.
+     */
     protected function getItem(
         CustomAttributeGroupItem $item,
-        Fieldset $fieldset,
+        Field|Fieldset $control,
         int|string $position,
         bool $expanded,
-    ): Stringable
-    {
-        $element = \Hirtz\Skeleton\Html\Fieldset::make()
+        bool $sortable,
+    ): Stringable {
+        $element = Div::make()
             ->addClass('custom-attribute-group-item')
             ->attribute('data-group-item', true);
 
-        if ($this->single) {
-            return $element->addClass('form-action')->content($fieldset, $this->getItemButtons());
-        }
-
         if (!$this->collapsible) {
-            return $element->content($this->getItemButtons(), $fieldset);
+            return $element->content($control);
         }
 
         $id = $this->getItemId($item);
 
         return $element->content(
-            Div::make()
-                ->addClass('custom-attribute-group-item-header')
-                ->content($this->getToggleButton($item, $position, $id, $expanded), $this->getItemButtons()),
+            InputGroup::make()
+                ->append(...$this->getItemButtons($sortable))
+                ->content($this->getToggleButton($item, $position, $id, $expanded)),
             Div::make()
                 ->addClass('custom-attribute-group-item-body')
                 ->attribute('data-group-body', true)
                 ->attribute('id', "$id-fields")
                 ->attribute('hidden', $expanded ? null : true)
-                ->content($fieldset),
+                ->content($control),
         );
     }
 
@@ -299,33 +264,78 @@ class GroupField extends Field
         return Html::getInputIdByName($item->formName());
     }
 
+    protected function getItemControl(CustomAttributeGroupItem $item, bool $sortable): Field|Fieldset
+    {
+        return ($this->single ? $this->getField($item, $sortable) : null) ?? $this->getFieldset($item);
+    }
+
+    /**
+     * The group's own label names the one field, so the field drops its own and is laid out by the row rather
+     * than by a form row of its own.
+     */
+    protected function getField(CustomAttributeGroupItem $item, bool $sortable): ?Field
+    {
+        foreach ($item->getCustomAttributeDefinitions() as $definition) {
+            if ($definition->isVisible($item)) {
+                return $definition->createField($item)
+                    ->form($this->form)
+                    ->label('')
+                    ->showRow(false)
+                    ->append(...$this->getItemButtons($sortable));
+            }
+        }
+
+        return null;
+    }
+
+    protected function getFieldset(CustomAttributeGroupItem $item): Fieldset
+    {
+        $fieldset = Fieldset::make()
+            ->model($item)
+            ->form($this->form)
+            ->rows(array_keys($item->getCustomAttributeDefinitions()));
+
+        $title = $this->collapsible ? $this->group->getTitleAttribute() : null;
+
+        if ($title === null) {
+            return $fieldset;
+        }
+
+        // A `prepare()` closure runs after `Fieldset::configure()` resolved the rows into fields and before any
+        // of them configures itself, which is what lets it reach the one the preview reads.
+        return $fieldset->prepare(static function (Fieldset $fieldset) use ($title): void {
+            foreach ($fieldset->getRows() as $row) {
+                if ($row instanceof Field && $row->property === $title) {
+                    $row->attribute('data-group-title-input', true);
+                }
+            }
+        });
+    }
+
     protected function getToggleButton(
         CustomAttributeGroupItem $item,
         int|string $position,
         string $id,
         bool $expanded,
-    ): Stringable
-    {
+    ): Stringable {
         $value = $this->getItemTitle($item);
         $fallback = $value === '';
 
-        $title = Div::make()
-            ->addClass('custom-attribute-group-item-title')
+        $title = Span::make()
             ->attribute('data-group-title', true)
             // The script rewrites only the rows that fell back, the rest being what the user typed.
             ->attribute('data-group-title-position', $fallback ?: null)
             ->text($fallback ? Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ITEM_POSITION', ['position' => $position]) : $value);
 
-        return Button::make()
-            ->link()
-            ->addClass('custom-attribute-group-item-toggle')
-            ->type('button')
-            ->icon('chevron-down')
-            ->text($title)
+        // `.input` rather than `.btn`: the row reads as the control it stands in for, the way a filled upload
+        // field does.
+        return \Hirtz\Skeleton\Html\Button::make()
+            ->addClass('input custom-attribute-group-item-toggle')
             ->attribute('id', "$id-toggle")
             ->attribute('data-group-toggle', true)
             ->attribute('aria-controls', "$id-fields")
-            ->attribute('aria-expanded', $expanded ? 'true' : 'false');
+            ->attribute('aria-expanded', $expanded ? 'true' : 'false')
+            ->content(Icon::make()->name('chevron-down'), $title);
     }
 
     /**
@@ -345,20 +355,24 @@ class GroupField extends Field
         return is_array($value) ? '' : trim((string)$value);
     }
 
-    protected function getItemButtons(): ?Stringable
+    /**
+     * @return list<Stringable>
+     */
+    protected function getItemButtons(bool $sortable): array
     {
         if (!$this->group->isMultiple()) {
-            return null;
+            return [];
         }
 
-        return Div::make()
-            ->addClass('custom-attribute-group-item-buttons')
-            ->content(
-                $this->group->isSortable()
-                    ? DraggableSortButton::make()
-                    : null,
-                $this->getRemoveButton(),
-            );
+        return array_values(array_filter([
+            // One row has nowhere to move to; the script hides it again as rows come and go.
+            $this->group->isSortable()
+                ? DraggableSortButton::make()
+                    ->class('btn btn-icon icon')
+                    ->attribute('hidden', $sortable ? null : true)
+                : null,
+            $this->getRemoveButton(),
+        ]));
     }
 
     protected function getRemoveButton(): Button
@@ -366,7 +380,7 @@ class GroupField extends Field
         $label = Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_REMOVE');
 
         return Button::make()
-            ->secondary()
+            ->class('btn btn-icon icon')
             ->icon('trash')
             ->type('button')
             ->attribute('data-group-remove', true)
@@ -379,10 +393,11 @@ class GroupField extends Field
     protected function getTemplate(Model $owner): string
     {
         $item = $this->group->createItem($owner, self::TEMPLATE_INDEX);
+        $control = $this->getItemControl($item, true);
 
-        // The template is the row a click is about to add, so it arrives expanded and its number is the one the
-        // script writes once it knows where the row landed.
-        $content = (string)$this->getItem($item, $this->getFieldset($item), self::POSITION_PLACEHOLDER, true);
+        // The template is the row a click is about to add, so it arrives expanded, its number is the one the
+        // script writes once it knows where the row landed, and it is never the only row there is.
+        $content = (string)$this->getItem($item, $control, self::POSITION_PLACEHOLDER, true, true);
 
         return Html::tag('template', $content, ['data-group-template' => true]);
     }

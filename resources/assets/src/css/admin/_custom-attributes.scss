@@ -12,32 +12,63 @@
   }
 }
 
-.custom-attribute-group {
-  display: grid;
-  gap: 1rem;
-}
-
+.custom-attribute-group,
 .custom-attribute-group-items {
   display: grid;
   gap: 1rem;
 }
 
-.custom-attribute-group-item-buttons {
-  display: flex;
-  justify-content: flex-end;
+// Every row is an `.input-group` — which draws the box and answers for hover and focus, so nothing here repeats
+// that — plus whatever hangs below it: the field's error, or the fields a collapsed row folds away.
+.custom-attribute-group-item {
+  display: grid;
+  gap: .5rem;
 
-  .custom-attribute-group-single {
-    gap: .5rem;
+  &:has([data-group-body]) {
+    gap: 0;
   }
 }
 
+// `.input` only paints a background for a real form control, and this one stands in for the input a one-field
+// row has — the same reason `.upload-name` does it.
+.custom-attribute-group-item-toggle {
+  align-items: center;
+  background-color: var(--input-bg-color);
+  display: flex;
+  gap: 1rem;
+
+  > span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &[aria-expanded="true"] > span:first-child {
+    rotate: 180deg;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    > span:first-child {
+      transition: rotate .15s;
+    }
+  }
+}
+
+// It hangs off the header, so the two read as one box while the row is open.
 .custom-attribute-group-item-body {
-  border-top: 1px solid var(--border-color);
+  border-radius: 0 0 .25rem .25rem;
+  border: 1px solid var(--input-border-color);
+  border-top: 0;
   padding: 1rem;
 
   .form-row {
     grid-template-columns: 6rem auto;
   }
+}
+
+.custom-attribute-group-item:has([data-group-body]:not([hidden])) .input-group {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 // The add button sits below the rows on the right, the count the group is bound by beside it.
@@ -46,112 +77,4 @@
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
-}
-
-// A group of more than one field boxes each of its rows: a collapsed one is its title and its buttons, and
-// expands into the fields below them.
-.custom-attribute-group:not(.custom-attribute-group-single) {
-
-  .custom-attribute-group-item {
-    border: 1px solid var(--border-color);
-    border-radius: .25rem;
-
-    &:hover, &:has(:focus-within) {
-      --border-color: var(--input-focus-border-color);
-    }
-  }
-}
-
-.custom-attribute-group-item-header {
-  --btn-secondary-bg: var(--form-group-btn-bg);
-  --btn-secondary-color: var(--form-group-btn-color);
-  --btn-secondary-hover-bg: var(--form-group-hover-btn-bg);
-  --btn-secondary-hover-color: var(--form-group-btn-hover-color);
-
-  @media (prefers-reduced-motion: no-preference) {
-    transition: color .2s, background-color .2s, border-color .2s;
-  }
-
-  &:hover {
-    background-color: var(--input-focus-bg-color);
-  }
-
-  &:hover, &:has([aria-expanded="true"]) {
-
-    .btn {
-      --btn-secondary-bg: var(--form-group-hover-btn-bg);
-      --btn-secondary-color: var(--form-group-btn-hover-color);
-    }
-  }
-
-  .btn {
-    border: 0;
-  }
-
-  align-items: center;
-  display: flex;
-  gap: .5rem;
-  justify-content: space-between;
-  border-radius: .25rem;
-  color: var(--input-color);
-
-  // Nested so it beats `.btn`, which is loaded after this file: the title is the row's own content and has to
-  // read in the body font rather than in the display one a button wears.
-  .custom-attribute-group-item-toggle {
-    flex: 1;
-    font-family: inherit;
-    letter-spacing: normal;
-    min-width: 0;
-    padding: .5rem 1rem;
-    text-align: start;
-
-    .icon-text {
-      justify-content: flex-start;
-      gap: 1rem;
-
-      // A flex item does not shrink below its own text, which is what the title has to do to be truncated.
-      > div {
-        min-width: 0;
-      }
-    }
-
-    > .icon-text > span {
-      color: var(--btn-secondary-color);
-      transition: rotate .15s;
-    }
-
-    &[aria-expanded="true"] > .icon-text > span {
-      rotate: 180deg;
-    }
-  }
-
-  .custom-attribute-group-item-title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-
-
-// A group rendering a single field lays it out beside the row's buttons and drops its label, the group's own
-// naming it already. `.form-action` on the item is the flex row; these keep the field stretching inside it.
-.custom-attribute-group-single {
-  .custom-attribute-group-item {
-    gap: .5rem;
-  }
-
-  // `.fieldset` carries a `display` of its own, so only the flex sizing is set here.
-  .fieldset {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .form-row {
-    grid-template-columns: auto;
-    max-width: none;
-  }
-
-  .form-content {
-    grid-column-start: auto;
-  }
 }
