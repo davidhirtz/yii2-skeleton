@@ -62,10 +62,10 @@ class CheckboxListField extends Field
      * never rendered moves the focus nowhere.
      */
     #[Override]
-    protected function getLabel(): ?Label
+    protected function getLabel(): ?Div
     {
         return $this->label
-            ? Label::make()
+            ? Div::make()
                 ->attributes($this->labelAttributes)
                 ->addClass('label')
                 ->text($this->label)

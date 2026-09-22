@@ -112,7 +112,7 @@ abstract class Field extends Widget
             ->content($content);
     }
 
-    protected function getLabel(): ?Label
+    protected function getLabel(): ?Stringable
     {
         return $this->label
             ? Label::make()
