@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **A duplicate is named after its source** (monorepo issue #219).
+  `Models\Actions\DuplicateActiveRecord::prefixDuplicateName()` renders the new `COMMON_DUPLICATE_NAME` key
+  over the duplicate's name — per language, in that language, for a translated attribute — and truncates the
+  result to the column's length, since the prefix would otherwise push a name that already fills it past its
+  own string rule. An attribute the caller assigned is left alone: the action keeps the given attributes in
+  `$attributes` for that. Nothing calls it by default; the entry and file actions do.
+
 - **The language picker names its languages rather than drawing their flags** (monorepo issue #216). The navbar
   button carries the current language's two letter code — `I18N::getLanguageCode()` takes the language as an
   optional argument now — with the native language name as its `aria-label`, and the dropdown option is the

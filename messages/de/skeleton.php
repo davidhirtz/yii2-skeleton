@@ -84,6 +84,7 @@ return [
     'COMMON_CREATED_AT_LABEL' => 'Erstellt',
     'COMMON_DELETED' => 'Gelöscht',
     'COMMON_DISABLED' => 'Deaktiviert',
+    'COMMON_DUPLICATE_NAME' => 'Kopie von {name}',
     'COMMON_ENABLED' => 'Aktiviert',
     'COMMON_ERROR_LOGS' => 'Fehlerprotokolle',
     'COMMON_HISTORY' => 'Historie',

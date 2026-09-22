@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Models\Actions;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Events\DuplicateActiveRecordEvent;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Exception;
 use Yii;
 
@@ -26,11 +27,17 @@ class DuplicateActiveRecord
     public ActiveRecord $duplicate;
 
     /**
+     * @var array<string, mixed> the attributes the caller assigned, which no default may overwrite
+     */
+    protected array $attributes;
+
+    /**
      * @param T $model
      * @param array<string, mixed> $attributes
      */
     public function __construct(protected ActiveRecord $model, array $attributes = [])
     {
+        $this->attributes = $attributes;
         $this->duplicate = $this->model::create();
         $this->duplicate->setAttributes([...$this->getSafeAttributes(), ...$attributes], false);
     }
@@ -99,6 +106,28 @@ class DuplicateActiveRecord
             foreach ($definition->getAttributeNames($this->duplicate) as $name) {
                 $definition->afterDuplicate($this->duplicate, $this->model, $name);
             }
+        }
+    }
+
+    /**
+     * A duplicate is otherwise indistinguishable from its source wherever it is listed. The attribute can be
+     * translated, so each language is prefixed in its own, and the result is truncated to the attribute's length.
+     */
+    protected function prefixDuplicateName(string $attribute = 'name', int $maxLength = 255): void
+    {
+        $names = $this->duplicate instanceof I18nAttributeInterface
+            ? $this->duplicate->getI18nAttributeNames($attribute)
+            : [Yii::$app->language => $attribute];
+
+        foreach ($names as $language => $name) {
+            $value = (string)$this->duplicate->$name;
+
+            if ($value === '' || array_key_exists($name, $this->attributes)) {
+                continue;
+            }
+
+            $value = Yii::t('skeleton', 'COMMON_DUPLICATE_NAME', ['name' => $value], $language);
+            $this->duplicate->$name = mb_substr($value, 0, $maxLength);
         }
     }
 
