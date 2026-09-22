@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Assets\CustomAttributesAssetBundle;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Label;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
 use Hirtz\Skeleton\Models\CustomAttributes\GroupCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
@@ -34,6 +35,12 @@ class GroupField extends Field
      */
     protected bool $single = false;
 
+    /**
+     * The first row's fields, for the label to point at. {@see getInput()} assigns it and a template item never
+     * does — a template's ids are the placeholder and its inputs are not in the document.
+     */
+    protected ?Fieldset $firstFieldset = null;
+
     public function group(GroupCustomAttribute $group): static
     {
         $this->group = $group;
@@ -41,19 +48,41 @@ class GroupField extends Field
     }
 
     /**
-     * A group labels several inputs at once, so its own label is not a `<label for>` — the container names it
-     * through `aria-labelledby` instead.
+     * The label points at the first field of the first row, so clicking it puts the cursor where typing starts.
+     * It cannot name the group that way — a `<label for>` labels one control — so the container carries
+     * `aria-labelledby` beside it, and a group with no row to point at keeps that alone.
      */
     #[Override]
     protected function getLabel(): ?Tag
     {
-        return $this->label
-            ? Div::make()
-                ->attributes($this->labelAttributes)
-                ->addClass('label')
-                ->attribute('id', $this->getId())
-                ->text($this->label)
-            : null;
+        if (!$this->label) {
+            return null;
+        }
+
+        $for = $this->getLabelledFieldId();
+
+        // `addAttributes()`, since `attributes()` would replace the `for` set above it.
+        return ($for ? Label::make()->for($for) : Div::make())
+            ->addAttributes($this->labelAttributes)
+            ->addClass('label')
+            ->attribute('id', $this->getId())
+            ->text($this->label);
+    }
+
+    /**
+     * {@see Field::renderContent()} renders its content before it asks for the label, so the row's fields have
+     * configured themselves by here and carry the ids their inputs were rendered with. A field that rendered
+     * nothing is not in the document and a disabled one cannot take the focus, so neither is pointed at.
+     */
+    protected function getLabelledFieldId(): ?string
+    {
+        foreach ($this->firstFieldset?->getRows() ?? [] as $row) {
+            if ($row instanceof Field && !$row->isDisabled() && $row->render() !== '') {
+                return $row->getId();
+            }
+        }
+
+        return null;
     }
 
     #[Override]
@@ -76,7 +105,7 @@ class GroupField extends Field
             ->content(Div::make()
                 ->addClass('custom-attribute-group-items')
                 ->attribute('data-group-items', true)
-                ->content(...array_map($this->getItem(...), $items)));
+                ->content(...array_map($this->getItem(...), $this->getFieldsets($items))));
 
         if ($this->single) {
             $container->addClass('custom-attribute-group-single');
@@ -135,7 +164,19 @@ class GroupField extends Field
         return $items;
     }
 
-    protected function getItem(CustomAttributeGroupItem $item): Stringable
+    /**
+     * @param list<CustomAttributeGroupItem> $items
+     * @return list<Fieldset>
+     */
+    protected function getFieldsets(array $items): array
+    {
+        $fieldsets = array_map($this->getFieldset(...), $items);
+        $this->firstFieldset = $fieldsets[0] ?? null;
+
+        return $fieldsets;
+    }
+
+    protected function getFieldset(CustomAttributeGroupItem $item): Fieldset
     {
         $fieldset = Fieldset::make()
             ->model($item)
@@ -155,6 +196,11 @@ class GroupField extends Field
             });
         }
 
+        return $fieldset;
+    }
+
+    protected function getItem(Fieldset $fieldset): Stringable
+    {
         $content = $this->single
             ? [$fieldset, $this->getItemButtons()]
             : [$this->getItemButtons(), $fieldset];
@@ -199,8 +245,9 @@ class GroupField extends Field
     protected function getTemplate(Model $owner): string
     {
         $item = $this->group->createItem($owner, self::TEMPLATE_INDEX);
+        $content = (string)$this->getItem($this->getFieldset($item));
 
-        return Html::tag('template', (string)$this->getItem($item), ['data-group-template' => true]);
+        return Html::tag('template', $content, ['data-group-template' => true]);
     }
 
     protected function getFooter(int $count): Stringable

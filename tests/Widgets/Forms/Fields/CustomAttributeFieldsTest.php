@@ -206,18 +206,44 @@ class CustomAttributeFieldsTest extends TestCase
 
     public function testTheGroupLabelsTheRowItRendersInto(): void
     {
-        $content = $this->renderGroup(FieldRecord::TYPE_LINKS);
+        $model = $this->createRecord();
+        $model->type = FieldRecord::TYPE_LINKS;
+        $model->links = [['label' => 'Label', 'url' => 'https://example.com']];
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['links'])
+            ->render();
 
         self::assertStringContainsString('<div class="form-group form-row" data-id="fieldrecord-links">', $content);
+
+        // The label points at the first field of the first row; the group as a whole is named by the container,
+        // since a `<label for>` labels one control.
+        self::assertStringContainsString(
+            '<label id="fieldrecord-links" class="label" for="fieldrecord-links-0-label">Links</label>',
+            $content
+        );
+
+        self::assertStringContainsString('aria-labelledby="fieldrecord-links"', $content);
+    }
+
+    /**
+     * The only ids a group with no row carries are its template's, which are the placeholder and are not in the
+     * document at all.
+     */
+    public function testAGroupWithNoRowHasNoFieldToPointAt(): void
+    {
+        $content = $this->renderGroup(FieldRecord::TYPE_LINKS);
 
         self::assertStringContainsString(
             '<div class="form-label"><div id="fieldrecord-links" class="label">Links</div></div>',
             $content
         );
 
-        // A group labels every input it holds, so it names them through the container rather than as a `<label for>`.
         self::assertStringContainsString('aria-labelledby="fieldrecord-links"', $content);
-        self::assertStringNotContainsString('for="fieldrecord-links"', $content);
+
+        // The template's own labels are there, pointing at the placeholder; nothing points at a row.
+        self::assertStringNotContainsString('for="fieldrecord-links-0', $content);
     }
 
     public function testASingleFieldGroupDropsTheFieldsOwnLabel(): void
@@ -228,7 +254,10 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertStringContainsString('class="custom-attribute-group-item form-action"', $content);
 
         self::assertStringContainsString('name="FieldRecord[links][0][label]"', $content);
-        self::assertStringNotContainsString('for="fieldrecord-links-0-label"', $content);
+
+        // The field's own label is gone; the group's points at it.
+        self::assertStringNotContainsString('<label class="label" for="fieldrecord-links-0-label">', $content);
+        self::assertStringContainsString('id="fieldrecord-links" class="label" for="fieldrecord-links-0-label"', $content);
     }
 
     /**
