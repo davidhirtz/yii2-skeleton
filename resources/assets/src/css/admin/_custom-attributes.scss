@@ -24,8 +24,20 @@
 
 .custom-attribute-group-item-buttons {
   display: flex;
-  gap: .5rem;
   justify-content: flex-end;
+
+  .custom-attribute-group-single {
+    gap: .5rem;
+  }
+}
+
+.custom-attribute-group-item-body {
+  border-top: 1px solid var(--border-color);
+  padding: 1rem;
+
+  .form-row {
+    grid-template-columns: 6rem auto;
+  }
 }
 
 // The add button sits below the rows on the right, the count the group is bound by beside it.
@@ -39,20 +51,49 @@
 // A group of more than one field boxes each of its rows: a collapsed one is its title and its buttons, and
 // expands into the fields below them.
 .custom-attribute-group:not(.custom-attribute-group-single) {
+
   .custom-attribute-group-item {
     border: 1px solid var(--border-color);
-    border-radius: var(--border-radius, .25rem);
-    display: grid;
-    gap: 1rem;
-    padding: 1rem;
+    border-radius: .25rem;
+
+    &:hover, &:has(:focus-within) {
+      --border-color: var(--input-focus-border-color);
+    }
   }
 }
 
 .custom-attribute-group-item-header {
+  --btn-secondary-bg: var(--form-group-btn-bg);
+  --btn-secondary-color: var(--form-group-btn-color);
+  --btn-secondary-hover-bg: var(--form-group-hover-btn-bg);
+  --btn-secondary-hover-color: var(--form-group-btn-hover-color);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: color .2s, background-color .2s, border-color .2s;
+  }
+
+  &:hover {
+    background-color: var(--input-focus-bg-color);
+  }
+
+  &:hover, &:has([aria-expanded="true"]) {
+
+    .btn {
+      --btn-secondary-bg: var(--form-group-hover-btn-bg);
+      --btn-secondary-color: var(--form-group-btn-hover-color);
+    }
+  }
+
+  .btn {
+    border: 0;
+  }
+
   align-items: center;
   display: flex;
   gap: .5rem;
   justify-content: space-between;
+  border-radius: .25rem;
+  color: var(--input-color);
 
   // Nested so it beats `.btn`, which is loaded after this file: the title is the row's own content and has to
   // read in the body font rather than in the display one a button wears.
@@ -61,10 +102,12 @@
     font-family: inherit;
     letter-spacing: normal;
     min-width: 0;
+    padding: .5rem 1rem;
     text-align: start;
 
     .icon-text {
       justify-content: flex-start;
+      gap: 1rem;
 
       // A flex item does not shrink below its own text, which is what the title has to do to be truncated.
       > div {
@@ -73,6 +116,7 @@
     }
 
     > .icon-text > span {
+      color: var(--btn-secondary-color);
       transition: rotate .15s;
     }
 

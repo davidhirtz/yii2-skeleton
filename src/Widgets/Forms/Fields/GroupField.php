@@ -261,7 +261,8 @@ class GroupField extends Field
         Fieldset $fieldset,
         int|string $position,
         bool $expanded,
-    ): Stringable {
+    ): Stringable
+    {
         $element = \Hirtz\Skeleton\Html\Fieldset::make()
             ->addClass('custom-attribute-group-item')
             ->attribute('data-group-item', true);
@@ -303,7 +304,8 @@ class GroupField extends Field
         int|string $position,
         string $id,
         bool $expanded,
-    ): Stringable {
+    ): Stringable
+    {
         $value = $this->getItemTitle($item);
         $fallback = $value === '';
 
@@ -352,7 +354,9 @@ class GroupField extends Field
         return Div::make()
             ->addClass('custom-attribute-group-item-buttons')
             ->content(
-                $this->group->isSortable() ? DraggableSortButton::make() : null,
+                $this->group->isSortable()
+                    ? DraggableSortButton::make()
+                    : null,
                 $this->getRemoveButton(),
             );
     }
@@ -425,8 +429,7 @@ class GroupField extends Field
             ->icon('plus')
             ->type('button')
             ->attribute('data-group-add', true)
-            ->attribute('aria-label', $label)
-            ->tooltip($label);
+            ->attribute('aria-label', $label);
 
         return $max !== null && $count >= $max ? $button->attribute('hidden', true) : $button;
     }
