@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Models\CustomAttributes;
 
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Upload\Upload;
+use Hirtz\Skeleton\Validators\FileValidator;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Fields\UploadField;
 use Override;
@@ -13,7 +14,6 @@ use Stringable;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
-use yii\validators\FileValidator;
 use yii\web\UploadedFile;
 
 /**

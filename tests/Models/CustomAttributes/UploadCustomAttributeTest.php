@@ -14,6 +14,8 @@ use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\helpers\StringHelper;
+use yii\web\UploadedFile;
 
 class UploadCustomAttributeTest extends TestCase
 {
@@ -243,6 +245,31 @@ class UploadCustomAttributeTest extends TestCase
             self::assertInstanceOf(UploadCustomAttribute::class, $definition);
             self::assertSame($accept, $definition->getAccept());
         }
+    }
+
+    /**
+     * The file arrives in chunks, so its assembled size is past php.ini's `upload_max_filesize` as often as not.
+     */
+    public function testAFileLargerThanASingleRequestIsAccepted(): void
+    {
+        $definition = $this->createRecord()->getCustomAttribute('attachment');
+        self::assertInstanceOf(UploadCustomAttribute::class, $definition);
+
+        $size = StringHelper::convertIniSizeToBytes((string)ini_get('upload_max_filesize')) + 1;
+        self::assertLessThan($definition->getMaxSize(), $size);
+
+        $upload = new UploadedFile([
+            'name' => 'notes.pdf',
+            'tempName' => __FILE__,
+            'type' => 'application/pdf',
+            'size' => $size,
+            'error' => UPLOAD_ERR_OK,
+        ]);
+
+        self::assertNull($definition->validateUploadedFile($upload));
+
+        $upload->size = $definition->getMaxSize() + 1;
+        self::assertNotNull($definition->validateUploadedFile($upload));
     }
 
     /**
