@@ -81,14 +81,13 @@
   }
 }
 
+// Rendered only where there is a message to render — `Field::getError()` answers an empty string otherwise —
+// so it needs no gate. It used to be shown only inside a `.form-group:has([aria-invalid])`, which a custom
+// attribute group's own row never is: the group carries the count error, the rows carry the controls, and the
+// message was silently swallowed.
 .form-error {
-  display: none;
-
-  .form-group:has([aria-invalid],:user-invalid) & {
-    display: block;
-    font-size: .75rem;
-    color: var(--form-invalid-color);
-  }
+  color: var(--form-invalid-color);
+  font-size: .75rem;
 }
 
 .form-hint {
@@ -155,8 +154,10 @@
   }
 }
 
+// All four are inherited, so a row holding rows of its own — a custom attribute group — would repaint every
+// input inside it for one bad value. A row is the control's own row or it is not the one to say so.
 [aria-invalid],
-.form-group:has([aria-invalid],:user-invalid), {
+.form-group:not(:has(.form-row)):has([aria-invalid],:user-invalid) {
   --color-label: var(--form-invalid-color);
   --input-bg-color: var(--form-invalid-bg);
   --input-border-color: var(--form-invalid-border);

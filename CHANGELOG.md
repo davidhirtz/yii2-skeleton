@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- **One invalid field no longer paints every input of a custom attribute group** (monorepo issue #226).
+  `--color-label` and the three `--input-*` the invalid palette sets are inherited, so putting them on
+  `.form-group:has([aria-invalid],:user-invalid)` reached every control a row holds rows of — the whole group
+  went red for one bad value. A row that holds rows is not the one to say so:
+  `.form-group:not(:has(.form-row)):has(…)`, the shape the required asterisk already uses. `.form-error` drops
+  its `display: none` with it, since it is rendered only where there is a message to render — the gate was what
+  swallowed a group's own count error, which no `[aria-invalid]` anywhere accompanies.
+
 - **An icon button inside an `.input-group` fills its cell and has a focus state.** `.btn-icon` draws a box of
   its own and `.icon` sizes it to one line, which only made an appended or prepended button smaller than the
   row it sits in — `Widgets\Forms\Fields\UploadField`'s remove button and the custom attribute group's row
