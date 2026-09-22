@@ -2,11 +2,11 @@
 @use "../shared/svg" as *;
 
 :root {
-  --aside-width: 14rem;
+  --aside-width: 12rem;
   --aside-collapsed-width: 5rem;
 
   @include media-breakpoint-up(lg) {
-    --aside-width: 16rem;
+    --aside-width: 14rem;
   }
 }
 

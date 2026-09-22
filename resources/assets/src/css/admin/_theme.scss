@@ -172,8 +172,6 @@
   --card-header-color: var(--color-black);
   --card-danger-header-bg: var(--color-red-200);
   --card-danger-header-color: var(--color-white);
-  --card-stack-link-bg: var(--color-gray-100);
-  --card-stack-link-hover-bg: var(--color-gray-200);
   --card-centered-border-color: var(--border-color);
 
   // Dropdown
@@ -285,8 +283,10 @@
   --progress-bar-bg: var(--color-black);
 
   // Stack
-  --stack-link-bg: var(--color-white);
-  --stack-link-hover-bg: var(--color-gray-100);
+  --stack-link-bg: var(--color-gray-100);
+  --stack-link-color: var(--color-black);
+  --stack-link-hover-bg: var(--color-gray-200);
+  --stack-link-hover-color: var(--stack-link-color);
 
   // Submenu
   --submenu-border-color: var(--color-gray-700);

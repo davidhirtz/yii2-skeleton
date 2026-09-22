@@ -46,7 +46,6 @@ class StackItem extends Widget
 
         $link = A::make()
             ->attributes($this->linkAttributes)
-            ->addClass('stack-item-link')
             ->href($this->url);
 
         if ($this->icon) {

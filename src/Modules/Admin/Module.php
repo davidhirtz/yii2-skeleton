@@ -83,7 +83,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
     public $layout = 'main';
 
     /**
-     * The admin module whether or not this request is being handled by it — {@see getInstance()} answers `null`
+     * The admin module whether this request is being handled by it — {@see getInstance()} answers `null`
      * outside it, and the error view renders outside.
      */
     public static function current(): self
@@ -137,13 +137,6 @@ class Module extends \Hirtz\Skeleton\Base\Module
         }
     }
 
-    /**
-     * The language {@see Controllers\AccountController::actionLanguage()} wrote is kept in the session, so it
-     * outlives the request that set it — the login page included, where there is no account to fall back to yet and
-     * the language the URL manager resolved stands. That language is the frontend's — with `UrlManager::$i18nUrl`
-     * the path's, with a tenant its own — and never the admin's, which belongs to the account and not to the
-     * content it edits.
-     */
     protected function setLanguage(): void
     {
         $languages = $this->getLanguages();
@@ -219,7 +212,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
     }
 
     /**
-     * Built with `new`, never through the container: {@see \Hirtz\Skeleton\Web\Application::setDefaultCookieConfig()}
+     * Built with `new`, never through the container: {@see Application::setDefaultCookieConfig}
      * and {@see \Hirtz\Tenant\Web\UrlManager} put a `Domain` on the container's {@see Cookie}, and a scoped
      * twin of a host-only cookie is the one `$_COOKIE` hides behind (monorepo issue #195). This one is host-only
      * at both ends — the script writes no domain either.
@@ -249,8 +242,9 @@ class Module extends \Hirtz\Skeleton\Base\Module
             DashboardItem::make()
                 ->icon('user-plus')
                 ->label(Yii::t('skeleton', 'DASHBOARD_ACTION_USER_CREATE'))
-                ->url(['/admin/user/create'])
-                ->roles([User::AUTH_USER]),
+                ->order(60)
+                ->roles([User::AUTH_USER])
+                ->url(['/admin/user/create']),
             DashboardItem::make()
                 ->icon('globe')
                 ->label(Yii::t('skeleton', 'MODULE_OPEN_HOMEPAGE'))

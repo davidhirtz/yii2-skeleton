@@ -2,12 +2,11 @@
   background: var(--btn-bg, transparent);
   border-radius: .25rem;
   border: 1px solid var(--btn-border-color, transparent);
-  color: var(--btn-color, var(--color-black));
+  color: var(--btn-color);
   cursor: pointer;
   display: inline-block;
   font-family: 'Bebas Neue', sans-serif;
   font-size: .875rem;
-  font-weight: 500;
   letter-spacing: .0625em;
   min-width: 3.125rem;
   padding: 0.5rem 1rem;

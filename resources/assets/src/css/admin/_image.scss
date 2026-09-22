@@ -16,3 +16,11 @@
   //noinspection CssUnknownTarget
   background: url(../images/transparent.svg);
 }
+
+.fill-body-bg {
+  fill: var(--body-bg);
+}
+
+.fill-body-color {
+  fill: var(--body-color);
+}

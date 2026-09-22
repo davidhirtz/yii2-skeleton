@@ -21,12 +21,13 @@
   display: flex;
   align-items: center;
   background: var(--stack-link-bg);
-  font-weight: 500;
+  color: var(--stack-link-color);
   padding: 1rem;
   gap: 1rem;
 
   &:hover,
   &:focus {
     background: var(--stack-link-hover-bg);
+    color: var(--stack-link-hover-color);
   }
 }
