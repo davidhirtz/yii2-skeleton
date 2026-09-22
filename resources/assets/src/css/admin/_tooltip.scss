@@ -31,4 +31,5 @@
   padding: .25rem .5rem;
   position: relative;
   text-align: center;
+  white-space: normal; // Reset the white-space: nowrap; from parent element
 }
