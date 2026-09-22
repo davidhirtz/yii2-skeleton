@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+- **`yii message` keeps the keys nothing calls** (monorepo issue #211). `messages/config.php` gains
+  `keepMessages`, a list of keys per category the run adds to whatever it extracted: a permission's description
+  is a `Message` pointer inside the SQL string its migration seeds, so no call site names it and `removeUnused`
+  deleted every `AUTH_*_DESCRIPTION` on each regeneration — after which the permission list rendered the raw
+  keys in every language. A bundle adding a permission adds its key there.
+
 - **The colour scheme is picked in the account settings and nowhere else** (monorepo issue #210).
   `Modules\Admin\Widgets\Buttons\ColorSchemeDropdownButton` is gone from the navbar and from the bundle, with
   `includes/colorScheme.ts` and the `admin/account/color-scheme` route it posted to. The device override goes with

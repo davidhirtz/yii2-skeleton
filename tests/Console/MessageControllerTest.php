@@ -93,6 +93,47 @@ class MessageControllerTest extends TestCase
         self::assertSame(['OWNED_KEY' => ''], require $this->messagePath . 'en-US/owned.php');
     }
 
+    /**
+     * A key the tokenizer cannot reach — a permission description lives in the `auth_item.description` a
+     * migration seeds, as a `Message` pointer inside an SQL string — was deleted by `removeUnused` on every run
+     * (monorepo issue #211). Naming it in `keepMessages` keeps it, with the translation it already has.
+     */
+    public function testAKeptKeyAndItsTranslationSurviveARunThatCannotSeeIt(): void
+    {
+        $file = $this->messagePath . 'en-US/owned.php';
+        file_put_contents($file, "<?php\n\nreturn ['KEPT_KEY' => 'Kept', 'STALE_KEY' => 'Stale'];\n");
+
+        $this->extract(['owned'], ['owned' => ['KEPT_KEY']]);
+
+        $messages = require $file;
+
+        self::assertSame('Kept', $messages['KEPT_KEY'] ?? null);
+        self::assertArrayHasKey('OWNED_KEY', $messages);
+        self::assertArrayNotHasKey('STALE_KEY', $messages);
+    }
+
+    /**
+     * Kept for a category the configuration does not own, so nothing of another bundle's can be written here.
+     */
+    public function testAKeptKeyOfAnotherCategoryIsIgnored(): void
+    {
+        $this->extract(['owned'], ['other' => ['KEPT_KEY']]);
+
+        self::assertFileDoesNotExist($this->messagePath . 'en-US/other.php');
+        self::assertArrayNotHasKey('KEPT_KEY', require $this->messagePath . 'en-US/owned.php');
+    }
+
+    /**
+     * The skipped-category branch counts the kept keys too, or a category reached from data alone would be
+     * reported as empty and left behind.
+     */
+    public function testACategoryHoldingOnlyKeptKeysIsWritten(): void
+    {
+        $this->extract(['empty'], ['empty' => ['KEPT_KEY']]);
+
+        self::assertSame(['KEPT_KEY' => ''], require $this->messagePath . 'en-US/empty.php');
+    }
+
     public function testAConfigurationWithoutCategoriesIsRefused(): void
     {
         $this->expectException(Exception::class);
@@ -114,8 +155,9 @@ class MessageControllerTest extends TestCase
 
     /**
      * @param list<string>|null $categories
+     * @param array<string, list<string>> $keepMessages
      */
-    private function extract(?array $categories): string
+    private function extract(?array $categories, array $keepMessages = []): string
     {
         $config = [
             'sourcePath' => rtrim($this->sourcePath, '/'),
@@ -131,6 +173,10 @@ class MessageControllerTest extends TestCase
 
         if ($categories !== null) {
             $config['categories'] = $categories;
+        }
+
+        if ($keepMessages) {
+            $config['keepMessages'] = $keepMessages;
         }
 
         $configFile = $this->path . 'config.php';

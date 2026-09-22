@@ -50,7 +50,11 @@ class MessageController extends \yii\console\controllers\MessageController
     {
         foreach ($this->config['categories'] as $category) {
             $file = str_replace('\\', '/', "$dirName/$category.php");
-            $extracted = array_values(array_unique($messages[$category] ?? []));
+
+            $extracted = array_values(array_unique([
+                ...$messages[$category] ?? [],
+                ...$this->getKeptMessages($category),
+            ]));
 
             if (!$extracted) {
                 $this->stdout("No message found in \"$category\" category... Skipping.\n\n", Console::FG_YELLOW);
@@ -60,5 +64,19 @@ class MessageController extends \yii\console\controllers\MessageController
             $this->stdout('Saving messages to ' . Console::ansiFormat($file, [Console::FG_CYAN]) . "...\n");
             $this->saveMessagesCategoryToPHP($extracted, $file, $overwrite, $removeUnused, $sort, $category, $markUnused);
         }
+    }
+
+    /**
+     * The keys of a category that no call site can name, because what holds them is data: the
+     * `auth_item.description` a migration seeds is a {@see \Hirtz\Skeleton\I18n\Message} pointer inside an SQL
+     * string, and the tokenizer reads literal arguments of `Yii::t()` and `Message::make()` alone — so
+     * `removeUnused` dropped every permission description on each run (monorepo issue #211).
+     *
+     * @return list<string>
+     */
+    protected function getKeptMessages(string $category): array
+    {
+        $kept = $this->config['keepMessages'][$category] ?? [];
+        return is_array($kept) ? array_values(array_filter($kept, is_string(...))) : [];
     }
 }

@@ -82,7 +82,6 @@ return [
     'COMMON_CREATED' => 'Criado',
     'COMMON_CREATED_AT' => 'Criado {timestamp}',
     'COMMON_CREATED_AT_LABEL' => 'Criado',
-    'COMMON_CREDENTIALS' => 'Credenciais',
     'COMMON_DELETED' => 'Eliminado',
     'COMMON_DISABLED' => 'Desativado',
     'COMMON_ENABLED' => 'Ativado',

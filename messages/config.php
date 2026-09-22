@@ -7,6 +7,10 @@ declare(strict_types=1);
  *
  * `sourcePath` is the whole `bundles` tree, not the bundle itself: a bundle routinely translates
  * through another bundle's category, and `removeUnused` would drop every key it cannot see.
+ *
+ * `keepMessages` names the keys no call site can reach at all: a permission's description lives in the
+ * `auth_item.description` a migration seeds, as a `Message` pointer inside an SQL string the tokenizer never
+ * reads, so `removeUnused` deleted it on every run (monorepo issue #211). Add one here beside the migration.
  */
 return [
     'sourcePath' => dirname(__DIR__, 2),
@@ -14,6 +18,15 @@ return [
     'categories' => [
         'country',
         'skeleton',
+    ],
+    'keepMessages' => [
+        'skeleton' => [
+            'AUTH_AUTH_UPDATE_DESCRIPTION',
+            'AUTH_REDIRECT_DESCRIPTION',
+            'AUTH_SYSTEM_DESCRIPTION',
+            'AUTH_TRAIL_INDEX_DESCRIPTION',
+            'AUTH_USER_DESCRIPTION',
+        ],
     ],
     'languages' => [
         'de',
