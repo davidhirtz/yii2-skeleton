@@ -97,8 +97,7 @@ class AccountMenu extends Widget
             ]);
 
         return Modal::make()
-            ->title(Yii::t('skeleton', 'ACCOUNT_MENU_LOGOUT'))
-            ->content(P::make()->text(Yii::t('skeleton', 'ACCOUNT_CONFIRM_LOGOUT')))
+            ->title(Yii::t('skeleton', 'ACCOUNT_CONFIRM_LOGOUT'))
             ->footer($button);
     }
 }
