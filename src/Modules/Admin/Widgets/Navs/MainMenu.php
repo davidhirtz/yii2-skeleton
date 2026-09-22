@@ -43,6 +43,8 @@ class MainMenu extends Nav
             }
         }
 
+        $this->addItem(asidePin: AsidePinNavItem::make());
+
         parent::configure();
     }
 }

@@ -30,19 +30,17 @@ export const asidePin = ($btn: HTMLButtonElement) => {
         document.cookie = `${COOKIE_NAME}=${collapsed ? COLLAPSED : ''}; path=/; max-age=${collapsed ? COOKIE_MAX_AGE : 0}; samesite=lax${secure}`;
 
         $btn.setAttribute('aria-pressed', collapsed ? 'false' : 'true');
-        $btn.setAttribute('aria-label', label);
 
         const $icon = $btn.querySelector<HTMLElement>('.fas');
         $icon?.classList.toggle('fa-thumbtack', !collapsed);
         $icon?.classList.toggle('fa-thumbtack-slash', collapsed);
 
-        // `includes/tooltips.ts` bakes the `title` into an element it inserts after the button on `mouseenter`,
-        // which is where the pointer is at this very moment — so the open tooltip is caught up here rather than
-        // through an attribute it has already consumed.
-        const $inner = $btn.nextElementSibling?.querySelector('.tooltip-inner');
+        // The button is a nav link like any other, so its label is the visible text and the accessible name at
+        // once — there is no `title` or `aria-label` beside it to keep in step.
+        const $label = $btn.querySelector('.nav-link-label');
 
-        if ($inner) {
-            $inner.textContent = label;
+        if ($label) {
+            $label.textContent = label;
         }
     });
 };
@@ -67,8 +65,8 @@ document.addEventListener('click', (event: MouseEvent) => {
         return;
     }
 
-    // The pin button is inside the aside but is the one control that means "stop showing this", so a click on
-    // it must not latch what it just collapsed.
+    // The pin is the last item of the main menu, but it is the one control there that means "stop showing
+    // this", so a click on it must not latch what it just collapsed.
     const latch = !!$target?.closest('#aside') && !$target.closest('[data-aside-pin]');
 
     document.documentElement.toggleAttribute(OPEN_ATTRIBUTE, latch);

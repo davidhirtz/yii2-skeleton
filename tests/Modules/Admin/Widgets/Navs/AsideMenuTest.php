@@ -49,16 +49,44 @@ class AsideMenuTest extends TestCase
         self::assertSame('', AsideMenu::make()->render());
     }
 
+    /**
+     * The skeleton's aside opens straight into its menu, the header being the extension point a theme with a
+     * logo of its own overrides.
+     */
+    public function testTheAsideRendersNoHeader(): void
+    {
+        $this->login();
+
+        self::assertStringNotContainsString('aside-header', AsideMenu::make()->render());
+    }
+
+    public function testThePinIsTheLastItemOfTheMainMenu(): void
+    {
+        $this->login();
+
+        $aside = AsideMenu::make()->render();
+        // Everything before the account menu is the main one, its subnavs among it — so the closing tag of the
+        // first list is no boundary.
+        $mainMenu = substr($aside, 0, (int)strpos($aside, 'id="account-menu"'));
+        $pin = strrpos($mainMenu, '<li class="aside-pin nav-item">');
+
+        self::assertNotFalse($pin, 'The main menu renders no pin item.');
+        self::assertStringNotContainsString('<li', substr($mainMenu, $pin + 1));
+    }
+
     public function testThePinButtonReportsTheExpandedAside(): void
     {
         $this->login();
 
         $aside = AsideMenu::make()->render();
 
-        self::assertStringContainsString('class="aside-header"', $aside);
         self::assertStringContainsString('data-aside-pin', $aside);
         self::assertStringContainsString('aria-pressed="true"', $aside);
         self::assertStringContainsString('fa-thumbtack"', $aside);
+        self::assertStringContainsString(
+            '<span class="nav-link-label">' . Yii::t('skeleton', 'ASIDE_UNPIN') . '</span>',
+            $aside,
+        );
     }
 
     /**

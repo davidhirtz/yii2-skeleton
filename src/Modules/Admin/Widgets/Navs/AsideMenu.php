@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Html\Aside;
-use Hirtz\Skeleton\Html\Div;
-use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\AsidePinButton;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -60,16 +58,13 @@ class AsideMenu extends Widget
         return [$this->getHeader(), $this->mainMenu, $this->accountMenu];
     }
 
+    /**
+     * The skeleton's aside opens straight into its menu — the header is the extension point for a theme
+     * rendering a logo of its own, as `Hirtz\Anakin` does.
+     */
     protected function getHeader(): ?Stringable
     {
-        return Div::make()
-            ->class('aside-header')
-            ->content($this->getPinButton());
-    }
-
-    protected function getPinButton(): Stringable
-    {
-        return AsidePinButton::make();
+        return null;
     }
 
     protected function getMainMenu(): Stringable

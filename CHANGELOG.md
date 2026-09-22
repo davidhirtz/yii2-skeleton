@@ -1,5 +1,15 @@
 ## 3.0.0 (in development)
 
+- **The pin moved out of the aside's header and into its main menu.**
+  `Modules\Admin\Widgets\Buttons\AsidePinButton` is gone; `Modules\Admin\Widgets\Navs\AsidePinNavItem` is a
+  `Widgets\Navs\NavItem` `MainMenu` adds last, above `SystemNavItem`'s order so a bundle adding to the menu
+  cannot push past it, and `.aside-pin` is pushed to the end of the list by an auto margin rather than revealed
+  on hover. It renders the `.nav-link` markup every other item does — `.nav-link-icon` plus a `.nav-link-label`
+  the collapsed rail fades out — so the label carries the accessible name and the tooltip and `aria-label` are
+  gone with it; `includes/aside.ts` swaps that text instead. `AsideMenu::getHeader()` now answers `null` and
+  `getPinButton()` is gone with it: the skeleton's aside opens straight into its menu, and the header is the
+  extension point for a theme with a logo of its own.
+
 - **A login loads a fresh document instead of swapping into the page it was typed into** (monorepo issue #185).
   `Web\Response::setHtmxRefresh()` is now `setHtmxReload()` and covers both ways of ending a document: a redirect
   issued after it is answered with `HX-Redirect`, a response staying where it is with `HX-Refresh`, and a request

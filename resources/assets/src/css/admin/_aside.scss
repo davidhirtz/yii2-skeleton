@@ -45,37 +45,31 @@
   .nav-link-icon {
     min-width: 1rem;
   }
+
+  // A label of more than one word wraps inside the collapsed rail, where the link is 3rem wide, and a faded
+  // label still takes its two lines — so the pin used to stand 62px tall against every other item's 40.
+  .nav-link-label {
+    white-space: nowrap;
+  }
 }
 
+// The skeleton renders no header — the row is what a theme puts its logo in, as `Hirtz\Anakin` does.
 .aside-header {
   align-items: center;
   display: flex;
   gap: .5rem;
-  justify-content: flex-end;
   min-height: 2rem;
   padding-inline: 1rem;
 }
 
+// The pin is the last item of the main menu and is pushed to its end — `justify-self` does nothing to a flex
+// item, so the free space `.aside-main`'s `flex-grow` collects is absorbed by an auto margin instead.
 .aside-pin {
-  min-width: 2rem;
-  opacity: 0;
-  padding-block: .25rem;
-  transition: opacity .15s;
+  margin-block-start: auto;
 
-  // Below `md` the aside is a drawer the toggle already opens, so there is nothing here to collapse.
+  // Below `md` the aside is a drawer the navbar toggle already opens, so there is nothing here to collapse.
   @include media-breakpoint-down(sm) {
     display: none;
-  }
-
-  // Revealed on hover, so the first thing the eye lands on is still the menu. A device with no hover has no way
-  // of revealing it and would be left tapping an invisible button.
-  @media (hover: none) {
-    opacity: 1;
-  }
-
-  .aside:hover &,
-  &:focus-visible {
-    opacity: 1;
   }
 }
 
