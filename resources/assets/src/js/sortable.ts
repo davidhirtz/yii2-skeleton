@@ -9,10 +9,6 @@ import htmx from "htmx.org";
 import onLoad from './includes/onLoad';
 
 onLoad(($node) => {
-    if (!($node instanceof HTMLElement)) {
-        return;
-    }
-
     ($node.querySelectorAll('[data-sort-url]') as NodeListOf<HTMLTableElement>).forEach(($el) => {
         new Sortable($el, {
             handle: '.sortable-handle',

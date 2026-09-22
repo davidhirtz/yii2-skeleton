@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **The scripts type-check, and `npm run typecheck` is what runs it** (monorepo issue #227). `tsconfig.json`
+  named `ES2020` while esbuild builds for `esnext`, so `String.prototype.replaceAll` was an error, and
+  `includes/onLoad.ts` declared its callback's argument `HTMLElement` where htmx hands it an `Element` — which
+  is why every caller opened with a cast or an `instanceof` guard. The narrowing happens in `onLoad()` now, so
+  a callback registered there is handed the `HTMLElement` it always wanted and the five workarounds are gone.
+  Nothing runs the compiler on its own: esbuild strips types without checking them.
+
 - **One invalid field no longer paints every input of a custom attribute group** (monorepo issue #226).
   `--color-label` and the three `--input-*` the invalid palette sets are inherited, so putting them on
   `.form-group:has([aria-invalid],:user-invalid)` reached every control a row holds rows of — the whole group

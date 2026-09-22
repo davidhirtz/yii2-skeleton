@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/js/includes/onLoad.ts"],
+  "sourcesContent": ["import htmx from 'htmx.org';\n\nconst callbacks: Array<($root: HTMLElement) => void> = [];\nlet $processed: HTMLElement | null = null;\n\n// htmx hands its callback an `Element`, and everything registered here wants the `HTMLElement` it is in\n// practice \u2014 so the narrowing happens once, here, rather than as a cast in every caller.\n//\n// htmx runs its first pass on a timer of its own, which fires between two deferred module scripts \u2014 so a page\n// loading more than one entry point would leave everything the later one registers without the document it\n// loaded into. This module lives in the chunk htmx itself is in, so it registers before that first pass and\n// replays it for whoever arrives after.\nhtmx.onLoad(($root) => {\n    if (!($root instanceof HTMLElement)) {\n        return;\n    }\n\n    $processed = $root;\n    callbacks.forEach((callback) => callback($root));\n});\n\nexport default ($callback: ($root: HTMLElement) => void) => {\n    callbacks.push($callback);\n\n    if ($processed) {\n        $callback($processed);\n    }\n};\n"],
+  "mappings": "wCAEA,IAAMA,EAAiD,CAAC,EACpDC,EAAiC,KASrCC,EAAK,OAAQC,GAAU,CACbA,aAAiB,cAIvBF,EAAaE,EACbH,EAAU,QAASI,GAAaA,EAASD,CAAK,CAAC,EACnD,CAAC,EAED,IAAOE,EAASC,GAA4C,CACxDN,EAAU,KAAKM,CAAS,EAEpBL,GACAK,EAAUL,CAAU,CAE5B",
+  "names": ["callbacks", "$processed", "htmx_esm_default", "$root", "callback", "onLoad_default", "$callback"]
+}

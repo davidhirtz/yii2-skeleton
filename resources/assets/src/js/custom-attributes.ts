@@ -11,10 +11,6 @@ Sortable.mount(new AutoScroll());
 const POSITION_PLACEHOLDER = '__POSITION__';
 
 onLoad(($node) => {
-    if (!($node instanceof HTMLElement)) {
-        return;
-    }
-
     $node.querySelectorAll<HTMLElement>('[data-group]').forEach(($group) => {
         const $items = $group.querySelector<HTMLElement>('[data-group-items]');
         const $template = $group.querySelector<HTMLTemplateElement>('[data-group-template]');

@@ -1,7 +1,7 @@
 import onLoad from './includes/onLoad';
 
 onLoad(($container) => {
-    (($container as HTMLElement).querySelectorAll('[data-id="signup"]') as NodeListOf<HTMLFormElement>).forEach(($form) => {
+    $container.querySelectorAll<HTMLFormElement>('[data-id="signup"]').forEach(($form) => {
         const getField = (id: string): HTMLInputElement => {
             return $form.querySelector(`[data-id="${id}"]`) as HTMLInputElement;
         }

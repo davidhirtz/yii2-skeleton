@@ -30,7 +30,7 @@ declare global {
 
 onLoad(($container) => {
     const queryAll = (selector: string, method: Function) => {
-        ($container as HTMLElement).querySelectorAll(selector).forEach(($el: Element) => method($el));
+        $container.querySelectorAll(selector).forEach(($el: Element) => method($el));
     };
 
     queryAll('[data-aside-pin]', asidePin);

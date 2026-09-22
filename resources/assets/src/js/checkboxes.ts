@@ -1,8 +1,6 @@
 import onLoad from './includes/onLoad';
 
-onLoad((elt) => {
-    const $container = elt as HTMLElement;
-
+onLoad(($container) => {
     $container.querySelectorAll<HTMLInputElement>('[data-check-all]')
         .forEach($checkbox => {
             const $parent: HTMLElement | null = $checkbox.dataset.checkAll
