@@ -33,7 +33,7 @@ class LanguageDropdownButton extends Widget
         $current = Yii::$app->language;
 
         $button = Button::make()
-            ->class('btn navbar-btn')
+            ->class('btn btn-border')
             ->content(strtoupper($i18n->getLanguageCode($current)))
             ->attribute('aria-label', $i18n->getLabel($current));
 

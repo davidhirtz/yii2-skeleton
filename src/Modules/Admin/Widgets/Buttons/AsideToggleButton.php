@@ -22,7 +22,7 @@ class AsideToggleButton extends Widget
     protected function renderContent(): string|Stringable
     {
         return Button::make()
-            ->addClass('btn navbar-btn aside-toggle')
+            ->addClass('btn btn-border aside-toggle')
             ->addAttributes(['data-aside' => ''])
             ->icon('bars')
             ->attribute('aria-label', Yii::t('skeleton', 'NAV_BAR_TOGGLE_MENU'));

@@ -35,9 +35,5 @@
 
 .navbar-items {
   display: flex;
-}
-
-.navbar-btn {
-  padding-inline: 0;
-  min-width: 2.5rem;
+  gap: .5rem;
 }

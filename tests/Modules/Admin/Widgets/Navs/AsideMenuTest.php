@@ -56,7 +56,6 @@ class AsideMenuTest extends TestCase
     public function testTheAsideRendersNoHeader(): void
     {
         $this->login();
-
         self::assertStringNotContainsString('aside-header', AsideMenu::make()->render());
     }
 

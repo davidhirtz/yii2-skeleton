@@ -81,6 +81,15 @@
   --btn-hover-color: var(--btn-danger-hover-color);
 }
 
+.btn-border {
+  --btn-bg: transparent;
+  --btn-border-color: var(--border-color);
+  --btn-color: inherit;
+  --btn-hover-bg: var(--btn-secondary-hover-bg);
+  --btn-hover-border-color: var(--btn-secondary-hover-border-color);
+  --btn-hover-color: var(--btn-secondary-hover-color);
+}
+
 .btn-link {
   background: transparent !important;
   margin: 0;
