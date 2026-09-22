@@ -1,5 +1,13 @@
 ## 3.0.0 (in development)
 
+- **An icon button inside an `.input-group` fills its cell and has a focus state.** `.btn-icon` draws a box of
+  its own and `.icon` sizes it to one line, which only made an appended or prepended button smaller than the
+  row it sits in — `Widgets\Forms\Fields\UploadField`'s remove button and the custom attribute group's row
+  buttons ask for a bare `.btn` now, the cells are flex so the button stretches, and `.input-group .btn` names
+  the `--input-group-btn-hover-bg` a bare `.btn` otherwise has none of. Tabbing to one used to change nothing
+  but the group's own border, which says a control in the row has focus and not which: it draws an outline
+  inside its cell now, which is also what tells focus from hover.
+
 - **A custom attribute group row is an `.input-group`, and nothing about it is built twice.** A row of one field
   is that field's control with the row's buttons appended, and a row of several is the same input group with the
   collapse toggle standing in for the control — so the box, the radius and the hover and focus palette all come

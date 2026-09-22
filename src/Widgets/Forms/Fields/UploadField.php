@@ -109,7 +109,7 @@ class UploadField extends Field
     protected function getRemoveButton(): string|Stringable
     {
         return Button::make()
-            ->class('btn btn-icon icon')
+            ->class('btn')
             ->icon('xmark')
             ->tooltip(Yii::t('skeleton', 'UPLOAD_BUTTON_REMOVE'))
             ->replace($this->getUrl(remove: true), '#' . $this->getContainerId());

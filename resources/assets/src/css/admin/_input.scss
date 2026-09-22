@@ -133,12 +133,34 @@
     border-radius: 0;
   }
 
+  // An appended button fills its cell, so it needs none of `.btn-icon`'s box — and a bare `.btn` names no hover
+  // background of its own, which is what left it with nothing to show on hover or focus. The outline is drawn
+  // inside the cell, the group clipping anything outside it, and is what tells focus from hover.
+  .btn {
+    --btn-hover-bg: var(--input-group-btn-hover-bg);
+
+    align-items: center;
+    display: flex;
+    justify-content: center;
+
+    &:focus-visible {
+      outline: 2px solid var(--input-focus-border-color);
+      outline-offset: -2px;
+    }
+  }
+
   > .input,
   > .select {
     flex: 1 1 auto;
     min-width: 0; // https://stackoverflow.com/questions/36247140/why-dont-flex-items-shrink-past-content-size
     width: 1%;
   }
+}
+
+// A flex cell, so the button inside stretches to the row rather than sitting at its own content height.
+.input-group-append,
+.input-group-prepend {
+  display: flex;
 }
 
 .input-group-append {

@@ -368,7 +368,7 @@ class GroupField extends Field
             // One row has nowhere to move to; the script hides it again as rows come and go.
             $this->group->isSortable()
                 ? DraggableSortButton::make()
-                    ->class('btn btn-icon icon')
+                    ->class('btn')
                     ->attribute('hidden', $sortable ? null : true)
                 : null,
             $this->getRemoveButton(),
@@ -380,7 +380,7 @@ class GroupField extends Field
         $label = Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_REMOVE');
 
         return Button::make()
-            ->class('btn btn-icon icon')
+            ->class('btn')
             ->icon('trash')
             ->type('button')
             ->attribute('data-group-remove', true)
