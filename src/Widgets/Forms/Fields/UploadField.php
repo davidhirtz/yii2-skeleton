@@ -6,9 +6,9 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Input;
-use Hirtz\Skeleton\Html\Label;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\CustomAttributes\UploadCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
@@ -132,7 +132,7 @@ class UploadField extends Field
      * chosen — so the label names the row rather than a control.
      */
     #[Override]
-    protected function getLabel(): ?Label
+    protected function getLabel(): ?Tag
     {
         return parent::getLabel()?->attribute('for', null);
     }

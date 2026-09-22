@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Label;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
@@ -112,7 +113,7 @@ abstract class Field extends Widget
             ->content($content);
     }
 
-    protected function getLabel(): ?Stringable
+    protected function getLabel(): ?Tag
     {
         return $this->label
             ? Label::make()

@@ -21,7 +21,7 @@ class CheckboxListFieldTest extends TestCase
             ]);
 
         $html = '<div class="form-group form-row" data-id="f-tags">'
-            . '<div class="form-label"><label class="label">Tags</label></div>'
+            . '<div class="form-label"><div class="label">Tags</div></div>'
             . '<div class="form-content">'
             . '<input type="hidden" name="F[tags]" value="">'
             . '<div class="form-checkbox"><div class="checkbox"><input type="checkbox" id="f-tags-1" class="input" name="F[tags][]" value="1"></div><label class="label" for="f-tags-1">First</label></div>'
@@ -32,7 +32,8 @@ class CheckboxListFieldTest extends TestCase
     }
 
     /**
-     * The group's caption labels no single input, so a `for` would point at an id that is never rendered.
+     * The group's caption labels no single input, so it is a `div` rather than a `<label>` whose `for` would
+     * point at an id that is never rendered — every item carries a label of its own.
      */
     public function testTheGroupLabelClaimsNoInput(): void
     {
@@ -41,7 +42,7 @@ class CheckboxListFieldTest extends TestCase
             ->addItem(1, 'First')
             ->render();
 
-        self::assertStringContainsString('<label class="label">Tags</label>', $content);
+        self::assertStringContainsString('<div class="label">Tags</div>', $content);
     }
 
     public function testAnItemCarriesItsOwnLabelAttributes(): void
