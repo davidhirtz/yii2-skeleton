@@ -1,9 +1,31 @@
 ## 3.0.0 (in development)
 
+- **A custom attribute group row of several fields is previewed by its title and expands in place.** A
+  collapsed row is its title, a chevron and its buttons; the fields sit in a `[data-group-body]` beside them
+  that `custom-attributes.ts` shows and hides. Which attribute the title reads comes from the new
+  `Models\CustomAttributes\GroupCustomAttribute::titleAttribute()`, defaulting to the first one declared, and
+  the server renders it through that attribute's own `formatValue()` — so a select reads as its option label
+  rather than as its value. The script then mirrors the marked input as it is typed into, reading a select's
+  selected option rather than its value, so it never has to know a definition's type. A row with nothing typed
+  into it is its number instead, the new `CUSTOM_ATTRIBUTE_ITEM_POSITION` key, and says so with
+  `data-group-title-position` — the script rewrites only those, on every add, remove and move, the rest being
+  what the user typed. A row arrives open when it was added by the add button or when a failed validation left
+  an error on it, and one holding a control the browser refuses on submit opens itself: a control it cannot
+  focus blocks the submit with nothing on screen to say why, so a capture-phase `invalid` listener gets there
+  first. A group of one row, or of one field, does not collapse — there is nothing to fold away — and the
+  group's label points at the first row's toggle rather than at a field a collapsed row hides.
+
+- **The required asterisk only marks the label of the row the required control is in.** `_form.scss` matched
+  `.form-row:has(:required) .form-label .label`, which reaches every label a custom attribute group holds — one
+  required field anywhere in a group marked all of them, the group's own included. It is
+  `.form-row:not(:has(.form-row)):has(:required) > .form-label > .label` now: a row holding rows of its own is
+  asking about the group rather than about a control.
+
 - **A custom attribute group renders as an ordinary form row, and a group of one field as a single line.**
   `Widgets\Forms\Fields\GroupField` no longer renders a `<fieldset>` with a `<legend>` of its own: the group's
   label sits in the row's `form-label` and everything it holds in the `form-content`, like every other field,
-  and points at the first field of the first row, so clicking it puts the cursor where typing starts. It cannot
+  and points at the first field of the first row — or, for a group that collapses, at the first row's toggle —
+  so clicking it reaches what typing starts with. It cannot
   name the group that way — a `<label for>` labels one control — so the `<fieldset>` the whole row sits in
   carries `aria-labelledby` instead, and a group with no row to point at is a plain `div`. That
   `.custom-attribute-group-fieldset` is also what spaces a group off the plain fields around it. The

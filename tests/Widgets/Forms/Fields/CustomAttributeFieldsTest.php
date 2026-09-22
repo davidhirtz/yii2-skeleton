@@ -120,7 +120,7 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertStringContainsString('data-group-sortable', $content);
 
         self::assertStringContainsString(
-            '<input type="text" id="fieldrecord-links-0-label" class="input" name="FieldRecord[links][0][label]" value="Label" maxlength="255">',
+            '<input type="text" id="fieldrecord-links-0-label" class="input" name="FieldRecord[links][0][label]" value="Label" maxlength="255" data-group-title-input>',
             $content
         );
 
@@ -219,8 +219,10 @@ class CustomAttributeFieldsTest extends TestCase
 
         // The label points at the first field of the first row; the group as a whole is named by the container,
         // since a `<label for>` labels one control.
+        // A collapsed row hides its fields and a `<label for>` naming a hidden control does nothing, so the
+        // label points at the toggle that opens them.
         self::assertStringContainsString(
-            '<label id="fieldrecord-links" class="label" for="fieldrecord-links-0-label">Links</label>',
+            '<label id="fieldrecord-links" class="label" for="fieldrecord-links-0-toggle">Links</label>',
             $content
         );
 
@@ -296,6 +298,87 @@ class CustomAttributeFieldsTest extends TestCase
 
         self::assertStringContainsString('data-group-add', $content);
         self::assertStringNotContainsString('form-hint', $content);
+    }
+
+    public function testARowOfSeveralFieldsIsPreviewedByItsTitleAndExpands(): void
+    {
+        $model = $this->createRecord();
+        $model->type = FieldRecord::TYPE_LINKS;
+        $model->links = [
+            ['label' => 'One', 'url' => 'https://one.example.com'],
+            ['url' => 'https://two.example.com'],
+        ];
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['links'])
+            ->render();
+
+        // The title defaults to the first attribute the group declares, and the script is handed the pattern a
+        // row with nothing typed into it falls back to.
+        self::assertStringContainsString('data-group-position="#' . GroupField::POSITION_PLACEHOLDER . '"', $content);
+        self::assertStringContainsString('name="FieldRecord[links][0][label]" value="One" maxlength="255" data-group-title-input', $content);
+
+        self::assertStringContainsString(
+            '<div class="custom-attribute-group-item-title" data-group-title>One</div>',
+            $content
+        );
+
+        // The second row has no label, so it is its number — and says so, since the script rewrites only those.
+        self::assertStringContainsString(
+            '<div class="custom-attribute-group-item-title" data-group-title data-group-title-position>#2</div>',
+            $content
+        );
+
+        self::assertStringContainsString(
+            '<button type="button" id="fieldrecord-links-0-toggle" class="btn btn-link custom-attribute-group-item-toggle" data-group-toggle aria-controls="fieldrecord-links-0-fields" aria-expanded="false">',
+            $content
+        );
+
+        self::assertStringContainsString(
+            '<div id="fieldrecord-links-0-fields" class="custom-attribute-group-item-body" data-group-body hidden>',
+            $content
+        );
+    }
+
+    /**
+     * A control the browser cannot focus blocks the submit with nothing on screen to say why, so the row a
+     * failed validation left an error on arrives open.
+     */
+    public function testARowWithAnErrorIsRenderedOpen(): void
+    {
+        $model = $this->createRecord();
+        $model->type = FieldRecord::TYPE_LINKS;
+        $model->links = [
+            ['label' => 'One', 'url' => 'https://one.example.com'],
+            ['label' => 'Two', 'url' => ''],
+        ];
+
+        self::assertFalse($model->validate());
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['links'])
+            ->render();
+
+        self::assertStringContainsString('aria-controls="fieldrecord-links-0-fields" aria-expanded="false"', $content);
+        self::assertStringContainsString('aria-controls="fieldrecord-links-1-fields" aria-expanded="true"', $content);
+
+        self::assertStringContainsString(
+            '<div id="fieldrecord-links-1-fields" class="custom-attribute-group-item-body" data-group-body>',
+            $content
+        );
+    }
+
+    /**
+     * There is nothing to fold away: a group that holds one row holds it open, and a row of one field is the
+     * line it would collapse to.
+     */
+    public function testOnlyARepeatedRowOfSeveralFieldsCollapses(): void
+    {
+        self::assertStringNotContainsString('data-group-toggle', $this->renderGroup(FieldRecord::TYPE_META));
+        self::assertStringNotContainsString('data-group-toggle', $this->renderGroup(FieldRecord::TYPE_REQUIRED_LINKS));
+        self::assertStringContainsString('data-group-toggle', $this->renderGroup(FieldRecord::TYPE_TRANSLATED_LINKS));
     }
 
     /**

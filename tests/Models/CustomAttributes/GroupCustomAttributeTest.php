@@ -98,6 +98,20 @@ class GroupCustomAttributeTest extends TestCase
         self::assertArrayHasKey('links', $model->getErrors());
     }
 
+    public function testTheTitleAttributeDefaultsToTheFirstOneDeclared(): void
+    {
+        $attributes = [TextCustomAttribute::make('label'), UrlCustomAttribute::make('url')];
+
+        self::assertSame('label', GroupCustomAttribute::make('links')->attributes($attributes)->getTitleAttribute());
+
+        self::assertSame(
+            'url',
+            GroupCustomAttribute::make('links')->attributes($attributes)->titleAttribute('url')->getTitleAttribute()
+        );
+
+        self::assertNull(GroupCustomAttribute::make('links')->getTitleAttribute());
+    }
+
     public function testTheTrailValueIsALabelPerChildOfEveryRow(): void
     {
         $model = $this->createRecord();

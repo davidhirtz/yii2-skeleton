@@ -147,7 +147,10 @@
     }
   }
 
-  .form-row:has(:required) .form-label &:after {
+  // A row holding rows of its own — a custom attribute group — is asking about the group rather than about a
+  // control, and the descendant form of this would mark every label inside it for one required field anywhere
+  // in there. The child combinators keep a nested row's own label its own.
+  .form-row:not(:has(.form-row)):has(:required) > .form-label > &:after {
     content: " *";
   }
 }

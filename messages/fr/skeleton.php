@@ -130,6 +130,7 @@ return [
     'CUSTOM_ATTRIBUTE_HINT_MAX_COUNT' => 'Au maximum {max, plural, one{# entrée} other{# entrées}}',
     'CUSTOM_ATTRIBUTE_HINT_MIN_COUNT' => 'Au minimum {min, plural, one{# entrée} other{# entrées}}',
     'CUSTOM_ATTRIBUTE_HINT_MIN_MAX_COUNT' => 'Entre {min} et {max, plural, one{# entrée} other{# entrées}}',
+    'CUSTOM_ATTRIBUTE_ITEM_POSITION' => 'n° {position}',
     'DASHBOARD_ACTION_USER_CREATE' => 'Créer un nouvel utilisateur',
     'DASHBOARD_HEADER_HELLO_AGAIN' => 'Bonjour {user}, content de vous revoir !',
     'DASHBOARD_HEADER_LAST_LOGIN' => 'Dernière connexion {timestamp}',

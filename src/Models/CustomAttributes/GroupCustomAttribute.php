@@ -23,6 +23,7 @@ class GroupCustomAttribute extends CustomAttribute
     protected int $minCount = 0;
     protected ?int $maxCount = null;
     protected bool $sortable = true;
+    protected ?string $titleAttribute = null;
 
     /**
      * @var class-string<CustomAttributeGroupItem>
@@ -63,6 +64,16 @@ class GroupCustomAttribute extends CustomAttribute
     }
 
     /**
+     * The attribute a collapsed row is previewed by. It defaults to the first one declared, which is the one a
+     * group is normally named after.
+     */
+    public function titleAttribute(string $titleAttribute): static
+    {
+        $this->titleAttribute = $titleAttribute;
+        return $this;
+    }
+
+    /**
      * @param class-string<CustomAttributeGroupItem> $itemClass
      */
     public function itemClass(string $itemClass): static
@@ -97,6 +108,11 @@ class GroupCustomAttribute extends CustomAttribute
     public function isSortable(): bool
     {
         return $this->sortable;
+    }
+
+    public function getTitleAttribute(): ?string
+    {
+        return $this->titleAttribute ?? ($this->attributes[0]->name ?? null);
     }
 
     #[Override]
