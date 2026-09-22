@@ -1,8 +1,3 @@
 .autocomplete {
   position: relative;
 }
-
-// The options reuse the dropdown menu, which is positioned by floating-ui rather than by an anchoring button.
-.autocomplete-results {
-  max-width: min(28rem, 90vw);
-}

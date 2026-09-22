@@ -42,9 +42,11 @@ export default ($btn: HTMLElement) => {
             Object.assign($popover.style, {
                 left: `${x}px`,
                 top: `${y}px`,
-                width: `${$btn.offsetWidth}px`,
                 visibility: 'visible',
             });
+
+            // A floor rather than the width, so a menu wider than its button grows instead of wrapping its labels.
+            $popover.style.setProperty('--dropdown-anchor-width', `${$btn.offsetWidth}px`);
 
             $dropdown?.classList.toggle('dropup', placement.startsWith('top'));
         });

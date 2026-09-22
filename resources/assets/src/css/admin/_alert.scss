@@ -40,6 +40,12 @@
   padding: 1rem;
   position: relative;
 
+  .container > & {
+    @include media-breakpoint-up(sm) {
+      margin-inline: 1rem;
+    }
+  }
+
   .dismissed & {
     opacity: 0;
     translate: 100%;

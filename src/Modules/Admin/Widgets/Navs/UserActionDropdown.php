@@ -24,8 +24,8 @@ class UserActionDropdown extends ActionDropdown
         $this->addItem(
             $this->getUserPasswordResetButton(),
             $this->getUserDisableAuthenticatorButton(),
-            $this->getUserDeleteButton(),
             $this->getOwnerLinkButton(),
+            $this->getUserDeleteButton(),
         );
         parent::configure();
     }
