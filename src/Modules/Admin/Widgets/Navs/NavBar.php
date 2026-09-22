@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\AsidePinButton;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\AsideToggleButton;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\LanguageDropdownButton;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -34,6 +35,7 @@ class NavBar extends Widget
         $content = implode('', array_map(strval(...), array_filter([
             $this->getSearchItem(),
             $this->getLanguageDropdownItem(),
+            $this->getAsidePinItem(),
             $this->getMobileToggle(),
         ])));
 
@@ -52,6 +54,11 @@ class NavBar extends Widget
     protected function getLanguageDropdownItem(): ?Stringable
     {
         return LanguageDropdownButton::make();
+    }
+
+    protected function getAsidePinItem(): ?Stringable
+    {
+        return AsidePinButton::make();
     }
 
     protected function getMobileToggle(): ?Stringable

@@ -13,35 +13,31 @@ const OPEN_ATTRIBUTE = 'data-aside-open';
 export const asidePin = ($btn: HTMLButtonElement) => {
     const secure = $btn.hasAttribute('data-aside-pin-secure') ? '; secure' : '';
 
-    $btn.addEventListener('click', (event: MouseEvent) => {
+    $btn.addEventListener('click', () => {
         const collapsed = !document.documentElement.hasAttribute(COLLAPSED_ATTRIBUTE);
         const label = (collapsed ? $btn.dataset.asidePinLabelCollapsed : $btn.dataset.asidePinLabel) ?? '';
 
         document.documentElement.toggleAttribute(COLLAPSED_ATTRIBUTE, collapsed);
-        // The latch below skips this button, but one from an earlier click would still be standing.
+        // The button sits in the navbar, so the listener below already drops the latch — but a click that never
+        // reaches it (a keyboard activation on a page htmx has just swapped) would leave one standing.
         document.documentElement.removeAttribute(OPEN_ATTRIBUTE);
-
-        // The button keeps focus after a pointer click, and `.aside:focus-within` is one of the three ways the
-        // collapsed menu is open — so collapsing would appear to do nothing until the next click elsewhere. A
-        // keyboard activation reports no detail and keeps its focus, where staying open is the right answer.
-        if (collapsed && event.detail > 0) {
-            $btn.blur();
-        }
 
         document.cookie = `${COOKIE_NAME}=${collapsed ? COLLAPSED : ''}; path=/; max-age=${collapsed ? COOKIE_MAX_AGE : 0}; samesite=lax${secure}`;
 
         $btn.setAttribute('aria-pressed', collapsed ? 'false' : 'true');
+        $btn.setAttribute('aria-label', label);
 
         const $icon = $btn.querySelector<HTMLElement>('.fas');
-        $icon?.classList.toggle('fa-angle-double-left', !collapsed);
-        $icon?.classList.toggle('fa-angle-double-right', collapsed);
+        $icon?.classList.toggle('fa-thumbtack', !collapsed);
+        $icon?.classList.toggle('fa-thumbtack-slash', collapsed);
 
-        // The button is a nav link like any other, so its label is the visible text and the accessible name at
-        // once — there is no `title` or `aria-label` beside it to keep in step.
-        const $label = $btn.querySelector('.nav-link-label');
+        // `includes/tooltips.ts` bakes the `title` into an element it inserts after the button on `mouseenter`,
+        // which is where the pointer is at this very moment — so the open tooltip is caught up here rather than
+        // through an attribute it has already consumed.
+        const $inner = $btn.nextElementSibling?.querySelector('.tooltip-inner');
 
-        if ($label) {
-            $label.textContent = label;
+        if ($inner) {
+            $inner.textContent = label;
         }
     });
 };
@@ -66,9 +62,7 @@ document.addEventListener('click', (event: MouseEvent) => {
         return;
     }
 
-    // The pin is the last item of the main menu, but it is the one control there that means "stop showing
-    // this", so a click on it must not latch what it just collapsed.
-    const latch = !!$target?.closest('#aside') && !$target.closest('[data-aside-pin]');
+    const latch = !!$target?.closest('#aside');
 
     document.documentElement.toggleAttribute(OPEN_ATTRIBUTE, latch);
 });

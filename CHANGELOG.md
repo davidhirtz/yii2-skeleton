@@ -21,17 +21,16 @@
   account's `color_scheme` column alone — so a guest follows `prefers-color-scheme` and a stale `_theme` cookie is
   ignored. The account form is unchanged and still asks for a full document load when the save changed the scheme.
 
-- **The pin moved out of the aside's header and into its main menu.**
-  `Modules\Admin\Widgets\Buttons\AsidePinButton` is gone; `Modules\Admin\Widgets\Navs\AsidePinNavItem` is a
-  `Widgets\Navs\NavItem` `MainMenu` adds last, above `SystemNavItem`'s order so a bundle adding to the menu
-  cannot push past it, and `.aside-pin` is pushed to the end of the list by an auto margin rather than revealed
-  on hover. It renders the `.nav-link` markup every other item does — `.nav-link-icon` plus a `.nav-link-label`
-  the collapsed rail fades out — so the label carries the accessible name and the tooltip and `aria-label` are
-  gone with it; `includes/aside.ts` swaps that text instead. `AsideMenu::getHeader()` now answers `null` and
-  `getPinButton()` is gone with it: the skeleton's aside opens straight into its menu, and the header is the
-  extension point for a theme with a logo of its own. It reads as expanding and collapsing rather than pinning
-  now — `angle-double-right` / `angle-double-left`, and `ASIDE_PIN` / `ASIDE_UNPIN` retranslated in all four
-  languages; the keys and the class names still say pin.
+- **The pin moved out of the aside and into the navbar**, where it shares a slot with the drawer toggle and the
+  `md` breakpoint decides which of the two is drawn. `Modules\Admin\Widgets\Buttons\AsidePinButton` renders it,
+  `NavBar::getAsidePinItem()` places it, and both it and `AsideToggleButton` extend the new
+  `Buttons\AbstractAsideButton`, which is where the guest check that keeps either out of a bar with no aside
+  behind it now lives — the navbar renders before the aside and cannot ask it. `AsideMenu::getHeader()` answers
+  `null` and `getPinButton()` is gone with it: the skeleton's aside opens straight into its menu, and the header
+  is the extension point for a theme with a logo of its own. The button is icon-only (`thumbtack` /
+  `thumbtack-slash`), so its label is an `aria-label` and a tooltip `includes/aside.ts` keeps in step; the
+  `ASIDE_PIN` / `ASIDE_UNPIN` keys read *Expand menu* / *Collapse menu* in all four languages, and the keys and
+  class names still say pin.
 
 - **A login loads a fresh document instead of swapping into the page it was typed into** (monorepo issue #185).
   `Web\Response::setHtmxRefresh()` is now `setHtmxReload()` and covers both ways of ending a document: a redirect

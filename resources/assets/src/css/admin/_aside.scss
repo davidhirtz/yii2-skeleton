@@ -46,8 +46,9 @@
     min-width: 1rem;
   }
 
-  // A label of more than one word wraps inside the collapsed rail, where the link is 3rem wide, and a faded
-  // label still takes its two lines — so the pin used to stand 62px tall against every other item's 40.
+  // A label of more than one word would wrap inside the collapsed rail, where the link is 3rem wide, and a
+  // faded label still takes its two lines — an item a word longer than the shipped ones would stand half
+  // again as tall as the rest.
   .nav-link-label {
     white-space: nowrap;
   }
@@ -60,17 +61,6 @@
   gap: .5rem;
   min-height: 2rem;
   padding-inline: 1rem;
-}
-
-// The pin is the last item of the main menu and is pushed to its end — `justify-self` does nothing to a flex
-// item, so the free space `.aside-main`'s `flex-grow` collects is absorbed by an auto margin instead.
-.aside-pin {
-  margin-block-start: auto;
-
-  // Below `md` the aside is a drawer the navbar toggle already opens, so there is nothing here to collapse.
-  @include media-breakpoint-down(sm) {
-    display: none;
-  }
 }
 
 @include media-breakpoint-up(md) {
@@ -278,9 +268,18 @@
   }
 }
 
+// The two navbar buttons share a slot and the breakpoint decides which one is drawn: below `md` the aside is a
+// drawer the toggle opens, above it a rail the pin collapses.
 .aside-toggle {
 
   @include media-breakpoint-up(md) {
+    display: none;
+  }
+}
+
+.aside-pin {
+
+  @include media-breakpoint-down(sm) {
     display: none;
   }
 }

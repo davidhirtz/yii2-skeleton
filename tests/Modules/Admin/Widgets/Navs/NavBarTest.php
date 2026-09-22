@@ -56,6 +56,7 @@ class NavBarTest extends TestCase
 
         self::assertStringContainsString('/admin/account/language', $navbar);
         self::assertStringNotContainsString('aside-toggle', $navbar);
+        self::assertStringNotContainsString('aside-pin', $navbar);
     }
 
     public function testTheLoggedInNavbarKeepsItsToggle(): void
@@ -63,6 +64,20 @@ class NavBarTest extends TestCase
         $this->login();
 
         self::assertStringContainsString('aside-toggle', NavBar::make()->render());
+    }
+
+    /**
+     * The drawer toggle and the pin share a slot, the breakpoint deciding which one is drawn — so both are in
+     * the markup and neither is the other's fallback.
+     */
+    public function testTheLoggedInNavbarCarriesThePinBesideTheToggle(): void
+    {
+        $this->login();
+
+        $navbar = NavBar::make()->render();
+
+        self::assertStringContainsString('aside-pin', $navbar);
+        self::assertStringContainsString('data-aside-pin', $navbar);
     }
 
     /**

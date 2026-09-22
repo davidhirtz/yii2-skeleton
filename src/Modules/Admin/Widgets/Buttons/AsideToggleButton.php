@@ -5,19 +5,15 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Buttons;
 
 use Hirtz\Skeleton\Widgets\Buttons\Button;
-use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 use Yii;
 
-class AsideToggleButton extends Widget
+/**
+ * Opens the aside as a drawer below the `md` breakpoint, where {@see AsidePinButton} takes the same slot over.
+ */
+class AsideToggleButton extends AbstractAsideButton
 {
-    #[Override]
-    public function isVisible(): bool
-    {
-        return parent::isVisible() && !$this->webuser->getIsGuest();
-    }
-
     #[Override]
     protected function renderContent(): string|Stringable
     {
