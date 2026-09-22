@@ -65,6 +65,7 @@ class AccountLogoutOtherSessionsButton extends Widget
     {
         return Button::make()
             ->danger()
+            ->addClass('text-nowrap')
             ->icon($this->icon)
             ->modal($this->getModal())
             ->text($this->label);
