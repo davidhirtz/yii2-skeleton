@@ -32,6 +32,7 @@ class StatusIconColumn extends LinkColumn
      */
     public function __construct(array $config = [])
     {
+        $this->headerAttributes = ['class' => 'grid-col-icon'];
         $this->format ??= 'raw';
         $this->property ??= 'status';
         $this->title ??= false;

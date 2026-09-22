@@ -24,6 +24,16 @@ class CheckboxColumn extends Column
     protected bool $multiple = true;
     protected string $param = 'selection';
 
+    /**
+     * @param array<string, mixed> $config
+     */
+    public function __construct(array $config = [])
+    {
+        $this->headerAttributes = ['class' => 'grid-col-icon'];
+
+        parent::__construct($config);
+    }
+
     public function multiple(bool $multiple = true): static
     {
         $this->multiple = $multiple;
