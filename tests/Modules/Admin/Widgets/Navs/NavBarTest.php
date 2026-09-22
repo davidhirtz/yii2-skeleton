@@ -54,7 +54,7 @@ class NavBarTest extends TestCase
 
         $navbar = NavBar::make()->render();
 
-        self::assertStringContainsString('i18n-dropdown-option', $navbar);
+        self::assertStringContainsString('/admin/account/language', $navbar);
         self::assertStringNotContainsString('aside-toggle', $navbar);
     }
 

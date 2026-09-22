@@ -16,7 +16,6 @@ class Icon extends Widget
     use TooltipAttributeTrait;
 
     public const string ICON_COLLECTION_BRAND = 'brand';
-    public const string ICON_COLLECTION_FLAG = 'flag';
 
     private string $name;
     private ?string $collection = null;
@@ -43,7 +42,6 @@ class Icon extends Widget
     {
         $this->addClass(match ($this->collection) {
             self::ICON_COLLECTION_BRAND => "fab fa-$this->name",
-            self::ICON_COLLECTION_FLAG => "i18n-icon $this->name",
             default => "fas fa-$this->name",
         });
 

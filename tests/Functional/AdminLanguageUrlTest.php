@@ -52,7 +52,7 @@ class AdminLanguageUrlTest extends TestCase
         $this->login();
         $this->open('admin/user/index');
 
-        self::assertSelectorExists('button.i18n-dropdown-option[hx-post="/en/admin/account/language"][hx-vals=\'{"language":"de"}\']');
+        self::assertSelectorExists('button.dropdown-option[hx-post="/en/admin/account/language"][hx-vals=\'{"language":"de"}\']');
 
         $request = $this->getWebRequest();
 

@@ -34,13 +34,23 @@ class LanguageDropdownButtonTest extends TestCase
         self::assertStringContainsString('hx-vals="{&quot;language&quot;:&quot;de&quot;}"', $content);
     }
 
+    public function testTheButtonNamesTheCurrentLanguageByItsCode(): void
+    {
+        Yii::$app->language = 'en-US';
+
+        $content = LanguageDropdownButton::make()->render();
+
+        self::assertStringContainsString('aria-label="English"', $content);
+        self::assertStringContainsString('>EN</button>', $content);
+    }
+
     public function testTheCurrentLanguageIsTheSelectedOption(): void
     {
         Yii::$app->language = 'de';
 
         $content = LanguageDropdownButton::make()->render();
 
-        self::assertStringContainsString('class="dropdown-option i18n-dropdown-option selected"', $content);
+        self::assertStringContainsString('class="dropdown-option selected"', $content);
         self::assertSame(1, substr_count($content, 'selected'));
     }
 

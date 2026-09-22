@@ -1,5 +1,12 @@
 ## 3.0.0 (in development)
 
+- **The language picker names its languages rather than drawing their flags** (monorepo issue #216). The navbar
+  button carries the current language's two letter code — `I18N::getLanguageCode()` takes the language as an
+  optional argument now — with the native language name as its `aria-label`, and the dropdown option is the
+  native name alone. `Widgets\Icon::ICON_COLLECTION_FLAG` is gone with the `.i18n-icon` and
+  `.i18n-dropdown-option` rules and the four flag images: a flag names a country, not a language, and the set
+  only ever covered the four shipped languages.
+
 - **`yii message` keeps the keys nothing calls** (monorepo issue #211). `messages/config.php` gains
   `keepMessages`, a list of keys per category the run adds to whatever it extracted: a permission's description
   is a `Message` pointer inside the SQL string its migration seeds, so no call site names it and `removeUnused`

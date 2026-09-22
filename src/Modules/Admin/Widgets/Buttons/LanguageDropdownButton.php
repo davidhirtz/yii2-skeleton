@@ -9,7 +9,6 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\ModuleTrait;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
-use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
@@ -33,13 +32,10 @@ class LanguageDropdownButton extends Widget
         $i18n = Yii::$app->getI18n();
         $current = Yii::$app->language;
 
-        $icon = Icon::make()
-            ->collection(Icon::ICON_COLLECTION_FLAG)
-            ->name($current);
-
         $button = Button::make()
             ->class('btn navbar-btn')
-            ->content($icon);
+            ->content(strtoupper($i18n->getLanguageCode($current)))
+            ->attribute('aria-label', $i18n->getLabel($current));
 
         $dropdown = Dropdown::make()
             ->button($button)
@@ -57,9 +53,8 @@ class LanguageDropdownButton extends Widget
     protected function getLanguageButton(string $language, string $label, ?string $current): Stringable
     {
         return Button::make()
-            ->addClass('dropdown-option i18n-dropdown-option', $language === $current ? 'selected' : null)
+            ->addClass('dropdown-option', $language === $current ? 'selected' : null)
             ->type('button')
-            ->icon(Icon::ICON_COLLECTION_FLAG . ':' . $language)
             ->text($label)
             ->post(['/admin/account/language'])
             ->attribute('hx-vals', (string)json_encode(['language' => $language]));

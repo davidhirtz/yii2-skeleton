@@ -69,7 +69,7 @@ class AdminLanguageTest extends TestCase
 
         self::assertResponseIsSuccessful();
         self::assertLanguageSame('de');
-        self::assertSelectorNotExists('.i18n-dropdown-option');
+        self::assertSelectorNotExists('button[hx-post="/admin/account/language"]');
         self::assertSelectorNotExists('select[name$="[language]"]');
     }
 
@@ -91,7 +91,7 @@ class AdminLanguageTest extends TestCase
     }
 
     /**
-     * The navbar renders outside `#wrap`, so the page the flag was rendered with is not the page it is clicked
+     * The navbar renders outside `#wrap`, so the page the button was rendered with is not the page it is clicked
      * on — the whole document is reloaded rather than swapped, and the URL is the browser's own.
      */
     public function testAnHtmxRequestIsAnsweredWithARefresh(): void
@@ -146,8 +146,8 @@ class AdminLanguageTest extends TestCase
         $this->login();
         $this->open('admin/user/index');
 
-        self::assertSelectorExists('button.i18n-dropdown-option[hx-post="/admin/account/language"][hx-vals=\'{"language":"de"}\']');
-        self::assertSelectorExists('button.i18n-dropdown-option[hx-post="/admin/account/language"][hx-vals=\'{"language":"en-US"}\']');
+        self::assertSelectorExists('button.dropdown-option[hx-post="/admin/account/language"][hx-vals=\'{"language":"de"}\']');
+        self::assertSelectorExists('button.dropdown-option[hx-post="/admin/account/language"][hx-vals=\'{"language":"en-US"}\']');
 
         // nothing outside `#wrap` inherits its CSRF header
         self::assertSelectorExists('.dropdown[hx-headers\\:inherited]');

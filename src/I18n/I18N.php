@@ -95,9 +95,9 @@ class I18N extends \yii\i18n\I18N
         return static::$languageLabels[$language] ?? $language;
     }
 
-    public function getLanguageCode(): string
+    public function getLanguageCode(?string $language = null): string
     {
-        return substr((string)Yii::$app->language, 0, 2);
+        return substr($language ?? (string)Yii::$app->language, 0, 2);
     }
 
     /**

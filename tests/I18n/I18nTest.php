@@ -31,4 +31,13 @@ class I18nTest extends TestCase
         self::assertSame('Deutsch', $i18n->getLabel('de'));
         self::assertSame('nl', $i18n->getLabel('nl'));
     }
+
+    public function testLanguageCodes(): void
+    {
+        $i18n = Yii::$app->getI18n();
+
+        self::assertSame('en', $i18n->getLanguageCode());
+        self::assertSame('de', $i18n->getLanguageCode('de'));
+        self::assertSame('en', $i18n->getLanguageCode('en-US'));
+    }
 }

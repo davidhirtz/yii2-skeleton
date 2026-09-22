@@ -41,39 +41,3 @@
   padding-inline: 0;
   min-width: 2.5rem;
 }
-
-.i18n-icon {
-  aspect-ratio: 1;
-  background-repeat: no-repeat;
-  background-size: contain;
-  display: block;
-  height: 1lh;
-  margin-inline: auto;
-
-  &.de {
-    //noinspection CssUnknownTarget
-    background-image: url(../images/flags/de.png);
-  }
-
-  &.en-US {
-    //noinspection CssUnknownTarget
-    background-image: url(../images/flags/en-US.png);
-  }
-
-  &.fr {
-    //noinspection CssUnknownTarget
-    background-image: url(../images/flags/fr.png);
-  }
-
-  &.pt {
-    //noinspection CssUnknownTarget
-    background-image: url(../images/flags/pt.png);
-  }
-}
-
-.i18n-dropdown-option {
-  align-items: center;
-  display: flex;
-  gap: 1rem;
-  padding: 0.8125rem 1rem;
-}
