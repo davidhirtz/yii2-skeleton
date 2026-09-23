@@ -14,7 +14,8 @@ use yii\web\UploadedFile;
 class ChunkedUploadedFile extends UploadedFile
 {
     /**
-     * @var int|null the maximum file size for chunked uploads.
+     * @var int|null the maximum size of the assembled file, {@see Upload::$maxSize} unless set: the first chunk
+     * already names the total, so an oversized upload is refused before any of it is written.
      */
     public ?int $maxSize = null;
 
@@ -22,6 +23,7 @@ class ChunkedUploadedFile extends UploadedFile
 
     public function init(): void
     {
+        $this->maxSize ??= Upload::getComponent()->maxSize;
         $this->saveTempFile();
         parent::init();
     }

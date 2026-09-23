@@ -103,6 +103,15 @@ class ChunkedUploadedFileTest extends TestCase
         self::assertCount(0, glob($this->path . '*.tmp') ?: []);
     }
 
+    public function testTheMaximumSizeDefaultsToTheUploadComponentsCeiling(): void
+    {
+        $maxSize = Upload::getComponent()->maxSize;
+        $file = $this->createUploadedFile($this->createSourceFile('abc'), range: 'bytes 0-2/' . ($maxSize + 1));
+
+        self::assertSame($maxSize, $file->maxSize);
+        self::assertSame(UPLOAD_ERR_FORM_SIZE, $file->error);
+    }
+
     public function testAnUploadAtTheMaximumSizeIsAccepted(): void
     {
         $file = $this->createUploadedFile($this->createSourceFile('abc'), range: 'bytes 0-2/3', config: ['maxSize' => 3]);
