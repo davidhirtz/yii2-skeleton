@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Test\Traits;
 
 use Yii;
+use yii\db\Migration;
 
 /**
  * Loads a v2 → v3 migration from the `davidhirtz/yii2-upgrade` checkout beside this one.
@@ -49,6 +50,24 @@ trait UpgradeMigrationTrait
         if ($db->getSchema()->getTableSchema("{{%$table}}", true) !== null) {
             $db->createCommand()->dropTable("{{%$table}}")->execute();
         }
+    }
+
+    /**
+     * The class is named as a string, never `X::class`: a standalone bundle checkout has no upgrade checkout
+     * beside it, so PHPStan there does not know the class, while the monorepo scans it.
+     *
+     * @param array<string, mixed> $config
+     */
+    protected function createUpgradeMigration(string $bundle, string $class, array $config = []): Migration
+    {
+        $this->requireUpgradeMigration($bundle, $class);
+        $migration = new $class($config);
+
+        if (!$migration instanceof Migration) {
+            self::fail("$class is not a migration.");
+        }
+
+        return $migration;
     }
 
     protected function requireUpgradeMigration(string $bundle, string $class): void

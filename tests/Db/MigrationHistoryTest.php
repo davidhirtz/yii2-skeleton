@@ -141,7 +141,7 @@ class MigrationHistoryTest extends TestCase
         $file = Yii::getAlias('@runtime/undeclarable-migration.php');
 
         file_put_contents($file, sprintf(
-            '<?php namespace %s; final class %s { use \Gone\MissingTrait; }',
+            '<?php namespace %s; final class %s extends \Gone\MissingParent {}',
             substr(self::UNDECLARABLE, 0, (int)strrpos(self::UNDECLARABLE, '\\')),
             substr(strrchr(self::UNDECLARABLE, '\\') ?: '', 1),
         ));
