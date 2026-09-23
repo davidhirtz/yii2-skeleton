@@ -22,6 +22,10 @@
   border-bottom: 1px solid var(--card-border-color);
   color: var(--card-header-color);
   padding: 0.8125rem 1rem;
+
+  .collapsed &, &:last-child {
+    border-bottom: 0;
+  }
 }
 
 .card-title {

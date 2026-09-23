@@ -22,14 +22,6 @@ class Link extends Widget
     use TagLinkTrait;
     use TooltipAttributeTrait;
 
-    /**
-     * @param array<int|string, mixed>|string|null $url
-     */
-    public function url(array|string|null $url): static
-    {
-        return $this->href($url);
-    }
-
     protected function renderContent(): string|Stringable
     {
         return A::make()
