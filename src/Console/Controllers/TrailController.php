@@ -22,7 +22,7 @@ class TrailController extends Controller
     use GarbageCollectionTrait;
 
     /**
-     * Updates the model classes in the trail table to the current class names based on the container definitions.
+     * Updates the trail's model classes to the current container definitions.
      */
     public function actionUpdateModels(?string $filter = '\\Models\\'): void
     {
@@ -45,8 +45,10 @@ class TrailController extends Controller
     }
 
     /**
-     * Removes trail records older than the threshold defined in the module configuration. Alternatively, the lifetime
-     * in seconds can be passed as an argument.
+     * Removes trail records older than the configured or given lifetime.
+     *
+     * The threshold is defined in the module configuration; alternatively, the lifetime in seconds can be passed as an
+     * argument.
      */
     public function actionClear(?int $lifetime = null): void
     {

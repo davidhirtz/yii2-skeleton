@@ -22,8 +22,10 @@ class UserLoginController extends Controller
     use GarbageCollectionTrait;
 
     /**
-     * Removes login records older than the threshold defined in the module configuration. Alternatively, the
-     * lifetime in seconds can be passed as an argument.
+     * Removes login records older than the configured or given lifetime.
+     *
+     * The threshold is defined in the module configuration; alternatively, the lifetime in seconds can be passed as an
+     * argument.
      */
     public function actionClear(?int $lifetime = null): void
     {

@@ -20,8 +20,10 @@ class UserTokenController extends Controller
     use GarbageCollectionTrait;
 
     /**
-     * Removes tokens that have expired. A token without an expiry — a two-factor recovery code — is spent rather
-     * than aged out and is never collected here.
+     * Removes tokens that have expired.
+     *
+     * A token without an expiry — a two-factor recovery code — is spent rather than aged out and is never collected
+     * here.
      */
     public function actionClear(): void
     {

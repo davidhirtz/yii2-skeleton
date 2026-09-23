@@ -74,7 +74,9 @@ class ParamsController extends Controller
     }
 
     /**
-     * Generates the password pepper, the secret appended to every password before it is hashed.
+     * Generates the password pepper.
+     *
+     * The pepper is the secret appended to every password before it is hashed.
      */
     public function actionPepper(bool $replace = false): void
     {

@@ -26,8 +26,10 @@ class SearchController extends Controller
     public int $batchSize = 500;
 
     /**
-     * Rebuilds the search index. Not a single transaction, so a crash leaves a partial index rather than a locked
-     * table, and the fulltext index sees the batches as they commit.
+     * Rebuilds the search index.
+     *
+     * Not a single transaction, so a crash leaves a partial index rather than a locked table, and the fulltext index
+     * sees the batches as they commit.
      *
      * @param string|null $models a comma-separated list of class or short names, defaults to every registered class
      */

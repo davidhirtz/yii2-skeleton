@@ -18,6 +18,9 @@ class EmailController extends Controller
 
     public $defaultAction = 'test';
 
+    /**
+     * Sends a test email to the given address.
+     */
     public function actionTest(string $email): void
     {
         if (empty(Yii::$app->params['email'])) {

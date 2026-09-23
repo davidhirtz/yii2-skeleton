@@ -18,8 +18,10 @@ class UploadController extends Controller
     use ControllerTrait;
 
     /**
-     * Removes the files of uploads whose record was never saved. The upload action collects them too, with
-     * `Upload::$gcProbability`, so this is for an installation that would rather not pay for it in a request.
+     * Removes the files of uploads whose record was never saved.
+     *
+     * The upload action collects them too, with `Upload::$gcProbability`, so this is for an installation that would
+     * rather not pay for it in a request.
      */
     public function actionClear(): void
     {

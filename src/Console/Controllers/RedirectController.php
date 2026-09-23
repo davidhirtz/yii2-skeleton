@@ -61,8 +61,10 @@ class RedirectController extends Controller
     }
 
     /**
-     * Deletes the redirects that can never resolve — one whose target comes back to its own request URI, and the
-     * members of a cycle — and shortens a target that is itself redirected to the end of its chain.
+     * Deletes the redirects that can never resolve and shortens chains.
+     *
+     * A redirect never resolves when its target comes back to its own request URI or when it is a member of a cycle;
+     * a target that is itself redirected is shortened to the end of its chain.
      */
     public function actionClean(): int
     {

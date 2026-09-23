@@ -13,6 +13,9 @@ use Hirtz\Skeleton\Helpers\FileHelper;
 use Yii;
 use yii\helpers\Console;
 
+/**
+ * Combines, compresses and clears the published asset files.
+ */
 class AssetController extends \yii\console\controllers\AssetController
 {
     use ControllerTrait;

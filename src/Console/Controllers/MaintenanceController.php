@@ -11,9 +11,10 @@ use yii\console\Controller;
 use yii\helpers\Console;
 
 /**
- * Toggles maintenance mode. The command copies the maintenance mode template to the runtime directory. In the
- * `web/index.php` entry script, the existence of the file is checked and the maintenance mode template is displayed if
- * necessary.
+ * Toggles maintenance mode.
+ *
+ * The command copies the maintenance mode template to the runtime directory. In the `web/index.php` entry script, the
+ * existence of the file is checked and the maintenance mode template is displayed if necessary.
  *
  * @since v1.8
  */
@@ -87,7 +88,7 @@ class MaintenanceController extends Controller
     }
 
     /**
-     * Enables maintenance mode with the given configuration. Run `yii help maintenance/enable` for more information.
+     * Enables maintenance mode with the given configuration.
      */
     public function actionEnable(): void
     {

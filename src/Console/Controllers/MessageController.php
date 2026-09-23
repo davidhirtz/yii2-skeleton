@@ -9,8 +9,14 @@ use Yii;
 use yii\console\Exception;
 use yii\helpers\Console;
 
+/**
+ * Extracts messages to be translated from source files.
+ */
 class MessageController extends \yii\console\controllers\MessageController
 {
+    /**
+     * Extracts messages, by default with the configuration in `@messages/config.php`.
+     */
     #[Override]
     public function actionExtract($configFile = null): void
     {

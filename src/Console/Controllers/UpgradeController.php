@@ -18,6 +18,9 @@ use yii\helpers\Console;
  */
 class UpgradeController extends Controller
 {
+    /**
+     * Updates the namespaces stored in the migration and trail tables.
+     */
     public function actionIndex(): void
     {
         $this->updateMigrationNamespaces();
@@ -25,9 +28,10 @@ class UpgradeController extends Controller
     }
 
     /**
-     * Mails a password reset link to every user without a password, which after `M260913180000PasswordScheme` is
-     * everyone who still had a v2 password. Kept out of the migration on purpose: a migration runs in CI and on
-     * staging, and must not send mail.
+     * Mails a password reset link to every user without a password.
+     *
+     * After `M260913180000PasswordScheme` that is everyone who still had a v2 password. Kept out of the migration on
+     * purpose: a migration runs in CI and on staging, and must not send mail.
      */
     public function actionPasswords(): void
     {

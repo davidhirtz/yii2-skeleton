@@ -16,7 +16,7 @@ use yii\console\ExitCode;
 use yii\helpers\Console;
 
 /**
- * Manages application migrations
+ * Manages application migrations.
  */
 class MigrateController extends \yii\console\controllers\MigrateController
 {
@@ -212,6 +212,11 @@ class MigrateController extends \yii\console\controllers\MigrateController
         return true;
     }
 
+    /**
+     * Applies new migrations.
+     *
+     * On an installation without users, it offers to create the owner's account afterwards.
+     */
     #[Override]
     public function actionUp($limit = 0): int
     {

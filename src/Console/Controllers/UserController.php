@@ -57,8 +57,10 @@ class UserController extends Controller
     }
 
     /**
-     * Sets a user's password from the console. The way back into an installation whose only administrator lost
-     * their password and whose mailer is not an option.
+     * Sets a user's password.
+     *
+     * The way back into an installation whose only administrator lost their password and whose mailer is not an
+     * option.
      */
     public function actionPassword(string $email): int
     {
@@ -113,6 +115,9 @@ class UserController extends Controller
         return CliPrompt::hiddenPrompt();
     }
 
+    /**
+     * Creates a user account.
+     */
     public function actionCreate(): int
     {
         $form = ConsoleSignupForm::create();

@@ -11,12 +11,18 @@ trait BackupTrait
 {
     use ControllerTrait;
 
+    /**
+     * Backs up the database.
+     */
     public function actionBackup(): void
     {
         $this->interactiveStartStdout('Backing up database ...');
         $this->interactiveDoneStdout(Yii::$app->getDb()->backup() !== false);
     }
 
+    /**
+     * Restores the database from a backup.
+     */
     public function actionRestore(): void
     {
         $backups = Yii::$app->getDb()->getBackups();
