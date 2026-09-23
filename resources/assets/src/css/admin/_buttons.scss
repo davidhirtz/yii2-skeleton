@@ -39,7 +39,7 @@
     opacity: .5;
   }
 
-  &:has(i:only-child) {
+  &:has(.fas:only-child) {
     padding-inline: 0;
   }
 }
