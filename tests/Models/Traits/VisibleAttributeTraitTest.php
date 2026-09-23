@@ -39,7 +39,7 @@ class VisibleAttributeTraitTest extends TestCase
         $model = $this->createModel(VisibleModel::TYPE_WITHOUT_NAME);
 
         self::assertFalse($model->isAttributeVisible('name'));
-        self::assertFalse($model->getVisibleAttribute('name'));
+        self::assertNull($model->getVisibleAttribute('name'));
 
         self::assertTrue($model->isAttributeVisible('content'));
         self::assertSame('Content', $model->getVisibleAttribute('content'));
@@ -55,7 +55,7 @@ class VisibleAttributeTraitTest extends TestCase
 
         self::assertNotContains('subtitle', $model->attributes());
         self::assertTrue($model->isAttributeVisible('subtitle'));
-        self::assertFalse($model->getVisibleAttribute('subtitle'));
+        self::assertNull($model->getVisibleAttribute('subtitle'));
     }
 
     public function testTheTranslatedValueIsReturned(): void
@@ -66,6 +66,15 @@ class VisibleAttributeTraitTest extends TestCase
         Yii::$app->language = 'de';
 
         self::assertSame('Name (DE)', $model->getVisibleAttribute('name'));
+    }
+
+    public function testTheLanguageCanBeNamed(): void
+    {
+        $model = $this->createModel(VisibleModel::TYPE_DEFAULT);
+        $model->name_de = 'Name (DE)';
+
+        self::assertSame('Name (DE)', $model->getVisibleAttribute('name', 'de'));
+        self::assertSame('Name', $model->getVisibleAttribute('name'));
     }
 
     private function createModel(int $type): VisibleModel

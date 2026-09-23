@@ -1,3 +1,7 @@
+## Unreleased
+
+- Changed `VisibleAttributeInterface::getVisibleAttribute()` to answer `null` instead of `false` and to take a `$language`
+
 ## 3.0.0 (September 23, 2026)
 
 - Renamed the namespace `davidhirtz\yii2\skeleton\` to `Hirtz\Skeleton\` and every directory from lowercase to StudlyCase

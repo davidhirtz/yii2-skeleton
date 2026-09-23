@@ -13,7 +13,7 @@ use Hirtz\Skeleton\Models\Types\Type;
  */
 interface VisibleAttributeInterface
 {
-    public function getVisibleAttribute(string $attribute): mixed;
+    public function getVisibleAttribute(string $attribute, ?string $language = null): mixed;
 
     public function isAttributeVisible(string $attribute): bool;
 }
