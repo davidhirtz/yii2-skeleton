@@ -487,12 +487,13 @@ class TrailGridView extends GridView
 
     /**
      * {@see \Hirtz\Skeleton\Modules\Admin\Controllers\TrailController::actionIndex()} splits the parameter on
-     * `@`, so a route that joins on anything else filters nothing.
+     * `@`, so a route that joins on anything else filters nothing. The route is absolute because the grid also
+     * renders on a user's trail tab, where a relative `index` resolves to `user-trail/index` and drops its id.
      *
      * @return array<int|string, mixed>
      */
     protected function getTrailIndexRoute(string $modelClass, string $modelId): array
     {
-        return ['index', 'model' => implode('@', array_filter([$modelClass, $modelId]))];
+        return ['/admin/trail/index', 'model' => implode('@', array_filter([$modelClass, $modelId]))];
     }
 }

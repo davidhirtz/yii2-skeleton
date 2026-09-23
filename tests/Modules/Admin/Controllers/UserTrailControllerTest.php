@@ -32,6 +32,22 @@ class UserTrailControllerTest extends TestCase
     }
 
     /**
+     * The grid is the trail grid, whose filter links are relative to the trail controller — on this page a
+     * relative `index` would resolve to `user-trail/index` and drop the id (monorepo issue #234).
+     */
+    public function testTheFilterLinksPointAtTheTrailIndex(): void
+    {
+        $actor = $this->login();
+        $this->createTrail($actor, 'by the actor');
+
+        $html = Yii::$app->runAction('admin/user-trail/index', ['id' => $actor->id]);
+
+        self::assertIsString($html);
+        self::assertStringContainsString('/admin/trail/index?model=', $html);
+        self::assertStringNotContainsString('user-trail/index?model=', $html);
+    }
+
+    /**
      * The provider populates the relation from the user it was scoped to, so the grid must not query it per row.
      */
     public function testIndexDoesNotQueryTheUserOfEveryRow(): void
