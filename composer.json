@@ -58,6 +58,11 @@
       "Hirtz\\Skeleton\\Tests\\": "tests"
     }
   },
+  "extra": {
+    "branch-alias": {
+      "dev-main": "3.x-dev"
+    }
+  },
   "config": {
     "allow-plugins": {
       "yiisoft/yii2-composer": true
