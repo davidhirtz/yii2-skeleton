@@ -110,7 +110,7 @@ class UploadField extends Field
     {
         return Button::make()
             ->class('btn')
-            ->icon('xmark')
+            ->icon('trash')
             ->tooltip(Yii::t('skeleton', 'UPLOAD_BUTTON_REMOVE'))
             ->replace($this->getUrl(remove: true), '#' . $this->getContainerId());
     }
