@@ -16,8 +16,8 @@ class VersionHelper
 {
     /**
      * @var list<string> the installed packages that are not the platform, matched against the full name with
-     * `fnmatch()`. The framework's own extensions carry its version, and the two `davidhirtz/` packages are
-     * dependencies rather than bundles.
+     * `fnmatch()`. The framework's own extensions carry its version, and the one `davidhirtz/` package listed
+     * is a dependency rather than a bundle.
      */
     final public const array EXCLUDED_PACKAGES = [
         'yiisoft/*',

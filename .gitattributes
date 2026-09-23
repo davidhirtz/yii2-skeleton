@@ -9,6 +9,7 @@
 /package.json export-ignore
 /phpstan.neon export-ignore
 /phpunit.xml export-ignore
+/resources/assets/src/ export-ignore
 /resources/tests/ export-ignore
 /tests/ export-ignore
 /tsconfig.json export-ignore
