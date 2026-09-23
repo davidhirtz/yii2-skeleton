@@ -16,6 +16,7 @@ import filter from './includes/filter';
 import {closeModal, createModal} from './includes/modals';
 import scrollActiveIntoView from './includes/scrollActiveIntoView';
 import search from './includes/search';
+import selectLink from './includes/selectLink';
 import sticky from './includes/sticky';
 import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
@@ -42,6 +43,7 @@ onLoad(($container) => {
     queryAll('[data-modal]', closeModal);
     queryAll('[data-scroll-active]', scrollActiveIntoView);
     queryAll('[data-search]', search);
+    queryAll('[data-select-link]', selectLink);
     queryAll('[data-sticky]', sticky);
     queryAll('[data-tooltip]', tooltip);
     queryAll('[data-timezone-offset]', timezone);
