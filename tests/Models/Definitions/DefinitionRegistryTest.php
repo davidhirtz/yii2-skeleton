@@ -6,12 +6,16 @@ namespace Hirtz\Skeleton\Tests\Models\Definitions;
 
 use Closure;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\Definitions\DefinitionRegistry;
+use Hirtz\Skeleton\Models\Interfaces\DraftStatusAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Statuses\Status;
+use Hirtz\Skeleton\Models\Traits\DraftStatusAttributeTrait;
 use Hirtz\Skeleton\Models\Traits\StatusAttributeTrait;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Types\Type;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
 use Yii;
@@ -30,7 +34,7 @@ class DefinitionRegistryTest extends TestCase
     #[Override]
     protected function setUpSchema(): void
     {
-        foreach ([ConfiguredRecord::tableName(), DeclaredRecord::tableName()] as $table) {
+        foreach ([ConfiguredRecord::tableName(), DeclaredRecord::tableName(), DraftRecord::tableName()] as $table) {
             Yii::$app->getDb()->createCommand()
                 ->createTable($table, [
                     'id' => 'pk',
@@ -44,7 +48,7 @@ class DefinitionRegistryTest extends TestCase
     #[Override]
     protected function tearDownSchema(): void
     {
-        foreach ([ConfiguredRecord::tableName(), DeclaredRecord::tableName()] as $table) {
+        foreach ([ConfiguredRecord::tableName(), DeclaredRecord::tableName(), DraftRecord::tableName()] as $table) {
             Yii::$app->getDb()->createCommand()->dropTable($table)->execute();
         }
     }
@@ -54,6 +58,8 @@ class DefinitionRegistryTest extends TestCase
     {
         Yii::$container->clear(ConfiguredRecord::class);
         Yii::$container->clear(DeclaredRecord::class);
+        Yii::$container->clear(DraftRecord::class);
+        Yii::$container->clear(User::class);
 
         parent::tearDown();
     }
@@ -82,6 +88,27 @@ class DefinitionRegistryTest extends TestCase
 
         self::assertSame([ConfiguredRecord::STATUS_ENABLED], array_keys($definitions));
         self::assertSame('Live', $definitions[ConfiguredRecord::STATUS_ENABLED]->getName());
+    }
+
+    /**
+     * The draft trait and the user declare statuses of their own, which the configuration still replaces — the
+     * container is how a project changes them on every shipped model.
+     */
+    public function testTheConfiguredStatusesReplaceTheShippedDeclarations(): void
+    {
+        self::assertCount(3, DraftRecord::getStatusDefinitions());
+
+        foreach ([DraftRecord::class, User::class] as $class) {
+            Yii::$container->set($class, ['statuses' => static fn (): array => [
+                Status::make(StatusAttributeInterface::STATUS_DISABLED)->name('Off'),
+            ]]);
+        }
+
+        DefinitionRegistry::reset();
+
+        self::assertSame('Off', DraftRecord::getStatusDefinitions()[DraftRecord::STATUS_DISABLED]->getName());
+        self::assertCount(1, DraftRecord::getStatusDefinitions());
+        self::assertCount(1, User::getStatusDefinitions());
     }
 
     public function testAModelNobodyConfiguredKeepsItsOwnDefinitions(): void
@@ -174,4 +201,12 @@ class DeclaredRecord extends ActiveRecord implements TypeAttributeInterface
     {
         return [Type::make(self::TYPE_DEFAULT)->name('Declared')];
     }
+}
+
+/**
+ * @property int $status
+ */
+class DraftRecord extends ActiveRecord implements DraftStatusAttributeInterface
+{
+    use DraftStatusAttributeTrait;
 }

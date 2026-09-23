@@ -18,7 +18,7 @@ trait DraftStatusAttributeTrait
     /**
      * @return list<Status>
      */
-    public function getStatuses(): array
+    protected function getDefaultStatuses(): array
     {
         return [
             Status::make(static::STATUS_ENABLED)

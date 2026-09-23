@@ -30,7 +30,7 @@ trait StatusAttributeTrait
     }
 
     /**
-     * Override this method to implement statuses — an override owns them, and the configured list is then ignored.
+     * The configured list where the container set one, the model's {@see static::getDefaultStatuses()} otherwise.
      *
      * @return list<Status>
      */
@@ -42,6 +42,17 @@ trait StatusAttributeTrait
                 : $this->configuredStatuses;
         }
 
+        return $this->getDefaultStatuses();
+    }
+
+    /**
+     * Override this method to implement a model's statuses; unlike an override of {@see static::getStatuses()},
+     * it still gives way to what the container configured.
+     *
+     * @return list<Status>
+     */
+    protected function getDefaultStatuses(): array
+    {
         return [
             Status::make(static::STATUS_ENABLED)
                 ->name(Yii::t('skeleton', 'COMMON_ENABLED'))
