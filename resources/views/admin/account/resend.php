@@ -19,8 +19,6 @@ use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
 
-;
-
 $this->title(Yii::t('skeleton', 'ACCOUNT_RESEND_TITLE'));
 
 echo Container::make()

@@ -18,8 +18,6 @@ use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
 
-;
-
 $this->title(Yii::t('skeleton', 'ACCOUNT_RECOVER_TITLE'));
 
 echo Container::make()

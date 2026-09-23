@@ -13,17 +13,11 @@ use Hirtz\Skeleton\Html\Noscript;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\SignupActiveForm;
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Container;
-use Hirtz\Skeleton\Widgets\Forms\ErrorSummary;
 use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
 
 $this->title(Yii::t('skeleton', 'ACCOUNT_CREATE_TITLE'));
-
-echo Container::make()
-    ->content(ErrorSummary::make()
-        ->models($form)
-        ->title(Yii::t('skeleton', 'ACCOUNT_CREATE_ERROR_SUMMARY')));
 
 echo Noscript::make()
     ->content(Container::make()
