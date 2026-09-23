@@ -39,7 +39,7 @@ class FileUploadButton extends Widget
     /**
      * @var list<Closure>|null
      */
-    private ?array $buttonCallbacks = null;
+    private ?array $buttonClosures = null;
 
     public function accept(?string $accept): static
     {
@@ -53,7 +53,7 @@ class FileUploadButton extends Widget
      */
     public function button(Closure $callback): static
     {
-        $this->buttonCallbacks[] = $callback;
+        $this->buttonClosures[] = $callback;
         return $this;
     }
 
@@ -113,7 +113,7 @@ class FileUploadButton extends Widget
             ->text($this->label)
             ->icon($this->icon);
 
-        return $this->evaluate($this->buttonCallbacks, $button);
+        return $this->evaluate($this->buttonClosures, $button);
     }
 
     protected function getInput(): ?Stringable

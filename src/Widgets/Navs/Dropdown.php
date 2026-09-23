@@ -31,7 +31,7 @@ class Dropdown extends Widget
     /**
      * @var list<Closure>|null
      */
-    private ?array $popoverCallbacks = null;
+    private ?array $popoverClosures = null;
 
     public function autofocus(bool $autofocus = true): static
     {
@@ -57,7 +57,7 @@ class Dropdown extends Widget
      */
     public function popover(Closure $callback): static
     {
-        $this->popoverCallbacks[] = $callback;
+        $this->popoverClosures[] = $callback;
         return $this;
     }
 
@@ -104,7 +104,7 @@ class Dropdown extends Widget
             return '';
         }
 
-        $popover = $this->evaluate($this->popoverCallbacks, Div::make()
+        $popover = $this->evaluate($this->popoverClosures, Div::make()
             ->attribute('popover', 'auto')
             ->class('dropdown-menu')
             ->content(...$this->content)

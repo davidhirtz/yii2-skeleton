@@ -46,11 +46,11 @@ class Column
     /**
      * @var list<Closure>|null
      */
-    private ?array $bodyCallbacks = null;
+    private ?array $bodyClosures = null;
     /**
      * @var list<Closure>|null
      */
-    private ?array $headerCallbacks = null;
+    private ?array $headerClosures = null;
 
     /**
      * @param array<string, mixed> $config
@@ -70,7 +70,7 @@ class Column
      */
     public function body(Closure $closure): static
     {
-        $this->bodyCallbacks[] = $closure;
+        $this->bodyClosures[] = $closure;
         return $this;
     }
 
@@ -86,7 +86,7 @@ class Column
      */
     public function header(Closure $closure): static
     {
-        $this->headerCallbacks[] = $closure;
+        $this->headerClosures[] = $closure;
         return $this;
     }
 
@@ -131,7 +131,7 @@ class Column
                 ->content($body);
         }
 
-        return $this->evaluate($this->bodyCallbacks, $body);
+        return $this->evaluate($this->bodyClosures, $body);
     }
 
     /**
@@ -151,7 +151,7 @@ class Column
             ->attributes($this->headerAttributes)
             ->content($this->getHeader());
 
-        return $this->evaluate($this->headerCallbacks, $header);
+        return $this->evaluate($this->headerClosures, $header);
     }
 
     protected function getHeader(): string|Stringable

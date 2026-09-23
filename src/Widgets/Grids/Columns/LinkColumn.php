@@ -24,7 +24,7 @@ class LinkColumn extends DataColumn
     /**
      * @var list<Closure>|null
      */
-    private ?array $linkCallbacks = null;
+    private ?array $linkClosures = null;
 
     /**
      * The closure a caller hands `url()` is typed against whichever model it re-binds the column to, which the
@@ -54,7 +54,7 @@ class LinkColumn extends DataColumn
      */
     public function link(Closure $closure): static
     {
-        $this->linkCallbacks[] = $closure;
+        $this->linkClosures[] = $closure;
         return $this;
     }
 
@@ -103,14 +103,14 @@ class LinkColumn extends DataColumn
         $href = $this->url ? ($this->url)($model, $key, $index) : null;
 
         if ($href) {
-            return $this->evaluate($this->linkCallbacks, A::make()
+            return $this->evaluate($this->linkClosures, A::make()
                 ->attributes($this->linkAttributes)
                 ->content($content)
                 ->href($href));
         }
 
-        return $this->linkCallbacks || $this->linkAttributes
-            ? $this->evaluate($this->linkCallbacks, Div::make()
+        return $this->linkClosures || $this->linkAttributes
+            ? $this->evaluate($this->linkClosures, Div::make()
                 ->attributes($this->linkAttributes)
                 ->content($content))
             : $content;

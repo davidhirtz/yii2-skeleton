@@ -36,7 +36,7 @@ class DataColumn extends Column
     /**
      * @var list<Closure>|null
      */
-    private ?array $sortCallbacks = null;
+    private ?array $sortClosures = null;
 
     /**
      * @param array<string, mixed> $config
@@ -52,7 +52,7 @@ class DataColumn extends Column
      */
     public function sort(Closure $closure): static
     {
-        $this->sortCallbacks[] = $closure;
+        $this->sortClosures[] = $closure;
         return $this;
     }
 
@@ -77,7 +77,7 @@ class DataColumn extends Column
     protected function getHeader(): string|Stringable
     {
         return $this->property !== null && $this->title !== false
-            ? $this->evaluate($this->sortCallbacks, $this->getSort())
+            ? $this->evaluate($this->sortClosures, $this->getSort())
             : parent::getHeader();
     }
 
