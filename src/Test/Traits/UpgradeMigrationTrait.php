@@ -39,9 +39,16 @@ trait UpgradeMigrationTrait
         $db->createCommand((string)file_get_contents($this->findUpgradeFile("legacy/$table.sql")))->execute();
     }
 
+    /**
+     * Guarded, because a test skipped in `setUp()` for the missing checkout still runs its `tearDown()`.
+     */
     protected function dropLegacyTable(string $table): void
     {
-        Yii::$app->getDb()->createCommand()->dropTable("{{%$table}}")->execute();
+        $db = Yii::$app->getDb();
+
+        if ($db->getSchema()->getTableSchema("{{%$table}}", true) !== null) {
+            $db->createCommand()->dropTable("{{%$table}}")->execute();
+        }
     }
 
     protected function requireUpgradeMigration(string $bundle, string $class): void

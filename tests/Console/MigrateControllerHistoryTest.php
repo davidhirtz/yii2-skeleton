@@ -153,15 +153,16 @@ class MigrateControllerHistoryTest extends TestCase
     }
 
     /**
-     * A class whose file is on disk and whose trait is not. Autoloaded from `@runtime` rather than committed,
-     * so no fixture of this repository is a file PHP cannot declare.
+     * A class whose file is on disk and whose parent is not. Autoloaded from `@runtime` rather than committed,
+     * so no fixture of this repository is a file PHP cannot declare. A missing parent throws an `Error` on every
+     * supported PHP version; a missing trait was a compile-time fatal before PHP 8.5.
      */
     private function registerUndeclarableClass(): string
     {
         $file = Yii::getAlias('@runtime/undeclarable-migration.php');
 
         file_put_contents($file, sprintf(
-            '<?php namespace %s; final class %s { use \Gone\MissingTrait; }',
+            '<?php namespace %s; final class %s extends \Gone\MissingParent {}',
             substr(self::UNDECLARABLE, 0, (int)strrpos(self::UNDECLARABLE, '\\')),
             substr(strrchr(self::UNDECLARABLE, '\\') ?: '', 1),
         ));
