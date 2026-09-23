@@ -161,6 +161,13 @@
 .input-group-append,
 .input-group-prepend {
   display: flex;
+
+  // A cell whose every child is hidden is 1px of divider and nothing else — a custom attribute group's row
+  // buttons render hidden while there is one row. The first `:has()` is what keeps a text addon, which has no
+  // element child at all, out of it.
+  &:has(> [hidden]):not(:has(> :not([hidden]))) {
+    display: none;
+  }
 }
 
 .input-group-append {

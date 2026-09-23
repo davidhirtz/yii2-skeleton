@@ -1,5 +1,10 @@
 ## 3.0.0 (in development)
 
+- **An input group's addon cell hides itself once everything in it is hidden.** `.input-group-append` and
+  `-prepend` draw the divider between the input and what sits beside it, so a cell whose only button was hidden
+  — a custom attribute group's sort and remove buttons, while there is one row — left a 1px line standing at the
+  end of the row. A text addon has no element child at all and is deliberately left alone.
+
 - **The scripts type-check, and `npm run typecheck` is what runs it** (monorepo issue #227). `tsconfig.json`
   named `ES2020` while esbuild builds for `esnext`, so `String.prototype.replaceAll` was an error, and
   `includes/onLoad.ts` declared its callback's argument `HTMLElement` where htmx hands it an `Element` — which
