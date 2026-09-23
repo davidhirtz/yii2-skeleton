@@ -1,4 +1,4 @@
-## 3.0.0 (in development)
+## 3.0.0 (September 23, 2026)
 
 - Renamed the namespace `davidhirtz\yii2\skeleton\` to `Hirtz\Skeleton\` and every directory from lowercase to StudlyCase
   (`models\forms\LoginForm` is `Models\Forms\LoginForm`, `modules\admin\controllers\` is `Modules\Admin\Controllers\`)
