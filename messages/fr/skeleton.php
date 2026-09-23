@@ -13,7 +13,6 @@ return [
     'ACCOUNT_CONFIRM_LOGOUT' => 'Voulez-vous vraiment vous déconnecter ?',
     'ACCOUNT_CONFIRM_LOGOUT_OTHER_SESSIONS' => 'Cela met fin à toutes les autres sessions de votre compte, sur tous les autres navigateurs et appareils. Celle que vous utilisez actuellement reste connectée.',
     'ACCOUNT_CONFIRM_NAME_LABEL' => 'Nom d’utilisateur',
-    'ACCOUNT_CREATE_ERROR_SUMMARY' => 'Votre compte n’a pas pu être créé',
     'ACCOUNT_CREATE_TITLE' => 'Inscription',
     'ACCOUNT_DELETE_TYPE_PASSWORD' => 'Saisissez votre mot de passe dans le champ ci-dessous pour supprimer votre compte, tous les éléments associés et les fichiers envoyés. Cette action est irréversible, veuillez confirmer !',
     'ACCOUNT_ERROR_LOGOUT_BEFORE_CREATING' => 'Veuillez vous déconnecter avant de créer un autre compte',

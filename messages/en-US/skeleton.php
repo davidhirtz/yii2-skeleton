@@ -13,7 +13,6 @@ return [
     'ACCOUNT_CONFIRM_LOGOUT' => 'Are you sure you want to log out?',
     'ACCOUNT_CONFIRM_LOGOUT_OTHER_SESSIONS' => 'This ends every other session of your account, on every other browser and device. The one you are using now stays signed in.',
     'ACCOUNT_CONFIRM_NAME_LABEL' => 'Username',
-    'ACCOUNT_CREATE_ERROR_SUMMARY' => 'Your account could not be created',
     'ACCOUNT_CREATE_TITLE' => 'Sign up',
     'ACCOUNT_DELETE_TYPE_PASSWORD' => 'Type your password in the text field below to delete your account, all related items and uploaded files. This cannot be undone, please be certain!',
     'ACCOUNT_ERROR_LOGOUT_BEFORE_CREATING' => 'Please logout before creating another account',

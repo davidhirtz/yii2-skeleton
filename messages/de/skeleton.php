@@ -13,7 +13,6 @@ return [
     'ACCOUNT_CONFIRM_LOGOUT' => 'Sind Sie sicher, dass Sie sich abmelden wollen?',
     'ACCOUNT_CONFIRM_LOGOUT_OTHER_SESSIONS' => 'Damit werden alle anderen Sitzungen Ihres Accounts beendet, in jedem anderen Browser und auf jedem anderen Gerät. Die aktuell verwendete Sitzung bleibt angemeldet.',
     'ACCOUNT_CONFIRM_NAME_LABEL' => 'Benutzername',
-    'ACCOUNT_CREATE_ERROR_SUMMARY' => 'Ihr Account konnte nicht erstellt werden',
     'ACCOUNT_CREATE_TITLE' => 'Registrieren',
     'ACCOUNT_DELETE_TYPE_PASSWORD' => 'Bitte geben Sie Ihr Passwort in das Feld unten ein, um Ihren Account, alle zugehörigen Einträge und hochgeladenen Dateien zu löschen. Das kann nicht rückgängig gemacht werden!',
     'ACCOUNT_ERROR_LOGOUT_BEFORE_CREATING' => 'Bitte loggen Sie sich aus, bevor Sie einen neuen Account erstellen.',

@@ -13,7 +13,6 @@ return [
     'ACCOUNT_CONFIRM_LOGOUT' => 'Tem a certeza de que pretende terminar a sessão?',
     'ACCOUNT_CONFIRM_LOGOUT_OTHER_SESSIONS' => 'Isto termina todas as outras sessões da sua conta, em todos os outros navegadores e dispositivos. A que está a utilizar agora permanece com sessão iniciada.',
     'ACCOUNT_CONFIRM_NAME_LABEL' => 'Nome de utilizador',
-    'ACCOUNT_CREATE_ERROR_SUMMARY' => 'Não foi possível criar a sua conta',
     'ACCOUNT_CREATE_TITLE' => 'Registar',
     'ACCOUNT_DELETE_TYPE_PASSWORD' => 'Escreva a sua palavra-passe no campo abaixo para eliminar a sua conta, todos os itens associados e os ficheiros carregados. Esta ação não pode ser anulada, tenha a certeza!',
     'ACCOUNT_ERROR_LOGOUT_BEFORE_CREATING' => 'Termine a sessão antes de criar outra conta',
