@@ -248,7 +248,7 @@
 
   // Nav
   --nav-link-bg: transparent;
-  --nav-link-border-color: transparent;
+  --nav-link-border-color: var(--border-color);
   --nav-link-color: var(--color-black);
   --nav-link-active-badge-bg: var(--nav-link-active-color);
   --nav-link-active-badge-color: var(--nav-link-active-bg);
