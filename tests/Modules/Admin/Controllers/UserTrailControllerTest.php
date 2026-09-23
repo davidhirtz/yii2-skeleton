@@ -82,6 +82,27 @@ class UserTrailControllerTest extends TestCase
         Yii::$app->runAction('admin/user-trail/index', ['id' => $user->id]);
     }
 
+    /**
+     * The owner's trail answers 403 to anyone else, so the trail names the owner without linking there.
+     */
+    public function testTheTrailLinksOnlyTheUsersTheActorMayManage(): void
+    {
+        $this->login();
+
+        $owner = $this->getUserFromFixture('owner');
+        $disabled = $this->getUserFromFixture('disabled');
+
+        $this->createTrail($owner, 'by the owner');
+        $this->createTrail($disabled, 'by someone else');
+
+        $html = Yii::$app->runAction('admin/trail/index');
+
+        self::assertIsString($html);
+        self::assertStringContainsString("user-trail/index?id=$disabled->id", $html);
+        self::assertStringNotContainsString("user-trail/index?id=$owner->id", $html);
+        self::assertStringContainsString('>owner</span>', $html);
+    }
+
     private function createTrail(User $user, string $message): Trail
     {
         $trail = Trail::create();

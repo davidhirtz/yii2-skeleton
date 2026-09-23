@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserLoginController;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
@@ -65,9 +66,14 @@ class UserLoginGridView extends GridView
         return DataColumn::make()
             ->property('user')
             ->visible(!$this->user)
-            ->content(fn (UserLogin $login): Stringable => Username::make()
-                ->user($login->user)
-                ->href(['view', 'user' => $login->user_id]));
+            ->content(function (UserLogin $login): Stringable {
+                $username = Username::make()->user($login->user);
+
+                // An administrator is refused the owner's logins, as is anyone holding less than the account does.
+                return $login->user && $this->webuser->can(User::AUTH_USER, ['user' => $login->user])
+                    ? $username->href(['view', 'user' => $login->user_id])
+                    : $username;
+            });
     }
 
     protected function getBrowserColumn(): ?Column

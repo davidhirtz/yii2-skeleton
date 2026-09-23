@@ -110,6 +110,27 @@ class UserLoginControllerTest extends TestCase
         Yii::$app->runAction('admin/user-login/view', ['user' => $this->getUserFromFixture('owner')->id]);
     }
 
+    /**
+     * The owner's logins answer 403 to anyone else, so the index names the owner without linking there.
+     */
+    public function testIndexLinksOnlyTheUsersTheActorMayManage(): void
+    {
+        $this->login();
+
+        $owner = $this->getUserFromFixture('owner');
+        $disabled = $this->getUserFromFixture('disabled');
+
+        $this->createUserLogin($owner, '10.0.0.1');
+        $this->createUserLogin($disabled, '10.0.0.2');
+
+        $html = Yii::$app->runAction('admin/user-login/index');
+
+        self::assertIsString($html);
+        self::assertStringContainsString("user-login/view?user=$disabled->id", $html);
+        self::assertStringNotContainsString("user-login/view?user=$owner->id", $html);
+        self::assertStringContainsString('>owner</span>', $html);
+    }
+
     private function createUserLogin(User $user, string $ip): UserLogin
     {
         $login = UserLogin::create();

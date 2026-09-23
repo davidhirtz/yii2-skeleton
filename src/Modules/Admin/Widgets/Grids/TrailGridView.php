@@ -448,9 +448,12 @@ class TrailGridView extends GridView
         }
 
         if ($trail->user) {
-            return Username::make()
-                ->user($trail->user)
-                ->href(['/admin/user-trail/index', 'id' => $trail->user_id]);
+            $username = Username::make()->user($trail->user);
+
+            // The user's own trail answers only whoever may manage the account, so the owner's is nobody else's.
+            return $this->webuser->can(Trail::AUTH_TRAIL_INDEX, ['user' => $trail->user])
+                ? $username->href(['/admin/user-trail/index', 'id' => $trail->user_id])
+                : $username;
         }
 
         return A::make()
