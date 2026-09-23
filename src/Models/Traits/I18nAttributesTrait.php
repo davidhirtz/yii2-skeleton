@@ -20,10 +20,12 @@ trait I18nAttributesTrait
      * @var array<string, string>
      */
     private array $i18nHints = [];
+
     /**
      * @var array<string, string>
      */
     private array $i18nLabels = [];
+
     /**
      * @var list<string>|null the attributes the labels and hints were built for, `null` while they never were
      */
