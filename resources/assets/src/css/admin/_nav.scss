@@ -41,6 +41,11 @@
     outline: 0;
   }
 
+  // Font Awesome sets the icon to `line-height: 1`, so a link without a label would be a line shorter.
+  .nav-link-icon {
+    line-height: inherit;
+  }
+
   &.disabled,
   &:disabled {
     opacity: .5;
