@@ -1,2006 +1,464 @@
-# Upgrade Guide
+# Upgrading to 3.0
 
-## 3.0.0 — `App\Controllers`, and the `@App` alias is gone
+Class names below are relative to `Hirtz\Skeleton\` (v3) and `davidhirtz\yii2\skeleton\` (v2) unless they carry another
+namespace. The v2 → v3 database migrations do not ship with the bundle: `davidhirtz/yii2-upgrade` generates them into the
+project (see *Data and schema*), and the bundle itself carries one baseline migration for a fresh install.
 
-`Web\Application::$controllerNamespace` is `App\Controllers`, where Yii's default is the lowercase
-`app\controllers` — which Composer's case-sensitive PSR-4 lookup never resolved against a project's `App\`
-prefix, so a project's own `SiteController` answered a 404 until the project set the property itself. Such a
-project can drop the line; one that keeps its controllers elsewhere keeps it, and is only routed by the
-namespace either way, since a controller is resolved by class name and never by path.
+## Requirements
 
-The `@App` alias is gone with it. It pointed at the directory `@app` already names, and existed only because
-Yii resolves a namespace to a directory through an alias of the same name. **A project's configuration, view or
-command naming `@App` names `@app`.** Nothing derives a path from that alias any more: a module and both
-applications pin their controller path, `Helpers\NamespaceHelper::getPath()` answers a namespace's directory
-from Composer's autoloader, and a migration run registers the one alias Yii's own private resolver asks for.
+- PHP `^8.3` with `ext-imagick`, `ext-intl` (new), `ext-json`, `ext-openssl`, `ext-simplexml` and `ext-xmlwriter`.
+- MySQL or MariaDB with InnoDB fulltext support; the `search` table carries two `FULLTEXT` indexes.
+- Every sibling bundle at `^3.0`. All bundles renamed their namespace at once, so a project upgrades them together.
+- `davidhirtz/yii2-upgrade` as a `require-dev` dependency for the length of the upgrade.
+- Remove from the project's `composer.json` what v3 dropped: `yiisoft/yii2-authclient`, `yiisoft/yii2-bootstrap4`,
+  `davidhirtz/yii2-timeago`, and the asset-packagist repository if it only served jQuery. `bower-asset/jquery` is
+  `provide`d by the skeleton and never served; the admin runs on htmx 4 without jQuery, Bootstrap or jQuery UI.
+- A deployment behind a proxy must set `components.request.trustedHosts` (see *Configuration*): the spoofable
+  `Request::getRemoteIP()` override is gone, and without trusted hosts the client IP, the `secure` cookie flag and the
+  HSTS header all see a plain HTTP request from the proxy.
 
-One consequence is worth knowing: `Yii::autoload()` is registered ahead of Composer's autoloader, so with the
-alias in place a project's own classes were loaded by Yii rather than by Composer. They are Composer's again.
+## Renames
 
-## 3.0.0 — `ext-intl` is required
+### Namespaces and directories
 
-`Models\CustomAttributes\UrlCustomAttribute` validates with `enableIDN`, so `https://münchen.de` is accepted the
-way `https://example.com/über-uns` already was, and `yii\validators\UrlValidator` throws without the extension.
-It is in `composer.json` now; a deployment that installs from a lock file has to make sure the extension is there.
+| v2 | v3 |
+|---|---|
+| `davidhirtz\yii2\skeleton\` | `Hirtz\Skeleton\` |
+| lowercase directories (`models\forms\`, `modules\admin\controllers\`) | StudlyCase (`Models\Forms\`, `Modules\Admin\Controllers\`) |
+| `controllers\AccountController` | `Modules\Admin\Controllers\AccountController` |
+| `codeception\fixtures\UserFixture`, `codeception\fixtures\UserFixtureTrait`, `codeception\traits\StdOutBufferControllerTrait` | `Test\Fixtures\UserFixture`, `Test\Traits\UserFixtureTrait`, `Test\Traits\StdOutBufferControllerTrait` |
+| `src/views/`, `src/mail/`, `src/modules/admin/views/` | `resources/views/`, `resources/mail/`, `resources/views/admin/` |
+| `src/messages/` | `messages/` |
+| project controllers `app\controllers` | `App\Controllers` (`Web\Application::$controllerNamespace`) |
+| project commands `app\commands` | `App\Commands` (`Console\Application::$controllerNamespace`) |
+| project migrations | `App\Migrations` in `app/Migrations` |
+| `@App` alias | removed; `@app` names `app/` |
 
-Its `defaultScheme` is gone with the setter that configured it. The field renders `<input type="url">`, which
-refuses a scheme-less value client-side, so the rewrite of `example.com` to `https://example.com` was unreachable
-from a browser while a console or import path silently relied on it. Prefix such a value before it is assigned.
+### Classes
 
-## 3.0.0 — the admin's nesting lives on the model
+| v2 | v3 |
+|---|---|
+| `web\Sitemap` | `Sitemap\Sitemap` |
+| `behaviors\SitemapBehavior`, `models\interfaces\SitemapInterface` | removed; `Sitemap\ModelSitemap`, `Sitemap\UrlSitemap`, `Sitemap\SitemapInterface` |
+| `models\forms\GoogleAuthenticatorForm` | `Models\Forms\TwoFactorAuthenticatorForm` |
+| `validators\GoogleAuthenticatorValidator` | `Validators\TwoFactorAuthenticationValidator` |
+| `modules\admin\widgets\forms\GoogleAuthenticatorActiveForm`, `GoogleAuthenticatorLoginActiveForm` | `Modules\Admin\Widgets\Forms\TwoFactorAuthenticatorActiveForm`, `TwoFactorAuthenticationLoginActiveForm` |
+| `models\traits\IconFilenameAttributeTrait` | removed; `Models\CustomAttributes\IconCustomAttribute` |
+| `rbac\rules\OwnerRule` | removed; `Web\User::canManageUser()` |
+| `behaviors\UserLanguageBehavior` | removed; `Modules\Admin\Module::$languages` |
+| `modules\ModuleTrait` (per-language tables) | `Modules\ModuleTrait` (the static `getModule()` accessor only) |
+| `helpers\StructuredData` | `Widgets\StructuredData\BreadcrumbList` |
+| `helpers\ArrayHelper::simpleXmlToArray()` | `Xml\XmlNode` |
+| `modules\admin\widgets\grids\GridView` | `Widgets\Grids\GridView` |
+| `modules\admin\widgets\grids\columns\CounterColumn`, `LinkDataColumn`, `traits\StatusGridViewTrait`, `TypeGridViewTrait`, `MessageSourceTrait` | removed; `Widgets\Grids\Columns\*`, `Widgets\Grids\Toolbars\StatusFilterDropdown`, `TypeFilterDropdown` |
+| `modules\admin\widgets\forms\traits\ContentFieldTrait`, `EmailFieldTrait`, `StatusFieldTrait`, `TypeFieldTrait`, `SubmitButtonTrait`, `ModelTimestampTrait` | removed; `Widgets\Forms\ActiveForm`, `Widgets\Forms\Fields\*`, `Widgets\Forms\Footers\*` |
+| `modules\admin\widgets\navs\TrailSubmenu`, `panels\HelpPanel`, `UserHelpPanel`, `UserDeletePanel`, `UserOwnerPanel` | removed; `Modules\Admin\Widgets\Navs\TrailHeader`, `UserActionDropdown`, `UserOwnerButton`, `Modules\Admin\Widgets\HintAlert` |
+| `widgets\AdminButton` | `Widgets\Buttons\AdminButton` |
+| `widgets\bootstrap\ActiveForm`, `ActiveField` | `Widgets\Forms\ActiveForm`, `Widgets\Forms\Fields\InputField` and siblings |
+| `widgets\bootstrap\Breadcrumbs`, `Flashes`, `Panel` | `Widgets\Navs\Breadcrumbs`, `Widgets\Flashes`, `Widgets\Panels\Panel` |
+| `widgets\bootstrap\ButtonDropdown` | `Widgets\Navs\Dropdown`, `Widgets\Navs\ActionDropdown` |
+| `widgets\bootstrap\ListGroup` | removed |
+| `widgets\fontawesome\Icon`, `Nav`, `Submenu` | `Widgets\Icon`, `Widgets\Navs\Nav`, `Widgets\Navs\Submenu` |
+| `widgets\forms\DeleteActiveForm` | `Widgets\Forms\DeleteActiveForm` |
+| `widgets\forms\DynamicRangeDropdown` | `Widgets\Forms\Fields\SelectField` |
+| `widgets\forms\FileUpload` | `Widgets\Buttons\FileUploadButton`, `Html\Custom\FileUpload` |
+| `widgets\forms\HexColorInputWidget`, `TimezoneDropdown`, `TinyMceEditor` | `Widgets\Forms\Fields\HexColorField`, `TimezoneSelectField`, `TinyMceField` |
+| `widgets\jui\DatePicker` | `Widgets\Forms\Fields\DateTimeField` |
+| `widgets\pagers\LinkPager` | `Widgets\Grids\Pagers\LinkPager` |
+| `assets\AdminAsset`, `FontAwesomeAsset`, `SignupAsset`, `FileUploadAsset` | `Assets\AdminAssetBundle`, `FontAwesomeAssetBundle`, `SignupAssetBundle`, `FileUploadAssetBundle` |
+| `assets\BootboxAsset`, `JuiAsset`, `TimeZoneDetectAsset` | removed |
+| `auth\clients\*`, `models\AuthClient`, `models\forms\AuthClientSignupForm`, `models\forms\UserPictureForm`, `gii\*` | removed |
+| `log\ActiveRecordErrorLogger` | `Log\ActiveRecordErrorLogger`; `yii\log\FileTarget` in the core config is `Log\FileTarget` |
 
-`Models\Interfaces\AdminModelInterface` declares `getAdminParent(): ?AdminModelInterface`,
-`getAdminIndexBreadcrumb(): ?Breadcrumb` and `getAdminSubtitle(): ?string`. All three default to `null` in
-`Models\Traits\AdminModelTrait`, so nothing breaks at class load — a model that answers none keeps the header
-and the breadcrumb bar it has.
+### Methods
 
-A record **edited through another** — a section, an asset, a hotspot — says so by answering the third, and that
-is what tells `Widgets\Navs\ModelHeader` the H1 belongs further up:
+| v2 | v3 |
+|---|---|
+| `User::generateVerificationToken()`, `generatePasswordResetToken()` | `createVerificationToken(): string`, `createPasswordResetToken(): string` |
+| `User::getEmailConfirmationUrl()`, `getPasswordResetUrl()` | `createEmailConfirmationUrl()`, `createPasswordResetUrl()` (each issues a token) |
+| `User::getTrailModelName()`, `getTrailModelType()` | `getAdminName()`, `getAdminType()` |
+| `User::getFullName()`, `getCountries()`, `deletePicture()`, `getPictureUrl()`, `getUploadPath()`, `setUploadPath()`, `getAuthClients()` | removed |
+| `$user->google_2fa_secret` | `getTwoFactorAuthenticationSecret()`, `setTwoFactorAuthenticationSecret()`, `hasTwoFactorAuthentication()` |
+| `Trail::getModelClass()`, `getDataModelClass()` (returned the record) | `getModelRecord()`, `getDataModelRecord()` |
+| `Trail::createOrderTrail(?ActiveRecord, ?string $message, array $data)` | `createOrderTrail(?TrailModelInterface, ?Message, array)` |
+| `TrailModelCollection::getModelByNameAndId()` | `getModelByClassAndId()` |
+| `Redirect::sanitizeUrl()`, `getDisplayName()` | `Helpers\Url::sanitize()`, `getAdminName()` |
+| `static getTypes()`, `static getStatuses()` returning arrays | instance methods returning `Models\Types\Type[]` / `Models\Statuses\Status[]` |
+| `getTypeOptions()['key']` | `$model->getType()?->getKey()` |
+| `UrlManager::setApplicationLanguage()` | protected `setLanguage(Request $request)` |
+| `UrlManager::hasI18nUrls()`, `Request::getLanguage()`, `getLanguageFromCookie()`, `getRemoteIP()` | removed |
+| `I18nActiveQuery::replaceI18nAttributes()` | `withTranslations(array\|string\|null $languages = null)`, `withoutTranslations()` |
+| `getI18nAttributeName($attribute, $language)`, `getI18nAttribute($attribute, $language)` | a third `bool $fallback = false` argument |
+| `MigrationTrait::addI18nColumns()`, `dropI18nColumns()` | removed; `moveI18nColumnsToTranslations(string $table, string $modelClass)`, `restoreI18nColumnsFromTranslations()` |
+| `ModelTrait::getTraitNames()`, `getTraitRules()`, `getTraitAttributeLabels()` | removed; the using class spreads the trait's methods itself |
+| `ArrayHelper::cacheStringToArray()`, `createCacheString()`, `MaterializedTreeTrait::getIdsFromPath()`, `getPathFromIds()` | removed; `path` is a JSON `int[]` column |
+| `Html::buttonList()`, `Html::buttons()` | removed; `Widgets\Buttons\ButtonGroup` |
+| `GridView::isSortedByPosition()` | `isSortable()` |
+| `GridView::getUpdateButton()`, `getDeleteButton()`, `getSortableButton()`, `renderSelectionForm()` | removed; `Widgets\Grids\Columns\ButtonColumn`, `Widgets\Grids\Traits\SelectionTrait` |
+| `Web\Controller::error()`, `success()`, `errorOrSuccess()` returning `bool` / `void` | return `static`, take `string\|Stringable` and encode a plain string; `warning()` added |
+| `Modules\Admin\Module::getDashboardPanels()`, `setDashboardPanels()`, `getNavBarItems()`, `setNavBarItems()` | `Module::dashboard(Dashboard)`, `ModuleInterface::aside(Nav)`, `Widget::EVENT_CONFIGURE` on `Modules\Admin\Widgets\Navs\NavBar` |
+| `UserController::actionDisableGoogleAuthenticator()` | `actionDisableAuthenticator()` (POST only) |
+| `AccountController::actionUpdate()` with email and password fields | `actionUpdate()`, `actionCredentials()`, `actionSecurity()` |
+| `ActiveForm::getFieldset()` | `createFieldset()` |
 
-```php
-public function getAdminParent(): Entry
-{
-    return $this->entry;
-}
+### Properties
 
-public function getAdminSubtitle(): string
-{
-    return $this->getAdminPositionLabel();
-}
+| v2 | v3 |
+|---|---|
+| `Web\User::$enableGoogleAuthenticator` | `$enableTwoFactorAuthentication` |
+| `Web\User::$loginType` (`string`, `'unknown'`) | `int`, `UserLogin::TYPE_OTHER` |
+| `Modules\Admin\Module::$alias` | `params['adminAlias']` |
+| `Modules\Admin\Module::$showInBreadcrumbs` | removed |
+| `Modules\Admin\Module::$trailLifetime` (`?int`) | `int\|false` |
+| `UrlManager::$i18nSubdomain` | removed |
+| `UrlManager::$languages` (`array\|false\|null`) | `?array`, read through `getLanguages()` |
+| `UrlManager::$defaultLanguage` (`string\|false\|null`, defaulted to `sourceLanguage`) | `?string`; `null` lets `Accept-Language` decide |
+| `Sitemap::$models` | `Sitemap\Sitemap::$sitemaps` |
+| `Widgets\Forms\ActiveForm::$rows` | `$fieldsets` (`list<Fieldset>\|null`), declared through `getDefaultRows()` |
+| `UserFormTrait::$repeatPassword`, `$upload` | removed |
+| `LoginForm::$enableFacebookLogin`, `SignupForm::$enableFacebookSignup` | removed |
+| `ChunkedUploadedFile::$partialUploadPath`, `$tempFileLifetime`, `$gcProbability`; `StreamUploadedFile::$temporaryUploadPath` | `Upload\Upload::$tempPath`, `$tempLifetime`, `$enableGarbageCollection` |
+| `AdminButton::$icon` (`string`) | `string\|Stringable` |
+| private and protected `$_name` | `$name` |
 
-public function getAdminIndexBreadcrumb(): Breadcrumb
-{
-    return new Breadcrumb(Yii::t('app', 'COMMON_SECTIONS'), ['/admin/section/index', 'entry' => $this->entry_id]);
-}
-```
+### Constants
 
-A record with a page of its own answers only the middle one — including a record filed under one of its own
-kind, since a tree parent belongs in the bar rather than in the title.
+| v2 | v3 |
+|---|---|
+| `User::AUTH_USER_CREATE`, `AUTH_USER_UPDATE`, `AUTH_USER_DELETE` | `User::AUTH_USER` (`user`) |
+| `Redirect::AUTH_REDIRECT_CREATE` | `Redirect::AUTH_REDIRECT` (`redirect`) |
+| `UserLogin::TYPE_LOGIN` `'login'`, `TYPE_COOKIE` `'auto'`, `TYPE_SIGNUP` `'signup'`, `TYPE_CONFIRM_EMAIL` `'email'`, `TYPE_RESET_PASSWORD` `'password'` | `2`, `3`, `4`, `5`, `6`; `TYPE_OTHER` `1` |
+| `Trail::TYPE_DEFAULT` (resolved to `1`, a create) | `13`, a plain message |
+| `Widget::ROLE_ANY` | `Models\User::ROLE_ANY` (`*`), `ROLE_AUTHENTICATED` (`@`) |
+| — | `User::AUTH_ROLE_MANAGER` (`manager`), `User::PASSWORD_PEPPER`, `Modules\Admin\Module::AUTH_SYSTEM` (`system`) |
 
-A project header then extends `ModelHeader` and drops whatever breadcrumbs it built by hand:
+### Configuration keys and params
 
-```php
-/**
- * @extends ModelHeader<Section|null>
- */
-class SectionHeader extends ModelHeader
-{
-}
-```
+| v2 | v3 |
+|---|---|
+| `modules.admin.alias` | `params.adminAlias` |
+| `params.googleAuthenticatorIssuer` | `params.twoFactorAuthenticationIssuer` |
+| `params.facebookClientId`, `params.facebookClientSecret`, `components.authClientCollection` | removed |
+| `components.sitemap.models` | `components.sitemap.sitemaps` |
+| `components.log.targets[0]` (the file target) | `components.log.targets.file` |
+| `modules.<id>.enableI18nTables`, `modules.<id>.tablePrefix` | removed |
+| — | `params.secretKey`, `passwordPepper`, `sentryDsn`, `mailerDsn`, `registryUrl`, `registryKey`; `components.upload`, `components.search`; `components.user.cookieSecure`, `components.session.cookieSecure` |
 
-`ModelHeader` fills `title` and `url` from the **base** record, `subtitle` from the chain between it and the
-page's own record, and *appends* the chain breadcrumbs — so a header that adds a crumb of its own before
-calling `parent::configure()` keeps it in front. A subclass that leaves `title` set keeps its own title.
+### Tables and columns
 
-## 3.0.0 — `AdminModelInterface` answers for the permission, and `AdminLink` moved here
+| v2 | v3 |
+|---|---|
+| `user.password_salt` | `user.password_scheme` (`pepper` or `NULL`, never a salt) |
+| `user.google_2fa_secret` (16 chars, clear) | `user.two_factor_secret` (encrypted, `enc:` prefix) |
+| `user.verification_token`, `password_reset_token`, `google_2fa_recovery_codes` | `user_token` (`user_id`, `type`, hashed `token`, `expires_at`) |
+| `user.picture`, `first_name`, `last_name`, `birthdate`, `city`, `country` | `user.custom_attributes` (JSON) |
+| `user.login_count` (`smallint`) | unsigned `int` |
+| `user_login.type` (`string(12)`) | `tinyint` |
+| `trail.model`, `translation.model` | `model_class` |
+| `<table>.<attribute>_<language>` columns | `translation` (`model_class`, `model_id`, `language`, `attribute`, `value`) |
+| `auth_client` | dropped |
+| `auth_rule` rows, `auth_item.rule_name` | emptied and cleared |
+| materialized `path` (comma string) | JSON array |
+| — | `user.email_confirmed_at`, `show_hints`, `color_scheme`; `search`; `depth` on every nested tree table |
 
-`Models\Interfaces\AdminModelInterface` declares `getPermissionName(): string`, the permission guarding the
-model's admin page. It was declared ad hoc on the media `Asset` and cms `EntryRelation` families and nowhere
-else, so anything holding an `AdminModelInterface` had to duck-type its way to it.
+### Message keys
 
-`Models\Traits\AdminModelTrait` does **not** implement it, for the same reason it leaves `getAdminRoute()` to
-the model: only the model knows, and a silent default would hide every link to it — or show one it should not.
-So a model implementing the interface has to answer it, and a model that does not is a fatal at class load.
+The `skeleton` category is key-based: every string is an `UPPER_SNAKE_CASE`, domain-first key looked up with
+`forceTranslation`, and `messages/en-US/skeleton.php` is the catalogue of the English copy. There is no mechanical map
+from the old English text; grep the new file for the wording. Shapes: `{DOMAIN}_{ATTRIBUTE}_LABEL` / `_HINT` / `_ERROR`,
+`{DOMAIN}_SUCCESS_*`, `{DOMAIN}_CONFIRM_*`, `{DOMAIN}_BUTTON_*`, `AUTH_{PERMISSION}_DESCRIPTION`, `COMMON_*`. The
+`countries` category is `country`. Dropped languages: `ru`, `zh-CN`, `zh-TW`.
 
-```php
-// a model with an admin page of its own
-public function getPermissionName(): string
-{
-    return self::AUTH_PRODUCT;
-}
+### Console commands
 
-// a model only ever edited through another answers that one's — there is no `entryAsset`
-public function getPermissionName(): string
-{
-    return Entry::AUTH_ENTRY;
-}
-```
+| v2 | v3 |
+|---|---|
+| `trail/update-models --filter='\models\'` | default filter is `'\Models\'` |
+| — | `migrate` options `--dbFile`, `--upgradeFile`, `--skipBackup` |
+| — | `params/pepper`, `redirect/clean`, `registry/push`, `registry/show`, `search/rebuild`, `search/clear`, `upgrade/passwords`, `upload/clear`, `user/password <email>`, `user-login/clear`, `user-token/clear` |
+| `user/create` (prompts) | also `--name`, `--email`, `--password` or the `YII_USER_PASSWORD` environment variable |
 
-The permission has to be one the auth manager actually holds. Nothing throws for a name nobody registered: the
-record simply stops being reachable and every link to it disappears, so assert it in a test —
-`Yii::$app->getAuthManager()->getPermission($model->getPermissionName())`.
+### Cookies and CSS
 
-### `Widgets\AdminLink` moved out of `yii2-cms`
+| v2 | v3 |
+|---|---|
+| `_identity` (auto login), `PHPSESSID` (session) | `_auth`, `_session` |
+| `.admin.overlay` (project-defined `overlay`) | `.admin`, positioned by `AdminButton::registerCss()`; the `relative` ancestor stays the project's |
 
-The frontend overlay link is `Hirtz\Skeleton\Widgets\AdminLink`, not `Hirtz\Cms\Widgets\AdminLink`. It
-never referenced a cms class, and the CSS it renders into is `Widgets\Buttons\AdminButton`'s, which was
-already here. `AdminLink::tag($model)` takes any `AdminModelInterface` and is otherwise unchanged.
+## Configuration
 
-**Its default class is `admin`, no longer `admin overlay`.** `overlay` was never a platform class — each
-project defined its own — so `AdminButton::registerCss()` positions `.admin` itself now:
-
-```css
-.admin {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%
-}
-```
-
-Two consequences. A caller passing its own `class` replaces the default outright (`attributes()` replaces,
-`addAttributes()` merges), so that class has to carry the geometry itself. And the overlay fills the nearest
-*positioned* ancestor, which stays the project's markup: `Cms\Widgets\Artwork` and the cms `_sections.php`
-both name `relative` for it, but the platform never defines that class — supply it through Tailwind or a rule
-of your own, or the overlay covers the viewport rather than the record.
-
-## 3.0.0 — A form's rows are fieldsets
-
-`Widgets\Forms\ActiveForm::$rows` accepted three shapes — a flat list of fields, a list of groups, or fieldsets —
-and which one it held was guessed from the *first* element, with the answer applied to the rest. A bare field behind
-a group was therefore handed to a fieldset that never got its model (`Call to a member function
-getActiveValidators() on null`), and everything reading the rows had to repeat the guess, including any bundle or
-project inserting a field through `Widget::EVENT_CONFIGURE`.
-
-All three shapes still go in. They are normalized to `list<Fieldset>` once, before the event fires, so there is one
-shape to read.
-
-### A subclass declares its rows in `getDefaultRows()`
-
-```php
-// before
-protected function configure(): void
-{
-    $this->rows ??= [
-        $this->getStatusField(),
-        $this->getNameField(),
-    ];
-
-    parent::configure();
-}
-
-// after
-protected function getDefaultRows(): array
-{
-    return [
-        $this->getStatusField(),
-        $this->getNameField(),
-    ];
-}
-```
-
-The hook is only asked when the caller named no rows, which is what `??=` used to say. **The property is
-`$fieldsets` now**, typed `list<Fieldset>|null` — a row of a form is a label and its content, which is what
-`Fieldset::$rows` holds, so what a form itself holds is the fieldsets those sit in. Assigning it directly takes the
-rows past the normalizer and PHPStan reports it. Anything else a form does in `configure()` stays there; only the
-rows move.
-
-### A listener reaches into a fieldset
-
-`rows()` hands its closure `list<Fieldset>`, and `Fieldset::rows()` takes a closure of its own over the rows of
-that one fieldset — the shape `Widgets\Grids\GridView::columns()` already had. `Fieldset::getRows()` reads them
-back, which is how a listener finds the fieldset it wants:
-
-```php
-EventHelper::on(
-    EntryActiveForm::class,
-    Widget::EVENT_CONFIGURE,
-    static fn (EntryActiveForm $form) => $form->rows(static function (array $fieldsets): array {
-        $fieldsets[0]->rows(static fn (array $rows): array => [...$rows, MyField::make()]);
-        return $fieldsets;
-    }),
-);
-```
-
-Before `configure()` a fieldset's rows are what was declared — a property name, a field, any stringable. Afterwards
-they are the resolved fields, cloned per language where the model translates them.
-
-### Mixing shapes is refused
-
-A list holding both groups and bare fields throws an `InvalidConfigException` naming the form. Wrap the bare fields
-in a group of their own:
+`config/params.php`:
 
 ```php
-// before — the first element decided for all of them
-[[$status, $name], $slug]
-
-// after
-[[$status, $name], [$slug]]
-```
-
-`ActiveForm::getFieldset()` is gone. `createFieldset()` replaces it and answers a `Fieldset`, not a `Stringable`.
-
-## 3.0.0 — A type change reloads the page, and a hidden field is really gone
-
-What a type decides used to reach the browser two different ways, each answering for half of it: the type select
-reloaded the *form* when the candidate types' custom attribute definitions hashed differently, and
-`Models\Types\Type::hiddenFields()` was a list of CSS selectors a script hid on change. A type that decided
-anything else — a field another bundle contributes, a panel outside the form, which menus an entry may go in —
-reached neither, and two types with the same custom attributes emitted no `hx-*` at all.
-
-Now the select reloads whenever it offers more than one type, and the reload re-renders the whole `#wrap`: the
-server answers for the page, so nothing has to be enumerated on the client.
-
-**`hiddenFields()` takes attribute names, not selectors.** A bundle's `FIELD_*` marker lost the `#` it carried for
-the old syntax, so a project spelling one out by hand changes:
-
-```php
-// before
-->hiddenFields('content', '#assets')
-
-// after — or better, name the constant
-->hiddenFields('content', Entry::FIELD_ASSETS)
-```
-
-**A hidden attribute is no longer safe.** It is dropped from `rules()`, so it is neither rendered, validated nor
-assigned by `load()`. Two consequences:
-
-- The value a record holds under a type that hides it now **survives** a save instead of being overwritten by what
-  the form did not post. This is the point of the change.
-- Code relying on a hidden attribute still being mass-assignable has to assign it itself, or the type should not
-  have hidden it.
-
-**A model using `Models\Traits\VisibleAttributeTrait` must declare `Models\Interfaces\VisibleAttributeInterface`**,
-or the skeleton cannot ask it and the type's hidden fields are silently ignored:
-
-```php
-class Entry extends ActiveRecord implements TypeAttributeInterface, VisibleAttributeInterface
-{
-    use VisibleAttributeTrait;
-}
-```
-
-**Gone:** `Models\CustomAttributes\CustomAttribute::getFingerprint()` and the `getFingerprintData()` overrides of
-every definition class — a custom definition class overriding one drops it. So is the `data-toggle` attribute
-`Widgets\Forms\Fields\SelectField` wrote and the `includes/forms.ts` handler behind it; a project reading
-`data-toggle` in its own script has nothing to read any more.
-
-## 3.0.0 — A URL import is guarded, a local copy is a different class
-
-`Web\StreamUploadedFile` fetched whatever it was given. Anyone who could reach the media file form could make the
-server request a cloud metadata endpoint, anything on localhost or anything else inside the network, and a value
-with no scheme fell through to a plain filesystem read. It now accepts `http` and `https` only, resolves the host
-and refuses a loopback, private or reserved address, checks every redirect hop again, and streams the body under a
-timeout and a size ceiling.
-
-Two things a project may have to act on:
-
-- **An import from inside your own network now fails.** Either name the file by path instead, or allow it:
-
-  ```php
-  'components' => [
-      'upload' => [
-          'allowPrivateStreamUploadHosts' => true,
-          // 'enableStreamUploads' => false, // or turn the feature off entirely
-      ],
-  ],
-  ```
-
-  `Upload::$streamUploadTimeout` (10 s), `$maxStreamUploadSize` (64 MB) and `$maxStreamUploadRedirects` (5) are
-  beside it; there used to be no timeout and no ceiling at all.
-
-- **A path the application names is `Web\CopiedUploadedFile` now**, which opens it as it stands — a stream
-  wrapper's included — and none of the policy above applies to it. That is what the media bundle's
-  `Models\File::copy()` builds. Code doing this itself changes:
-
-  ```php
-  // before
-  new StreamUploadedFile(['url' => $file->getFilePath()]);
-
-  // after
-  new CopiedUploadedFile(['path' => $file->getFilePath()]);
-  ```
-
-  Both extend the new `Web\AbstractUploadedFile`, which owns `$allowedExtensions`, the temporary file,
-  `saveAs()` and `getExtension()` — a subclass overriding one of those still works, one naming
-  `StreamUploadedFile` as the type of an application path does not.
-
-## 3.0.0 — The type and status declarations are instance methods
-
-`getTypes()` and `getStatuses()` lost their `static`. Drop it from every override, or PHP fatals on the class:
-
-```php
-// before
-public static function getTypes(): array
-
-// after
-public function getTypes(): array
-```
-
-Nothing else changes: `getTypeDefinitions()`, `findType()`, `instantiate()`, `getStatusDefinitions()` and
-`findStatus()` are still static and still cached — the declaration has exactly one caller,
-`Models\Definitions\DefinitionRegistry`, which resolves it once per model class, per language, per application.
-
-What it buys is configuration. An installation that declares no model class of its own can now name a model's
-types and statuses in the container, which is where it would re-point the model anyway:
-
-```php
-'container' => [
-    'definitions' => [
-        Entry::class => [
-            'types' => fn (): array => [
-                EntryType::make(Entry::TYPE_DEFAULT)->name(Yii::t('app', 'Page')),
-            ],
-        ],
-    ],
-],
-```
-
-Four things to know:
-
-- **Use a closure.** A type's name is a `Yii::t()` result, and a literal in a configuration file resolves before
-  the application has an `i18n` component — which would freeze every definition to whichever language happened
-  to be current. A plain list is accepted for a declaration that needs no translation.
-- **A class that declares its own `getTypes()` owns them.** The override never reads what the container
-  configured, so configure *or* subclass, not both.
-- **Key it by the class the container resolves the model to.** A project that maps `Entry::class` to one of its
-  own configures that class; naming the bundle's does nothing.
-- The value reaches the model through `Yii::configure()` → `setTypes()` / `setStatuses()`, and
-  `ActiveRecord::__set()` asks `hasAttribute()` first, so a model configured this way needs its table. Every
-  real model has one; only a table-less test stub does not.
-
-
-## 3.0.0 — The `manager` role, and flat roles
-
-`Models\User::AUTH_ROLE_MANAGER` (`manager`) holds every permission the installation has but the
-installation-level ones. `Migrations\M260914190000ManagerRole` creates it and flattens `admin` to the full list: a
-role lists the **permissions themselves**, never another role, so the `author` and `media` roles `admin` used to
-group them under are detached by `yii2-cms` and `yii2-media`. The result is three independent lists:
-
-```
-admin   → user, authUpdate, redirect, trailIndex, system, entry, category, file, folder,
-          location, tag, tenant, config, shopifyProduct, shopifyWebhook
-manager → the same, less system and tenant
-author  → entry, category, file, folder
-```
-
-**Neither role inherits the other.** A guard an administrator should also pass names both:
-
-```php
-'roles' => [User::AUTH_ROLE_ADMIN, User::AUTH_ROLE_MANAGER],
-```
-
-and a permission of your own is added to both, since `addPermission()` takes any number of parents:
-
-```php
-$this->addPermission(Invoice::AUTH_INVOICE, $description, User::AUTH_ROLE_ADMIN, User::AUTH_ROLE_MANAGER);
-```
-
-Naming only `AUTH_ROLE_ADMIN` keeps it out of a manager's reach — but prefer a permission to a role check, so
-that the list a role shows in the admin is the whole of what it can do. That is what the platform's own
-administrator-only capabilities are: `Modules\Admin\Module::AUTH_SYSTEM` (`system`, "Inspect the server and the
-error logs") covers the error logs, `phpinfo()` and the system page's infrastructure rows, and `yii2-tenant`'s
-`tenant` covers the tenants the installation is cut into — `Tenant\Migrations\M260915190000ManagerTenantPermission`
-takes it back out of `manager`, which `M260914190000ManagerRole` had handed every permission that existed. Both
-are held by `admin` alone and can be granted to a role of your own without handing over the admin role. A project
-that guards a controller on `AUTH_ROLE_ADMIN` should ask whether it means a permission instead.
-
-`safeDown()` drops `manager` but leaves `admin` flat: those permissions grant exactly what it reached through a
-role, and nothing records which of the two it held them by.
-
-## 3.0.0 — The admin system page was rebuilt
-
-The page is three tabs, one card each: `system/index` (Application), `system/server` and `system/maintenance`,
-which the four maintenance actions redirect back to. A project linking straight to `system/index` for a cache
-flush should point at `system/maintenance` instead.
-
-`Modules\Admin\Widgets\Grids\AssetBundleGridView`, `CacheGridView` and `SessionGridView` are **removed**. None of
-them listed records — the session grid synthesised a single row out of two counts — so they are
-`Widgets\Panels\InfoList` rows now, gathered in `Modules\Admin\Widgets\Panels\MaintenanceInfo` beside the new
-`ApplicationInfo` and `ServerInfo` cards. `InfoList` renders the form row classes rather than a table. A project that subclassed one
-of the grids builds an `InfoList` instead, or adds its rows to the shipped one from a `Widget::EVENT_CONFIGURE`
-listener:
-
-```php
-Event::on(MaintenanceInfo::class, Widget::EVENT_CONFIGURE, static function (Event $event): void {
-    /** @var MaintenanceInfo $info */
-    $info = $event->sender;
-    $info->addRow('Queue', $queue->getLength(), Button::make()->post(['/admin/queue/clear']));
-});
-```
-
-`Base\Traits\ApplicationTrait::setMigrationNamespace()` no longer registers a console-only event handler: it
-appends to a property the application keeps under both SAPIs, which `getMigrationNamespaces()` returns. A project
-that called it from its own `Bootstrap` needs no change; one that set
-`Console\Controllers\MigrateController::$migrationNamespaces` directly should call `setMigrationNamespace()`
-instead, since the controller now takes its namespaces from the application. `app\Migrations` and
-`Hirtz\Skeleton\Migrations` are registered by the application itself.
-
-## 3.0.0 — The sitemap moved out of the models
-
-`Web\Sitemap` is `Sitemap\Sitemap`, and its `models` property is `sitemaps`. Where a model used to be listed —
-implementing `Models\Interfaces\SitemapInterface` itself, or carrying a `Behaviors\SitemapBehavior` — the list now
-holds sitemap objects, and the model is left alone:
-
-```php
-// before
-'sitemap' => [
-    'models' => [
-        'products' => [
-            'class' => Product::class,
-            'behaviors' => [
-                'sitemap' => [
-                    'callback' => fn (Product $product) => ['loc' => $product->getRoute()],
-                    'defaultChangeFrequency' => 'weekly',
-                    'defaultPriority' => 0.8,
-                ],
-            ],
-        ],
-    ],
-],
-
-// after
-'sitemap' => [
-    'sitemaps' => [
-        'products' => [
-            'class' => ModelSitemap::class,
-            'modelClass' => Product::class,
-            'url' => fn (Product $product) => ['loc' => $product->getRoute()],
-            'changeFrequency' => 'weekly',
-            'priority' => 0.8,
-        ],
-    ],
-],
-```
-
-`Behaviors\SitemapBehavior` and `Models\Interfaces\SitemapInterface` are removed. A sitemap that needs more than a
-closure — its own query, images, a record producing several URLs — extends `Sitemap\ModelSitemap` and overrides
-`getQuery()` and `getRecordUrls()`; `getSitemapQuery()`, `generateSitemapUrls()` and `getSitemapUrlCount()` have no
-equivalent on the model.
-
-The component's own `urls` and `views` are unchanged in the configuration, but are now a sitemap of their own,
-`Sitemap\UrlSitemap`, registered under the reserved key `urls` — so a key of that name in `sitemaps` throws.
-
-Three things behave differently:
-
-- **The index pages by URL, not by record.** `SitemapInterface::getPageCount()` replaces the URL count the component
-  used to divide by its own `maxUrlCount`, so a sitemap overriding `maxUrlCount` is paged by its own number. A
-  record producing one URL per language divides the page size with `intdiv()`, which is what a fractional limit
-  silently broke before: the query builder drops a `LIMIT` that is not a whole number, and every page then held
-  every record.
-- **The XML namespace is `http://www.sitemaps.org/schemas/sitemap/0.9`**, as the protocol declares it, rather than
-  the `https` and trailing slash it carried before.
-- **An unknown key or an out-of-range offset is a `404`**, where `sitemap.xml?key=nope` used to answer an empty but
-  valid sitemap with `200`.
-
-## 3.0.0 — `ArrayHelper::simpleXmlToArray()` became `XmlNode`
-
-The helper walked a `SimpleXMLElement` into nested arrays of `name`, `text`, `attributes` and `children`. It is
-now `Xml\XmlNode`, a readonly node of the same four properties, so a caller reads a typed object instead of
-indexing an array:
-
-```php
-// before
-$array = ArrayHelper::simpleXmlToArray(simplexml_load_string($xml));
-$title = $array['children']['channel'][0]['children']['title'][0]['text'] ?? null;
-
-// after
-$title = XmlNode::fromString($xml)->getChild('channel')?->getChild('title')?->text;
-```
-
-`XmlNode::fromElement()` takes a `SimpleXMLElement` for a document that is already parsed, and `toArray()` returns
-exactly the array the helper did, so an existing consumer of the array shape only changes where the tree is built.
-
-Two behavioural differences: `fromString()` throws an `InvalidArgumentException` for a string that is not valid
-XML, where the helper left the parsing to its caller and dereferenced the `null` its signature accepted; and the
-`text` of an element that holds nothing but whitespace is `null`, as it was before.
-
-## 3.0.0 — The login type is an integer
-
-`Models\UserLogin::$type` was a `string(12)` and is now a `tinyint`. It was the last string-valued type in the
-platform; every other `TYPE_*` constant was already an integer.
-
-| v2 value     | v3 constant                        | Value |
-|--------------|------------------------------------|-------|
-| `'login'`    | `UserLogin::TYPE_LOGIN`            | 2     |
-| `'auto'`     | `UserLogin::TYPE_COOKIE`           | 3     |
-| `'signup'`   | `UserLogin::TYPE_SIGNUP`           | 4     |
-| `'email'`    | `UserLogin::TYPE_CONFIRM_EMAIL`    | 5     |
-| `'password'` | `UserLogin::TYPE_RESET_PASSWORD`   | 6     |
-| anything else | `UserLogin::TYPE_OTHER`           | 1     |
-
-`M260914180000UserLoginType` applies that map and collapses everything else — the provider names the removed
-social login wrote (`facebook`, `google`, …), and the `'unknown'` that `Web\User::$loginType` used to default to.
-**Those names do not come back**, on the way down or otherwise; `user_login` is pruned by `userLoginLifetime` and
-`user-login/clear` anyway, so the rows are transient by design.
-
-If your project wrote login types of its own — a second identity provider, a Shibboleth integration — map them
-in `config/params.php` **before** running the migration, and declare the same values in your `getTypes()`
-override:
-
-```php
-'userLoginTypes' => [
-    'shibboleth' => 7,
-],
-```
-
-Anything left unmapped becomes `TYPE_OTHER`. Start your own values at 7; 1 to 6 are the platform's.
-
-`Web\User::$loginType` is typed `int` and defaults to `UserLogin::TYPE_OTHER`, so a project that logs a user in
-itself assigns a constant rather than a string:
-
-```php
-// before
-$webuser->loginType = 'sso';
-
-// after
-$webuser->loginType = UserLogin::TYPE_SSO;  // your own constant, declared in getTypes()
-```
-
-The 12-character truncation in `insertLogin()` is gone with the string column, and so are the two fallbacks
-`UserLogin` carried for undeclared values: `getTypeName()` no longer answers `ucfirst($this->type)` and
-`getTypeIcon()` no longer answers `"brand:$this->type"` — a Font Awesome brands icon that only ever existed for
-the social login providers. Every value a login can hold is declared now, so the grid renders a real icon.
-
-
-## 3.0.0 — Types and statuses are objects
-
-`getTypes()` and `getStatuses()` no longer return arrays. They return a list of definition objects, and the
-platform refuses anything else: the first read throws `InvalidConfigException` naming the model.
-
-```php
-// before
-public static function getTypes(): array
-{
-    return [
-        self::TYPE_DEFAULT => [
-            'name' => Yii::t('app', 'Page'),
-            'hiddenFields' => ['content', '#assets'],
-            'class' => Page::class,
-        ],
-    ];
-}
-
-// after
-public function getTypes(): array
-{
-    return [
-        EntryType::make(self::TYPE_DEFAULT)
-            ->name(Yii::t('app', 'Page'))
-            ->hiddenFields('content', AssetModelInterface::FIELD_ASSETS)
-            ->modelClass(Page::class),
-    ];
-}
-```
-
-The value moved from the array key to the constructor argument, every key is a setter of the same name, and
-`class` is `modelClass()`. A misspelled key was silent; a misspelled setter is an `Error`.
-
-Reads change with it. `getTypeOptions()` is gone:
-
-```php
-// before
-$viewFile = $this->getTypeOptions()['viewFile'] ?? null;
-$name = static::getStatuses()[$this->status]['name'] ?? '';
-
-// after
-$viewFile = $this->getType()?->getViewFile();
-$name = static::findStatus($this->status)?->getName() ?? '';
-```
-
-`getTypes()` is the declaration, is an **instance** method (see below) and is read by nothing but the registry. Everything else reads
-`getTypeDefinitions()` (indexed by value, validated, cached), `findType()` or `$model->getType()`, which is
-`null` for a row whose type the code no longer declares. `getStatuses()` mirrors it with
-`getStatusDefinitions()`, `findStatus()` and `getStatus()`.
-
-**Never mutate a definition you were handed.** `DefinitionRegistry` caches it and every record of that value
-shares the instance; a configuration to be reused across several types is a named constructor on your own type
-subclass, which makes a fresh object per call. The cache is keyed by the application language as well, since a
-`name` is a `Yii::t()` result, and is reset with the application.
-
-A project option that used to live in the array — `entriesPerPage`, `headlineTag` — has no home in a bag any
-more; there is deliberately no `option()` escape hatch. Extend the bundle's type class instead:
-
-```php
-final class SectionType extends \Hirtz\Cms\Models\Types\SectionType
-{
-    protected ?int $entriesPerPage = null;
-
-    public function entriesPerPage(?int $entriesPerPage): static
-    {
-        $this->entriesPerPage = $entriesPerPage;
-        return $this;
-    }
-
-    public function getEntriesPerPage(): ?int
-    {
-        return $this->entriesPerPage;
-    }
-}
-```
-
-and point the model at it:
-
-```php
-public static function getTypeClass(): string
-{
-    return SectionType::class;
-}
-
-public function getType(): ?SectionType
-{
-    /** @var SectionType|null */
-    return static::findType(static::normalizeTypeValue($this->type ?? null));
-}
-```
-
-`normalizeTypeValue()` is not optional: a form posts the type as a string and PDO answers one for an integer
-column, and `findType()` takes `?int` under `strict_types`.
-
-New on the base class: `available(Closure|bool)`, whether the type is offered for a record in the admin. That
-is what the asset types' `visible` key meant; a cms section type's `visible()` keeps its own meaning, the
-frontend render filter.
-
-
-## 3.0.0 — The session and auto login cookies are renamed
-
-Everyone is logged out once when this deploys. The auto login cookie is `_auth` (was Yii's `_identity`) and the
-session cookie is `_session` (was PHP's `PHPSESSID`).
-
-The rename is what disposes of the cookies the upgrade already invalidated — `M260913180000PasswordScheme`
-rotates `auth_key` for every account whose v2 hash it drops — and a migration could not, since it cannot reach a
-browser. It also escapes a trap that made those stale cookies unclearable: `secure` is derived from the request,
-so a host answering on both http and https writes a `Secure` copy beside the plain one, and a browser then
-refuses every plain HTTP response the right to overwrite *or* delete that name (RFC 6265bis §5.4, "leave secure
-cookies alone"). The stale cookie was frozen in the browser and the user logged out on every session lapse,
-while the server sent the correct headers throughout.
-
-A fresh name has no `Secure` twin, but the trap re-arms on it as soon as the site is used over both schemes
-again. **Pin the flag on any host that answers on both** — a local `*.localhost` served by Herd or Valet, or a
-staging box without a redirect:
-
-```php
-'components' => [
-    'session' => ['cookieSecure' => false],
-    'user' => ['cookieSecure' => false],
-],
-```
-
-Both default to `null`, which keeps the previous per-request behaviour, and both accept `true` to pin a cookie
-as `Secure` on an HTTPS-only deployment. A project that named either cookie itself keeps its own name:
-`components.user.identityCookie` and `components.session.name` are unchanged as configuration.
-
-To diagnose a browser already stuck in this state, set two cookies in one response — one under the name in
-question and one under any other name. If only the other one lands, a `Secure` twin exists and nothing served
-over http can remove it; the cookie has to be cleared in the browser, or the name retired.
-
-## 3.0.0 — The admin path is a param
-
-`Modules\Admin\Module::$alias` is gone. The path the admin is reached under is `params['adminAlias']`, read by
-`Base\Traits\ApplicationTrait::getAdminAlias()` and defaulting to `admin`:
-
-```php
-// config/params.php
 return [
-    'adminAlias' => 'backend',
+    'cookieValidationKey' => '...',           // required; `./yii params` generates it
+    'passwordPepper' => '...',                // `./yii params/pepper` generates it; back it up with your secrets
+    'secretKey' => '...',                     // optional; encrypts 2FA secrets and signs tokens, falls back to cookieValidationKey
+    'adminAlias' => 'admin',                  // was modules.admin.alias
+    'twoFactorAuthenticationIssuer' => 'My site', // was googleAuthenticatorIssuer
+    'sentryDsn' => 'https://...',             // optional; adds Log\SentryTarget under components.log.targets.sentry
 ];
 ```
 
-The property was never read — the URL rules took the value out of the raw `modules.admin.alias` config array, so
-a project that set it on a `Module` subclass was silently ignored, and reading it off the module instance would
-have meant building the module on every request. A project that configured `modules.admin.alias` moves that
-value to the param.
-
-Moving the admin now also closes the default path: a route no URL rule matched falls back to the request path,
-which kept `admin/…` serving beside the new prefix. `Module::beforeAction()` refuses that one fallback, and only
-when the alias differs — a rule of the project's own that routes into the module parses as before.
-
-## 3.0.0 — The admin has its own languages
-
-`Modules\Admin\Module::$languages` is the list the admin interface is offered in, and it is no longer the
-application's content languages. The two were the same list only because the admin used to follow whatever
-language the URL manager resolved; it now overrides that unconditionally, so a project can edit content in
-languages the admin has no translation for.
+`config/web.php` (or wherever the project configures components):
 
 ```php
+'components' => [
+    'request' => ['trustedHosts' => ['10.0.0.0/8']],      // behind a proxy; Yii's own proxy handling is the only one left
+    'user' => [
+        'enableTwoFactorAuthentication' => true,          // was enableGoogleAuthenticator
+        'cookieSecure' => null,                           // pin to false on a host answering on http and https
+        'loginAttemptLimit' => 10,                        // 0 disables; counters live in the cache component
+        'enableUserEnumerationProtection' => true,        // false restores the messages that name the reason
+    ],
+    'session' => ['cookieSecure' => null],
+    'sitemap' => [
+        'sitemaps' => [                                   // was models
+            'products' => [
+                'class' => ModelSitemap::class,
+                'modelClass' => Product::class,
+                'url' => fn (Product $product) => ['loc' => $product->getRoute()],
+                'changeFrequency' => 'weekly',
+                'priority' => 0.8,
+            ],
+        ],
+    ],
+    'upload' => ['enableStreamUploads' => false],         // optional; turns the URL import off
+    'i18n' => [
+        'translations' => [
+            'app' => ['class' => PhpMessageSource::class, 'basePath' => '@messages', 'forceTranslation' => true],
+        ],
+    ],
+],
 'modules' => [
-    'admin' => [
-        'languages' => ['de', 'en-US'],
-    ],
+    'admin' => ['languages' => ['de', 'en-US']],           // the admin's own list; defaults to i18n.languages
 ],
-```
-
-It defaults to `I18N::getLanguages()`, so a project that says nothing keeps what it had. Three consequences:
-
-- **A single language is pinned.** The admin runs in it, `Widgets\Buttons\LanguageDropdownButton` renders
-  nothing and the account's language field is hidden — there is nothing to pick. A single-language project
-  therefore loses the language column it never used.
-- **The account language is validated against the admin list**, by `Models\User::getLanguages()` and through it
-  the `DynamicRangeValidator` on the attribute. An account whose stored `language` is no longer offered falls
-  back instead of switching the admin into a language it has no messages for — which is what happened before.
-- **The session override moved to the module.** `I18N::$sessionKey`, `I18N::getSessionLanguage()` and
-  `I18N::setSessionLanguage()` are `Module::$languageSessionKey`, `Module::getSessionLanguage()` and
-  `Module::setSessionLanguage()`; `Modules\ModuleTrait` is the skeleton's accessor for the module, matching the
-  other bundles. `I18N` keeps `getLanguages()`, `setLanguages()` and `hasLanguage()` for the content languages.
-
-**Russian and both Chinese translations are gone**, along with their flags: `messages/ru`, `messages/zh-CN` and
-`messages/zh-TW` in every bundle, their entries in `I18N::$languageLabels` and `messages/config.php`, and the
-`ru`/`zh-CN`/`zh-TW` flag images. The shipped set is `de`, `en-US`, `fr` and `pt`. A project that needs one of
-them back adds the language to `$languageLabels`, a flag rule to its own CSS and its own `messages/<lang>`
-directory — the message source reads the bundle's path, so the file has to live there or be pointed at through
-`I18N::$translations`. The `country` category went with them, so a frontend rendering country names in Russian
-or Chinese needs its own source too.
-
-## 3.0.0 — One permission per model
-
-The 46 verb permissions (`entryCreate`, `entryUpdate`, `entryDelete`, `entryOrder`, …) are 14 nouns, one per
-model the admin manages. `create`, `delete` and `order` were already parents of their `update`, so the only
-states the split could actually express were ones no project used; every project assigns roles.
-
-| Bundle   | New permission                  | Replaces                                                                               |
-|----------|---------------------------------|----------------------------------------------------------------------------------------|
-| skeleton | `user`                          | `userCreate` `userUpdate` `userDelete`                                                 |
-| skeleton | `authUpdate` (kept)             | —                                                                                       |
-| skeleton | `trailIndex` (kept)             | —                                                                                       |
-| skeleton | `redirect`                      | `redirectCreate`                                                                        |
-| cms      | `entry`                         | `entry*` `entryAsset*` `entryCategoryUpdate` `section*` `sectionAsset*`                 |
-| cms      | `category`                      | `category*`                                                                             |
-| media    | `file`                          | `file*`                                                                                 |
-| media    | `folder`                        | `folder*`                                                                               |
-| location | `location`                      | `location*`                                                                             |
-| location | `tag`                           | `tag*`                                                                                  |
-| tenant   | `tenant`                        | `tenant*`                                                                               |
-| config   | `config`                        | `configUpdate`                                                                          |
-| shopify  | `shopifyProduct`                | `shopifyProductUpdate`                                                                  |
-| shopify  | `shopifyWebhook`                | `shopifyWebhookUpdate`                                                                  |
-
-`authUpdate` keeps its verb and its value: it is the one that can grant permissions, and it must stay separate
-from `user`. `trailIndex` keeps its, because it is read-only.
-
-**The migration widens.** `M260914100000AuthItems` and its six siblings grant the new item to every parent and
-every assignee of *any* of the old ones, then delete those. An account or a project role that held `entryUpdate`
-alone now holds `entry` — which includes creating, deleting and reordering entries, their sections and their
-assets. Check your assignments before you run it if that matters.
-
-The three roles are unchanged: `admin` holds everything, `author` holds `entry` and `category`, `media` holds
-`file` and `folder`. An editor who also uploads still needs `media` beside `author`.
-
-### What to rename
-
-- Every `Model::AUTH_*_CREATE` / `_UPDATE` / `_DELETE` / `_ORDER` constant is one `Model::AUTH_<MODEL>`:
-  `User::AUTH_USER`, `Redirect::AUTH_REDIRECT`, `Entry::AUTH_ENTRY`, `Category::AUTH_CATEGORY`,
-  `File::AUTH_FILE`, `Folder::AUTH_FOLDER`, `Location::AUTH_LOCATION`, `Tag::AUTH_TAG`, `Tenant::AUTH_TENANT`,
-  `Config::AUTH_CONFIG`, `Product::AUTH_SHOPIFY_PRODUCT`, `Webhook::AUTH_SHOPIFY_WEBHOOK`. `Section` and the
-  asset models declare none — they are edited through their entry and use `Entry::AUTH_ENTRY`.
-- `Models\Asset::getPermissionName(string $action)` is `getPermissionName()`, and the `can(string $action, Asset)`
-  of the media asset grids is `can(Asset)`.
-- `findEntry()`, `findSection()`, `findCategory()`, `findFile()`, `findFolder()`, `findTenant()`,
-  `findLocation()` and `findTag()` lost their permission argument — `AccessControl` has already answered the
-  same question for the action. `findUser()` keeps it.
-- Every `can()` call loses its record: `can(Entry::AUTH_ENTRY)`, not `can(..., ['entry' => $entry])`. The one
-  exception is the `user` param on `user` and `authUpdate`.
-
-### `OwnerRule` is policy in `Web\User` now
-
-`Rbac\Rules\OwnerRule` and the `userUpdateRule` row are gone, and with them the only `yii\rbac\Rule` the
-platform shipped. `Web\User::can()` reads `$params['user']` and asks `canManageUser()`, which is the rule
-verbatim: the site owner and anyone holding a permission the acting user lacks stay unreachable, and an actor
-holding every registered permission is still answered without a lookup. The migration clears every `rule_name`
-and empties `auth_rule`; the table stays, because `yii\rbac\DbManager::loadFromCache()` reads it.
-
-A project that wants a per-record rule of its own still has Yii's mechanism — a `rule_name` on its own
-permission and `roleParams` on its `AccessRule`. The platform simply no longer ships one.
-
-`Widgets\Traits\VisibilityTrait::$roles` is unchanged: a nav item still names permissions, `User::ROLE_ANY`
-or `User::ROLE_AUTHENTICATED`, and still ORs them.
-
-### Descriptions and trail messages are pointers, not text
-
-`I18n\Message` holds a `category`, a `key` and optional `params`. It serializes to
-`{"category":"cms","key":"AUTH_ENTRY_DESCRIPTION"}` and renders through `Yii::t()` in the *current* language,
-so one row reads German to one administrator and English to the next.
-
-- `auth_item.description` stores the JSON. The column type is unchanged, and `Message::fromJson()` returns a
-  literal message for anything that is not a pointer, so a row an older version wrote still renders — as the
-  English it was written in. `Models\AuthItem::getLabel()` is what the permissions page shows.
-- `trail.message` stores the JSON for an order trail. `Trail::createOrderTrail()` takes a `Message`,
-  `Trail::getMessage()` returns the rendered text, and the `message` of a `Trail::getTypes()` entry is a
-  `Message` rather than text rendered in `sourceLanguage`.
-- An assign or revoke trail no longer copies the description at all: `Rbac\DbManager::createTrail()` writes
-  `data = ['name' => …, 'type' => …]`, and the grid looks the item up and renders its current label, falling
-  back to the name when the item is gone and to the stored text for a row written before 3.0.
-- `Widgets\Grids\Traits\MessageSourceTrait` is deleted. It tried to translate rendered English back by walking
-  every registered message source, which missed for `UPPER_SNAKE_CASE` keys — that is why the German admin saw
-  English descriptions.
-
-**A `Message::make()` key lives nowhere else**, so `messages/config.php` has to list it as a translator or
-`yii message` drops it:
-
-```php
-'translator' => ['Yii::t', '\\Yii::t', 'Message::make'],
-```
-
-### A project with its own permissions
-
-One line in a migration, one message key, one name in the `AccessControl`:
-
-```php
-$this->addPermission(Invoice::AUTH_INVOICE, Message::make('app', 'AUTH_INVOICE_DESCRIPTION'), User::AUTH_ROLE_ADMIN);
-```
-
-`Db\Traits\MigrationTrait` also has `replaceAuthItems(array $old, string $new)` for collapsing a project's own
-verb permissions the same way, and `restoreAuthItems()` for the way back down.
-
-## 3.0.0 — v2 passwords are not carried over
-
-**Every user who still has a v2 password has to set a new one.** `Migrations\M260913180000PasswordScheme` drops
-those hashes, so nobody keeps a password that v2's five-character minimum let them choose, and every hash in a
-v3 database is peppered.
-
-Affected is any account whose hash carries a v2 per-user salt. Anything already written under a v3 scheme — and
-any account created without a password — is left alone. Count them **before** you migrate, while the column
-still has its old name:
-
-```sql
-SELECT COUNT(*) FROM user WHERE password_salt IS NOT NULL AND password_salt != 'pepper';
-```
-
-On a database coming straight from v2 that is every user who has ever set a password. **If those users are your
-customers rather than a handful of administrators, this is a support event** — plan the announcement before you
-run it, not after.
-
-### The upgrade, in order
-
-```bash
-# 1. Back up. The dropped hashes cannot be recovered, and `migrate/down` does not bring them back.
-./yii migrate/backup
-
-# 2. Absolute URLs need a host in a console application, and Yii will not guess one.
-#    Set components.urlManager.hostInfo (and baseUrl) for the console config first — see below.
-
-# 3. Apply the migration. It reports how many passwords it invalidated and sends nothing.
-./yii migrate
-
-# 4. Mail the reset links, once you are ready for the inbox traffic.
-./yii upgrade/passwords
-```
-
-Step 4 is deliberately not part of step 3: a migration runs in CI, on staging and on every developer's machine,
-and must never mail your users. It is safe to repeat — it targets every user without a password, so a second run
-only reaches those who have not set one yet. That also means it mails accounts that were created without a
-password and never finished, which is usually what you want.
-
-The console needs to know where the link points:
-
-```php
-'components' => [
-    'urlManager' => [
-        'hostInfo' => 'https://www.example.com',
-        'baseUrl' => '',
-    ],
-],
-```
-
-Without it `upgrade/passwords` stops and tells you so rather than mailing a broken link. The links land on
-`account/reset`, which `Web\User::$enablePasswordReset` can switch off — an installation that keeps it off has
-to turn it on for the duration, or set every password with `user/password` below.
-
-### What survives, and what does not
-
-| | |
-|---|---|
-| Password | Gone. The account cannot log in until the reset link is used. |
-| Remember-me cookies | Gone — `auth_key` is rotated, since those cookies were issued against the old password. |
-| Open sessions | **Kept.** Anyone signed in stays signed in, including the administrator running the upgrade — which is what keeps you from locking yourself out of your own site while the emails go out. |
-| Two-factor authentication | Kept, and still required. Resetting the password does not sign the user in when they owe a code; they finish at the login form. |
-| Everything else | Untouched — roles, profile, trail, login history. |
-
-If the only administrator is locked out and the mailer is not an option, set a password directly:
-
-```bash
-./yii user/password admin@example.com
-```
-
-### `password_salt` is `password_scheme`
-
-bcrypt salts its own hashes, so the column never needed to hold one. It records which scheme a hash was written
-under instead — `Models\User::PASSWORD_PEPPER` or `null` — which is what lets the `passwordPepper` param be
-added, removed or rotated on a running installation: a hash whose scheme disagrees with the configured pepper is
-reported by `isPasswordHashOutdated()` and rewritten on that user's next successful login. Code that read
-`password_salt` reads `password_scheme`, and must not treat it as an input to the hash.
-
-## 3.0.0 — Tokens moved to `user_token`
-
-`user.verification_token` and `user.password_reset_token` held their tokens in the clear, so one read of the
-`user` table was a password reset on every account that had one. They now live in a `user_token` table, one row
-per token, stored as an HMAC of the token — a read of that table is worth nothing. The 2FA recovery codes moved
-to the same table (they were already hashed, and copy across unchanged).
-
-`Migrations\M260913170000UserToken` creates the table, copies every live token into it, adds
-`user.email_confirmed_at` and drops the five columns. **Existing confirmation and reset links keep working**;
-they are hashed on the way in.
-
-### `email_confirmed_at`
-
-`isUnconfirmed()` used to mean "has a verification token". Tokens now expire and are garbage collected, which
-would silently confirm every pending account, so whether an address was confirmed is a column of its own. The
-migration backfills it from `updated_at` for every user that had no verification token. A model or fixture that
-set `verification_token` to mark an account unconfirmed sets `email_confirmed_at` to `null` instead, and
-`Models\User::confirmEmail()` is what marks it confirmed.
-
-### What to rename
-
-| Removed                            | Replacement                                            |
-|------------------------------------|--------------------------------------------------------|
-| `generateVerificationToken()`      | `createVerificationToken(): string`                    |
-| `generatePasswordResetToken()`     | `createPasswordResetToken(): string`                   |
-| `clearVerificationToken()`         | `clearVerificationTokens()`                            |
-| `clearPasswordResetToken()`        | `clearPasswordResetTokens()`                           |
-| `getEmailConfirmationUrl()`        | `createEmailConfirmationUrl(): string`                 |
-| `getPasswordResetUrl()`            | `createPasswordResetUrl(): string`                     |
-| `isVerificationTokenValid($token)` | a `UserToken` lookup — see `Models\Forms\AccountConfirmForm` |
-| `isPasswordResetTokenValid($token)`| a `UserToken` lookup — see `Models\Forms\PasswordResetForm`  |
-
-The `create*` methods issue the token as a side effect and return it **in the clear, once** — only its HMAC is
-stored, so a URL cannot be rebuilt from a loaded record afterwards. A form that mails one holds it the way
-`Modules\Admin\Models\Forms\UserForm::getPasswordResetUrl()` and
-`Models\Forms\TwoFactorAuthenticatorForm::$recoveryCodes` do, and the four account mail templates now take the
-URL as a `$url` variable rather than calling the model. Both `create*` methods need a saved record, so a token
-is issued after the insert, not before it.
-
-### URLs
-
-`/admin/account/confirm` and `/admin/account/reset` no longer take an `email` parameter — the token finds its own
-user. A link that still carries one keeps working (the extra parameter is ignored), but anything that *builds*
-these URLs by hand must drop it.
-
-### Retention
-
-`./yii user-token/clear` deletes the tokens that have expired; run it from cron beside `trail/clear` and
-`user-login/clear`. Recovery codes have no expiry — they are spent, not aged out — and are never collected.
-
-## 3.0.0 — Two-factor authentication
-
-`user.google_2fa_secret` was a plaintext 16-character column, and there were no backup codes at all, so a lost
-authenticator could only be cleared by an administrator.
-
-`Migrations\M260913160000TwoFactorAuthentication` widens the column, encrypts every secret already in it, and
-adds `google_2fa_recovery_codes`; `Migrations\M260913190000TwoFactorSecret` then renames the column to
-`two_factor_secret`, since everything else around it says `TwoFactor` and nothing about TOTP is Google's. The encryption key is `Yii::$app->params['secretKey']`, falling back to
-`cookieValidationKey` — **keep whichever one applies**, because losing it makes every stored secret unreadable
-and every user has to set up 2FA again. Rows written before the migration (their secret is not marked `enc:`)
-are still read as-is, so nothing breaks if the migration has not run yet.
-
-**Read the secret through the model, never off the column:**
-
-| Before                        | After                                    |
-|-------------------------------|------------------------------------------|
-| `$user->google_2fa_secret`    | `$user->getTwoFactorAuthenticationSecret()` |
-| `if ($user->google_2fa_secret)` | `$user->hasTwoFactorAuthentication()`  |
-| `$user->google_2fa_secret = $s` | `$user->setTwoFactorAuthenticationSecret($s)` |
-
-The column behind them is `two_factor_secret`, so a query or fixture that named `google_2fa_secret` has to be
-renamed — but application code should be reaching for the three methods above rather than either column name.
-
-Enabling 2FA now issues `Models\User::RECOVERY_CODE_COUNT` single-use recovery codes. Only their HMACs are
-stored, so `Models\Forms\TwoFactorAuthenticatorForm::$recoveryCodes` after a successful `save()` is the one
-chance to show them — the security view renders them from a flash. A recovery code is accepted wherever a TOTP
-code is: at the login, and on the form that disables the second factor. Setting a new secret clears the codes,
-so a project that enables 2FA from its own code should surface the ones `save()` returns.
-
-## 3.0.0 — `userUpdate` and `userDelete` respect the permission hierarchy
-
-`Rbac\Rules\OwnerRule` guarded the site owner and nothing else, so anyone with `userUpdate` could set a
-password — or generate a reset token, or clear the second factor — for a user holding `authUpdate` or `admin`,
-and then log in as them. The rule now also refuses a target holding a permission the acting user does not,
-and `Migrations\M260913150000UserDeleteRule` attaches it to `userDelete` as well (it re-saves the rule itself,
-which every installation needs whatever its permissions look like).
-
-Two things follow:
-
-- A user with a **narrow** set of permissions who also manages users can no longer edit or delete the
-  administrators. If a project relied on that — a support role that resets anyone's password, say — give that
-  role the permissions of the accounts it has to reach, or grant it `admin`.
-- The check compares permission sets, so it reads both users' permissions. An actor who holds every registered
-  permission is answered without any lookup at all, and the results are memoised per request, so an ordinary
-  administrator pays nothing and a restricted one pays one lookup per distinct user on the page.
-
-The owner remains unreachable to everyone but themselves, unchanged.
-
-## 3.0.0 — User enumeration
-
-The login, password recovery and confirmation resend forms answered differently for an address that has an
-account and one that does not, which is a way to enumerate the accounts of an installation. They now answer the
-same: one message for every login failure, a dummy bcrypt check so a missing address costs what a wrong password
-costs, and an ordinary success from the recovery and resend forms whatever the address was.
-
-The messages that named the reason — `IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND`,
-`COMMON_ACCOUNT_CURRENTLY_DISABLED`, `ACCOUNT_RESEND_CONFIRM_ACCOUNT`, the two spam-protection ones — are still
-there and still translated, and an application that wants them back says so:
-
-```php
-'components' => [
-    'user' => [
-        'enableUserEnumerationProtection' => false,
-    ],
-],
-```
-
-A form of your own that uses `Models\Traits\IdentityTrait` reports a failure through
-`addIdentityError($specificMessage)` rather than `addError('email', …)`: it substitutes the shared message, or —
-when the form overrides `canRevealIdentity()` to `false`, as the recovery and resend forms do — drops
-`$this->user` so the caller reports its ordinary success. A caller of such a form must therefore tolerate a
-`null` `$form->user` after a successful `validate()`, which is why
-`Modules\Admin\Controllers\AccountController` names `$form->email` in its flash messages.
-
-## 3.0.0 — Passwords
-
-The minimum length is 8 (`Models\User::$passwordMinLength`, was 5) and the new `$passwordMaxLength` caps one at
-bcrypt's 72 bytes. Existing passwords are unaffected — the rules only run when one is set — but a project that
-wants the old floor back configures the model through the container.
-
-`generatePasswordHash()` stops writing `password_salt`. bcrypt salts its own hashes, so the column bought
-nothing; it stays in the schema because the hashes written with it still validate against it, and
-`Models\Forms\LoginForm` migrates each one to the new form on that user's next successful login, through the
-new `isPasswordHashOutdated()`. The same check replaces the unconditional rehash the login did on every request,
-which was pure cost, and it also picks up a raised `Security::$passwordHashCost`.
-
-A **pepper** takes the salt's place. `./yii params` generates one into `config/params.php` when there is none,
-the way it already generated the `cookieValidationKey`, and `./yii params/pepper` does it on demand. It is
-appended to every password before hashing, so a leaked `user` table cannot be attacked without a secret the
-database never held.
-
-```php
-// config/params.php
-'passwordPepper' => '…',
-```
-
-`password_salt` records which scheme each hash was written under — `Models\User::PASSWORD_PEPPER` for a peppered
-one, `null` for none, a random string for one that predates both — so **adding a pepper to a running
-installation locks nobody out**: the existing hashes still validate, `isPasswordHashOutdated()` reports them, and
-each is rewritten on its owner's next successful login. Removing it again works the same way.
-
-**Replacing** a pepper is the one destructive move: the marker says a hash was peppered, not which pepper it
-used, so every hash written with the old one stops matching and those users need a password reset. `params/pepper`
-therefore never replaces an existing pepper unattended, and never defaults to yes. Keep it out of version control
-and back it up with the rest of your secrets.
-
-## 3.0.0 — Login rate limiting
-
-`Models\Forms\LoginForm` now refuses a login once an email address or an IP has accumulated
-`Web\User::$loginAttemptLimit` failures within `$loginAttemptDuration` seconds, and it counts a wrong TOTP code
-the same as a wrong password. The counters live in the `cache` component, so **a deployment with more than one
-web node wants a shared cache** (Redis, Memcached, a database cache) rather than the default per-node
-`FileCache`, or the limit is per node.
-
-Tune or disable it on the `user` component:
-
-```php
-'components' => [
-    'user' => [
-        'loginAttemptLimit' => 20,
-        'loginAttemptDuration' => 600,
-    ],
-],
-```
-
-A functional test that submits many bad passwords in one application either raises the limit or calls
-`Yii::$app->getUser()->resetFailedLoginAttempts($email)` between them. `Test\TestCase` now configures an
-`ArrayCache`, so the counters never outlive the test that wrote them.
-
-## 3.0.0 — Expiring tokens
-
-A verification or password reset token lived in the database, and in every mail archive along the way, until it
-was used. Both now expire after `Models\User::$tokenLifetime` seconds — 24 hours by default — and a successful
-login clears the password reset token as well.
-
-`Migrations\M260913140000TokenExpiry` adds the two timestamp columns and backfills them from `updated_at`, so a
-token that is already out there is dated by the write that created it and is usually expired at once. A model
-that overrides `generateVerificationToken()` or `generatePasswordResetToken()` must set the matching
-`*_created_at`, or the token it writes is never valid — call the parent, or use `clearVerificationToken()` /
-`clearPasswordResetToken()` to retire one.
-
-Compare a token through `isVerificationTokenValid()` / `isPasswordResetTokenValid()` rather than reading the
-column: they check the age and compare in constant time. A longer-lived invitation link is a wider
-`$tokenLifetime` on the model:
-
-```php
 'container' => [
     'definitions' => [
-        \Hirtz\Skeleton\Models\User::class => [
-            'tokenLifetime' => 7 * 86400,
+        User::class => [
+            'customAttributes' => [TextCustomAttribute::make('first_name')->max(50)],
         ],
     ],
 ],
 ```
 
-## 3.0.0 — Secure cookies and HSTS
+The login rate limit and the upload limit count in `components.cache`; a multi-node deployment wants a shared cache. A
+console command that builds absolute URLs (`upgrade/passwords`, the sitemap) needs `components.urlManager.hostInfo` and
+`baseUrl` in the console configuration.
 
-Session, identity and application cookies now set `secure` when the request is a secure connection, and
-`Web\Controller` sends `Strict-Transport-Security: max-age=31536000` on such a request. Both read
-`Request::getIsSecureConnection()`, so **a deployment behind a proxy that terminates TLS has to set
-`Request::$trustedHosts`** (see the client IP section above) — without it the application sees a plain HTTP
-request, and neither the flag nor the header is applied.
+## Code changes
 
-A year of HSTS is a commitment: once a browser has seen the header it refuses to reach the host over HTTP until
-it expires, subdomains included if `includeSubDomains` is added. Shorten or disable it per controller or
-application-wide:
+### Types and statuses are objects
 
-```php
-'as hsts' => [
-    'class' => \yii\base\Behavior::class, // or set the property on your own base controller
-],
-```
+`getTypes()` and `getStatuses()` are instance methods returning definition objects; an array item throws
+`InvalidConfigException`, and `getTypeOptions()` is gone. Read through `getTypeDefinitions()`, `findType()` or
+`$model->getType()`; never mutate a definition, every record of that value shares it.
 
 ```php
-public string|false $strictTransportSecurity = false;
-```
-
-## 3.0.0 — Client IP behind a proxy
-
-`Web\Request::getRemoteIP()` returned `$_SERVER['HTTP_X_FORWARDED_FOR']` or `$_SERVER['HTTP_CLIENT_IP']` for
-every request, whether or not a proxy set them. Both are client-controlled, so any request could claim any IP.
-
-The override is gone. Yii's own proxy handling takes over, and it is off until the deployment says which proxies
-to trust — **an application behind a load balancer or a CDN must now configure it**, or every request reports the
-proxy's address:
-
-```php
-'components' => [
-    'request' => [
-        'trustedHosts' => [
-            '10.0.0.0/8',
-        ],
-    ],
-],
-```
-
-`Request::$ipHeaders` defaults to `[['X-Forwarded-For', ...]]`, so naming the trusted proxies is usually all it
-takes; a proxy that forwards under a different header adds it there. An application that is not behind a proxy
-needs no configuration and was reading a spoofable header until now.
-
-## 3.0.0 — Admin model interface
-
-`Models\Interfaces\AdminRouteInterface` is gone. `Models\Interfaces\AdminModelInterface` takes its place and adds
-the three things every admin surface asked a model for separately — the trail grid, the trail header, the search
-result, the asset grid, a page title:
-
-```php
-public function getAdminRoute(): array|false;
-public function getAdminName(): string;
-public function getAdminType(): string;
-public function getAdminIcon(): ?string;
-```
-
-`Models\Traits\AdminModelTrait` implements all but `getAdminRoute()`, which stays with the model — only it knows
-its controller, and a silent `false` would hide every link to it:
-
-```php
-class Product extends ActiveRecord implements AdminModelInterface
-{
-    use AdminModelTrait;
-
-    public function getAdminRoute(): array|false
-    {
-        return $this->id ? ['/admin/shop/product/update', 'id' => $this->id] : false;
-    }
-
-    public function getAdminType(): string
-    {
-        return Yii::t('shop', 'COMMON_PRODUCT');
-    }
-}
-```
-
-`getAdminName()` reads the model's `name` — through the magic getter, so a translated or custom attribute counts —
-and falls back to `COMMON_MODEL_ID` with the record's id, or to `getAdminType()` when there is no id.
-`getAdminType()` is the type name of a `TypeAttributeInterface` model and its short class name otherwise, so a model
-with a noun of its own overrides it. `getAdminIcon()` is the type icon, then the status icon, then `null`.
-
-### What to rename
-
-`TrailModelInterface` and `SearchableInterface` extend `AdminModelInterface`, so the trail methods are gone:
-
-| Removed                       | Replacement       |
-|-------------------------------|-------------------|
-| `getTrailModelAdminRoute()`   | `getAdminRoute()` |
-| `getTrailModelName()`         | `getAdminName()`  |
-| `getTrailModelType()`         | `getAdminType()`  |
-
-Every `TrailModelInterface` is therefore an `AdminModelInterface`: add `use AdminModelTrait;` beside
-`use TrailModelTrait;`, and declare `getAdminRoute()`. A relation record with no page of its own returns `false`,
-which is what the old `instanceof AdminRouteInterface` check produced for it.
-
-`getAdminType()` returns a non-empty `string` where `getTrailModelType()` returned `?string`, so a model that
-declares neither a type nor an override now shows its short class name where the trail used to show nothing. A model
-that has a `name` is now named by it: `Cms\Models\Section`, `Cms\Hotspot\Models\Hotspot` and
-`Media\Models\Asset` used to report `COMMON_MODEL_ID` even when they had one.
-
-`Models\Traits\SearchableTrait::getSearchIcon()` and `getSearchBadge()` are gone with them — a hit's icon and badge
-are `getAdminIcon()` and `getAdminType()`. `Media\Models\Asset::getModelName()` is gone too:
-`$asset->model->getAdminName()` is the name, since `AssetModelInterface` extends `AdminModelInterface`.
-
-## 3.0.0 — Fulltext search
-
-`M260913120000Search` creates a `search` table: one row per searchable record, id and language, with the model's
-display name in `title`, its searchable attributes in `content` and two fulltext indexes over them. The admin gets a
-search button in the navbar and a results page; the frontend gets the query and the DTO, the result page is the
-project's.
-
-### Opting a model in
-
-```php
-use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
-use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
-use Hirtz\Skeleton\Models\Traits\SearchableTrait;
-
-class Product extends ActiveRecord implements SearchableInterface
-{
-    use AdminModelTrait;
-    use SearchableTrait;
-
-    public function getAdminRoute(): array|false
-    {
-        return $this->id ? ['/admin/shop/product/update', 'id' => $this->id] : false;
-    }
-
-    public function getSearchAttributes(): array
-    {
-        // Any readable property: a column, a translated or custom attribute, or a getter.
-        return ['name', 'subtitle', 'description'];
-    }
-
-    public function getSearchWeight(): float
-    {
-        return 0.6;
-    }
-
-    protected function isSearchResultVisible(): bool
-    {
-        return Yii::$app->getUser()->can(static::AUTH_PRODUCT_UPDATE);
-    }
-}
-```
-
-That is the whole opt-in: `Db\ActiveRecord::behaviors()` attaches `Behaviors\SearchBehavior` to every
-`SearchableInterface`, and the two traits implement the rest of the interface — `SearchableInterface` extends
-`Models\Interfaces\AdminModelInterface`, which is where the hit's route, title, badge and icon come from. The values are read through the magic getter, so a name may be a
-column, a translated or custom attribute, or a plain getter — the media `File` indexes `filename`, which is
-`getFilename()`. Register
-the class from the bundle's `Bootstrap`, the same way media registers its asset classes — nothing is discovered by
-scanning:
-
-```php
-$app->extendComponent('search', [
-    'models' => [
-        Product::class,
-    ],
-]);
-```
-
-`models` also takes a weight per class (`[Product::class => 0.9]`), which overrides `getSearchWeight()` for that
-project. The weight is stored in the row and multiplied into the score, so changing it needs a `search/rebuild`.
-
-The hooks the trait leaves to the model: `getSearchTitle()` (defaults to the `name` attribute, then
-`getTrailModelName()`), `getSearchWeight()` (`1.0`), `getSearchTenantId()` (the `tenant_id` column, else `null`),
-`getSearchStatus()` (the `status` column of a `StatusAttributeInterface`), `isSearchable()` (`true` — return
-`false` for a record that has no page) and `isSearchResultVisible()`. The last one is the permission check: the
-model knows its own `AUTH_*` constants, the search does not, and a `getSearchResult()` of `null` hides the hit
-from the current user.
-
-### Keeping the index
-
-`SearchBehavior` writes on insert, update and delete, and skips an update that changed none of the searchable
-attributes, `status`, `type` or `tenant_id`. Writes that bypass `save()` leave the index stale — `updateAll()`,
-`updateAttributes()`, `batchInsert()` and the `parent_status` propagation in cms — the same limitation the
-`translation` table already lives with. Reconcile with the console:
-
-```bash
-./yii search/rebuild
-./yii search/rebuild --models=Entry,Category
-./yii search/clear
-```
-
-### The feature flag
-
-`Modules\Admin\Module::$enableSearch` switches the whole feature off in one place: the navbar button, both admin
-actions (404), the behavior's writes and the console commands. A project that turns it off should run
-`search/clear` once.
-
-### Traps
-
-- **InnoDB fulltext does not see uncommitted rows.** A test that asserts on a `MATCH` has to commit its rows and
-  delete them by hand, as `Tests\Search\SearchQueryTest` does; one that reads the index row with an ordinary
-  `WHERE` stays inside the test transaction.
-- **InnoDB indexes neither its built-in stopwords nor tokens shorter than `innodb_ft_min_token_size` (3)**, and
-  its parser splits `f2a@domain.com` into `f2a`, `domain` and `com` — so `com`, `IT` and `.de` were never in the
-  index, and no query could reach them. A query term is never the problem: a prefix term is always matched
-  literally, whatever its length. `Search\SearchText::getIndexTokens()` therefore appends a `__`-prefixed copy
-  of every dropped token to the indexed content, and `toBooleanQuery()` asks for one as `+(__com* com*)`: the
-  copy finds `domain.com`, the plain prefix still finds `commerce`. The underscore is a word character to
-  InnoDB's parser and counts towards the minimum length, so `__i` is indexed. Changing
-  `SearchText::UNINDEXED_PREFIX` or `STOPWORDS` needs a `search/rebuild`.
-- **A stopword is required on its own and optional beside another token.** `the` alone or `.com` alone has to
-  match, since nothing else narrows; in `the Bergfirma` or `firma.de` it only ranks, so a record without it is
-  still found. A short token that is not a stopword (`AG`, `VW`) is always required; `IT` is a stopword, `it`
-  is on InnoDB's list. The optional pair is emitted flat (`+firma* __de* de*`), because InnoDB ORs a
-  parenthesised group without an operator with the whole query. A project that controls
-  the server can instead set `innodb_ft_server_stopword_table` to an empty table and `innodb_ft_min_token_size`
-  to 1, rebuild the index and leave the prefixed copies unused.
-- **The admin search is never scoped to a tenant.** `tenant_id` and `status` are on the row for the frontend
-  presets (`SearchQuery::tenant()`, `enabled()`), where a site must only ever surface its own tenant's records.
-
-## 3.0.0 — `Trail::TYPE_DEFAULT` is a plain message
-
-`Models\Trail` declares its own `TYPE_DEFAULT` (`13`) for a trail that carries nothing but a `message`, and
-assigns it in `beforeValidate()`. Before, `TYPE_DEFAULT` was the `1` of `Models\Interfaces\TypeAttributeInterface`
-— the same value as `TYPE_CREATE` — so a trail written without a type was filed as a create and rendered as one.
-`M260913110000TrailType` moves the `trail.type` column default along. Existing rows keep their type; a project
-that inserts trail rows through plain SQL and relied on the old column default has to name `TYPE_CREATE` itself.
-
-## 3.0.0 — `IconFilenameAttributeTrait` replaced by `IconCustomAttribute`
-
-`Models\Traits\IconFilenameAttributeTrait` is gone. `Models\CustomAttributes\IconCustomAttribute` does the same
-job without an `icon_filename` column, without rules and without a label of its own — it is a
-`SelectCustomAttribute` whose options default to `Helpers\IconHelper::getIconFilenames()` over its `path`:
-
-```php
-self::TYPE_LINK => [
-    'name' => 'Link',
-    'customAttributes' => fn (): array => [
-        IconCustomAttribute::make('icon'),
-    ],
-],
-```
-
-That is the `customAttributes` key of the type options, as `Cms\Test\Models\TestSection` declares it. A model
-without types overrides `CustomAttributesTrait::getCustomAttributes()` or is handed the list through
-`setCustomAttributes()`. The path is configurable where `getIconPath()` used to be overridden:
-
-```php
-IconCustomAttribute::make('icon')->path('/images/nav-icons/');
-```
-
-| removed                            | replacement                                                       |
-|------------------------------------|-------------------------------------------------------------------|
-| `$iconFilenameAttribute`           | the custom attribute's own name                                   |
-| `getIconFilenameAttributeTraitRules()` / `...AttributeLabels()` | nothing — the custom attribute validates and labels itself |
-| `static::getIconFilenames()`       | `IconHelper::getIconFilenames($path)`                             |
-| `static::getIconPath()`            | `IconCustomAttribute::path()`                                     |
-| `getIcon()`                        | none — concatenate the path and the attribute value               |
-| `ICON_FILENAME_ATTRIBUTE_ICON`     | the custom attribute's label, which a project names itself        |
-
-The value moves from its own column into the `custom_attributes` JSON column, so a project that used the trait
-needs a migration that copies `icon_filename` into it and drops the column.
-
-## 3.0.0 — Trait rules and attribute labels are wired up by hand
-
-`ModelTrait::getTraitNames()`, `getTraitRules()` and `getTraitAttributeLabels()` are gone. They scanned the
-class with reflection and called any method named `get<Trait>Rules()` or `get<Trait>AttributeLabels()` they
-found — discovery by naming convention, the same magic `Widgets\Attributes\Configure` was removed for. It also
-never worked through inheritance: `ReflectionClass::getTraitNames()` is not recursive, so a trait used by a base
-class contributed nothing and said nothing about it.
-
-A trait that contributes rules or labels is now called by the class that uses it, as
-`Widgets\Grids\Toolbars\GridToolbar` calls `Widgets\Traits\StickyTrait::addStickyClass()`. In this bundle only
-`IconFilenameAttributeTrait` used the mechanism and it is removed outright, see above; for `yii2-cms` see
-`bundles/yii2-cms/UPGRADE.md`.
-
-Forgetting the `rules()` spread leaves an attribute neither safe nor validated, and
-`Widgets\Forms\Fields\Field` renders nothing for an attribute that is not safe — the field disappears from the
-form without an error.
-
-## 3.0.0 — `User` profile attributes removed
-
-Six columns are gone from `user`: `picture`, `first_name`, `last_name`, `birthdate`, `city` and `country`.
-`M260913100000UserAttributes` adds a `custom_attributes` column, copies the five non-picture columns into it
-and then drops all six.
-
-`Models\User` is a `CustomAttributeInterface` now, so a project that still needs any of those five declares it
-as a custom attribute and gets the value, the form field, the validation and the trail entry back under the
-same attribute name.
-
-### Profile pictures are gone for good
-
-There is no replacement. `User::$picture`, `Models\Forms\UserPictureForm`, `User::deletePicture()`,
-`getPictureUrl()`, `getUploadPath()` / `setUploadPath()`, `UserFormTrait::$upload` and
-`UserFormTrait::uploadUserPicture()` were removed, together with the `account/picture` and
-`user/delete-picture` actions. v3 had no upload UI left for them.
-
-The migration drops the column but touches nothing on disk — delete `web/uploads/users/` by hand once you
-have migrated. If you need avatars, `User::getInitials()` still returns the first two characters of the
-username.
-
-### What else is gone
-
-| Removed | Replacement |
-|---|---|
-| `User::getFullName()` | — (compose it from your own definitions) |
-| `User::getCountries()` | `Helpers\CountryList::getNames()` |
-| `UserActiveFormTrait::getFirstNameField()`, `getLastNameField()`, `getCityField()`, `getCountryField()` | `UserActiveFormTrait::getUserCustomAttributeFields()` |
-| The message keys `USER_FIRST_NAME_LABEL`, `USER_LAST_NAME_LABEL`, `USER_BIRTHDATE_LABEL`, `USER_CITY_LABEL`, `USER_COUNTRY_LABEL`, `USER_PICTURE_LABEL`, `USER_UPLOAD_LABEL` | your own `label()` on the definition |
-
-`User::getInitials()` no longer builds the initials from `first_name` / `last_name`; it returns the first two
-characters of the username. `UserQuery::matching()` searches `name` and `email` only, and
-`nameAttributesOnly()` / `selectListAttributes()` stopped selecting the dropped columns.
-
-### Data upgrade plan
-
-The migration never loses data — it copies every non-empty value of the five columns into `custom_attributes`
-keyed by the column name, and a key no definition claims stays in the JSON untouched across saves. But an
-undeclared key is invisible: it is not an attribute, not a form field, and not readable from the model. So
-**declare the definitions before you migrate**, and the values are there the moment the migration finishes.
-
-1. **Decide which of the five you still need.** For each one, add a definition to `User` through the
-   container, in `config/local.php` or wherever you configure it:
-
-   ```php
-   use Hirtz\Skeleton\Helpers\CountryList;
-   use Hirtz\Skeleton\Models\CustomAttributes\SelectCustomAttribute;
-   use Hirtz\Skeleton\Models\CustomAttributes\TextCustomAttribute;
-   use Hirtz\Skeleton\Models\User;
-
-   return [
-       'container' => [
-           'definitions' => [
-               User::class => [
-                   'customAttributes' => [
-                       TextCustomAttribute::make('first_name')
-                           ->label(Yii::t('app', 'First name'))
-                           ->max(50),
-                       TextCustomAttribute::make('last_name')
-                           ->label(Yii::t('app', 'Last name'))
-                           ->max(50),
-                       TextCustomAttribute::make('city')
-                           ->label(Yii::t('app', 'City'))
-                           ->max(50),
-                       SelectCustomAttribute::make('country')
-                           ->label(Yii::t('app', 'Country'))
-                           ->options(CountryList::getNames()),
-                   ],
-               ],
-           ],
-       ],
-   ];
-   ```
-
-   Keep the column name as the definition name — that is the key the migration writes. There is no date
-   definition, so `birthdate` becomes a `TextCustomAttribute`; its stored value is the `YYYY-MM-DD` string the
-   `DATE` column held.
-
-   The definitions only resolve once the columns are gone: a custom attribute whose name collides with a
-   column of the same name throws `InvalidConfigException`. That is expected — configure them, then migrate,
-   and do not load the admin in between.
-
-2. **Run the migration.**
-
-   ```bash
-   ./yii migrate
-   ```
-
-3. **Check a record.** `$user->first_name` reads through the JSON column again, the account and user forms
-   render one field per definition, and the trail logs the attribute rather than the JSON column.
-
-4. **Anything you did not declare** stays in `custom_attributes` as a plain key. Declare it later and it
-   reappears; drop the key with an `UPDATE … JSON_REMOVE(…)` if you are sure you do not want it.
-
-5. **Reverting** (`migrate/down 1`) recreates the five columns, copies the values back out of the JSON and
-   drops `custom_attributes` — including any other custom attribute you declared on `User`. `picture` comes
-   back as an empty column.
-
-### Your own code
-
-- A query that selected one of the dropped columns, or a `where` on `country` / `city`, has to be rewritten
-  against `custom_attributes` (`JSON_EXTRACT`) or dropped. The custom attributes are not indexable as columns.
-- `UserActiveForm` and `AccountActiveForm` render `...$this->getUserCustomAttributeFields()` where the four
-  fields used to be. A form of your own that called `getFirstNameField()` and friends switches to the same
-  method; it returns one field per visible definition, in definition order.
-- `Widgets\Forms\Traits\CustomAttributeFieldsTrait::getCustomAttributeFields()` gained an optional model
-  parameter for this — pass the record when the form's own model wraps it, as `UserForm` wraps `User`.
-
-## 3.0.0 — `yiisoft/yii2-authclient` removed
-
-Social login is gone. `yiisoft/yii2-authclient` is no longer a dependency, and `M260912130000AuthClient`
-drops the `auth_client` table together with every trail that pointed at one of its records — a trail whose
-class cannot be resolved logs an error on every trail index, so it is deleted rather than orphaned. The
-migration is reversible: `safeDown()` recreates the empty table, its `user_id` index and its foreign key.
-
-Existing `user_login` rows of type `facebook` are kept and the login history renders them exactly as it did
-before — `facebook` was never one of `UserLogin::getTypes()`, so nothing about that row changes.
-
-### What is gone
-
-| Removed | Replacement |
-|---|---|
-| `Auth\Clients\ClientInterface`, `Auth\Clients\Facebook` | — |
-| `Models\AuthClient` | — |
-| `Models\Forms\AuthClientSignupForm` | `Models\Forms\SignupForm` |
-| `Modules\Admin\Widgets\Grids\AuthClientGridView` | — |
-| `Modules\Admin\Widgets\Panels\AuthClientListGroup` | — |
-| `Web\Application::getAuthClientCollection()`, the `authClientCollection` component | — |
-| `Base\Traits\ApplicationTrait::setFacebookClientComponent()` | — |
-| `Models\User::getAuthClients()` and the `authClients` relation | — |
-| `LoginForm::$enableFacebookLogin`, `LoginForm::isFacebookLoginEnabled()` | — |
-| `SignupForm::$enableFacebookSignup`, `SignupForm::isFacebookSignupEnabled()` | — |
-| The `account/auth` action (`yii\authclient\AuthAction`) and `AccountController::onAuthSuccess()` | — |
-| `AccountController::actionDeauthorize()`, `UserController::actionDeauthorize()` | — |
-
-The message keys `AUTH_CLIENT_*`, `ACCOUNT_CONFIRM_REMOVE`, `ACCOUNT_SUCCESS_ACCOUNT_NOW_CONNECTED`,
-`ACCOUNT_SUCCESS_REMOVED`, `ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_CLIENT`, `ACCOUNT_SUCCESS_WELCOME_BACK` and
-`USER_SUCCESS_REMOVED` were dropped from every language file.
-
-### Migrating a downstream project
-
-1. **Before `./yii migrate`**, export `auth_client` if you want to keep the linked account ids — the
-   migration drops the table and there is nothing left to read afterwards.
-2. Remove `params['facebookClientId']` and `params['facebookClientSecret']` from `config/params.php`.
-   They no longer register anything; left in place they are dead configuration.
-3. Remove any `components.authClientCollection` entry from your config, and any client class of your own
-   that implemented `Auth\Clients\ClientInterface`.
-4. Drop `yiisoft/yii2-authclient` from your own `composer.json` if you required it directly.
-5. A user who only ever signed in through a client has no password. Point them at
-   `account/recover` to set one — the recovery mail works for any confirmed email address.
-
-## 3.0.0 — Tenants
-
-`yii2-cms` requires `yii2-tenant`. Every database has at least one tenant, every entry belongs to one,
-and `yii2-cms-tenant` is gone: its behaviour lives in `yii2-cms` and `yii2-tenant`, and its GitHub
-repository is archived.
-
-`permalink` became an entry-only table on the way, and category URLs were removed.
-
-### Everyone
-
-- **Category URLs are gone.** `Module::$enableCategoryUrls` and the `site/category` view no longer exist.
-  `Category::getRoute()` returns `['/cms/site/index', 'category' => <slug>]`, the filtered entry index,
-  which was already the shipped default. If you had the option on and those URLs were public, add
-  redirect rules for them before upgrading. The category `slug` column and its uniqueness rule stay.
-- **`permalink` is entry-only.** `model_class` / `model_id` are `entry_id`, with an `ON DELETE CASCADE`
-  foreign key, and the table carries the entry's `tenant_id`. The unique indexes are
-  `(tenant_id, language, uri)` and `(entry_id, language)`.
-- **`Models\Interfaces\PermalinkInterface` and `Models\Actions\DeletePermalinks` are gone**, and so is
-  `permalink/prune` — the cascade keeps the table consistent. `permalink/rebuild` stays.
-  `Models\Traits\PermalinkTrait` is typed against `Models\Entry`.
-- **`Models\Queries\PermalinkQuery::whereModel()` is gone.** Filter on `entry_id`, or read
-  `$entry->permalinks`. On `EntryQuery`, `whereSlug()` is `whereUri(string $uri, ?string $language = null)`
-  and `whereNotSlug()` is `whereNotUri()`; both join the permalink table and honour the
-  `Permalink::LANGUAGE_ALL` fallback, which the old slug subquery did not.
-- **Redirects are host-qualified.** A `Redirect` whose `request_uri` names a host (`www.example.com/old`) only
-  fires on that host, and the 404 handler prefers it over a bare-path record for the same path. Renaming an
-  entry records the host-qualified form with the entry's tenant host, so two tenants can rename the same slug
-  independently. Redirects you enter in the admin may use either form. The host compared is the tenant's
-  canonical one, which `Tenant\Web\UrlManager` now keeps as `hostInfo` on every request, including a draft
-  request and a request on a host that only fell back to the default tenant — absolute URLs there are now on
-  the tenant's host rather than the request's.
-- **`Controllers\SiteController`** lost `findPermalink()`, `renderPermalink()`, `renderCategory()`,
-  `findCategory()`, `validateCategoryResponse()` and `findCategoryEntries()`. `actionView()` resolves the
-  entry through `getQuery()->whereUri($slug)`; override `findEntry()` to change the lookup.
-
-### A project that had no tenant bundle
-
-The migration seeds exactly one tenant and gives every entry and permalink its id.
-
-1. **Before `./yii migrate`**, set the seed URL for *this environment* — `params['tenantUrl']`, or the
-   console `urlManager.hostInfo`. `Cms\Migrations\M260908100000Tenant` refuses to run without one and
-   never guesses. `params['tenantUrl']` is the documented source; the URL manager reads it back as
-   `hostInfo` on every request, so a staging copy of a production database needs its own value.
-2. After `./yii migrate`, assert: `tenant` has one enabled row, `entry.tenant_id` is NOT NULL, and no
-   entry and no permalink has a NULL `tenant_id`.
-3. Unless you want the tenant admin, add `'tenant' => ['enableAdminModule' => false]` under `modules`.
-   With it off the routes 404 rather than hiding a nav item over a live controller, and the tenant URL
-   can then only be changed through the console or SQL.
-4. `Tenant::AUTH_*` RBAC items are still created by the tenant bundle's `Roles` migration. They are
-   harmless and are not offered in the dashboard role editor while the admin module is off.
-
-### A project that had `yii2-cms-tenant`
-
-Remove `davidhirtz/yii2-cms-tenant` from `require`; `yii2-tenant` arrives with `yii2-cms`. A project
-`Entry` extends `Hirtz\Cms\Models\Entry` again. The class map:
-
-| v2 (`davidhirtz\yii2\cms\tenant\…`) | v3 |
-|---|---|
-| `models\Entry` | `Hirtz\Cms\Models\Entry` |
-| `models\Permalink`, `models\queries\PermalinkQuery` | removed — `Hirtz\Cms\Models\Permalink` carries `tenant_id` |
-| `models\queries\EntryQuery` | `Hirtz\Cms\Models\Queries\EntryQuery` |
-| `data\EntryActiveDataProvider` | `Hirtz\Cms\Modules\Admin\Data\EntryActiveDataProvider` |
-| `filters\PageCache` | `Hirtz\Tenant\Filters\PageCache` |
-| `modules\admin\widgets\forms\EntryActiveForm` | `Hirtz\Cms\Modules\Admin\Widgets\Forms\EntryActiveForm` |
-| `modules\admin\widgets\forms\fields\EntryParentIdSelectField` | `Hirtz\Cms\Modules\Admin\Widgets\Forms\Fields\EntryParentIdSelectField` |
-| `modules\admin\widgets\forms\fields\TenantIdField` | `Hirtz\Cms\Modules\Admin\Widgets\Forms\Fields\TenantIdField` |
-| `modules\admin\widgets\grids\EntryGridView` | `Hirtz\Cms\Modules\Admin\Widgets\Grids\EntryGridView` |
-| `modules\admin\widgets\grids\SectionParentEntryGridView` | `Hirtz\Cms\Modules\Admin\Widgets\Grids\SectionParentEntryGridView` |
-| `modules\admin\widgets\grids\TenantGridView` | `Hirtz\Cms\Modules\Admin\Widgets\Grids\TenantGridView` |
-| `validators\TenantIdValidator` | `Hirtz\Cms\Validators\TenantIdValidator` |
-| `behaviors\EntryTenantBehavior`, `behaviors\TenantEntryBehavior` | removed — the methods are on `Entry`, so `getEntryTenantBehavior()->getTenantRouteParams()` is `getTenantRouteParams()` |
-| the two admin traits, `TenantDropdownAssetBundle` | removed |
-
-Nothing is bound in the container any more except `Tenant\Modules\Admin\Widgets\Grids\TenantGridView`,
-which `Cms\Bootstrap` maps to the cms subclass that adds the entry-count column. Grep `config/` for
-`cms\tenant` afterwards: a DI definition that named the glue `Entry` as a *string* is invisible to Rector.
-
-After `./yii migrate`: no seed is inserted, `entry.tenant_id` only becomes NOT NULL, and `permalink` is
-built with each entry's tenant. If any entry has a NULL `tenant_id` and you have several tenants the
-migration aborts and names the count — assign them by hand first. Two behaviour notes: two tenants may
-now serve the same slug, which v2 silently lost to the first; and category URLs never worked on a
-tenanted site, because the lookup filtered on a tenant the category did not have.
-
-## 3.0.0 — `model_class`
-
-Every polymorphic table names its owner in a `model_class` / `model_id` pair. `model` was the natural
-name for a relation returning the owning record itself, so the column that holds the class string
-gave it up.
-
-`M260912090000ModelClass` renames `trail.model` and `translation.model`, recreates their indexes
-under the new name, and rewrites the `model` key of `trail.data` that the `TYPE_CHILD_*` types write.
-It is idempotent, so a fresh install runs it as a no-op. `permalink` has no class column of any name —
-see "3.0.0 — Tenants" below, which made it an entry-only table.
-
-Your own polymorphic tables are your own business — nothing here touches them.
-
-### Renames
-
-| Before | After |
-|---|---|
-| `Models\Trail::$model` | `Models\Trail::$model_class` |
-| `Models\Trail::getModelClass()` | `getModelRecord()` |
-| `Models\Trail::getDataModelClass()` | `getDataModelRecord()` |
-| `Models\Collections\TrailModelCollection::getModelByNameAndId()` | `getModelByClassAndId()` |
-| `Models\Translation::$model` | `Models\Translation::$model_class` |
-
-The two `getModel…Class()` methods returned the *record*, not a class — hence the new names.
-`TrailBehavior::$modelClass` and `TranslationInterface::getTranslationModelClass()` already said
-class and are unchanged.
-
-The `/admin/trail/index?model=` query parameter is a URL, not storage, and keeps its name.
-
-### What to check in your own code
-
-Anything that writes or filters those columns by hand: `Trail::updateAll()` / `deleteAll()`,
-`Translation::deleteAll()` in a test `tearDown()`, raw `[[model]]` SQL, fixture data files, and
-`andOnCondition()` on a relation to one of the three tables.
-
-## 3.0.0 — Custom attributes
-
-A model can declare typed attributes that have no column of their own. Their values are ordinary
-attributes — `$section->subtitle`, `load()`, `validate()`, the trail, `getI18nAttribute()` — but they
-are stored together in one `custom_attributes` JSON column.
-
-### Opting a model in
-
-```php
-use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
-use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
-
-class Section extends ActiveRecord implements CustomAttributeInterface
-{
-    use CustomAttributesTrait;
-}
-```
-
-Every platform model that ships with a `type` already carries the column and the trait. A model of
-your own needs the column (`MigrationTrait::addCustomAttributesColumn()`), and its `rules()`,
-`attributeLabels()` and `attributeHints()` must spread `parent::…` — that is where the definitions
-inject theirs.
-
-Add a `@property` docblock per definition so static analysis and the IDE know them:
-
-```php
-/**
- * @property string|null $subtitle
- * @property string|null $subtitle_de
- */
-```
-
-### Declaring definitions
-
-The default `getCustomAttributes()` reads the `customAttributes` key of the model's type options.
-Prefer a closure: `getTypes()` is called often and building the objects for every type on each call
-is waste.
-
-```php
+// before
 public static function getTypes(): array
 {
-    return [
-        self::TYPE_HEADLINE => [
-            'name' => 'Headline',
-            'customAttributes' => fn (): array => [
-                TextCustomAttribute::make('subtitle')->translatable(),
-            ],
-        ],
-        self::TYPE_LINK_LIST => [
-            'name' => 'Link list',
-            'customAttributes' => fn (): array => [
-                GroupCustomAttribute::make('links')
-                    ->multiple()
-                    ->maxCount(5)
-                    ->attributes([
-                        TextCustomAttribute::make('label')->translatable(),
-                        UrlCustomAttribute::make('url')->required(),
-                    ]),
-            ],
-        ],
-    ];
+    return [self::TYPE_DEFAULT => ['name' => Yii::t('app', 'Page'), 'hiddenFields' => ['content', '#assets'], 'class' => Page::class]];
+}
+
+// after
+public function getTypes(): array
+{
+    return [Type::make(self::TYPE_DEFAULT)->name(Yii::t('app', 'PAGE'))->hiddenFields('content')->modelClass(Page::class)];
 }
 ```
 
-The definitions can also be configured through the container, like `i18nAttributes`; a configured
-list (or closure) replaces the type options entirely:
+`hiddenFields()` takes attribute names, not selectors, and a hidden attribute is dropped server-side: unsafe, unvalidated,
+unrendered, and its stored value survives a save. A model using `Models\Traits\VisibleAttributeTrait` must declare
+`Models\Interfaces\VisibleAttributeInterface`. A project option that lived in the array (`entriesPerPage`) becomes a setter on
+a `Type` subclass named by `getTypeClass()`; a narrowing `getType()` override calls `static::normalizeTypeValue()` first. A
+type's `available(Closure|bool)` is enforced by `Validators\DynamicRangeValidator`, with the stored value exempt. Small
+projects declare types in the container instead of subclassing: `Entry::class => ['types' => fn (): array => [...]]`, a
+closure because a name is a `Yii::t()` result. The `Type` constructor also accepts an int-backed enum.
 
-```php
-'container' => [
-    'definitions' => [
-        Section::class => [
-            'customAttributes' => [
-                BooleanCustomAttribute::make('featured'),
-            ],
-        ],
-    ],
-],
-```
+### Custom attributes replace project columns
 
-A model whose definitions depend on something else overrides `getCustomAttributes()`, and
-`getCustomAttributesKey()` with whatever the definitions are derived from — the resolved definitions
-are cached until that key changes.
+A model implementing `Models\Interfaces\CustomAttributeInterface` with `Models\Traits\CustomAttributesTrait` declares typed
+definitions (`Models\CustomAttributes\TextCustomAttribute::make('subtitle')->translatable()`, `Group`, `Select`, `Upload`, ...)
+stored in one `custom_attributes` JSON column. Their values are ordinary attributes (`load()`, `validate()`, the trail,
+`getI18nAttribute()`), but not query conditions: a `where`, `orderBy` or grid sort on one has to stay a real column.
+Declare them per type through `Type::customAttributes()`, in the container through `customAttributes`, or by overriding
+`getCustomAttributes()`. `rules()`, `attributeLabels()` and `attributeHints()` must spread `parent::...`. A translatable
+definition names its languages through `translatableAttributes`, never `i18nAttributes`. `IconFilenameAttributeTrait` is
+`IconCustomAttribute::make('icon')->path('/images/icons/')`; the `icon_filename` column needs a project migration
+(`MigrationTrait::moveColumnsToCustomAttributes()`).
 
-Shipped types: `Text`, `Html`, `Boolean`, `Number`, `Select`, `Icon`, `Url`, `Email`, `HexColor` and
-`Group`, all suffixed `CustomAttribute`. Each takes `label()`, `hint()`, `translatable()`,
-`required()`, `visible()`, `disabled()` and `default()`; the last four accept a closure taking the
-owning model.
+### Translations live in the `translation` table
 
-- `visible: false` — no rule at all: unsafe, unvalidated, not rendered. The stored value is kept.
-- `disabled: true` — unsafe and unvalidated, but still rendered as a disabled input.
+Only the source language is a column; `name_de` is a virtual attribute read from `translation`. A translated model
+implements `Models\Interfaces\TranslationInterface`, uses `Models\Traits\TranslationTrait` beside `I18nAttributesTrait`,
+returns `self::class` from `getTranslationModelClass()` and an `I18nActiveQuery` from `find()`. `replaceI18nAttributes()`
+is `withTranslations()`; a multi-row query eager loads every language on its own, `withoutTranslations()` opts out.
+`getI18nAttribute('name', 'de', fallback: true)` falls back to the source language. Translated attributes must be
+string-typed; `''`, `null` and no row all mean no translation. `updateAttributes()` and `batchInsert()` bypass the table.
 
-### Rules for the author
+### Admin model interface
 
-- `getCustomAttributes()` must be cheap and free of side effects, and must not trigger a lazy
-  relation query: it runs in `afterFind()` for every loaded record. Eager load the relation
-  (`->with('file')`) or guard with `isRelationPopulated()`.
-- A definition name must match `^[a-z][a-z0-9_]*$`, be unique, and collide with neither a column nor
-  a translated attribute name. A model that declares definitions but whose table lacks the
-  `custom_attributes` column is a configuration error as well. All of these throw an
-  `InvalidConfigException` when the definitions resolve.
+`Models\Interfaces\AdminModelInterface` is how a model presents itself in the admin. `Models\Traits\AdminModelTrait`
+implements everything but `getAdminRoute()` and `getPermissionName()`, which every implementing model answers itself; a
+model only ever edited through another answers its parent's permission. `TrailModelInterface` and `SearchableInterface`
+extend it, so a trail model adds `use AdminModelTrait;` beside `use TrailModelTrait;` and renames `getTrailModelName()`
+/ `getTrailModelType()`. `getAdminParent()`, `getAdminIndexBreadcrumb()` and `getAdminSubtitle()` feed
+`Widgets\Navs\ModelHeader`, which builds the H1, subtitle and breadcrumbs from the chain.
 
-### Translations
+### Permissions and roles
 
-A translatable definition keeps the usual names — `subtitle` for the source language, `subtitle_de`
-for the rest — but both live inside the JSON, not in the `translation` table: a repeatable group item
-has no stable flat name to key a translation row by. Everything else is unchanged:
-`getI18nAttribute('subtitle', 'de', fallback: true)` works and the trail labels it "Subtitle (DE)".
+One permission per admin-managed model, named after the model: `can(User::AUTH_USER)`, never `can('userUpdate')` and
+never with a record, except the `user` param the user permissions read through `Web\User::canManageUser()`. A role lists
+permissions, not other roles, so an `AccessRule` an administrator should pass names `[User::AUTH_ROLE_ADMIN,
+User::AUTH_ROLE_MANAGER]` and a new permission is added to both:
+`$this->addPermission(Invoice::AUTH_INVOICE, Message::make('app', 'AUTH_INVOICE_DESCRIPTION'), User::AUTH_ROLE_ADMIN, User::AUTH_ROLE_MANAGER)`.
+A description is an `I18n\Message` pointer, so `messages/config.php` lists `Message::make` under `translator` and the key
+under `keepMessages`. A per-record `yii\rbac\Rule` of the project's own still works; the platform ships none.
 
-### Stored JSON
+### Tokens, passwords and 2FA
 
-The column holds an object keyed by attribute name. A key no current definition claims is kept, so
-switching a type back does not lose its values. A value that serializes to `null` has no key, and an
-empty object is stored as `null`.
-
-Two documented limits, the same as for translations: `updateAttributes()` and `batchInsert()` write
-columns directly and therefore bypass the JSON.
+A token is a `Models\UserToken` row; `createVerificationToken()` and `createPasswordResetToken()` return it in the clear
+once, so a form that mails one holds it (`Modules\Admin\Models\Forms\UserForm::getPasswordResetUrl()`), and the mail
+templates take a `$url`. `isUnconfirmed()` reads `email_confirmed_at`; a fixture marking an account unconfirmed sets that
+to `null`. The second factor is reached through `getTwoFactorAuthenticationSecret()` / `setTwoFactorAuthenticationSecret()`
+/ `hasTwoFactorAuthentication()`; `TwoFactorAuthenticatorForm::$recoveryCodes` after `save()` is the one moment the codes
+exist. A flow logging a user in without a password asks `Web\User::isTwoFactorAuthenticationRequired()` first. A form
+using `Models\Traits\IdentityTrait` reports through `addIdentityError()`, and `$form->user` may be `null` after a
+successful `validate()`. `User::$passwordMinLength` is 8, `$passwordMaxLength` 72; `password_scheme` is a marker, not a salt.
 
 ### Forms
 
-`ActiveForm` subclasses append `...$this->getCustomAttributeFields()` (from
-`Widgets\Forms\Traits\CustomAttributeFieldsTrait`) to their fieldset and render the type select
-with `Widgets\Forms\Fields\TypeSelectField`. When the types render different fields it reloads the
-form through htmx before the fields can change, and does nothing otherwise; the action tells that
-request apart with `Request::isFormReload()` and skips the save:
+A form subclass declares its rows in `getDefaultRows()` instead of assigning `$this->rows ??=` in `configure()`, and a
+listener reaches one fieldset through the closure forms of `rows()` and `Fieldset::rows()`. Mixing bare fields and groups
+in one list throws. An action on a typed model guards the save with `!$this->request->isFormReload()`, since
+`TypeSelectField` posts the form to the same action on every change. A `DeleteForm` posts `value` at the top level, so
+`load($this->request->post())` needs no form name. `UserFormTrait::getUserAttributeNames()` allowlists what a partial user
+form may load.
 
-```php
-if ($section->load($post) && !$this->request->isFormReload()) {
-    // …
-}
-```
+### Widgets, views and extension points
 
-An action of your own on an opted-in model needs that guard, or it saves on every type change.
+The Yii widget layer is replaced: `Html\` for elements, `Widgets\` for `GridView`, `ActiveForm`, `Nav`, `Submenu`,
+`Header`, `Dropdown` and the buttons, all `Stringable` and built with `::make()` plus fluent setters. Views moved to
+`resources/views/`, so a project overriding a bundle view points its `viewPath` there; a project admin module extends
+`Base\Module` and finds its views under `@views/<module id>`. A widget is extended from the outside through
+`Widget::EVENT_CONFIGURE` (`Helpers\EventHelper::on(NavBar::class, Widget::EVENT_CONFIGURE, fn (NavBar $navBar) => ...)`),
+a controller through `Web\Controller::EVENT_CONFIGURE`; `DashboardController::addRoles()` takes a closure so a bootstrap
+does not autoload every model. `Modules\Admin\ModuleInterface::aside(Nav)` and `dashboard(Dashboard)` replace the
+`getNavBarItems()` / `getDashboardPanels()` pairs. `Widgets\AdminLink` (from `yii2-cms`) renders the frontend overlay for
+any `AdminModelInterface`; its class is `admin` alone.
 
-## 3.0.0 — Translations move to the `translation` table
+### Sitemaps
 
-A translated attribute used to be one real column per language: `name` for the source language,
-`name_de`, `name_fr`, … for the others. Adding a language meant a migration on every translated
-table. In v3 the source language stays in its column and every other language moves to a single
-generic `translation` table, keyed by `model`, `model_id`, `language` and `attribute`.
+A sitemap is a `Sitemap\SitemapInterface` object listed under `components.sitemap.sitemaps`; the model carries nothing.
+`Sitemap\ModelSitemap` takes `modelClass`, a `url` closure, `changeFrequency`, `priority` and `batchSize`, or a subclass
+overrides `getQuery()` and `getRecordUrls()`. The component's `urls` and `views` are `Sitemap\UrlSitemap` under the reserved
+key `urls`. Paging is by `getPageCount()`, an unknown key or offset is a 404, the XML namespace is
+`http://www.sitemaps.org/schemas/sitemap/0.9`.
 
-The attribute names do not change. `name_de` is still what a form posts, what a rule validates, what
-the trail logs and what `getI18nAttributeName('name', 'de')` returns — it is a virtual attribute now,
-reported by `attributes()` but read from and written to the `translation` table.
+### Smaller changes
 
-```php
-// before — one column per language, migration required to add one
-$entry->name_de;
+- `Web\Request::post()` and `getBodyParams()` always answer an array; `load($this->request->post())` needs no object guard.
+- `Db\ActiveRecord::instantiate()` builds loaded records through the container, so `i18nAttributes` and `types` configured
+  there apply to `find()` as well as `create()`; `load()` typecasts the loaded attributes.
+- `Web\Controller::error()`, `success()` and `errorOrSuccess()` return `static` and encode a plain string; pass a
+  `Stringable` to flash markup. `warning()` is new.
+- Code that only runs under one SAPI uses `Web\Application::current()` / `Console\Application::current()` (throwing) or
+  `Web\User::current()` / `Web\Request::current()` (nullable) instead of `Yii::$app->has('user') ? ... : null`.
+- Inside a class using `MaterializedTreeTrait`, `NestedTreeTrait` or `CustomAttributesTrait`, `$this->ancestors`,
+  `$this->children`, `$this->descendants` and `$this->customAttributes` are the private caches; call the getters.
+- `Trail::createOrderTrail()` takes a `Message`; `Behaviors\TrailBehavior::createTrail(int $type)` takes the type.
+- A record built for a known type goes through `TypeAttributeTrait::instantiateByType()`, a create action through
+  `instantiateFromPost($this->request->post(), $type)`; every class in a type family answers the same `formName()`.
+- A trait contributing rules or labels is spread explicitly in the using class's `rules()` / `attributeLabels()`.
+- `Web\User::$loginType` is an `int`; a project's own login types start at 7 and are declared in a `UserLogin::getTypes()` override.
+- `ArrayHelper::simpleXmlToArray($xml)` is `Xml\XmlNode::fromString($xml)`, read with `getChild()`, `getChildren()`,
+  `getAttribute()`, or `toArray()` for the old shape; invalid XML throws.
+- A `redirect.request_uri` may be host-qualified (`www.example.com/old`); a writer of redirect rows keeps them out of loops
+  itself, `./yii redirect/clean` repairs an existing table.
+- `Web\CopiedUploadedFile(['path' => ...])` is the class for a path the application names; `Web\StreamUploadedFile` is
+  for a request URL only and refuses private hosts unless `upload.allowPrivateStreamUploadHosts` is set.
+- `Widgets\Buttons\AdminButton` renders for authenticated users only; `roles([User::ROLE_ANY])` restores the old behaviour.
+- A `Yii::t('app', ...)` message source needs `forceTranslation => true` once its keys are key-based; a bundle never writes
+  into `app`.
 
-// after — unchanged, loaded from the translation table on first access
-$entry->name_de;
-```
+## Data and schema
 
-### Migrating a downstream project
+The bundle ships `Migrations\M260101000000SkeletonBaseline` for a fresh install. A v2 database is upgraded by the
+migrations `davidhirtz/yii2-upgrade` generates into `app/Migrations` (its sources are `migrations/yii2-skeleton/` in that
+package), plus `upgrade/collapse.php`, which rewrites the `migration` history so the renamed namespaces resolve.
+`Console\Controllers\MigrateController` refuses to migrate while the history names classes that no longer load, and runs
+`$upgradeFile` (`@root/upgrade/collapse.php`) after a backup when it exists, so an upgrade deployment is an ordinary
+`./yii migrate`.
 
-1. Run the migrations. Each bundle ships one that moves its own models' `_xx` columns into
-   `translation` and drops them; the skeleton's `M260910100000Translation` creates the table and must
-   run first.
-2. For every translated model the project owns, add the interface and the trait. No behavior is
-   involved: `Db\ActiveRecord` writes the virtual attributes itself, before the event `TrailBehavior`
-   listens to, so the trail sees the translated values whatever order the behaviors were attached in.
+### Before `./yii migrate`
 
-```php
-use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
-use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
-use Hirtz\Skeleton\Models\Traits\TranslationTrait;
+1. Back up (`./yii migrate/backup`). The dropped password hashes and the `auth_client` rows cannot be recovered.
+2. Count the users who will lose their password: `SELECT COUNT(*) FROM user WHERE password_salt IS NOT NULL AND password_salt != 'pepper'`.
+   On a v2 database that is everyone who ever set one. If they are customers, plan the announcement.
+3. `./yii params/pepper` and keep `cookieValidationKey` (and `secretKey`, if set) stable: the 2FA secrets are encrypted with it.
+4. Declare the profile columns you keep as custom attributes on `User` (see *Configuration*), named after the column, before
+   the migration copies them into `custom_attributes`. Do not open the admin between configuring and migrating: a
+   definition colliding with a still-existing column throws.
+5. Map the project's own `user_login.type` strings in `params['userLoginTypes'] = ['shibboleth' => 7]`; anything unmapped
+   becomes `TYPE_OTHER`.
+6. Set `components.urlManager.hostInfo` and `baseUrl` for the console, or `upgrade/passwords` refuses to build links.
+7. Export `auth_client` if the linked account ids matter; remove `facebookClientId` / `facebookClientSecret` from the params.
 
-class Product extends ActiveRecord implements TranslationInterface
-{
-    use I18nAttributesTrait;
-    use TranslationTrait;
+### What the migrations do, in order
 
-    public function getTranslationModelClass(): string
-    {
-        // Never `static::class` — the container resolves the model class to whatever the application
-        // configured, and keying on the runtime class hides the record from the other path.
-        return self::class;
-    }
-}
-```
+1. `M260910100000Translation` creates `translation`; the bundle migrations that follow move each model's `_xx` columns into it.
+2. `M260912090000ModelClass` renames `trail.model` and `translation.model` to `model_class` and rewrites the `model` key in `trail.data`.
+3. `M260912130000AuthClient` drops `auth_client` and the trails pointing at it.
+4. `M260913100000UserAttributes` adds `user.custom_attributes`, copies `first_name`, `last_name`, `birthdate`, `city` and
+   `country` into it and drops them with `picture`. Files under `web/uploads/users/` are left for you to delete.
+5. `M260913110000TrailType` moves the `trail.type` column default to `13`.
+6. `M260913120000Search` creates `search` with its two fulltext indexes.
+7. `M260913130000LoginCount` widens `user.login_count` to an unsigned `int`.
+8. `M260913140000TokenExpiry`, `M260913160000TwoFactorAuthentication` and `M260913170000UserToken` create `user_token`,
+   copy every live verification and reset token and recovery code into it (hashed), add `user.email_confirmed_at`
+   backfilled from `updated_at`, encrypt the 2FA secrets and drop the five token columns. Existing links keep working.
+9. `M260913150000UserDeleteRule` is a no-op kept for history.
+10. `M260913180000PasswordScheme` renames `password_salt` to `password_scheme`, drops every hash that carried a v2 salt and
+    rotates those accounts' `auth_key`. Open sessions, roles and 2FA are kept, so the administrator running the upgrade stays logged in.
+11. `M260913190000TwoFactorSecret` renames `google_2fa_secret` to `two_factor_secret`.
+12. `M260914100000AuthItems` creates `user` and `redirect`, grants each to every parent and assignee of the verb items it
+    replaces, deletes those, clears every `rule_name`, empties `auth_rule` and stores the descriptions as `Message` JSON.
+    An account holding `userUpdate` alone now manages users outright; review assignments first if that matters.
+13. `M260914180000UserLoginType` converts `user_login.type` through the map above.
+14. `M260914190000ManagerRole` creates `manager` with every permission and flattens `admin`; `M260914220000SystemPermission` adds `system` to `admin` alone.
+15. `M260915130000CustomAttributesColumn` reorders `user.custom_attributes` (cosmetic).
+16. `M260917100000ShowHints` and `M260920100000ColorScheme` add `user.show_hints` and `user.color_scheme`.
 
-A model that overrides `saveVirtualAttributes()` returns the previous value per changed virtual
-attribute name, merged into the changed attributes the trail records.
+### After `./yii migrate`
 
-3. Write a migration for the project's own models, using the helpers on
-   `Hirtz\Skeleton\Db\Traits\MigrationTrait`:
+- `./yii search/rebuild` fills the index for every searchable model.
+- `./yii upgrade/passwords` mails a reset link to every user without a password; it is safe to repeat. `./yii user/password
+  <email>` sets one directly when the mailer is not an option. `Web\User::$enablePasswordReset` must be on for the links to land.
+- Add `./yii user-token/clear`, `user-login/clear` and `trail/clear` to cron.
+- Everyone logs in again: the cookies are renamed and the remember-me keys rotated.
+- Write a project migration for the project's own translated models (`moveI18nColumnsToTranslations()`), icon columns and
+  any column that becomes a custom attribute (`moveColumnsToCustomAttributes()`); `yii2-upgrade generate-columns` drafts it.
 
-```php
-public function safeUp(): void
-{
-    $this->moveI18nColumnsToTranslations(Product::create());
-}
+### What is lost
 
-public function safeDown(): void
-{
-    $this->restoreI18nColumnsFromTranslations(Product::create());
-}
-```
+Every v2 password and remember-me cookie; the `auth_client` table; the provider names in `user_login.type` (`facebook`
+becomes `TYPE_OTHER`, on the way down too); the `picture` column and nothing on disk; the Russian and Chinese translations
+and their flag images; `migrate/down` past `M260913180000PasswordScheme` restores columns but never hashes.
 
-`safeDown()` does not recreate indexes; a migration whose `safeUp()` dropped a unique index on a
-translated column recreates it itself.
+## Removed
 
-4. A model that stores translations must return an `I18nActiveQuery` (or a subclass) from `find()` —
-   that is what keeps the virtual names out of the SELECT and rewrites them in `orderBy()`.
-
-### `replaceI18nAttributes()` becomes `withTranslations()`
-
-`I18nActiveQuery::replaceI18nAttributes()` rewrote the SELECT to the current language's columns.
-There are no such columns anymore, so it is replaced by `withTranslations()`, which eager loads the
-translation records of the given languages, every configured language by default:
-
-```php
-// before
-Entry::find()
-    ->selectSiteAttributes()
-    ->replaceI18nAttributes();
-
-// after
-Entry::find()
-    ->selectSiteAttributes()
-    ->withTranslations();
-
-// one language only, for a list that is read in that language and discarded
-Entry::find()->withTranslations('de');
-```
-
-A query that returns more than one row calls `withTranslations()` on its own when nothing was decided,
-so a list — a grid, a cached collection, a sitemap — never queries once per record in a language it is
-read in later. `withoutTranslations()` opts out for a list whose translated attributes are not read; a
-single record stays lazy and loads every language on first access.
-
-### What to keep in mind
-
-- `i18nAttributes` is still the switch. It decides which attributes are translated, and it has to be
-  set before the model's attributes are first touched — configure it through the DI container or in
-  `init()`, as before.
-- **Translated attributes must be string-typed.** `translation.value` is a `TEXT` column, so a number
-  would come back as a string after a reload.
-- **An empty string, `null` and a missing record all mean "no translation."** A write normalises `''`
-  to deleting the record, a read returns `null`, and the SQL fallback uses `NULLIF(value, '')`. The
-  typecast behavior no longer turns `''` into `null` for these attributes — they are not columns.
-- **The migration only moves the languages the running application configures.** A `_xx` column of a
-  language that was removed from `i18n.languages` earlier is left untouched, as is an attribute that
-  was removed from `i18nAttributes`.
-- `ActiveRecord::batchInsert()` and `updateAttributes()` write the table directly: the former never
-  writes a translation, the latter fails on a translated name.
-- Reading a translation in one language loads every unloaded language of that record in one query.
-
-### Language fallback
-
-`getI18nAttributeName()`, `getI18nAttribute()` and their `I18nActiveQuery` counterpart take a third
-`bool $fallback = false` argument. With it, an attribute that holds no translation resolves to the
-untranslated attribute — on a model that is the source-language value, in SQL a
-`COALESCE(NULLIF(…), …)`, which is what makes sorting and searching fall back to the source language:
-
-```php
-$entry->getI18nAttribute('name', 'de', fallback: true);
-Entry::find()->getI18nAttributeName('name', fallback: true);
-```
-
-Uniqueness deliberately does **not** fall back: a translated value competes with the same language
-only.
-
-## 3.0.0 — Key-based translations
-
-v3 switches every platform message source to **key-based translations** resolved with
-`forceTranslation => true`. Instead of the English sentence being both the lookup key and the
-fallback, each string now has a stable, uppercase, domain-first **key**, and the English text lives
-in the `en-US` message file like any other language. Call sites stay on `Yii::t()` — the `yii
-message` extractor only recognises that call.
-
-```php
-// before
-Yii::t('cms', 'Create Entry');
-
-// after
-Yii::t('cms', 'ENTRY_CREATE_BUTTON');
-```
-
-```php
-// messages/en-US/cms.php
-'ENTRY_CREATE_BUTTON' => 'Create Entry',
-// messages/de/cms.php
-'ENTRY_CREATE_BUTTON' => 'Eintrag erstellen',
-```
-
-### Why
-
-- Editing an English string no longer orphans every translation keyed to the old sentence.
-- The same key can diverge per language without the source text drifting.
-- `en-US` becomes an explicit, reviewable catalogue of the source copy.
-- Keys group by topic, so a translator sees every string for a model or feature contiguously.
-
-### Key convention
-
-Keys are `UPPER_SNAKE_CASE` and **domain-first** — the leading token is the model or functional area,
-so translations cluster by topic:
-
-| Kind | Pattern | Example |
-| --- | --- | --- |
-| Attribute label / hint / error | `{DOMAIN}_{ATTRIBUTE}_LABEL` \| `_HINT` \| `_ERROR` | `ENTRY_NAME_LABEL` |
-| Flash message | `{DOMAIN}_FLASH_{SLUG}` | `ENTRY_FLASH_ASSET_ORDER_CHANGED` |
-| Button / link | `{DOMAIN}_BUTTON_{SLUG}` | `USER_BUTTON_COPY_LINK` |
-| Confirmation dialog | `{DOMAIN}_CONFIRM_{ACTION}` | `USER_CONFIRM_DELETE` |
-| RBAC permission description | `AUTH_{PERMISSION}_DESCRIPTION` | `AUTH_ENTRY_CREATE_DESCRIPTION` |
-| Nav / menu label | `{DOMAIN}_NAV_{SLUG}` | `USER_NAV_ITEM_USER_MANAGEMENT` |
-| Shared / cross-domain string | `COMMON_{SLUG}` | `COMMON_MODEL_ID` |
-
-`COMMON_*` holds strings used across more than one domain (the base `ActiveRecord` labels
-`COMMON_ID_LABEL`, `COMMON_STATUS_LABEL`, `COMMON_TYPE_LABEL`, … and generic UI copy). The `Yii::t`
-category already scopes the message source, so keys carry **no** bundle prefix.
-
-### What changed in the platform
-
-Every bundle's message source was migrated (`skeleton`, `cms`, `media`, `shopify`, `location`,
-`tenant`, `hotspot`, `config`). Each bundle's `Bootstrap` (or `I18N` for `skeleton`) now sets
-`forceTranslation => true`, and all `messages/<lang>/<category>.php` files were regenerated with keys.
-The `country` (already forced, data-keyed), `yii` (framework) and `app` (host application) categories
-were left unchanged.
-
-### Migrating a downstream project
-
-Downstream apps translate their own strings under the **`app`** category. There is no Rector rule:
-no tool can reliably invent semantic keys from arbitrary English, so the key assignment is manual
-(best done per model/feature).
-
-1. **Turn on `forceTranslation`** for the `app` message source in your application config:
-
-   ```php
-   'i18n' => [
-       'translations' => [
-           'app' => [
-               'class' => \yii\i18n\PhpMessageSource::class,
-               'sourceLanguage' => 'en-US',
-               'basePath' => '@app/messages',
-               'forceTranslation' => true,
-           ],
-       ],
-   ],
-   ```
-
-2. **Assign a key** to each string following the convention above and rewrite the call sites:
-
-   ```php
-   Yii::t('app', 'PRODUCT_NAME_LABEL');
-   ```
-
-3. **Regenerate the message files.** Add an `en-US/app.php` mapping each key to its English source
-   text, and remap the existing `de/fr/...` files from the old English string to the new key so no
-   translation is lost:
-
-   ```php
-   // messages/en-US/app.php
-   'PRODUCT_NAME_LABEL' => 'Product name',
-   // messages/de/app.php
-   'PRODUCT_NAME_LABEL' => 'Produktname',
-   ```
-
-4. **Verify** every key used in code resolves in `en-US/app.php` before shipping — a missing key
-   renders as the key string itself.
-
-A partially migrated app runs correctly: un-migrated calls keep passing the English string, which
-`forceTranslation` returns unchanged when no key matches. Migrate incrementally, one category or
-feature at a time.
+- Social login through `yiisoft/yii2-authclient`, no replacement; a user who only ever signed in that way recovers a password through `account/recover`.
+- Profile pictures (`User::$picture`, `UserPictureForm`, `account/picture`, `user/delete-picture`).
+- `first_name`, `last_name`, `birthdate`, `city`, `country` as columns, `User::getFullName()`, `getCountries()`.
+- Per-language database tables (`enableI18nTables`, `tablePrefix`, `I18N::getTableName()` on the module trait).
+- The language query parameter, cookie and `UserLanguageBehavior`; the admin language is a session override picked through `admin/account/language`.
+- `Rbac\Rules\OwnerRule` and the verb permissions `userCreate`, `userUpdate`, `userDelete`, `redirectCreate`.
+- `Behaviors\SitemapBehavior`, `Models\Interfaces\SitemapInterface`, `getSitemapQuery()` and friends on models.
+- `Models\Traits\IconFilenameAttributeTrait`.
+- `ArrayHelper::simpleXmlToArray()`, `cacheStringToArray()`, `createCacheString()`; `MaterializedTreeTrait::getIdsFromPath()`, `getPathFromIds()`.
+- `ModelTrait::getTraitNames()`, `getTraitRules()`, `getTraitAttributeLabels()`.
+- `Html::buttonList()`, `Html::buttons()`, `helpers\StructuredData`, the Bootstrap, Font Awesome and jQuery UI widget classes, the Gii templates.
+- `Request::getRemoteIP()`, `Request::getLanguage()`, `UrlManager::$i18nSubdomain`, `UrlManager::hasI18nUrls()`.
+- `Models\Redirect` from the search index (opt it back in with `SearchableInterface` + `SearchableTrait`).
+- The `ru`, `zh-CN` and `zh-TW` message files.
