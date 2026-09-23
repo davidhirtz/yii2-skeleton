@@ -20,6 +20,7 @@
     "postcss": "^8.4.49",
     "sortablejs": "^1.15.6",
     "tinymce": "^8.3.1",
+    "typescript": "^7.0.2",
     "x-timeago": "^1.2.0"
   }
 }
