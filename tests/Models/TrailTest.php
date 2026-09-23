@@ -27,8 +27,7 @@ class TrailTest extends TestCase
         self::assertTrue($trail->insert());
         self::assertSame(Trail::TYPE_DEFAULT, $trail->type);
 
-        $trail->refresh();
-        self::assertSame(Trail::TYPE_DEFAULT, $trail->type);
+        self::assertSame(Trail::TYPE_DEFAULT, Trail::findOne($trail->id)?->type);
 
         self::assertFalse($trail->isCreateType());
         self::assertFalse($trail->hasAttributesEnabled());

@@ -63,10 +63,11 @@ class MessageTest extends TestCase
         $message = Message::fromJson('Update entries');
 
         self::assertTrue($message->isLiteral());
-        self::assertSame('Update entries', (string)$message);
 
-        Yii::$app->language = 'de';
-        self::assertSame('Update entries', (string)$message);
+        foreach (['en-US', 'de'] as $language) {
+            Yii::$app->language = $language;
+            self::assertSame('Update entries', (string)$message, $language);
+        }
     }
 
     public function testJsonThatIsNoPointerIsLiteralToo(): void

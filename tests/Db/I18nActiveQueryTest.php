@@ -177,10 +177,14 @@ class I18nActiveQueryTest extends TestCase
 
         $loaded = I18nActiveRecord::findOne($record->id);
 
-        $queries = $this->countQueries(function () use ($loaded): void {
-            self::assertSame('Eins', $loaded->content_de);
-            self::assertSame('Eins', $loaded->content_de);
+        $values = [];
+
+        $queries = $this->countQueries(function () use ($loaded, &$values): void {
+            $values[] = $loaded->content_de;
+            $values[] = $loaded->content_de;
         });
+
+        self::assertSame(['Eins', 'Eins'], $values);
 
         self::assertSame(1, $queries);
         self::assertSame('Eins', $loaded->getOldAttribute('content_de'));
