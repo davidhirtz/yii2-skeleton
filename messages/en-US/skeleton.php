@@ -253,6 +253,7 @@ return [
     'SIGNUP_PASSWORD_LABEL' => 'Password',
     'SIGNUP_SIGN_UP_COULD' => 'Sign up could not be completed, please try again.',
     'SIGNUP_TERMS_LABEL' => 'I accept the terms of service and privacy policy',
+    'SUBMENU_BACK' => 'Back',
     'SYSTEM_APPLICATION' => 'Application',
     'SYSTEM_ASSETS' => 'Bundles',
     'SYSTEM_ASSETS_PUBLISHED' => '{count,plural,one{# directory} other{# directories}}, {size}',

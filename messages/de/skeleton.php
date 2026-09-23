@@ -253,6 +253,7 @@ return [
     'SIGNUP_PASSWORD_LABEL' => 'Passwort',
     'SIGNUP_SIGN_UP_COULD' => 'Die Registrierung konnte nicht abgeschlossen werden, bitte versuchen Sie es erneut.',
     'SIGNUP_TERMS_LABEL' => 'Ich akzeptiere die Nutzungsbedingungen',
+    'SUBMENU_BACK' => 'Zurück',
     'SYSTEM_APPLICATION' => 'Anwendung',
     'SYSTEM_ASSETS' => 'Bundles',
     'SYSTEM_ASSETS_PUBLISHED' => '{count,plural,one{# Verzeichnis} other{# Verzeichnisse}}, {size}',

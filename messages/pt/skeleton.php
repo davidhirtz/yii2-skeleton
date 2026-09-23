@@ -253,6 +253,7 @@ return [
     'SIGNUP_PASSWORD_LABEL' => 'Palavra-passe',
     'SIGNUP_SIGN_UP_COULD' => 'Não foi possível concluir o registo, tente novamente.',
     'SIGNUP_TERMS_LABEL' => 'Aceito os termos de serviço e a política de privacidade',
+    'SUBMENU_BACK' => 'Voltar',
     'SYSTEM_APPLICATION' => 'Aplicação',
     'SYSTEM_ASSETS' => 'Recursos',
     'SYSTEM_ASSETS_PUBLISHED' => '{count,plural,one{# diretório} other{# diretórios}}, {size}',

@@ -1,6 +1,12 @@
 ## 3.0.0 (in development)
 
 
+- **A submenu can lead one level back up the tree.** `Widgets\Navs\Submenu::backUrl()` renders an icon-only
+  back link in front of the tabs, and the protected `getAdminBackUrl()` derives it from a record: its
+  `getAdminIndexBreadcrumb()`, else its admin parent's own page, and none for a record without a parent. A
+  submenu carrying one renders even with a single tab.
+
+
 - **`Widgets\Navs\NavItem::addRoute()` adds one route the item is active on**, with the query parameters that
   narrow it as a second argument, and `ItemTrait::getItem()` reads a named item back. Together they are how a
   project marks a submenu tab active on a route of its own: every shipped submenu names its items, so an

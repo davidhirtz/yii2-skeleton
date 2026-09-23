@@ -253,6 +253,7 @@ return [
     'SIGNUP_PASSWORD_LABEL' => 'Mot de passe',
     'SIGNUP_SIGN_UP_COULD' => 'L’inscription n’a pas pu être finalisée, veuillez réessayer.',
     'SIGNUP_TERMS_LABEL' => 'J’accepte les conditions d’utilisation et la politique de confidentialité',
+    'SUBMENU_BACK' => 'Retour',
     'SYSTEM_APPLICATION' => 'Application',
     'SYSTEM_ASSETS' => 'Ressources',
     'SYSTEM_ASSETS_PUBLISHED' => '{count,plural,one{# répertoire} other{# répertoires}}, {size}',
