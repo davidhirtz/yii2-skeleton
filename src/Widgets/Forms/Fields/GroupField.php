@@ -25,17 +25,7 @@ use yii\base\Model;
 
 class GroupField extends Field
 {
-    /**
-     * The index of the template item. {@see Html::getInputIdByName()} mangles it, so the ids carry a different token
-     * and the script is told both.
-     */
     final public const string TEMPLATE_INDEX = '__INDEX__';
-
-    /**
-     * Stands in for a row's number in the title a row with nothing typed into it falls back to. The number the
-     * server rendered goes stale on every add, remove and move, so the script rewrites it — and the pattern
-     * around it is a translation, which the script cannot build for itself.
-     */
     final public const string POSITION_PLACEHOLDER = '__POSITION__';
 
     protected GroupCustomAttribute $group;
@@ -336,10 +326,6 @@ class GroupField extends Field
             ->content(Icon::make()->name('chevron-down'), $title);
     }
 
-    /**
-     * What a row with nothing typed into it is called: its number, after the group's placeholder where it declares
-     * one. One `Yii::t()` call per key, since `yii message` evaluates nothing.
-     */
     protected function getPositionTitle(int|string $position): string
     {
         $placeholder = $this->group->getPlaceholder();
@@ -423,10 +409,6 @@ class GroupField extends Field
             ->content($this->getCountHint(), $this->getAddButton($count));
     }
 
-    /**
-     * One `Yii::t()` call per key, repetition included: `yii message` reads the literal arguments of a call site
-     * and evaluates nothing, so a key reached through a ternary is deleted on the next regeneration.
-     */
     protected function getCountHint(): ?Stringable
     {
         $min = $this->group->getMinCount();
