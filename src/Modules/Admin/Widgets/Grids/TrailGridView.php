@@ -390,7 +390,9 @@ class TrailGridView extends GridView
     {
         if ($model instanceof TrailModelInterface) {
             $name = $model->getAdminName();
-            $route = $model->getAdminRoute();
+
+            // A deleted record is rebuilt from its keys, so it still answers its update route — which is a 404.
+            $route = !$model instanceof ActiveRecord || !$model->getIsNewRecord() ? $model->getAdminRoute() : false;
 
             if ($route) {
                 $name = A::make()

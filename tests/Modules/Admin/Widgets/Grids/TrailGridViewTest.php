@@ -10,12 +10,15 @@ use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Override;
 use Stringable;
 use Yii;
 
 class TrailGridViewTest extends TestCase
 {
+    use UserFixtureTrait;
+
     #[Override]
     protected function setUp(): void
     {
@@ -131,6 +134,25 @@ class TrailGridViewTest extends TestCase
         self::assertStringContainsString('wurde gelöscht', TestTrailGridView::make()->dataContent($trail));
     }
 
+    public function testTheMessageLinksAnExistingRecord(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+
+        $content = TestTrailGridView::make()->dataContent($this->createUserTrail((string)$user->id));
+
+        self::assertStringContainsString("user/update?id=$user->id", $content);
+    }
+
+    /**
+     * A deleted record is rebuilt from its keys, and its update page is a 404.
+     */
+    public function testTheMessageDoesNotLinkADeletedRecord(): void
+    {
+        $content = TestTrailGridView::make()->dataContent($this->createUserTrail('99999'));
+
+        self::assertStringNotContainsString('user/update?id=99999', $content);
+    }
+
     public function testAChildDeleteIsRenderedInTheReadersLanguage(): void
     {
         Yii::$app->language = 'de';
@@ -215,6 +237,17 @@ class TrailGridViewTest extends TestCase
         $route = TestTrailGridView::make()->userTrailRoute($trail);
 
         self::assertSame([User::class, '9'], explode('@', $route['model']));
+    }
+
+    protected function createUserTrail(string $id): Trail
+    {
+        // A delete renders its message rather than an attribute table, which is what links the record.
+        $trail = Trail::create();
+        $trail->type = Trail::TYPE_DELETE;
+        $trail->model_class = User::class;
+        $trail->model_id = $id;
+
+        return $trail;
     }
 
     protected function getBody(string $content): string
