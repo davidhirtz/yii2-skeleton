@@ -11,7 +11,6 @@ use Hirtz\Skeleton\Db\Commands\BatchInsertQueryBuild;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
-use Hirtz\Skeleton\Web\User as WebUser;
 use Override;
 use Yii;
 use davidhirtz\yii2\datetime\DateTime;
@@ -382,25 +381,30 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * @param array<int|string, mixed> $attributes
+     * Saves values derived from other rows — a count, a list of ids — and stamps `updated_at` when one changed. No
+     * validation and no save hooks: a parent that no longer validates would refuse its own bookkeeping, and a save
+     * would write whatever else the instance holds dirty.
+     *
+     * @param array<string, mixed> $attributes
+     * @return int the number of rows updated, `0` where no value changed
      */
-    public function updateAttributesBlameable(array $attributes): int
+    public function updateDenormalizedAttributes(array $attributes): int
     {
-        foreach ($attributes as $name => $value) {
-            if (is_int($name)) {
-                if ($value === 'updated_by_user_id') {
-                    $attributes[$value] = WebUser::current()?->getId();
-                    unset($name);
-                }
+        $changed = array_filter(
+            $attributes,
+            fn (mixed $value, string $name): bool => $this->getAttribute($name) !== $value,
+            ARRAY_FILTER_USE_BOTH
+        );
 
-                if ($value === 'updated_at') {
-                    $attributes[$value] = new DateTime();
-                    unset($name);
-                }
-            }
+        if (!$changed) {
+            return 0;
         }
 
-        return $this->updateAttributes($attributes);
+        if ($this->hasAttribute('updated_at')) {
+            $changed['updated_at'] = new DateTime();
+        }
+
+        return $this->updateAttributes($changed);
     }
 
     /**

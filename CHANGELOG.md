@@ -125,6 +125,7 @@
   `upload/clear`, `user/password`, `user-login/clear` and `user-token/clear`; `user/create` takes `--name`, `--email` and `--password`
 - Added `Widgets\Forms\Fields\AutocompleteField`, `CheckboxListField`, `GroupField` and `UploadField`, `Widgets\Grids\Traits\SelectionTrait`,
   `Widgets\Navs\ModelHeader`, `Modules\Admin\Widgets\Navs\NavBarSearch`, `Modules\Admin\Widgets\Buttons\AsidePinButton` and `LanguageDropdownButton`
+- Removed `Db\ActiveRecord::updateAttributesBlameable()`; added `updateDenormalizedAttributes()`
 
 ## 2.6.8 (May 21, 2026)
 

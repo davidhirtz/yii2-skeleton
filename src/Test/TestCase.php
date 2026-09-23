@@ -246,9 +246,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Reads and writes alike.
+     * Reads and writes alike, or only the statements whose SQL matches `$pattern`.
      */
-    protected function countQueries(callable $callback): int
+    protected function countQueries(callable $callback, ?string $pattern = null): int
     {
         $this->logger->messages = [];
         $this->logger->isRecording = true;
@@ -263,6 +263,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             $this->logger->messages,
             fn (array $message): bool => $message[1] === Logger::LEVEL_PROFILE_BEGIN
                 && in_array($message[2], ['yii\db\Command::query', 'yii\db\Command::execute'], true)
+                && ($pattern === null || preg_match($pattern, (string)$message[0]) === 1)
         );
 
         $this->logger->messages = [];

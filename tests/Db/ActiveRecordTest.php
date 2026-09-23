@@ -100,26 +100,37 @@ class ActiveRecordTest extends TestCase
         self::assertEquals(1, $updated->id);
     }
 
-    public function testUpdateAttributesBlameable(): void
+    public function testUpdateDenormalizedAttributesStampsTheChange(): void
     {
-        $this->getWebUser()->login(User::findOne(1));
-
         $model = new TestActiveRecord();
         $model->name = 'Test';
         $model->insert();
 
-        self::assertNull($model->updated_by_user_id);
         self::assertNull($model->updated_at);
 
-        $model->updateAttributesBlameable([
-            'name' => 'New Test',
-            'updated_by_user_id',
-            'updated_at',
-        ]);
+        // Neither validated nor saved along: an empty name fails the rules, and the dirty value stays unsaved.
+        $model->updateAttributes(['name' => '']);
+        $model->nullable = 'dirty';
 
-        self::assertEquals('New Test', $model->name);
-        self::assertEquals(1, $model->updated_by_user_id);
+        self::assertSame(1, $model->updateDenormalizedAttributes(['user_id' => 5]));
         self::assertNotNull($model->updated_at);
+
+        $row = TestActiveRecord::findOne($model->id);
+
+        self::assertSame(5, $row?->user_id);
+        self::assertNull($row->nullable);
+        self::assertNotNull($row->updated_at);
+    }
+
+    public function testUpdateDenormalizedAttributesLeavesAnUnchangedRowAlone(): void
+    {
+        $model = new TestActiveRecord();
+        $model->name = 'Test';
+        $model->user_id = 5;
+        $model->insert();
+
+        self::assertSame(0, $model->updateDenormalizedAttributes(['user_id' => 5]));
+        self::assertNull(TestActiveRecord::findOne($model->id)?->updated_at);
     }
 
     public function testBatchInsert(): void
