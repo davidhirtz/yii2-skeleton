@@ -8,32 +8,30 @@ use Hirtz\Skeleton\Db\ActiveRecord as SkeletonActiveRecord;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Validators\Interfaces\AttributeTypeInterface;
 use yii\base\Behavior;
-use yii\base\Event;
 use yii\base\InvalidArgumentException;
 use yii\base\Model;
-use yii\base\ModelEvent;
 use yii\db\ActiveRecord;
-use yii\db\AfterSaveEvent;
 use yii\db\BaseActiveRecord;
+use yii\db\ColumnSchema;
+use yii\db\Schema;
 use yii\helpers\StringHelper;
 use yii\validators\BooleanValidator;
 use yii\validators\NumberValidator;
 use yii\validators\StringValidator;
 use Closure;
+use Stringable;
 
 /**
- * This is a rewrite of {@see \yii\behaviors\AttributeTypecastBehavior}.
+ * Casts the attributes to the type their validators describe when they enter the record (after
+ * {@see SkeletonActiveRecord::load()}) and before they are validated and written, so rules, `isAttributeChanged()` and
+ * the dirty attributes compare what the database returns. Types come from the validators, `null` for an empty value on
+ * a nullable column and the scale of a `decimal` column from the table schema.
  *
- * The original behavior auto-detects attributes on attaching the behavior. This is not ideal for performance and also
- * makes it impossible to manipulate the validators by other behaviors, as the validators are loaded before the actual
- * validation is performed.
+ * A value is only cast when nothing is lost: `"abc"` stays a string for the `integer` rule to reject. `null` is never
+ * cast. A boolean is an integer and a `decimal` column a string at the column's scale, which is what MySQL returns.
  *
- * Furthermore, this behavior can typecast attributes to `null` if they are empty and nullable, which is auto-detected
- * from the table schema. Boolean values are typecast as integers, which is how they are stored in the database.
- *
- * On default, the behavior only performs typecasting before validation, which makes skipping rules based on changed
- * attributes possible. But it can be configured to perform typecasting after validation, before saving, after saving
- * and after finding, to stay consistent with the original class.
+ * A model's own `beforeSave()` runs before the cast when it assigns ahead of `parent::beforeSave()`, which triggers the
+ * event, but only `save(false)` reaches it with anything uncast.
  *
  * @property array<string, mixed>|null $attributeTypes {@see static::setAttributeTypes()}
  * @property list<string>|null $nullableAttributes {@see static::setNullableAttributes()}
@@ -48,52 +46,19 @@ class AttributeTypecastBehavior extends Behavior
     final public const string TYPE_STRING = 'string';
 
     /**
-     * @var bool whether to skip typecasting of `null` values
-     */
-    public bool $skipOnNull = true;
-
-    /**
-     * @var bool whether to typecast the attributes before validation.
-     * This allows the use of {@see ActiveRecord::isAttributeChanged()} in validation.
-     */
-    public bool $typecastBeforeValidate = true;
-
-    /**
-     * @var bool whether to perform typecasting after owner model validation.
-     */
-    public bool $typecastAfterValidate = true;
-
-    /**
-     * @var bool whether to perform typecasting before saving the owner model (insert or update).
-     */
-    public bool $typecastBeforeSave = false;
-
-    /**
-     * @var bool whether to perform typecasting after saving owner model (insert or update).
-     */
-    public bool $typecastAfterSave = false;
-
-    /**
-     * @var bool whether to perform typecasting after retrieving owner model data from the database.
-     */
-    public bool $typecastAfterFind = false;
-
-    /**
-     * @var bool whether to typecast boolean values as integers. Defaults to `true` which matches boolean values after
-     * they have been retrieved from the database.
-     */
-    public bool $typecastBooleanAsInteger = true;
-
-    /**
-     * @var array<string, mixed>|null the attribute types, auto-detected from the table schema when `null`.
+     * @var array<string, mixed>|null the attribute types, auto-detected from the validators when `null`.
      */
     private ?array $attributeTypes = null;
 
     /**
-     * @var list<string>|null the list of nullable attributes to be typecast to `null` if empty. If `null`, nullable
-     * attributes will be auto-detected from the table schema.
+     * @var list<string>|null the attributes cast to `null` when empty, auto-detected from the table schema when `null`.
      */
     private ?array $nullableAttributes = null;
+
+    /**
+     * @var array<string, int>|null the scale of each `decimal` column
+     */
+    private ?array $decimalScales = null;
 
     /**
      * @var array<string, array<string, mixed>>
@@ -106,87 +71,24 @@ class AttributeTypecastBehavior extends Behavior
     private static array $autoDetectedNullableAttributes = [];
 
     /**
+     * @var array<string, array<string, int>>
+     */
+    private static array $autoDetectedDecimalScales = [];
+
+    /**
      * @return array<string, string|Closure>
      */
     #[\Override]
     public function events(): array
     {
-        $events = [];
+        $handler = fn () => $this->typecastAttributes();
 
-        if ($this->typecastAfterFind) {
-            $events[BaseActiveRecord::EVENT_AFTER_FIND] = $this->afterFind(...);
-        }
-
-        if ($this->typecastAfterValidate) {
-            $events[Model::EVENT_AFTER_VALIDATE] = $this->afterValidate(...);
-        }
-        if ($this->typecastBeforeSave) {
-            $events[BaseActiveRecord::EVENT_BEFORE_INSERT] = $this->beforeSave(...);
-            $events[BaseActiveRecord::EVENT_BEFORE_UPDATE] = $this->beforeSave(...);
-        }
-        if ($this->typecastAfterSave) {
-            $events[BaseActiveRecord::EVENT_AFTER_INSERT] = $this->afterSave(...);
-            $events[BaseActiveRecord::EVENT_AFTER_UPDATE] = $this->afterSave(...);
-        }
-
-        if ($this->typecastBeforeValidate) {
-            $events[BaseActiveRecord::EVENT_BEFORE_VALIDATE] = $this->beforeValidate(...);
-        }
-
-        return $events;
-    }
-
-    public function beforeValidate(): void
-    {
-        $this->typecastAttributes();
-    }
-
-    /**
-     * @noinspection PhpUnusedParameterInspection
-     */
-    public function afterValidate(Event $event): void
-    {
-        if (!$this->owner->hasErrors()) {
-            $this->typecastAttributes();
-        }
-    }
-
-    /**
-     * @noinspection PhpUnusedParameterInspection
-     */
-    public function beforeSave(ModelEvent $event): void
-    {
-        $this->typecastAttributes();
-    }
-
-    /**
-     * @noinspection PhpUnusedParameterInspection
-     */
-    public function afterSave(AfterSaveEvent $event): void
-    {
-        $this->typecastAttributes();
-    }
-
-    /**
-     * @noinspection PhpUnusedParameterInspection
-     */
-    public function afterFind(Event $event): void
-    {
-        $this->typecastAttributes();
-        $this->resetOldAttributes();
-    }
-
-    protected function resetOldAttributes(): void
-    {
-        if ($this->owner instanceof ActiveRecord) {
-            $attributes = array_keys($this->getAttributeTypes());
-
-            foreach ($attributes as $attribute) {
-                if ($this->owner->canSetOldAttribute($attribute)) {
-                    $this->owner->setOldAttribute($attribute, $this->owner->{$attribute});
-                }
-            }
-        }
+        return [
+            SkeletonActiveRecord::EVENT_AFTER_LOAD => $handler,
+            Model::EVENT_BEFORE_VALIDATE => $handler,
+            BaseActiveRecord::EVENT_BEFORE_INSERT => $handler,
+            BaseActiveRecord::EVENT_BEFORE_UPDATE => $handler,
+        ];
     }
 
     /**
@@ -201,7 +103,7 @@ class AttributeTypecastBehavior extends Behavior
         foreach ($attributeNames as $attribute) {
             $value = $this->owner->$attribute;
 
-            if ($this->skipOnNull && $value === null) {
+            if ($value === null) {
                 continue;
             }
 
@@ -222,8 +124,8 @@ class AttributeTypecastBehavior extends Behavior
             return $type ? call_user_func($type, $value) : $value;
         }
 
-        if (is_object($value) && method_exists($value, '__toString')) {
-            $value = $value->__toString();
+        if ($value instanceof Stringable) {
+            $value = (string)$value;
         }
 
         if ($this->isEmpty($value) && in_array($attributeName, $this->getNullableAttributes(), true)) {
@@ -231,11 +133,44 @@ class AttributeTypecastBehavior extends Behavior
         }
 
         return match ($type) {
-            self::TYPE_INTEGER => (int)$value,
-            self::TYPE_FLOAT => (float)$value,
-            self::TYPE_BOOLEAN => $this->typecastBooleanAsInteger ? (int)$value : (bool)$value,
-            self::TYPE_STRING => is_float($value) ? StringHelper::floatToString($value) : (string)$value,
+            self::TYPE_INTEGER => $this->typecastInteger($value),
+            self::TYPE_FLOAT => $this->typecastFloat($value, $this->getDecimalScales()[$attributeName] ?? null),
+            self::TYPE_BOOLEAN => $this->typecastBoolean($value),
+            self::TYPE_STRING => $this->typecastString($value),
             default => throw new InvalidArgumentException("Unsupported type '$type'"),
+        };
+    }
+
+    protected function typecastInteger(mixed $value): mixed
+    {
+        return match (true) {
+            $value === '', is_bool($value) => (int)$value,
+            is_float($value) => floor($value) === $value && abs($value) < PHP_INT_MAX ? (int)$value : $value,
+            is_string($value) => preg_match('/^\s*[+-]?\d+\s*$/', $value) ? (int)$value : $value,
+            default => $value,
+        };
+    }
+
+    protected function typecastFloat(mixed $value, ?int $scale): mixed
+    {
+        if ($value === '' || is_bool($value) || is_int($value) || is_float($value) || is_numeric($value)) {
+            return $scale !== null ? number_format((float)$value, $scale, '.', '') : (float)$value;
+        }
+
+        return $value;
+    }
+
+    protected function typecastBoolean(mixed $value): mixed
+    {
+        return in_array($value, [true, false, 0, 1, '0', '1', ''], true) ? (int)$value : $value;
+    }
+
+    protected function typecastString(mixed $value): mixed
+    {
+        return match (true) {
+            is_float($value) => StringHelper::floatToString($value),
+            is_scalar($value) => (string)$value,
+            default => $value,
         };
     }
 
@@ -326,15 +261,9 @@ class AttributeTypecastBehavior extends Behavior
      */
     protected function detectNullableAttributes(): array
     {
-        if (!$this->owner instanceof ActiveRecord) {
-            return [];
-        }
-
-        $table = $this->owner::getDb()->getSchema()->getTableSchema($this->owner::tableName());
-        $columns = $table->columns ?? [];
         $nullableAttributes = [];
 
-        foreach ($columns as $column) {
+        foreach ($this->getColumnSchemas() as $column) {
             if ($column->allowNull) {
                 $nullableAttributes[] = $column->name;
             }
@@ -343,9 +272,51 @@ class AttributeTypecastBehavior extends Behavior
         return $nullableAttributes;
     }
 
+    /**
+     * @return array<string, int>
+     */
+    protected function getDecimalScales(): array
+    {
+        if ($this->decimalScales === null) {
+            self::$autoDetectedDecimalScales[$this->owner::class] ??= $this->detectDecimalScales();
+            $this->decimalScales = self::$autoDetectedDecimalScales[$this->owner::class];
+        }
+
+        return $this->decimalScales;
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    protected function detectDecimalScales(): array
+    {
+        $scales = [];
+
+        foreach ($this->getColumnSchemas() as $column) {
+            if ($column->type === Schema::TYPE_DECIMAL && $column->scale !== null) {
+                $scales[$column->name] = $column->scale;
+            }
+        }
+
+        return $scales;
+    }
+
+    /**
+     * @return array<string, ColumnSchema>
+     */
+    private function getColumnSchemas(): array
+    {
+        if (!$this->owner instanceof ActiveRecord) {
+            return [];
+        }
+
+        return $this->owner::getDb()->getSchema()->getTableSchema($this->owner::tableName())->columns ?? [];
+    }
+
     public static function clearAutoDetectedAttributeTypes(): void
     {
         self::$autoDetectedAttributeTypes = [];
         self::$autoDetectedNullableAttributes = [];
+        self::$autoDetectedDecimalScales = [];
     }
 }

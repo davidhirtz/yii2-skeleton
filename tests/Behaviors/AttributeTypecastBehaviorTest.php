@@ -39,6 +39,7 @@ class AttributeTypecastBehaviorTest extends TestCase
             'price' => 'float not null',
             'is_active' => 'boolean not null',
             'callback' => 'string not null',
+            'ratio' => 'decimal(5,2) null',
             'nullable' => 'string null default null',
         ];
 
@@ -56,13 +57,13 @@ class AttributeTypecastBehaviorTest extends TestCase
     public function testTypecast(): void
     {
         $model = new AttributeTypecastActiveRecord();
-        $model->getAttributeTypecastBehavior()->typecastBooleanAsInteger = false;
 
         $model->setAttribute('name', 123);
         $model->setAttribute('amount', '58');
         $model->setAttribute('price', '100.8');
-        $model->setAttribute('is_active', 1);
+        $model->setAttribute('is_active', true);
         $model->setAttribute('callback', 'foo');
+        $model->setAttribute('ratio', 12.3);
         $model->setAttribute('nullable', '');
 
         $model->getAttributeTypecastBehavior()->typecastAttributes();
@@ -70,9 +71,70 @@ class AttributeTypecastBehaviorTest extends TestCase
         self::assertSame('123', $model->name);
         self::assertSame(58, $model->amount);
         self::assertSame(100.8, $model->price);
-        self::assertTrue($model->is_active);
-        self::assertSame('callback: foo', $model->callback);
+        self::assertSame(1, $model->is_active);
+        self::assertSame('FOO', $model->callback);
+        self::assertSame('12.30', $model->ratio);
         self::assertNull($model->nullable);
+    }
+
+    public function testInvalidValuesAreLeftForTheValidator(): void
+    {
+        $model = new AttributeTypecastActiveRecord();
+
+        $model->setAttribute('amount', 'abc');
+        $model->setAttribute('price', '1,5');
+        $model->setAttribute('is_active', 'maybe');
+        $model->setAttribute('ratio', 'abc');
+
+        self::assertFalse($model->validate());
+        self::assertSame(['amount', 'price', 'is_active', 'ratio'], array_keys($model->getErrors()));
+
+        self::assertSame('abc', $model->amount);
+        self::assertSame('1,5', $model->price);
+        self::assertSame('maybe', $model->is_active);
+        self::assertSame('abc', $model->ratio);
+    }
+
+    public function testTypecastOnlyLossless(): void
+    {
+        $model = new AttributeTypecastActiveRecord();
+        $behavior = $model->getAttributeTypecastBehavior();
+
+        $model->setAttribute('amount', ' -5 ');
+        $behavior->typecastAttributes(['amount']);
+        self::assertSame(-5, $model->amount);
+
+        $model->setAttribute('amount', 2.0);
+        $behavior->typecastAttributes(['amount']);
+        self::assertSame(2, $model->amount);
+
+        $model->setAttribute('amount', 2.5);
+        $behavior->typecastAttributes(['amount']);
+        self::assertSame(2.5, $model->amount);
+
+        $model->setAttribute('amount', '1.0');
+        $behavior->typecastAttributes(['amount']);
+        self::assertSame('1.0', $model->amount);
+
+        $model->setAttribute('amount', '');
+        $behavior->typecastAttributes(['amount']);
+        self::assertSame(0, $model->amount);
+
+        $model->setAttribute('price', '1e3');
+        $behavior->typecastAttributes(['price']);
+        self::assertSame(1000.0, $model->price);
+
+        $model->setAttribute('is_active', 'on');
+        $behavior->typecastAttributes(['is_active']);
+        self::assertSame('on', $model->is_active);
+
+        $model->setAttribute('is_active', '0');
+        $behavior->typecastAttributes(['is_active']);
+        self::assertSame(0, $model->is_active);
+
+        $model->setAttribute('name', ['array']);
+        $behavior->typecastAttributes(['name']);
+        self::assertSame(['array'], $model->name);
     }
 
     public function testTypecastModelProperties(): void
@@ -80,7 +142,7 @@ class AttributeTypecastBehaviorTest extends TestCase
         $model = new class () extends Model {
             public int|string|null $int = null;
             public float|null $float = null;
-            public bool|null $bool = null;
+            public int|bool|null $bool = null;
             public string|null $string = null;
 
             public function behaviors(): array
@@ -89,7 +151,6 @@ class AttributeTypecastBehaviorTest extends TestCase
                     'AttributeTypecastBehavior' => [
                         'class' => AttributeTypecastBehavior::class,
                         'nullableAttributes' => ['int', 'float', 'bool', 'string'],
-                        'typecastBooleanAsInteger' => false,
                     ],
                 ];
             }
@@ -126,22 +187,17 @@ class AttributeTypecastBehaviorTest extends TestCase
         $model->bool = false;
         $model->string = '';
 
-        self::assertNotNull($model->int);
-        self::assertNotNull($model->float);
-        self::assertNotNull($model->bool);
-        self::assertNotNull($model->string);
-
         $behavior->typecastAttributes();
 
-        self::assertNotNull($model->int);
-        self::assertNotNull($model->float);
-        self::assertNotNull($model->bool);
+        self::assertSame(0, $model->int);
+        self::assertSame(0.0, $model->float);
+        self::assertSame(0, $model->bool);
         self::assertNull($model->string);
 
         $model->int = '0';
         $behavior->typecastAttributes();
 
-        self::assertEquals(0, $model->int);
+        self::assertSame(0, $model->int);
 
         $model->int = '';
         $behavior->typecastAttributes();
@@ -152,13 +208,13 @@ class AttributeTypecastBehaviorTest extends TestCase
     public function testSkipNull(): void
     {
         $model = new AttributeTypecastActiveRecord();
-        $model->getAttributeTypecastBehavior()->skipOnNull = true;
 
         $model->setAttribute('name', null);
         $model->setAttribute('amount', null);
         $model->setAttribute('price', null);
         $model->setAttribute('is_active', null);
         $model->setAttribute('callback', null);
+        $model->setAttribute('ratio', null);
         $model->setAttribute('nullable', null);
 
         $model->getAttributeTypecastBehavior()->typecastAttributes();
@@ -168,24 +224,23 @@ class AttributeTypecastBehaviorTest extends TestCase
         self::assertNull($model->price);
         self::assertNull($model->is_active);
         self::assertNull($model->callback);
+        self::assertNull($model->ratio);
         self::assertNull($model->nullable);
+    }
 
-        $model->getAttributeTypecastBehavior()->skipOnNull = false;
-        $model->getAttributeTypecastBehavior()->typecastAttributes();
+    public function testAfterLoadEvent(): void
+    {
+        $model = new AttributeTypecastActiveRecord();
+        $model->load(['amount' => '58', 'ratio' => '1.5', 'nullable' => ''], '');
 
-        self::assertSame('', $model->name);
-        self::assertSame(0, $model->amount);
-        self::assertSame(0.0, $model->price);
-        self::assertSame(0, $model->is_active);
-        self::assertSame('callback: ', $model->callback);
+        self::assertSame(58, $model->amount);
+        self::assertSame('1.50', $model->ratio);
         self::assertNull($model->nullable);
     }
 
     public function testBeforeValidateEvent(): void
     {
         $model = new class () extends AttributeTypecastActiveRecord {
-            public bool $typecastBeforeValidate = true;
-
             public function rules(): array
             {
                 return [
@@ -208,13 +263,13 @@ class AttributeTypecastBehaviorTest extends TestCase
         $model->is_active = true;
         $model->callback = '';
 
-        $model->save();
+        self::assertTrue($model->save());
 
         $model->setAttribute('amount', '1');
         self::assertTrue($model->validate());
     }
 
-    public function testAfterFindEvent(): void
+    public function testBeforeSaveEvent(): void
     {
         $model = new AttributeTypecastActiveRecord();
 
@@ -222,127 +277,51 @@ class AttributeTypecastBehaviorTest extends TestCase
         $model->amount = 1;
         $model->price = 100.1;
         $model->is_active = true;
-        $model->callback = '';
+        $model->callback = 'insert';
 
-        $model->validate();
+        $model->save(false);
+        self::assertSame('INSERT', $model->callback);
+        self::assertSame(1, $model->is_active);
+
+        $model->callback = 'update';
+        $model->setAttribute('amount', '2');
+
         $model->save(false);
 
-        $model->updateAll(['callback' => 'find']);
-        $model->refresh();
-        self::assertSame('callback: find', $model->callback);
+        self::assertSame('UPDATE', $model->callback);
+        self::assertSame(2, $model->amount);
     }
 
-    public function testEmptyDirtyAttributesAfterFind(): void
+    public function testNoDirtyAttributesAfterFind(): void
     {
         $model = new AttributeTypecastActiveRecord();
 
         $model->setAttribute('name', 123);
         $model->setAttribute('amount', '58');
         $model->setAttribute('price', '100.8');
-        $model->setAttribute('is_active', 1);
+        $model->setAttribute('is_active', true);
         $model->setAttribute('callback', 'foo');
+        $model->setAttribute('ratio', '12.3');
         $model->setAttribute('nullable', '');
 
-        $model->save(false);
+        self::assertTrue($model->save());
 
-        $model = AttributeTypecastActiveRecord::find()->one();
+        $model = AttributeTypecastActiveRecord::findOne($model->id);
+        self::assertNotNull($model);
+        self::assertSame('12.30', $model->ratio);
 
-        self::assertEmpty($model->getDirtyAttributes());
-    }
+        $model->load([
+            'name' => '123',
+            'amount' => '58',
+            'price' => '100.8',
+            'is_active' => '1',
+            'callback' => 'foo',
+            'ratio' => '12.3',
+            'nullable' => '',
+        ], '');
 
-    public function testAfterValidateEvent(): void
-    {
-        $model = new AttributeTypecastActiveRecord();
-
-        $model->callback = 'validate';
-        $model->validate();
-        self::assertSame('callback: validate', $model->callback);
-    }
-
-    public function testBeforeSaveEvent(): void
-    {
-        $model = new AttributeTypecastActiveRecord();
-        $beforeInsertHappened = false;
-
-        $model->name = 'name';
-        $model->amount = 1;
-        $model->price = 100.1;
-        $model->is_active = true;
-        $model->callback = 'insert';
-
-        $model->on(AttributeTypecastActiveRecord::EVENT_BEFORE_INSERT, function () use (&$beforeInsertHappened): void {
-            $beforeInsertHappened = true;
-        });
-
-        $model->save(false);
-        self::assertSame('callback: insert', $model->callback);
-        self::assertTrue($beforeInsertHappened);
-        $beforeInsertHappened = false;
-
-        $beforeUpdateHappened = false;
-        $model->callback = 'update';
-
-        $model->on(AttributeTypecastActiveRecord::EVENT_BEFORE_UPDATE, function () use (&$beforeUpdateHappened): void {
-            $beforeUpdateHappened = true;
-        });
-
-        $model->save(false);
-
-        self::assertSame('callback: update', $model->callback);
-        self::assertTrue($beforeUpdateHappened);
-    }
-
-    public function testAfterSaveEvent(): void
-    {
-        $model = new AttributeTypecastActiveRecord([
-            'typecastAfterSave' => true
-        ]);
-
-        $model->name = 'name';
-        $model->amount = 1;
-        $model->price = 100.1;
-        $model->is_active = true;
-        $model->callback = 'insert';
-
-        $beforeInsertHappened = false;
-
-        $model->on(AttributeTypecastActiveRecord::EVENT_BEFORE_INSERT, function () use (&$beforeInsertHappened): void {
-            $beforeInsertHappened = true;
-        });
-
-        $afterInsertHappened = false;
-
-        $model->on(AttributeTypecastActiveRecord::EVENT_AFTER_INSERT, function () use (&$afterInsertHappened): void {
-            $afterInsertHappened = true;
-        });
-
-        $model->save(false);
-
-        self::assertTrue($beforeInsertHappened);
-        self::assertTrue($afterInsertHappened);
-        self::assertSame('callback: callback: insert', $model->callback);
-
-        $beforeInsertHappened = false;
-        $afterInsertHappened = false;
-
-        $model->callback = 'update';
-        $beforeUpdateHappened = false;
-
-        $model->on(AttributeTypecastActiveRecord::EVENT_BEFORE_UPDATE, function () use (&$beforeUpdateHappened): void {
-            $beforeUpdateHappened = true;
-        });
-
-        $afterUpdateHappened = false;
-
-        $model->on(AttributeTypecastActiveRecord::EVENT_AFTER_UPDATE, function () use (&$afterUpdateHappened): void {
-            $afterUpdateHappened = true;
-        });
-
-        $model->save(false);
-
-        self::assertSame('callback: callback: update', $model->callback);
-        self::assertTrue($beforeUpdateHappened);
-        self::assertTrue($afterUpdateHappened);
+        self::assertTrue($model->validate());
+        self::assertSame([], $model->getDirtyAttributes());
     }
 
     public function testAutoDetectAttributeTypes(): void
@@ -483,15 +462,13 @@ class AttributeTypecastBehaviorTest extends TestCase
  * @property float|null $price
  * @property bool|null $is_active
  * @property string|null $callback
+ * @property float|string|null $ratio
  * @property string|null $nullable
  *
  * @property AttributeTypecastBehavior $attributeTypecastBehavior
  */
 class AttributeTypecastActiveRecord extends ActiveRecord
 {
-    public bool $typecastBeforeValidate = false;
-    public bool $typecastAfterSave = false;
-
     #[Override]
     public function behaviors(): array
     {
@@ -504,14 +481,10 @@ class AttributeTypecastActiveRecord extends ActiveRecord
                     'amount' => AttributeTypecastBehavior::TYPE_INTEGER,
                     'price' => AttributeTypecastBehavior::TYPE_FLOAT,
                     'is_active' => AttributeTypecastBehavior::TYPE_BOOLEAN,
-                    'callback' => fn ($value) => "callback: $value",
+                    'callback' => fn ($value) => mb_strtoupper((string)$value),
+                    'ratio' => AttributeTypecastBehavior::TYPE_FLOAT,
                     'nullable' => AttributeTypecastBehavior::TYPE_STRING,
                 ],
-                'typecastBeforeValidate' => $this->typecastBeforeValidate,
-                'typecastAfterValidate' => true,
-                'typecastBeforeSave' => true,
-                'typecastAfterFind' => true,
-                'typecastAfterSave' => $this->typecastAfterSave,
             ],
         ];
     }
@@ -541,6 +514,10 @@ class AttributeTypecastActiveRecord extends ActiveRecord
             [
                 ['is_active'],
                 'boolean',
+            ],
+            [
+                ['ratio'],
+                'number',
             ],
             [
                 ['nullable'],

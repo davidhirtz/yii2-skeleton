@@ -20,6 +20,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
 {
     use ModelTrait;
 
+    final public const string EVENT_AFTER_LOAD = 'afterLoad';
+
     private bool $isBatch = false;
     private bool $isDeleted = false;
     private bool $hasCustomAttributesColumn = true;
@@ -42,9 +44,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * A form posts strings, and only validation typecast them until now — which a form reload never reaches. So a
-     * `Closure` reading an attribute off the loaded record, {@see \Hirtz\Skeleton\Models\Types\Type::available()}
-     * and its kind, saw `"2"` where the saved record holds `2`.
+     * A form posts strings; {@see AttributeTypecastBehavior} casts them on this event, so a `Closure` reading an
+     * attribute off the loaded record, {@see \Hirtz\Skeleton\Models\Types\Type::available()} and its kind, sees
+     * what the saved record holds even on a form reload, which never validates.
      *
      * @param array<string, mixed> $data
      */
@@ -55,13 +57,13 @@ class ActiveRecord extends \yii\db\ActiveRecord
             return false;
         }
 
-        $behavior = $this->getBehavior('AttributeTypecastBehavior');
-
-        if ($behavior instanceof AttributeTypecastBehavior) {
-            $behavior->typecastAttributes();
-        }
-
+        $this->afterLoad();
         return true;
+    }
+
+    public function afterLoad(): void
+    {
+        $this->trigger(self::EVENT_AFTER_LOAD);
     }
 
     /**

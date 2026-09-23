@@ -360,7 +360,14 @@ key `urls`. Paging is by `getPageCount()`, an unknown key or offset is a 404, th
 
 - `Web\Request::post()` and `getBodyParams()` always answer an array; `load($this->request->post())` needs no object guard.
 - `Db\ActiveRecord::instantiate()` builds loaded records through the container, so `i18nAttributes` and `types` configured
-  there apply to `find()` as well as `create()`; `load()` typecasts the loaded attributes.
+  there apply to `find()` as well as `create()`.
+- `AttributeTypecastBehavior` casts after `load()` (`Db\ActiveRecord::EVENT_AFTER_LOAD`), before validation and before
+  insert/update, with no switches: drop `typecastBeforeValidate`, `typecastAfterValidate`, `typecastBeforeSave`,
+  `typecastAfterSave`, `typecastAfterFind`, `skipOnNull` and `typecastBooleanAsInteger` from a behavior config. `null` is
+  never cast, a boolean is an integer, a `decimal` column is a string at its scale (`"12.30"`, as MySQL returns it), and
+  a value that does not convert without loss is left for the validator. A `filter` rule with `intval` or a `number_format()`
+  in `beforeSave()` that only kept an attribute from reading as changed can go; a `filter` rule casting posted input hides
+  invalid input, use `integer` / `number`.
 - `Web\Controller::error()`, `success()` and `errorOrSuccess()` return `static` and encode a plain string; pass a
   `Stringable` to flash markup. `warning()` is new.
 - Code that only runs under one SAPI uses `Web\Application::current()` / `Console\Application::current()` (throwing) or

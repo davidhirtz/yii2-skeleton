@@ -82,7 +82,10 @@
 - Dropped the `_` prefix of every private and protected property; inside a class using `MaterializedTreeTrait`, `NestedTreeTrait` or
   `CustomAttributesTrait`, `$this->ancestors`, `$this->children`, `$this->descendants` and `$this->customAttributes` read the cache, so call the getter
 - Changed `Web\Request::post()` and `getBodyParams()` to always answer an array
-- Changed `Db\ActiveRecord::instantiate()` to build loaded records through the container, so a container definition applies to `find()` too; `load()` typecasts
+- Changed `Db\ActiveRecord::instantiate()` to build loaded records through the container, so a container definition applies to `find()` too
+- Changed `AttributeTypecastBehavior` to cast at fixed points — `Db\ActiveRecord::EVENT_AFTER_LOAD` (new, triggered by `load()`), before validation and before insert/update —
+  and only where nothing is lost (`"abc"` stays for the `integer` rule to reject); a `decimal` column is a string at its scale; removed `$typecastBeforeValidate`,
+  `$typecastAfterValidate`, `$typecastBeforeSave`, `$typecastAfterSave`, `$typecastAfterFind`, `$skipOnNull` and `$typecastBooleanAsInteger`
 - Added `Web\Controller::EVENT_CONFIGURE` and `Widgets\Widget::EVENT_CONFIGURE`; `DashboardController::addRoles()` accepts a `Closure`
 - Changed `Widgets\Forms\ActiveForm::$rows` to `$fieldsets` (`list<Fieldset>`); a subclass declares its rows in `getDefaultRows()`;
   `rows()`, `Fieldset::rows()` and `GridView::columns()` take a `Closure`; `ActiveForm::getFieldset()` is `createFieldset()`
