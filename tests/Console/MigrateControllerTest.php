@@ -40,6 +40,18 @@ class MigrateControllerTest extends TestCase
         self::assertStringContainsString('No new migrations found. Your system is up-to-date.', $controller->flushStdOutBuffer());
     }
 
+    public function testAnUnresolvableMigrationNamespaceIsDropped(): void
+    {
+        Application::current()->setMigrationNamespace('Nowhere\\Migrations');
+
+        $controller = $this->createMigrationController();
+        $controller->runAction('new');
+
+        self::assertNotContains('Nowhere\\Migrations', $controller->migrationNamespaces);
+        self::assertContains('Hirtz\\Skeleton\\Migrations', $controller->migrationNamespaces);
+        self::assertStringContainsString('No new migrations found.', $controller->flushStdOutBuffer());
+    }
+
     public function testActionUpWithoutDsn(): void
     {
         $controller = $this->createMigrationController();

@@ -82,17 +82,29 @@ class MigrateController extends \yii\console\controllers\MigrateController
      * but never for the root package, so a project's own `App\Migrations` had nothing to resolve against. The
      * alias is registered here, from the autoloader and only for the namespaces that lack one, rather than
      * configured: nothing outside a migration run asks for it, and `Db\MigrationHistory` — which reads the same
-     * namespaces from a web request — needs no alias at all.
+     * namespaces from a web request — needs no alias at all. A namespace nothing can resolve is dropped, as the
+     * history does: `App\Migrations` is registered for every installation, and a bundle installed on its own has
+     * no `App\` prefix at all, where Yii would throw on the missing alias.
      */
     protected function setMigrationNamespaceAliases(): void
     {
-        foreach ($this->migrationNamespaces as $namespace) {
-            $alias = '@' . str_replace('\\', '/', $namespace);
+        $this->migrationNamespaces = array_values(array_filter(
+            $this->migrationNamespaces,
+            static function (string $namespace): bool {
+                $alias = '@' . str_replace('\\', '/', $namespace);
 
-            if (Yii::getAlias($alias, false) === false && ($path = NamespaceHelper::getPath($namespace)) !== null) {
+                if (Yii::getAlias($alias, false) !== false) {
+                    return true;
+                }
+
+                if (($path = NamespaceHelper::getPath($namespace)) === null) {
+                    return false;
+                }
+
                 Yii::setAlias($alias, $path);
-            }
-        }
+                return true;
+            },
+        ));
     }
 
     #[Override]
