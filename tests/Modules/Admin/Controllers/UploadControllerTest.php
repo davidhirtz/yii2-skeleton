@@ -82,12 +82,12 @@ class UploadControllerTest extends TestCase
         $html = $this->post();
 
         self::assertStringContainsString('notes.txt', $html);
-        self::assertMatchesRegularExpression('/value="[\w-]{16}-notes\.txt"/', $html);
+        self::assertMatchesRegularExpression('/value="[\w-]{16}_notes\.txt"/', $html);
 
         $files = glob($this->upload->tempPath . '*') ?: [];
 
         self::assertCount(1, $files);
-        self::assertStringEndsWith('-notes.txt', $files[0]);
+        self::assertStringEndsWith('_notes.txt', $files[0]);
     }
 
     /**

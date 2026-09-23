@@ -215,10 +215,27 @@ class UploadCustomAttributeTest extends TestCase
         self::assertFileExists($this->upload->getFilePath($record, 'attachment', 'notes.txt'));
     }
 
+    /**
+     * Sixteen letters and hyphens followed by a hyphen is a plain slug, and it once read as a token whose file was
+     * gone — so the record never validated again, and a save would have cut the name down to what followed.
+     */
+    public function testAHyphenatedFilenameIsNotAToken(): void
+    {
+        $filename = 'verbos-espanoles-konjugationstabelle.pdf';
+
+        self::assertFalse($this->upload->isToken($filename));
+        self::assertSame($filename, $this->upload->getFilename($filename));
+
+        $record = $this->createRecord();
+        $record->attachment = $filename;
+
+        self::assertTrue($record->validate(), print_r($record->getErrors(), true));
+    }
+
     public function testATokenWhoseFileIsGoneIsReported(): void
     {
         $record = $this->createRecord();
-        $record->attachment = 'abcdefghijklmnop-notes.txt';
+        $record->attachment = 'abcdefghijklmnop_notes.txt';
 
         self::assertFalse($record->save());
         self::assertArrayHasKey('attachment', $record->getErrors());
@@ -325,7 +342,7 @@ class UploadCustomAttributeTest extends TestCase
      */
     private function createToken(string $filename, string $content = 'x'): string
     {
-        $token = 'abcdefghijklmnop-' . $filename;
+        $token = 'abcdefghijklmnop_' . $filename;
 
         FileHelper::createDirectory($this->upload->tempPath);
         file_put_contents($this->upload->tempPath . $token, $content);

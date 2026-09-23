@@ -31,7 +31,7 @@ class Upload extends Component
 
     public const string SESSION_KEY = 'upload.gc';
 
-    private const string TOKEN_PATTERN = '/^[\w-]{' . self::TOKEN_LENGTH . '}-[\w-]+\.[a-zA-Z0-9]+$/';
+    private const string TOKEN_PATTERN = '/^[\w-]{' . self::TOKEN_LENGTH . '}_[\w-]+\.[a-zA-Z0-9]+$/';
 
     /**
      * @var string where the attached files are kept, an alias or an absolute path. It must be readable by the web
@@ -198,7 +198,7 @@ class Upload extends Component
     public function createTempFile(UploadedFile $upload): ?string
     {
         $token = Yii::$app->getSecurity()->generateRandomString(self::TOKEN_LENGTH)
-            . '-' . $this->createFilename($upload);
+            . '_' . $this->createFilename($upload);
 
         if (!$this->isToken($token) || !FileHelper::createDirectory($this->tempPath)) {
             return null;
@@ -228,7 +228,9 @@ class Upload extends Component
     }
 
     /**
-     * A token and a stored filename share the attribute, so they have to be told apart by shape.
+     * A token and a stored filename share the attribute, so they have to be told apart by shape: the random part is
+     * joined by an underscore, which {@see static::createFilename()} never writes at that position — a hyphen would
+     * make a slugged name such as `verbos-espanoles-tabelle.pdf` read as a token.
      */
     public function isToken(mixed $token): bool
     {
