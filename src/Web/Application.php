@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Rbac\DbManager;
 use Override;
 use Yii;
 use yii\base\InvalidCallException;
+use yii\debug\Module as YiiDebugModule;
 use Hirtz\Skeleton\Modules\Debug\Module as DebugModule;
 use yii\symfonymailer\Mailer;
 use yii\web\Cookie;
@@ -111,12 +112,13 @@ class Application extends \yii\web\Application
 
     /**
      * Configures Yii2 debug module (which is currently only available for web applications) if `YII_DEBUG` is `true`.
+     * `yiisoft/yii2-debug` is a dev dependency, so a `--no-dev` install running with `YII_DEBUG` goes without it.
      *
      * @param array<string, mixed> $config
      */
     protected function setDebugModuleConfig(array &$config): void
     {
-        if (YII_DEBUG && !YII_ENV_TEST) {
+        if (YII_DEBUG && !YII_ENV_TEST && class_exists(YiiDebugModule::class)) {
             if (!in_array('debug', $config['bootstrap'] ?? [], true)) {
                 $config['bootstrap'][] = 'debug';
             }
