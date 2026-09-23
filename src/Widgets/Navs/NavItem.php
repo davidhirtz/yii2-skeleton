@@ -79,6 +79,19 @@ class NavItem extends Widget
         return $this;
     }
 
+    /**
+     * Marks the item active on `$route` as well, a regular expression matched against the current route and
+     * negated by a leading `!`. `$params` narrows it to requests carrying one of the given query parameters: a
+     * list names parameters that must be present, a map values they must equal.
+     *
+     * @param array<int|string, mixed> $params
+     */
+    public function addRoute(string $route, array $params = []): static
+    {
+        $this->routes[] = $params ? [$route, ...$params] : $route;
+        return $this;
+    }
+
     #[Override]
     protected function renderContent(): string|Stringable
     {

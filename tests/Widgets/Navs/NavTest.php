@@ -177,6 +177,41 @@ class NavTest extends TestCase
         self::assertStringContainsString('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/site/test"><span class="nav-link-label">Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span class="nav-link-label">Test</span></a></li></ul>', $content);
     }
 
+    public function testActiveItemWithAddedRoute(): void
+    {
+        $this->getWebRequest()->setQueryParams(['id' => 1]);
+
+        $content = Nav::make()
+            ->items([
+                NavItem::make()
+                    ->label('Home')
+                    ->url(['site/test'])
+                    ->addRoute('site/index', ['id' => '2']),
+                NavItem::make()
+                    ->label('Test')
+                    ->url(['site/test'])
+                    ->addRoute('site/other')
+                    ->addRoute('site/index', ['id']),
+            ])
+            ->render();
+
+        self::assertStringContainsString('<li class="nav-item"><a class="nav-link" href="/site/test"><span class="nav-link-label">Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span class="nav-link-label">Test</span></a></li>', $content);
+    }
+
+    public function testNamedItemIsReadByName(): void
+    {
+        $nav = Nav::make()->addItem(
+            home: NavItem::make()
+                ->label('Home')
+                ->url(['site/test']),
+        );
+
+        $nav->getItem('home')?->addRoute('site/index');
+
+        self::assertNull($nav->getItem('about'));
+        self::assertStringContainsString('<a class="nav-link active" href="/site/test">', $nav->render());
+    }
+
     public function testNamedItemIsReplacedAndRemoved(): void
     {
         $content = Nav::make()

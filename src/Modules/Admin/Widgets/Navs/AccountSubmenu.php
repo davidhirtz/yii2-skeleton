@@ -16,9 +16,9 @@ class AccountSubmenu extends Submenu
     protected function configure(): void
     {
         $this->addItem(
-            $this->getSettingsItem(),
-            $this->getLoginItem(),
-            $this->getSecurityItem(),
+            settings: $this->getSettingsItem(),
+            logins: $this->getLoginItem(),
+            security: $this->getSecurityItem(),
         );
 
         parent::configure();

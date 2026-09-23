@@ -1,5 +1,11 @@
 ## 3.0.0 (in development)
 
+
+- **`Widgets\Navs\NavItem::addRoute()` adds one route the item is active on**, with the query parameters that
+  narrow it as a second argument, and `ItemTrait::getItem()` reads a named item back. Together they are how a
+  project marks a submenu tab active on a route of its own: every shipped submenu names its items, so an
+  `EVENT_CONFIGURE` listener calls `$submenu->getItem('assets')?->addRoute('admin/project/…')`.
+
 - **An input group's addon cell hides itself once everything in it is hidden.** `.input-group-append` and
   `-prepend` draw the divider between the input and what sits beside it, so a cell whose only button was hidden
   — a custom attribute group's sort and remove buttons, while there is one row — left a 1px line standing at the

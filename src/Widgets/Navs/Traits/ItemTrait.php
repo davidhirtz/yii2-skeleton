@@ -38,6 +38,14 @@ trait ItemTrait
         return $this;
     }
 
+    /**
+     * @return T|null
+     */
+    public function getItem(string $name): ?Stringable
+    {
+        return $this->items[$name] ?? null;
+    }
+
     public function removeItem(string ...$names): static
     {
         foreach ($names as $name) {

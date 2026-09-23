@@ -23,10 +23,10 @@ class UserSubmenu extends Submenu
     protected function configure(): void
     {
         $this->addItem(
-            $this->getUserUpdateItem(),
-            $this->getUserPermissionItem(),
-            $this->getUserLoginItem(),
-            $this->getUserTrailItem(),
+            user: $this->getUserUpdateItem(),
+            permissions: $this->getUserPermissionItem(),
+            logins: $this->getUserLoginItem(),
+            trail: $this->getUserTrailItem(),
         );
 
         parent::configure();
