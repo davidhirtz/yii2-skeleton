@@ -70,7 +70,7 @@ class UserLoginGridView extends GridView
                 $username = Username::make()->user($login->user);
 
                 // An administrator is refused the owner's logins, as is anyone holding less than the account does.
-                return $login->user && $this->webuser->can(User::AUTH_USER, ['user' => $login->user])
+                return $this->webuser->can(User::AUTH_USER, ['user' => $login->user])
                     ? $username->href(['view', 'user' => $login->user_id])
                     : $username;
             });

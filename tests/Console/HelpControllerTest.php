@@ -74,14 +74,16 @@ class HelpControllerTest extends TestCase
             foreach ($help->getActions($controller) as $id) {
                 $action = $controller->createAction($id);
 
-                if (
-                    !$action instanceof InlineAction
-                    || !str_starts_with((new ReflectionMethod($controller, $action->actionMethod))->class, 'Hirtz\\')
-                ) {
+                if (!$action instanceof InlineAction) {
                     continue;
                 }
 
-                if (!str_ends_with($controller->getActionHelpSummary($action), '.')) {
+                $method = new ReflectionMethod($controller, $action->actionMethod);
+
+                // What `Controller::getActionHelpSummary()` reads, which Yii types too narrowly to be handed the action.
+                $summary = trim(preg_split('/\R/', (string)$method->getDocComment())[1] ?? '', "\t *");
+
+                if (str_starts_with($method->class, 'Hirtz\\') && !str_ends_with($summary, '.')) {
                     $missing[] = "$command/$id";
                 }
             }
