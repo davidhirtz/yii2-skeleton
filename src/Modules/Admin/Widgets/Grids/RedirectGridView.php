@@ -142,7 +142,12 @@ class RedirectGridView extends GridView
 
     protected function getDeleteSelectionLabel(): string
     {
-        return Yii::t('skeleton', 'REDIRECT_DELETE_SELECTED');
+        return Yii::t('skeleton', 'REDIRECT_BUTTON_DELETE_SELECTED');
+    }
+
+    protected function getDeleteSelectionMessage(): string
+    {
+        return Yii::t('skeleton', 'REDIRECT_CONFIRM_DELETE_SELECTED');
     }
 
     /**

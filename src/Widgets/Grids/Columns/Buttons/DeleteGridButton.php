@@ -21,6 +21,7 @@ class DeleteGridButton extends DeleteButton
         return Button::make()
             ->danger()
             ->ariaLabel($this->label)
+            ->tooltip($this->label)
             ->icon($this->icon)
             ->modal($this->getModal());
     }

@@ -96,7 +96,9 @@ class LogFileGridView extends GridView
                 ->url($this->getLogFileUrl($file, raw: true))
                 ->icon('file'),
             DeleteGridButton::make()
-                ->url($this->getLogFileUrl($file, 'delete'))
+                ->label(Yii::t('skeleton', 'LOG_FILE_BUTTON_DELETE'))
+                ->title(Yii::t('skeleton', 'LOG_FILE_CONFIRM_DELETE'))
+                ->url($this->getLogFileUrl($file, 'delete')),
         ];
     }
 

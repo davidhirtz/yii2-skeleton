@@ -25,6 +25,7 @@ class UserDeleteButton extends DeleteButton
     #[Override]
     protected function configure(): void
     {
+        $this->label ??= Yii::t('skeleton', 'USER_BUTTON_DELETE');
         $this->message ??= Yii::t('skeleton', 'USER_DELETE_TYPE_USER');
         $this->property ??= 'email';
         $this->title ??= Yii::t('skeleton', 'USER_CONFIRM_DELETE');

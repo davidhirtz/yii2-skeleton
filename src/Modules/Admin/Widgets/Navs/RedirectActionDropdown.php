@@ -36,7 +36,8 @@ class RedirectActionDropdown extends ActionDropdown
     protected function getDeleteButton(): ?Stringable
     {
         return DeleteButton::make()
-            ->label(Yii::t('skeleton', 'REDIRECT_ACTION_DROPDOWN_DELETE_REDIRECT'))
+            ->label(Yii::t('skeleton', 'REDIRECT_BUTTON_DELETE'))
+            ->title(Yii::t('skeleton', 'REDIRECT_CONFIRM_DELETE'))
             ->model($this->model);
     }
 }
