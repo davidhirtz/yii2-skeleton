@@ -158,6 +158,7 @@ class Connection extends \yii\db\Connection
     /**
      * The server's own version string (`11.4.2-MariaDB`, `8.0.36`), `null` where the driver does not answer.
      */
+    #[Override]
     public function getServerVersion(): ?string
     {
         try {

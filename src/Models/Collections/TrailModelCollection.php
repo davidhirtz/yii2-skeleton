@@ -81,21 +81,14 @@ class TrailModelCollection
                 return self::getModelByClassAndId($relation->modelClass, $value);
             }
         }
-
-        switch (self::getDefaultAttributeValues($model)[$attribute] ?? null) {
-            case self::VALUE_TYPE_BOOLEAN:
-                return $value ? Yii::t('yii', 'Yes') : Yii::t('yii', 'No');
-
-            case self::VALUE_TYPE_DATETIME:
-                return is_array($value) && isset($value['date'])
-                    ? Yii::$app->getFormatter()->asDatetime(new DateTime($value['date'], new DateTimeZone($value['timezone'] ?? Yii::$app->timeZone)), 'medium')
-                    : $value;
-
-            case self::VALUE_TYPE_RANGE:
-                return self::formatRangeValue($model, $attribute, $value);
-        }
-
-        return is_array($value) ? print_r($value, true) : (string)$value;
+        return match (self::getDefaultAttributeValues($model)[$attribute] ?? null) {
+            self::VALUE_TYPE_BOOLEAN => $value ? Yii::t('yii', 'Yes') : Yii::t('yii', 'No'),
+            self::VALUE_TYPE_DATETIME => is_array($value) && isset($value['date'])
+                ? Yii::$app->getFormatter()->asDatetime(new DateTime($value['date'], new DateTimeZone($value['timezone'] ?? Yii::$app->timeZone)), 'medium')
+                : $value,
+            self::VALUE_TYPE_RANGE => self::formatRangeValue($model, $attribute, $value),
+            default => is_array($value) ? print_r($value, true) : (string)$value,
+        };
     }
 
     /**

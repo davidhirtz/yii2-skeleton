@@ -27,19 +27,13 @@ class DuplicateActiveRecord
     public ActiveRecord $duplicate;
 
     /**
-     * @var array<string, mixed> the attributes the caller assigned, which no default may overwrite
-     */
-    protected array $attributes;
-
-    /**
      * @param T $model
-     * @param array<string, mixed> $attributes
+     * @param array<string, mixed> $attributes the attributes the caller assigned, which no default may overwrite
      */
-    public function __construct(protected ActiveRecord $model, array $attributes = [])
+    public function __construct(protected ActiveRecord $model, protected array $attributes = [])
     {
-        $this->attributes = $attributes;
         $this->duplicate = $this->model::create();
-        $this->duplicate->setAttributes([...$this->getSafeAttributes(), ...$attributes], false);
+        $this->duplicate->setAttributes([...$this->getSafeAttributes(), ...$this->attributes], false);
     }
 
     public function duplicateActiveRecord(): bool
