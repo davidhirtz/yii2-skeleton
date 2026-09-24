@@ -6,7 +6,7 @@ project (see *Data and schema*), and the bundle itself carries one baseline migr
 
 ## Requirements
 
-- PHP `^8.3` with `ext-imagick`, `ext-intl` (new), `ext-json`, `ext-openssl`, `ext-simplexml` and `ext-xmlwriter`.
+- PHP `^8.3` with `ext-intl` (new), `ext-json`, `ext-openssl`, `ext-simplexml` and `ext-xmlwriter`.
 - MySQL or MariaDB with InnoDB fulltext support; the `search` table carries two `FULLTEXT` indexes.
 - Every sibling bundle at `^3.0`. All bundles renamed their namespace at once, so a project upgrades them together.
 - `davidhirtz/yii2-upgrade` as a `require-dev` dependency for the length of the upgrade.

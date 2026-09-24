@@ -4,9 +4,9 @@ The core of a Yii 2 based admin platform: two application classes, a database la
 `Db\ActiveQuery`, migrations with backups), users with roles, two-factor authentication and rate-limited login, an admin
 module with a navbar, aside, grids, forms and a fulltext search, an HTML and widget layer built on htmx 4, translated
 and custom attributes, redirects, a trail, a sitemap and a console. Every other `davidhirtz/yii2-*` bundle requires it.
-It depends on `yiisoft/yii2`, `yiisoft/yii2-imagine`, `yiisoft/yii2-symfonymailer`, `sentry/sentry`,
-`robthree/twofactorauth` and `tinymce/tinymce`, and needs PHP 8.3 with `imagick`, `intl`, `openssl`, `simplexml` and
-`xmlwriter`.
+It depends on `yiisoft/yii2`, `yiisoft/yii2-symfonymailer`, `sentry/sentry`, `robthree/twofactorauth` and
+`tinymce/tinymce`, and needs PHP 8.3 with `intl`, `openssl`, `simplexml` and `xmlwriter`. Image processing lives in
+`davidhirtz/yii2-media`.
 
 ## Installation
 
