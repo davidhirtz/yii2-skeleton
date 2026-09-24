@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
+use Hirtz\Skeleton\Db\Commands\RenumberPositions;
 use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
@@ -12,7 +13,6 @@ use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use ReflectionClass;
 use Yii;
 use yii\base\Model;
-use yii\db\ActiveQuery;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
 
@@ -69,29 +69,24 @@ trait AdminModelTrait
      * Read through `getAttribute()` rather than the magic property, which is undeclared on a model without the
      * column.
      *
-     * Given its siblings, the record reads as "Section 2/4": the rank is counted rather than read off `position`,
-     * which a delete leaves with a gap.
+     * Given the parent's count of its children, the record reads as "Section 2/4". That holds because positions
+     * stay `1..n` ({@see RenumberPositions}); a position past the total falls back to "Section #5".
      *
      * @param string|null $type a noun to use in place of {@see static::getAdminType()}, for a record whose type
      *     name repeats what the subtitle already says before it
-     * @param ActiveQuery<covariant \yii\db\ActiveRecord>|null $siblings the record and its siblings
+     * @param int|null $total the parent's count of this record and its siblings
      */
-    protected function getAdminPositionLabel(?string $type = null, ?ActiveQuery $siblings = null): string
+    protected function getAdminPositionLabel(?string $type = null, ?int $total = null): string
     {
         $type ??= $this->getAdminType();
         $position = $this instanceof ActiveRecordInterface ? $this->getAttribute('position') : null;
 
-        if ($siblings && is_numeric($position)) {
-            $total = (int)$siblings->count();
-            $rank = (int)(clone $siblings)->andWhere(['<=', 'position', $position])->count();
-
-            if ($rank > 0 && $rank <= $total) {
-                return Yii::t('skeleton', 'COMMON_MODEL_POSITION_TOTAL', [
-                    'model' => $type,
-                    'position' => $rank,
-                    'total' => $total,
-                ]);
-            }
+        if ($total && is_numeric($position) && $position > 0 && $position <= $total) {
+            return Yii::t('skeleton', 'COMMON_MODEL_POSITION_TOTAL', [
+                'model' => $type,
+                'position' => (int)$position,
+                'total' => $total,
+            ]);
         }
 
         $position ??= $this->getAdminId();

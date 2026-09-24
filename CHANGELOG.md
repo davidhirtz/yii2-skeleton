@@ -1,3 +1,8 @@
+## Unreleased
+
+- Added `Db\Commands\RenumberPositions`, which renumbers each parent's rows `1..n` in one statement
+- Changed `AdminModelTrait::getAdminPositionLabel()` to take the parent's count as `$total` instead of querying the siblings
+
 ## 3.1.0 (September 24, 2026)
 
 - Fixed `TranslationTrait::setAttribute()` on a record whose translations were not loaded yet
