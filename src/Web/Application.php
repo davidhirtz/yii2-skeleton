@@ -64,12 +64,23 @@ class Application extends \yii\web\Application
     #[Override]
     public function preInit(&$config): void
     {
-        $config['basePath'] ??= realpath(dirname((string)$_SERVER['SCRIPT_FILENAME'], 2));
+        $config['basePath'] ??= realpath(dirname($this->getEntryScript(), 2));
 
         $this->preInitInternal($config);
         $this->setDebugModuleConfig($config);
 
         parent::preInit($config);
+    }
+
+    /**
+     * The entry script a base path is derived from when the configuration names none. PHP's built-in server reports
+     * the requested file as `SCRIPT_FILENAME` whenever it exists below the document root, so anything but a PHP file
+     * there means the script PHP started, the router, is the entry script.
+     */
+    protected function getEntryScript(): string
+    {
+        $script = (string)($_SERVER['SCRIPT_FILENAME'] ?? '');
+        return str_ends_with($script, '.php') ? $script : (get_included_files()[0] ?? $script);
     }
 
     #[Override]

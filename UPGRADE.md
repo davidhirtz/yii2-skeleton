@@ -187,6 +187,18 @@ from the old English text; grep the new file for the wording. Shapes: `{DOMAIN}_
 
 ## Configuration
 
+The entry scripts name the base path, which the application would otherwise take from the request (`web/index.php`)
+or the working directory (`yii`) — PHP's built-in server reports a requested static file as the script, and a cron job
+runs from anywhere. A `basePath` in the config still wins:
+
+```php
+// web/index.php
+(new Application(['basePath' => dirname(__DIR__), ...require __DIR__ . "/../config/$env.php"]))->run();
+
+// yii
+exit((int)(new Application(['basePath' => __DIR__, ...require __DIR__ . "/config/$env.php"]))->run());
+```
+
 `config/params.php`:
 
 ```php
