@@ -1,4 +1,4 @@
-## Unreleased
+## 3.1.1 (September 24, 2026)
 
 - Added `Db\Commands\RenumberPositions`, which renumbers each parent's rows `1..n` in one statement
 - Changed `AdminModelTrait::getAdminPositionLabel()` to take the parent's count as `$total` instead of querying the siblings
