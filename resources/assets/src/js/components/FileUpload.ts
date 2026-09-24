@@ -20,7 +20,6 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
             return;
         }
 
-        const $target = (this.dataset.target ? document.querySelector(this.dataset.target) : null) || document.body;
         const $btn = this.querySelector('button') as HTMLButtonElement;
         const chunkSize = this.dataset.chunkSize ? parseInt(this.dataset.chunkSize) : 1024 * 1024 * 2;
 
@@ -47,7 +46,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
             const $progress = startBusy(totalSize);
 
             try {
-                await this.upload(files, $input, $target, chunkSize, $progress);
+                await this.upload(files, $input, chunkSize, $progress);
             } finally {
                 stopBusy();
             }
@@ -56,7 +55,13 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
         $btn.onclick = () => $input.click();
     }
 
-    async upload(files: FileList, $input: HTMLInputElement, $target: Element, chunkSize: number, $progress: HTMLProgressElement) {
+    // Looked up for every swap: the swap replaces the target, and a button outside it — the header, a dropdown — would
+    // otherwise keep swapping into the detached element, so only the first upload showed up in the grid.
+    getTarget(): Element {
+        return (this.dataset.target ? document.querySelector(this.dataset.target) : null) || document.body;
+    }
+
+    async upload(files: FileList, $input: HTMLInputElement, chunkSize: number, $progress: HTMLProgressElement) {
         for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
             const file = files[fileIndex];
             const totalChunks = Math.ceil(file.size / chunkSize);
@@ -89,6 +94,8 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                     .then(response => {
                         if (response.status === 200) {
                             response.text().then(html => {
+                                const $target = this.getTarget();
+
                                 void htmx.swap({
                                     text: html,
                                     target: $target,
