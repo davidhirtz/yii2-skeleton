@@ -3,6 +3,7 @@
 - Added `Mail\Mailer::getTransportError()`: the system page and `email/test` name a missing mailer bridge or HTTP client
 - Fixed an error response to an admin request emptying the page behind its modal
 - Removed `FileHelper::getExtensionFromUrl`
+- Replaced `FileHelper::createConfigFile()` with `Helpers\ConfigFile::write()`, which sorts the keys
 
 ## 3.2.0 (September 24, 2026)
 

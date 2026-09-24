@@ -10,35 +10,23 @@ use Yii;
 
 class FileHelperTest extends TestCase
 {
-    public function testConfigFile(): void
+    public function testGenerateRandomFilenameAndRename(): void
     {
         $folder = Yii::getAlias('@runtime/files');
+        FileHelper::createDirectory($folder);
+
         $length = 20;
-        $filename = FileHelper::generateRandomFilename($folder, 'php', $length);
+        $path = FileHelper::generateRandomFilename($folder, 'php', $length);
 
-        self::assertStringEndsWith('.php', $filename);
-        self::assertEquals($length + 4, strlen(basename($filename)));
+        self::assertStringEndsWith('.php', $path);
+        self::assertEquals($length + 4, strlen(basename($path)));
 
-        $config = [
-            'string' => 'this is a string',
-            'integer' => 123,
-            'float' => 123.456,
-        ];
+        file_put_contents($path, '');
 
-        $result = FileHelper::createConfigFile("$folder/$filename", $config, 'Test config file');
-        self::assertIsInt($result);
-
-        $path = Yii::getAlias("$folder/$filename");
-        self::assertFileExists($path);
-
-        $loadedConfig = require($path);
-        self::assertEquals($config, $loadedConfig);
-
-        $extension = pathinfo($filename, PATHINFO_EXTENSION);
-
-        $newPath = "$folder/renamed.$extension";
+        $newPath = "$folder/renamed.php";
         FileHelper::rename($path, $newPath);
         self::assertFileExists($newPath);
+        self::assertFileDoesNotExist($path);
 
         FileHelper::removeDirectory($folder);
         self::assertFileDoesNotExist($folder);

@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Helpers;
 use Override;
 use Yii;
 use yii\helpers\BaseFileHelper;
-use yii\helpers\VarDumper;
 
 class FileHelper extends BaseFileHelper
 {
@@ -85,38 +84,6 @@ class FileHelper extends BaseFileHelper
     {
         $dir = Yii::getAlias($dir);
         return array_values(parent::findDirectories($dir, $options));
-    }
-
-    /**
-     * Creates a config PHP file from the config array.
-     *
-     * @param array<string, mixed> $config
-     * @param list<string>|string|null $phpdoc
-     */
-    public static function createConfigFile(string $file, array $config = [], array|string|null $phpdoc = null): false|int
-    {
-        $file = Yii::getAlias($file);
-
-        if (!static::createDirectory(dirname((string)$file))) {
-            return false;
-        }
-
-        $export = VarDumper::export($config);
-        $date = date('c');
-
-        $lines = is_string($phpdoc) ? preg_split("/\r\n|\n|\r/", $phpdoc) ?: [] : $phpdoc ?? [];
-        $phpdoc = $lines ? "\n * " . implode("\n * ", $lines) . "\n *" : '';
-
-        return file_put_contents(
-            $file,
-            <<<EOL
-<?php
-/**$phpdoc
- * @version $date
- */
-return $export;
-EOL
-        );
     }
 
     public static function generateRandomFilename(string $path, string $extension, int $length = 8): string

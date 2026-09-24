@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Console\Controllers\Traits;
 
-use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Helpers\ConfigFile;
 use Yii;
 use yii\helpers\Console;
 
@@ -47,7 +47,7 @@ trait ConfigTrait
      */
     protected function setConfig(string $file, array $config, ?string $message = null): void
     {
-        if (!FileHelper::createConfigFile($file, $config)) {
+        if (!ConfigFile::write($file, $config)) {
             $this->stderr("Unable to create config file." . PHP_EOL, Console::FG_RED);
             return;
         }
