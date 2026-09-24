@@ -1,4 +1,4 @@
-## Unreleased
+## 3.2.0 (September 24, 2026)
 
 - Replaced `yiisoft/yii2-symfonymailer` with `symfony/mailer` directly:
   `mailerDsn` resolves against every installed Symfony mailer bridge (`resend+api://` with `symfony/resend-mailer`);
