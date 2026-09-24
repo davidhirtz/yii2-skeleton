@@ -69,6 +69,11 @@
     background: var(--body-bg);
     border-left: 1px solid var(--border-color);
     z-index: 1;
+
+    // TinyMCE's fullscreen editor is fixed inside `.main`, whose stacking context would keep it below the navbar.
+    .tox-fullscreen & {
+      z-index: auto;
+    }
   }
 
   [data-aside-collapsed]:has(.aside) {
