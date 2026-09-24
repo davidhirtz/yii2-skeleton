@@ -12,7 +12,6 @@
   ],
   "require": {
     "php": "^8.3",
-    "ext-imagick": "*",
     "ext-intl": "*",
     "ext-json": "*",
     "ext-openssl": "*",
@@ -27,7 +26,6 @@
     "seld/cli-prompt": "^1.0",
     "symfony/polyfill-mbstring": "^1.31",
     "yiisoft/yii2": "^2.0",
-    "yiisoft/yii2-imagine": "^2.3",
     "yiisoft/yii2-symfonymailer": "^4.0"
   },
   "require-dev": {
