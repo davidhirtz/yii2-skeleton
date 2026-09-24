@@ -237,7 +237,7 @@ class ModelHeaderTest extends TestCase
     private function getSubtitleItems(string $html): array
     {
         preg_match_all(
-            '~<(?:a|span)[^>]*class="header-subtitle-item"[^>]*>[^<]*</(?:a|span)>~',
+            '~<span[^>]*class="header-subtitle-item"[^>]*>(?:<a[^>]*>[^<]*</a>|[^<]*)</span>~',
             $html,
             $matches,
         );
@@ -245,7 +245,7 @@ class ModelHeaderTest extends TestCase
         return array_map(static function (string $tag): array {
             preg_match('~view-transition-name: ([^;"]+)~', $tag, $name);
             preg_match('~href="([^"]*)"~', $tag, $href);
-            preg_match('~>([^<]*)<~', $tag, $text);
+            preg_match('~([^<>]*)</(?:a|span)>~', $tag, $text);
 
             return [$tag, $name[1] ?? '', $href[1] ?? '', $text[1] ?? ''];
         }, $matches[0]);

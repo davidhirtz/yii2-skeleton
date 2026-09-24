@@ -7,6 +7,7 @@
 - Changed `TypeSelectField` to render a hidden input when there is only one type
 - Added `TypeAttributeTrait::getDefaultType()`
 - Added `getDefaultAdminIcon()` as a fallback for `AdminModelTrait::getAdminIcon()`
+- Changed search results to be named like the page header, replacing `SearchableTrait::getSearchResultTitle()`
 
 ## 3.2.0 (September 24, 2026)
 

@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Navs;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\H2;
 use Hirtz\Skeleton\Html\Span;
+use Hirtz\Skeleton\Models\AdminModelChain;
 use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
@@ -37,7 +38,7 @@ class ModelHeader extends Header
     protected array $subtitleItems = [];
 
     /**
-     * None of the shipped models can form a cycle, but `getAdminParent()` is a project extension point.
+     * @see AdminModelChain::fromModel()
      */
     protected int $maxChainCount = 16;
 
@@ -66,25 +67,14 @@ class ModelHeader extends Header
      */
     protected function getModelChain(AdminModelInterface $model): array
     {
-        $chain = [];
-
-        while ($model->getAdminSubtitle() !== null && count($chain) < $this->maxChainCount) {
-            $chain[] = $model;
-            $parent = $model->getAdminParent();
-
-            if (!$parent) {
-                break;
-            }
-
-            $model = $parent;
-        }
-
-        return [$model, array_reverse($chain)];
+        $chain = AdminModelChain::fromModel($model, $this->maxChainCount);
+        return [$chain->base, $chain->models];
     }
 
     /**
      * The subtitle is markup rather than a joined string: each record links to its own page where it has one,
-     * and the separator between them is the `.header-subtitle-item` rule rather than a character.
+     * and the separator between them is the `.header-subtitle-item` rule rather than a character. The item wraps
+     * the link, so the separator it draws is not part of what can be clicked.
      *
      * @param list<AdminModelInterface> $chain
      * @return list<Stringable>
@@ -102,10 +92,13 @@ class ModelHeader extends Header
 
             $route = $model->getAdminRoute();
 
-            $items[] = ($route ? A::make()->href($route) : Span::make())
+            $item = Span::make()
                 ->class('header-subtitle-item')
-                ->addStyle(['view-transition-name' => $this->getSubtitleItemName($model, $index)])
-                ->text($subtitle);
+                ->addStyle(['view-transition-name' => $this->getSubtitleItemName($model, $index)]);
+
+            $items[] = $route
+                ? $item->content(A::make()->href($route)->text($subtitle))
+                : $item->text($subtitle);
         }
 
         return $items;

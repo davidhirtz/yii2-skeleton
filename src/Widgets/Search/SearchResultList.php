@@ -80,9 +80,7 @@ class SearchResultList extends Widget
 
         $text = Div::make()
             ->class('search-result-text')
-            ->content(Span::make()
-                ->class('search-result-title')
-                ->content($this->markKeywords($result->title)));
+            ->content($this->getHeading($result));
 
         if ($result->description) {
             $text->addContent(Span::make()
@@ -95,6 +93,28 @@ class SearchResultList extends Widget
         return Li::make()
             ->class('search-result-item')
             ->content($link);
+    }
+
+    /**
+     * The subtitles read like the page header's, separated by its bar and dots rather than by a character.
+     */
+    protected function getHeading(SearchResult $result): Stringable
+    {
+        $title = Span::make()
+            ->class('search-result-title')
+            ->content($this->markKeywords($result->title));
+
+        if (!$result->subtitles) {
+            return $title;
+        }
+
+        $subtitles = array_map(fn (string $subtitle): Stringable => Span::make()
+            ->class('search-result-subtitle')
+            ->text($subtitle), $result->subtitles);
+
+        return Span::make()
+            ->class('search-result-heading')
+            ->content($title, ...$subtitles);
     }
 
     protected function getEmptyItem(): Stringable

@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Models\Traits;
 use davidhirtz\yii2\datetime\DateTime;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Models\AdminModelChain;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
@@ -105,35 +106,32 @@ trait SearchableTrait
         return true;
     }
 
+    /**
+     * A record edited through another is named the way its page header names it, "About — Section 2/5": its own
+     * name would say nothing about where it is, and a section's is usually empty.
+     */
     protected function createSearchResult(): SearchResult
     {
+        $chain = AdminModelChain::fromModel($this);
+        $title = $chain->models ? $chain->base->getAdminName() : $this->getSearchTitle();
         $updated = $this->getAttribute('updated_at') ?? $this->getAttribute('created_at');
 
         return new SearchResult(
-            title: $this->getSearchResultTitle(),
+            title: $title,
             route: $this->getAdminRoute(),
-            description: $this->getSearchDescription(),
+            description: $this->getSearchDescription($title),
             icon: $this->getAdminIcon(),
             updated: $updated instanceof DateTime ? $updated : null,
+            subtitles: $chain->subtitles,
         );
-    }
-
-    /**
-     * What the hit shows, as opposed to what is indexed: a child record names its parent here without the parent's
-     * name outranking it in the index.
-     */
-    protected function getSearchResultTitle(): string
-    {
-        return $this->getSearchTitle();
     }
 
     /**
      * The title is usually the first searchable attribute, and repeating it under itself says nothing.
      */
-    protected function getSearchDescription(): ?string
+    protected function getSearchDescription(string $title): ?string
     {
         $content = $this->getSearchContent(Yii::$app->language);
-        $title = $this->getSearchTitle();
 
         if ($title !== '' && str_starts_with($content, $title)) {
             $content = ltrim(substr($content, strlen($title)));

@@ -131,6 +131,35 @@
   white-space: nowrap;
 }
 
+.search-result-heading {
+  align-items: center;
+  display: flex;
+  gap: .5rem;
+  min-width: 0;
+}
+
+// The page header's bar and dots, the bar a little shorter to suit the smaller type.
+.search-result-subtitle {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: .5rem;
+  white-space: nowrap;
+
+  &::before {
+    background-color: var(--link-hover-color);
+    border-radius: .25rem;
+    content: "";
+    flex-shrink: 0;
+    height: .25rem;
+    width: .25rem;
+  }
+
+  .search-result-title + &::before {
+    width: .75rem;
+  }
+}
+
 .search-result-description {
   color: var(--muted-color);
   font-size: .8125rem;
