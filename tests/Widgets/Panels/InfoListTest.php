@@ -46,7 +46,10 @@ class InfoListTest extends TestCase
             ->render();
 
         self::assertSame(1, substr_count($html, 'class="form-action"'));
-        self::assertStringContainsString('<div class="form-action"><div>cache</div><button></button></div>', $html);
+        self::assertStringContainsString(
+            '<div class="form-action"><div class="form-action-content">cache</div><button></button></div>',
+            $html,
+        );
     }
 
     public function testTheValueHintIsRenderedBelowTheValue(): void
@@ -55,8 +58,10 @@ class InfoListTest extends TestCase
             ->addRow('Cache', TestInfoList::make()->value('cache', 'yii\caching\ArrayCache'))
             ->render();
 
-        self::assertStringContainsString('<div>cache</div>', $html);
-        self::assertStringContainsString('<div class="form-hint">yii\caching\ArrayCache</div>', $html);
+        self::assertStringContainsString(
+            '<div class="form-content"><div>cache</div><div class="form-hint">yii\caching\ArrayCache</div></div>',
+            $html,
+        );
     }
 
     public function testAClosureCanAddRowsAfterTheDefaults(): void

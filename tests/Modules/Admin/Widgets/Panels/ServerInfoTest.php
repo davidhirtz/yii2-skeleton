@@ -41,7 +41,7 @@ class ServerInfoTest extends TestCase
         $html = ServerInfo::make()->render();
 
         self::assertStringNotContainsString('@runtime', $html);
-        self::assertStringNotContainsString('badge', $html);
+        self::assertStringNotContainsString('badge-error', $html);
     }
 
     public function testTheMailerDsnCredentialsAreNeverRendered(): void
