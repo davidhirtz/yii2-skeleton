@@ -16,6 +16,7 @@ use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\FileUploadButton;
 use Hirtz\Skeleton\Widgets\Forms\InputGroup;
+use Hirtz\Skeleton\Widgets\Icon;
 use Override;
 use Stringable;
 use Yii;
@@ -115,13 +116,28 @@ class UploadField extends Field
             ->replace($this->getUrl(remove: true), '#' . $this->getContainerId());
     }
 
+    /**
+     * An empty field reads as the filled one does, the text input it stands in for with the action appended: the
+     * whole group is the one button that opens the picker, so it is one tab stop and a click anywhere on it counts.
+     */
     protected function getUploadButton(): string|Stringable
     {
         return FileUploadButton::make()
-            ->label(Yii::t('skeleton', 'UPLOAD_BUTTON_SELECT'))
-            ->icon('upload')
             ->accept($this->definition?->getAccept())
-            ->button(fn (Button $button): Button => $button->class('btn btn-secondary'))
+            ->button(fn (Button $button): Button => $button
+                ->class('input-group upload-select')
+                ->type('button')
+                ->icon(null)
+                ->content(
+                    Span::make()
+                        ->addClass('input upload-name upload-placeholder')
+                        ->text(Yii::t('skeleton', 'UPLOAD_PLACEHOLDER')),
+                    Span::make()
+                        ->addClass('input-group-append')
+                        ->content(Span::make()
+                            ->addClass('btn')
+                            ->content(Icon::make()->name('upload'))),
+                ))
             ->name('upload')
             ->target('#' . $this->getContainerId())
             ->url($this->getUrl());

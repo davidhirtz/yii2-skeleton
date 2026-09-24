@@ -223,6 +223,12 @@ class UploadControllerTest extends TestCase
 
         self::assertStringContainsString('file-upload', $html);
         self::assertStringNotContainsString('notes.txt', $html);
+
+        // the empty field reads as the filled one: one button laid out as an input group, the icon appended
+        self::assertMatchesRegularExpression('#<button[^>]+class="input-group upload-select"[^>]*type="button"|<button[^>]+type="button"[^>]*class="input-group upload-select"#', $html);
+        self::assertStringContainsString(Yii::t('skeleton', 'UPLOAD_PLACEHOLDER'), $html);
+        self::assertStringContainsString('input-group-append', $html);
+        self::assertStringNotContainsString('btn-secondary', $html);
     }
 
     /**
