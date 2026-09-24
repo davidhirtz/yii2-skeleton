@@ -7,10 +7,8 @@ namespace Hirtz\Skeleton\Widgets\Navs;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
-use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Navs\Traits\ItemTrait;
 use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
-use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -89,11 +87,7 @@ class Submenu extends Widget
             ->url($this->backUrl)
             ->link(fn (A $link): A => $link
                 ->addClass('nav-back-link')
-                ->addAttributes([
-                    'aria-label' => $label,
-                    'data-tooltip' => '',
-                    'title' => $label,
-                ]));
+                ->attribute('aria-label', $label));
     }
 
     /**
