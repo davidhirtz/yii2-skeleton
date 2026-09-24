@@ -118,14 +118,16 @@
   --alert-danger-link-hover-color: var(--color-red-600);
 
   // Badge
-  --badge-color: var(--color-white);
-  --badge-bg: var(--color-slate-400);
   --badge-active-bg: var(--badge-bg);
   --badge-active-color: var(--color-white);
-  --badge-info-bg: var(--color-blue-50);
-  --badge-info-color: var(--color-blue-900);
+  --badge-bg: var(--color-slate-400);
+  --badge-color: var(--color-white);
   --badge-error-bg: var(--color-red-50);
   --badge-error-color: var(--color-red-900);
+  --badge-info-bg: var(--color-blue-50);
+  --badge-info-color: var(--color-blue-900);
+  --badge-success-bg: var(--color-green-50);
+  --badge-success-color: var(--color-green-900);
   --badge-warning-bg: var(--color-yellow-100);
   --badge-warning-color: var(--color-black);
 
