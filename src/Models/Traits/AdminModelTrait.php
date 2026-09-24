@@ -63,19 +63,6 @@ trait AdminModelTrait
         return null;
     }
 
-    /**
-     * The shape a subordinate record answers {@see AdminModelInterface::getAdminSubtitle()} with: its noun and
-     * its position among its siblings, falling back to the primary key for a model that has no `position`.
-     * Read through `getAttribute()` rather than the magic property, which is undeclared on a model without the
-     * column.
-     *
-     * Given the parent's count of its children, the record reads as "Section 2/4". That holds because positions
-     * stay `1..n` ({@see RenumberPositions}); a position past the total falls back to "Section #5".
-     *
-     * @param string|null $type a noun to use in place of {@see static::getAdminType()}, for a record whose type
-     *     name repeats what the subtitle already says before it
-     * @param int|null $total the parent's count of this record and its siblings
-     */
     protected function getAdminPositionLabel(?string $type = null, ?int $total = null): string
     {
         $type ??= $this->getAdminType();
@@ -110,9 +97,6 @@ trait AdminModelTrait
         return $this instanceof StatusAttributeInterface ? ($this->getStatusIcon() ?: null) : null;
     }
 
-    /**
-     * Read through the magic getter, so a translated or custom `name` counts as one.
-     */
     protected function getAdminNameAttributeValue(): string
     {
         if (!in_array('name', $this->attributes(), true)) {
@@ -128,9 +112,6 @@ trait AdminModelTrait
         return is_scalar($value) ? trim((string)$value) : '';
     }
 
-    /**
-     * A composite key has no place in `COMMON_MODEL_ID`, so such a model falls back to its type.
-     */
     protected function getAdminId(): int|string|null
     {
         if (!$this instanceof ActiveRecordInterface) {
