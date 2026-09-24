@@ -64,11 +64,33 @@ class ConfigFileTest extends TestCase
         self::assertSame(['to' => 'b', 'from' => 'a'], $config['mailer']);
     }
 
+    public function testAnUnchangedConfigIsNotRewritten(): void
+    {
+        $file = "$this->folder/params.php";
+        ConfigFile::write($file, ['key' => 'value']);
+
+        $contents = (string)preg_replace('/@version .*/', '@version 2000-01-01T00:00:00+00:00', (string)file_get_contents($file));
+        file_put_contents($file, $contents);
+
+        self::assertTrue(ConfigFile::write($file, ['key' => 'value']));
+        self::assertSame($contents, file_get_contents($file));
+
+        self::assertTrue(ConfigFile::write($file, ['key' => 'changed']));
+        self::assertStringNotContainsString('2000-01-01', (string)file_get_contents($file));
+        self::assertSame(['key' => 'changed'], require $file);
+    }
+
+    public function testWriteLeavesNoTemporaryFile(): void
+    {
+        ConfigFile::write("$this->folder/params.php", ['key' => 'value']);
+        self::assertSame(['params.php'], array_values(array_diff((array)scandir($this->folder), ['.', '..'])));
+    }
+
     public function testRenderWritesThePhpdocAndVersion(): void
     {
         $contents = ConfigFile::render(['key' => 'value'], "First line\nSecond line");
 
-        self::assertStringStartsWith("<?php\n/**\n * First line\n * Second line\n *\n * @version ", $contents);
+        self::assertStringStartsWith("<?php\n\ndeclare(strict_types=1);\n\n/**\n * First line\n * Second line\n *\n * @version ", $contents);
         self::assertStringEndsWith("return [\n    'key' => 'value',\n];", $contents);
 
         $contents = ConfigFile::render([], ['Only line']);
