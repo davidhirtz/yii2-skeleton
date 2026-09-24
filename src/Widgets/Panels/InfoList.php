@@ -59,11 +59,11 @@ class InfoList extends Widget
             return $value;
         }
 
-        return Div::make()
-            ->addContent(Div::make()->addText($value))
-            ->addContent(Div::make()
+        // Siblings rather than wrapped, so the grid gap of `.form-content` (or `.form-action-content`) spaces them.
+        return Div::make()->addText($value)
+            . Div::make()
                 ->class('form-hint')
-                ->addText($hint));
+                ->addText($hint);
     }
 
     #[Override]
@@ -95,7 +95,9 @@ class InfoList extends Widget
             ? $value
             : Div::make()
                 ->class('form-action')
-                ->addContent(Div::make()->content($value))
+                ->addContent(Div::make()
+                    ->class('form-action-content')
+                    ->content($value))
                 ->addContent($action);
     }
 }
