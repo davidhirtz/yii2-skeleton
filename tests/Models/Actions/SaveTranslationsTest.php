@@ -75,11 +75,30 @@ class SaveTranslationsTest extends TestCase
         $model = $this->createRecord();
         $loaded = TranslatedActiveRecord::findOne($model->id);
 
-        // `setAttribute()` bypasses the lazy load, so the old attribute is unknown and only the stored record knows.
+        // `setAttribute()` loads the translations first, like the magic setter, so the old attribute is known.
         $loaded->setAttribute('name_de', 'Name DE Updated');
 
         self::assertSame(['name_de' => 'Name DE'], $loaded->saveVirtualAttributes());
         self::assertSame('Name DE Updated', $this->findTranslation($model)?->value);
+    }
+
+    /**
+     * Validation reads the attribute, which must not replace the assigned value with the stored one.
+     *
+     * @see https://github.com/davidhirtz/yii2-monorepo/issues/268
+     */
+    public function testSetAttributeBeforeReadingSurvivesTheUpdate(): void
+    {
+        $model = $this->createRecord();
+        $loaded = TranslatedActiveRecord::findOne($model->id);
+
+        $loaded->setAttribute('name_de', 'Name DE Updated');
+
+        self::assertSame('Name DE', $loaded->getOldAttribute('name_de'));
+        self::assertSame(1, $loaded->update());
+
+        self::assertSame('Name DE Updated', $this->findTranslation($model)?->value);
+        self::assertSame(['Name DE', 'Name DE Updated'], $this->findLatestTrail($loaded)->data['name_de']);
     }
 
     /**

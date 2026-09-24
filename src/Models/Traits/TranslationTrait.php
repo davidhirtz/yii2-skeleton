@@ -100,6 +100,21 @@ trait TranslationTrait
         parent::__set($name, $value);
     }
 
+    /**
+     * Populates like `__set()`: a value assigned before the translations are loaded would otherwise be overwritten by
+     * the stored one on the first read, which validation does.
+     *
+     * @param string $name
+     */
+    public function setAttribute($name, $value): void
+    {
+        if ($this->isUnloadedVirtualAttribute($name)) {
+            $this->populateVirtualAttributes($name);
+        }
+
+        parent::setAttribute($name, $value);
+    }
+
     public function resetLoadedTranslations(): void
     {
         $this->loadedTranslationLanguages = [];
@@ -206,7 +221,8 @@ trait TranslationTrait
             if (in_array($language, $languages, true)) {
                 $value = $values["$language/$attribute"] ?? null;
 
-                $this->setAttribute($name, $value);
+                // the parent's: populating must not trigger another population
+                parent::setAttribute($name, $value);
                 $this->setOldAttribute($name, $value);
             }
         }
