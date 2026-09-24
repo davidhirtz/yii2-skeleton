@@ -50,6 +50,10 @@ jobs:
       - name: Use the MariaDB client
         run: sudo apt-get install -y --no-install-recommends mariadb-client
 
+      # Ubuntu ships libheif's decoders as plugins: without one, Imagick writes an AVIF it cannot read back.
+      - name: Decode AVIF
+        run: sudo apt-get install -y --no-install-recommends libheif-plugin-dav1d
+
       - name: Find the Composer cache
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
