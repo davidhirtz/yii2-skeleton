@@ -8,6 +8,12 @@
   padding: 0.5rem 1rem;
   width: 100%;
 
+  // `.text-muted` loads before this file, so on its own it loses to the colour above: a stand-in for an input
+  // that shows nothing is set, such as the empty upload field, names both.
+  &.text-muted {
+    color: var(--muted-color);
+  }
+
   &:is(input,select,textarea) {
     background-color: var(--input-bg-color);
 

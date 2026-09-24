@@ -130,8 +130,8 @@ class UploadField extends Field
                 ->icon(null)
                 ->content(
                     Span::make()
-                        ->addClass('input upload-name upload-placeholder')
-                        ->text(Yii::t('skeleton', 'UPLOAD_PLACEHOLDER')),
+                        ->addClass('input upload-name text-muted')
+                        ->text(Yii::t('skeleton', 'UPLOAD_BUTTON_SELECT')),
                     Span::make()
                         ->addClass('input-group-append')
                         ->content(Span::make()

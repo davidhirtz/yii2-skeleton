@@ -25,9 +25,4 @@
   font: inherit;
   padding: 0;
   text-align: start;
-
-  // as dim as a real input's placeholder; `.input` names its own colour, so this has to outrank it
-  .upload-placeholder {
-    color: color-mix(in oklab, var(--input-color) 50%, transparent);
-  }
 }
