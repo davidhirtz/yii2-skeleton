@@ -1,10 +1,8 @@
 ## Unreleased
 
-- Fixed `TranslationTrait::setAttribute()` on a record whose translations were not loaded yet: validation replaced the
-  assigned value with the stored one, so the update wrote nothing
-- Fixed `Web\Application` deriving its base path from a requested static file, which PHP's built-in server reports as
-  `SCRIPT_FILENAME`; entry scripts should pass `basePath` themselves
-- Removed `Helpers\Image` and the `yiisoft/yii2-imagine` and `ext-imagick` requirements; image processing lives in `yii2-media`
+- Fixed `TranslationTrait::setAttribute()` on a record whose translations were not loaded yet
+- Fixed `Web\Application` deriving its base path from a requested static file
+- Removed `Helpers\Image` and the `yiisoft/yii2-imagine` and `ext-imagick` requirements; image processing now lives in `yii2-media`
 - Changed `VisibleAttributeInterface::getVisibleAttribute()` to answer `null` instead of `false` and to take a `$language`
 
 ## 3.0.0 (September 23, 2026)
