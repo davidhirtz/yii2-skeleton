@@ -57,8 +57,8 @@ class FileHelper extends BaseFileHelper
     {
         $path = Yii::getAlias($path);
 
-        // Yii integration does not work with stream wrappers such as Amazon S3, if stream
-        // is not local, let the implementation work out the specifics.
+        // Yii integration does not work with stream wrappers such as Amazon S3, if stream is not local, let the
+        // implementation work out the specifics
         if (!stream_is_local($path)) {
             return @mkdir($path);
         }
@@ -151,11 +151,6 @@ EOL
         }
 
         return false;
-    }
-
-    public static function getExtensionFromUrl(string $url): string
-    {
-        return strtolower(pathinfo((string)parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
     }
 
     public static function encodeUrl(string $url): string

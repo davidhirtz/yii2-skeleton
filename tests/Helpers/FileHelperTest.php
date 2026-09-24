@@ -34,8 +34,7 @@ class FileHelperTest extends TestCase
         $loadedConfig = require($path);
         self::assertEquals($config, $loadedConfig);
 
-        $extension = FileHelper::getExtensionFromUrl($filename);
-        self::assertEquals('php', $extension);
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
 
         $newPath = "$folder/renamed.$extension";
         FileHelper::rename($path, $newPath);
