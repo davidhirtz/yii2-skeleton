@@ -1,3 +1,10 @@
+## Unreleased
+
+- Replaced `yiisoft/yii2-symfonymailer` with `symfony/mailer` directly:
+  `mailerDsn` resolves against every installed Symfony mailer bridge (`resend+api://` with `symfony/resend-mailer`),
+  the transport is built on the first send, and the message reads addresses back as `['a@b.c' => 'Name']` (never `''`);
+  signing, encryption and the header helpers are gone (use `Message::$email`)
+
 ## 3.1.1 (September 24, 2026)
 
 - Added `Db\Commands\RenumberPositions`, which renumbers each parent's rows `1..n` in one statement

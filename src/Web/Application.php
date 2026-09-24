@@ -11,7 +11,7 @@ use Yii;
 use yii\base\InvalidCallException;
 use yii\debug\Module as YiiDebugModule;
 use Hirtz\Skeleton\Modules\Debug\Module as DebugModule;
-use yii\symfonymailer\Mailer;
+use Hirtz\Skeleton\Mail\Mailer;
 use yii\web\Cookie;
 
 /**

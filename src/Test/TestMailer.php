@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Test;
 
+use Hirtz\Skeleton\Mail\Mailer;
+use Hirtz\Skeleton\Mail\Message;
 use Override;
-use yii\symfonymailer\Mailer;
-use yii\symfonymailer\Message;
 
 class TestMailer extends Mailer
 {
@@ -42,30 +42,21 @@ class TestMailer extends Mailer
     }
 
     /**
-     * Symfony types the body `string|resource|null` and `MessageInterface::getTo()` an array or a plain string,
-     * neither of which a test wants to narrow for itself.
+     * Symfony types the body `string|resource|null`, which no test wants to narrow for itself.
      */
     public function getLastMessageBody(): string
     {
-        return (string)$this->getLastMessage()?->getSymfonyEmail()->getHtmlBody();
+        return (string)$this->getLastMessage()?->email->getHtmlBody();
     }
 
     public function getLastMessageTo(): string
     {
-        return $this->getFirstAddress($this->getLastMessage()?->getTo() ?? []);
+        return (string)array_key_first($this->getLastMessage()?->getTo() ?? []);
     }
 
     public function getLastMessageFrom(): string
     {
-        return $this->getFirstAddress($this->getLastMessage()?->getFrom() ?? []);
-    }
-
-    /**
-     * @param array<string, string>|string $addresses
-     */
-    private function getFirstAddress(array|string $addresses): string
-    {
-        return is_array($addresses) ? (string)key($addresses) : $addresses;
+        return (string)array_key_first($this->getLastMessage()?->getFrom() ?? []);
     }
 
     public function reset(): void

@@ -4,7 +4,7 @@ The core of a Yii 2 based admin platform: two application classes, a database la
 `Db\ActiveQuery`, migrations with backups), users with roles, two-factor authentication and rate-limited login, an admin
 module with a navbar, aside, grids, forms and a fulltext search, an HTML and widget layer built on htmx 4, translated
 and custom attributes, redirects, a trail, a sitemap and a console. Every other `davidhirtz/yii2-*` bundle requires it.
-It depends on `yiisoft/yii2`, `yiisoft/yii2-symfonymailer`, `sentry/sentry`, `robthree/twofactorauth` and
+It depends on `yiisoft/yii2`, `symfony/mailer`, `sentry/sentry`, `robthree/twofactorauth` and
 `tinymce/tinymce`, and needs PHP 8.3 with `intl`, `openssl`, `simplexml` and `xmlwriter`. Image processing lives in
 `davidhirtz/yii2-media`.
 
@@ -65,7 +65,7 @@ answer `null` there instead.
 | `secretKey` | `cookieValidationKey` | encrypts 2FA secrets and signs tokens |
 | `adminAlias` | `admin` | the URL prefix of the admin module |
 | `email` | `hostmaster@<server name>` | the sender of every mail |
-| `mailerDsn` | `sendmail://default` | the Symfony mailer transport |
+| `mailerDsn` | `sendmail://default` | the Symfony mailer transport; any installed bridge's scheme (`resend+api://KEY@default` with `symfony/resend-mailer` and `symfony/http-client`); `native://default` where the host's `sendmail` has no `-bs` mode |
 | `cookieDomain` | none | the `Domain` of the session and auth cookies |
 | `cacheKeyPrefix` | none | `keyPrefix` of the cache component |
 | `sentryDsn` | none | adds `Log\SentryTarget` under `components.log.targets.sentry` |

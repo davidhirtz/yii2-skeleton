@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Db\Connection;
 use Hirtz\Skeleton\I18n\I18N;
 use Hirtz\Skeleton\Log\FileTarget;
 use Hirtz\Skeleton\Log\SentryTarget;
+use Hirtz\Skeleton\Mail\Mailer;
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\DatabaseComponents;
@@ -30,7 +31,6 @@ use Yii;
 use yii\caching\FileCache;
 use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
-use yii\symfonymailer\Mailer;
 use yii\validators\TrimValidator;
 use yii\web\JqueryAsset;
 
