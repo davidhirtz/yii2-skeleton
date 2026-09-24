@@ -30,6 +30,20 @@ class TypeSelectField extends SelectField
         }
 
         parent::configure();
+
+        // A select would post its only option; a hidden input posts nothing unless it is given the value.
+        if ($this->isHiddenInput() && in_array($this->attributes['value'] ?? null, [null, ''], true)) {
+            $this->attributes['value'] = array_key_first($this->items);
+        }
+    }
+
+    /**
+     * A single type is kept whether or not the attribute is required: an empty choice would retype the record.
+     */
+    #[Override]
+    protected function isHiddenInput(): bool
+    {
+        return count($this->items) <= 1;
     }
 
     /**

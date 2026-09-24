@@ -38,16 +38,35 @@ class TypeSelectFieldTest extends TestCase
     public function testAnUnavailableTypeIsNotOffered(): void
     {
         $record = AvailabilityRecord::create();
-        $html = $this->renderTypeSelectField($record);
-
-        self::assertStringContainsString('>Always</option>', $html);
-        self::assertStringNotContainsString('>Named</option>', $html);
-        self::assertStringNotContainsString('>Never</option>', $html);
-
         $record->name = 'Name';
         $html = $this->renderTypeSelectField($record);
 
+        self::assertStringContainsString('>Always</option>', $html);
         self::assertStringContainsString('>Named</option>', $html);
+        self::assertStringNotContainsString('>Never</option>', $html);
+
+        $record->name = null;
+        $html = $this->renderTypeSelectField($record);
+
+        self::assertStringNotContainsString('<select', $html);
+        self::assertStringContainsString('value="1"', $html);
+    }
+
+    public function testASingleTypeIsAHiddenInput(): void
+    {
+        $record = OneTypeRecord::create();
+
+        self::assertFalse($record->isAttributeRequired('type'));
+
+        $html = TypeSelectField::make()
+            ->model($record)
+            ->render();
+
+        self::assertStringNotContainsString('<select', $html);
+        self::assertStringNotContainsString('<label', $html);
+        self::assertStringContainsString('<input type="hidden"', $html);
+        self::assertStringContainsString('value="1"', $html);
+        self::assertStringNotContainsString('hx-post', $html);
     }
 
     private function renderTypeSelectField(AvailabilityRecord $record): string
@@ -88,5 +107,17 @@ class AvailabilityRecord extends ActiveRecord implements TypeAttributeInterface
     public static function tableName(): string
     {
         return '{{%test_availability_record}}';
+    }
+}
+
+class OneTypeRecord extends AvailabilityRecord
+{
+    #[Override]
+    public function getTypes(): array
+    {
+        return [
+            Type::make(self::TYPE_DEFAULT)
+                ->name('Only'),
+        ];
     }
 }

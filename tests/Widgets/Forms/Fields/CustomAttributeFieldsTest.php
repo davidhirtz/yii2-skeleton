@@ -500,10 +500,14 @@ class CustomAttributeFieldsTest extends TestCase
         $model = SingleTypeRecord::create();
         $model->type = SingleTypeRecord::TYPE_DEFAULT;
 
-        $select = $this->renderTypeSelect($model);
+        $content = ActiveForm::make()
+            ->model($model)
+            ->rows([TypeSelectField::make()->property('type')])
+            ->render();
 
-        self::assertStringContainsString('name="SingleTypeRecord[type]"', $select);
-        self::assertStringNotContainsString('hx-', $select);
+        self::assertStringNotContainsString('<select', $content);
+        self::assertStringContainsString('<input type="hidden" id="singletyperecord-type" name="SingleTypeRecord[type]" value="1">', $content);
+        self::assertStringNotContainsString('hx-post', $content);
     }
 
     /**

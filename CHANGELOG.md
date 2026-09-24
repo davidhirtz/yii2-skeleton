@@ -4,6 +4,7 @@
 - Fixed an error response to an admin request emptying the page behind its modal
 - Removed `FileHelper::getExtensionFromUrl`
 - Replaced `FileHelper::createConfigFile()` with `Helpers\ConfigFile::write()`, which sorts the keys
+- Changed `TypeSelectField` to render a hidden input when there is only one type
 
 ## 3.2.0 (September 24, 2026)
 
