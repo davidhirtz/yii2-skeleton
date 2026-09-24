@@ -1,4 +1,4 @@
-## Unreleased
+## 3.1.0 (September 24, 2026)
 
 - Fixed `TranslationTrait::setAttribute()` on a record whose translations were not loaded yet
 - Fixed `Web\Application` deriving its base path from a requested static file
