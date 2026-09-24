@@ -110,12 +110,19 @@ trait TypeAttributeTrait
                 : $this->configuredTypes;
         }
 
+        return [$this->getDefaultType()];
+    }
+
+    /**
+     * The single type of a model nothing declares types for. Unlike an override of {@see static::getTypes()}, an
+     * override of this method still gives way to what the container configured.
+     */
+    protected function getDefaultType(): Type
+    {
         $class = static::getTypeClass();
 
-        return [
-            $class::make(static::TYPE_DEFAULT)
-                ->name(Yii::t('skeleton', 'COMMON_TYPE_DEFAULT')),
-        ];
+        return $class::make(static::TYPE_DEFAULT)
+            ->name(Yii::t('skeleton', 'COMMON_TYPE_DEFAULT'));
     }
 
     /**

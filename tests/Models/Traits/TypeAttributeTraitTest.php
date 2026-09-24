@@ -77,6 +77,23 @@ class TypeAttributeTraitTest extends TestCase
         self::assertSame('star', $record->getTypeIcon());
     }
 
+    public function testAModelWithoutTypesHasItsDefaultType(): void
+    {
+        $record = DefaultTypeRecord::create();
+        $record->type = DefaultTypeRecord::TYPE_DEFAULT;
+
+        self::assertSame([DefaultTypeRecord::TYPE_DEFAULT], array_keys(DefaultTypeRecord::getTypeDefinitions()));
+        self::assertSame('Only', $record->getTypeName());
+    }
+
+    public function testTheConfiguredTypesWinOverTheDefaultType(): void
+    {
+        $record = DefaultTypeRecord::create();
+        $record->setTypes(fn (): array => [Type::make(TypeRecord::TYPE_CHILD)->name('Configured')]);
+
+        self::assertSame(['Configured'], array_map(fn (Type $type): string => $type->getName(), $record->getTypes()));
+    }
+
     public function testAnUndeclaredValueHasNoType(): void
     {
         $record = TypeRecord::create();
@@ -321,4 +338,24 @@ class TypeRecordWithoutFormName extends TypeRecord
 
 class TypeRecordWithoutFormNameChild extends TypeRecordWithoutFormName
 {
+}
+
+/**
+ * @property int $type
+ */
+class DefaultTypeRecord extends ActiveRecord implements TypeAttributeInterface
+{
+    use TypeAttributeTrait;
+
+    protected function getDefaultType(): Type
+    {
+        return Type::make(self::TYPE_DEFAULT)
+            ->name('Only');
+    }
+
+    #[Override]
+    public static function tableName(): string
+    {
+        return '{{%test_type_record}}';
+    }
 }

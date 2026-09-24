@@ -5,6 +5,7 @@
 - Removed `FileHelper::getExtensionFromUrl`
 - Replaced `FileHelper::createConfigFile()` with `Helpers\ConfigFile::write()`, which sorts the keys
 - Changed `TypeSelectField` to render a hidden input when there is only one type
+- Added `TypeAttributeTrait::getDefaultType()`, the type of a model nothing declares types for
 
 ## 3.2.0 (September 24, 2026)
 
