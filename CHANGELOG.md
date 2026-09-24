@@ -1,8 +1,8 @@
 ## Unreleased
 
 - Replaced `yiisoft/yii2-symfonymailer` with `symfony/mailer` directly:
-  `mailerDsn` resolves against every installed Symfony mailer bridge (`resend+api://` with `symfony/resend-mailer`), 
-  encryption and the header helpers are gone (use `Message::$email`)
+  `mailerDsn` resolves against every installed Symfony mailer bridge (`resend+api://` with `symfony/resend-mailer`);
+  signing, encryption and the header helpers are gone (use `Message::$email`)
 - Changed `Mail\Mailer` to log a transport failure and answer `false` instead of throwing an exception
 
 ## 3.1.1 (September 24, 2026)
