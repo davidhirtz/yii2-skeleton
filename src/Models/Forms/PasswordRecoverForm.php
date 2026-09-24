@@ -80,18 +80,22 @@ class PasswordRecoverForm extends Model
             return false;
         }
 
-        // An address with no account, a disabled one, and one that was just sent a link all report the same
-        // success as one that gets the email, so nothing here says which addresses exist.
-        if ($this->user) {
-            $this->sendPasswordResetEmail();
+        // An address with no account, a disabled one, one that was just sent a link and, under enumeration
+        // protection, one whose email failed all report the same success, so nothing here says which exist.
+        if ($this->user && !$this->sendPasswordResetEmail()) {
+            // Without the token of the failed attempt the spam protection lets a retry through.
+            $this->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET)?->delete();
+            $this->addIdentityError(Yii::t('skeleton', 'COMMON_ERROR_EMAIL_NOT_SENT', [
+                'email' => $this->user->email,
+            ]));
         }
 
-        return true;
+        return !$this->hasErrors();
     }
 
-    public function sendPasswordResetEmail(): void
+    public function sendPasswordResetEmail(): bool
     {
-        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/recover', [
+        return Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/recover', [
             'user' => $this->user,
             'url' => $this->user->createPasswordResetUrl(),
         ])

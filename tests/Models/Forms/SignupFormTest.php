@@ -76,6 +76,28 @@ class SignupFormTest extends TestCase
         self::assertStringContainsString('/admin/account/confirm', $this->mailer->getLastMessageBody());
     }
 
+    public function testAFailedEmailStillSignsUpAndWarns(): void
+    {
+        $this->getWebUser()->enableSignup = true;
+        $this->mailer->isFailing = true;
+
+        $form = TestSignupForm::create();
+
+        $form->name = 'Testname';
+        $form->email = 'test-email@test.com';
+        $form->password = 'password';
+        $form->token = $form->getSessionToken();
+        $form->terms = true;
+        $form->honeypot = null;
+
+        self::assertTrue($form->insert());
+        self::assertFalse($form->user->getIsNewRecord());
+        self::assertSame(
+            ['The email to test-email@test.com could not be sent. Please try again later.'],
+            $this->getWebSession()->getFlash('warning'),
+        );
+    }
+
     public function testSignupWithIpSpamProtection(): void
     {
         $webuser = $this->getWebUser();

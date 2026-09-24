@@ -124,20 +124,23 @@ class UserForm extends Model
             $this->passwordResetUrl = $this->user->createPasswordResetUrl();
         }
 
-        if ($this->sendEmail) {
-            $this->sendCredentialsEmail();
+        if ($this->sendEmail && !$this->sendCredentialsEmail()) {
+            Application::current()->getSession()->addFlash('warning', Yii::t('skeleton', 'COMMON_ERROR_EMAIL_NOT_SENT', [
+                'email' => $this->user->email,
+            ]));
         }
     }
 
-    protected function sendCredentialsEmail(): void
+    protected function sendCredentialsEmail(): bool
     {
-        Yii::$app->getI18n()->callback($this->user->language, function (): void {
-            Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/credentials', ['form' => $this])
-                ->setSubject(Yii::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]))
-                ->setFrom(Yii::$app->params['email'])
-                ->setTo($this->user->email)
-                ->send();
-        });
+        $send = fn (): bool => Yii::$app->getMailer()
+            ->compose('@skeleton/../resources/mail/account/credentials', ['form' => $this])
+            ->setSubject(Yii::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]))
+            ->setFrom(Yii::$app->params['email'])
+            ->setTo($this->user->email)
+            ->send();
+
+        return Yii::$app->getI18n()->callback($this->user->language, $send) === true;
     }
 
     public function getLoginUrl(): string

@@ -8,9 +8,15 @@ use Hirtz\Skeleton\Mail\Mailer;
 use Hirtz\Skeleton\Mail\Message;
 use Hirtz\Skeleton\Test\TestCase;
 use Symfony\Component\Mailer\Bridge\Resend\Transport\ResendApiTransport;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\Exception\UnsupportedSchemeException;
+use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Transport\NullTransport;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+use Symfony\Component\Mime\RawMessage;
 use yii\base\InvalidConfigException;
+use yii\log\Logger;
 use yii\mail\BaseMailer;
 use yii\mail\MailEvent;
 
@@ -62,5 +68,40 @@ class MailerTest extends TestCase
         self::assertInstanceOf(Message::class, $message);
         self::assertTrue($message->send());
         self::assertSame($message, $sent);
+    }
+
+    public function testATransportFailureIsLoggedAndAnsweredFalse(): void
+    {
+        $this->logger->isRecording = true;
+
+        $mailer = new Mailer(['transport' => new class () implements TransportInterface {
+            public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
+            {
+                throw new TransportException('Refused');
+            }
+
+            public function __toString(): string
+            {
+                return 'failing://';
+            }
+        }]);
+
+        $sent = $mailer->compose()
+            ->setFrom('sender@example.com')
+            ->setTo('recipient@example.com')
+            ->setTextBody('Body')
+            ->send();
+
+        self::assertFalse($sent);
+        self::assertInstanceOf(TransportException::class, $mailer->getLastTransportException());
+
+        $errors = array_values(array_filter(
+            $this->logger->messages,
+            static fn (array $message): bool => $message[1] === Logger::LEVEL_ERROR,
+        ));
+
+        self::assertCount(1, $errors);
+        self::assertInstanceOf(TransportException::class, $errors[0][0]);
+        self::assertSame(Mailer::class . '::sendMessage', $errors[0][2]);
     }
 }

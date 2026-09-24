@@ -30,7 +30,9 @@ class EmailController extends Controller
 
         $this->interactiveStartStdout('Testing email functionality ...');
 
-        $success = Yii::$app->getMailer()
+        $mailer = Yii::$app->getMailer();
+
+        $success = $mailer
             ->compose()
             ->setSubject('Test email')
             ->setTextBody('This is a test email from ' . Yii::$app->name . '. If you received this email, the email functionality is working.')
@@ -39,5 +41,9 @@ class EmailController extends Controller
             ->send();
 
         $this->interactiveDoneStdout($success);
+
+        if ($exception = $mailer->getLastTransportException()) {
+            $this->stderr($exception->getMessage() . PHP_EOL, Console::FG_RED);
+        }
     }
 }

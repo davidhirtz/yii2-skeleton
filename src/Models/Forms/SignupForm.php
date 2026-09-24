@@ -181,7 +181,12 @@ class SignupForm extends AbstractSignupForm
         }
 
         $this->createUserLogin();
-        $this->sendSignupEmail();
+
+        if (!$this->sendSignupEmail()) {
+            Application::current()->getSession()->addFlash('warning', Yii::t('skeleton', 'COMMON_ERROR_EMAIL_NOT_SENT', [
+                'email' => $this->user->email,
+            ]));
+        }
     }
 
     private function createUserLogin(): void

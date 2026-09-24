@@ -54,7 +54,8 @@ class AccountCredentialsFormTest extends TestCase
         self::assertTrue($form->save());
         self::assertTrue($form->user->isUnconfirmed());
 
-        $message = $this->mailer->getLastMessage();
+        // The link confirms the new address, so only the new inbox may receive it
+        self::assertSame('valid@domain.com', $this->mailer->getLastMessageTo());
         self::assertStringContainsString('/admin/account/confirm', $this->mailer->getLastMessageBody());
     }
 
@@ -117,6 +118,22 @@ class AccountCredentialsFormTest extends TestCase
 
         self::assertEquals('valid@domain.com', $form->user->email);
         self::assertEquals($name, $form->user->name);
+    }
+
+    public function testAFailedConfirmationEmailStillSavesAndWarns(): void
+    {
+        $this->mailer->isFailing = true;
+
+        $form = $this->createForm();
+        $form->user->email = 'valid@domain.com';
+        $form->oldPassword = 'password';
+
+        self::assertTrue($form->save());
+        self::assertTrue($form->user->isUnconfirmed());
+        self::assertSame(
+            ['The email to valid@domain.com could not be sent. Please try again later.'],
+            $this->getWebSession()->getFlash('warning'),
+        );
     }
 
     protected function createForm(): AccountCredentialsForm

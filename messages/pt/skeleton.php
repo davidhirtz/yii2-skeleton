@@ -86,6 +86,7 @@ return [
     'COMMON_DISABLED' => 'Desativado',
     'COMMON_DUPLICATE_NAME' => 'Cópia de {name}',
     'COMMON_ENABLED' => 'Ativado',
+    'COMMON_ERROR_EMAIL_NOT_SENT' => 'Não foi possível enviar o e-mail para {email}. Tente novamente mais tarde.',
     'COMMON_ERROR_LOGS' => 'Registos de erros',
     'COMMON_HISTORY' => 'Histórico',
     'COMMON_ID_LABEL' => 'ID',

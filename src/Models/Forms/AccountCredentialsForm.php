@@ -116,7 +116,11 @@ class AccountCredentialsForm extends Model
                 $session->addFlash('success', Yii::t('skeleton', 'ACCOUNT_UPDATE_SUCCESS_CHECK_EMAILS_CONFIRM'));
             }
 
-            $this->sendEmailConfirmationEmail();
+            if (!$this->sendEmailConfirmationEmail()) {
+                $session->addFlash('warning', Yii::t('skeleton', 'COMMON_ERROR_EMAIL_NOT_SENT', [
+                    'email' => $this->user->email,
+                ]));
+            }
         }
 
         if ($this->newPassword) {
@@ -125,15 +129,18 @@ class AccountCredentialsForm extends Model
         }
     }
 
-    protected function sendEmailConfirmationEmail(): void
+    /**
+     * To the new address, since the link confirms it; `$email` is the one the user had before.
+     */
+    protected function sendEmailConfirmationEmail(): bool
     {
-        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/email', [
+        return Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/email', [
             'form' => $this,
             'url' => $this->user->createEmailConfirmationUrl(),
         ])
             ->setSubject(Yii::t('skeleton', 'ACCOUNT_UPDATE_PLEASE_CONFIRM_YOUR_NEW_EMAIL_ADDRESS_CONFIRM_TITLE'))
             ->setFrom(Yii::$app->params['email'])
-            ->setTo($this->email)
+            ->setTo($this->user->email)
             ->send();
     }
 

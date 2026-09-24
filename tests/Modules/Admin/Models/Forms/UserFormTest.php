@@ -68,6 +68,23 @@ class UserFormTest extends TestCase
         self::assertStringNotContainsString($form->newPassword, $this->mailer->getLastMessageBody());
     }
 
+    public function testAFailedCredentialsEmailStillCreatesTheUserAndWarns(): void
+    {
+        $this->mailer->isFailing = true;
+
+        $form = UserForm::create();
+        $form->user->name = 'test-user';
+        $form->user->email = 'test-user@test.com';
+        $form->sendEmail = true;
+
+        self::assertTrue($form->save());
+        self::assertFalse($form->user->getIsNewRecord());
+        self::assertSame(
+            ['The email to test-user@test.com could not be sent. Please try again later.'],
+            $this->getWebSession()->getFlash('warning'),
+        );
+    }
+
     public function testCreateUserWithoutPasswordSendsResetLink(): void
     {
         $form = UserForm::create();

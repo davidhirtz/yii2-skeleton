@@ -88,6 +88,39 @@ class RecoverPasswordTest extends TestCase
         self::assertSelectorNotExists('.form-error');
     }
 
+    public function testAFailedEmailReportsTheSameSuccessAndLetsTheRetryThrough(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->mailer->isFailing = true;
+
+        $this->open('admin/account/recover');
+        $this->submitPasswordRecoverForm($user->email);
+
+        self::assertSelectorNotExists('.form-error');
+        self::assertNull($user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
+
+        $this->mailer->isFailing = false;
+
+        $this->open('admin/account/recover');
+        $this->submitPasswordRecoverForm($user->email);
+
+        self::assertSame($user->email, $this->mailer->getLastMessageTo());
+    }
+
+    public function testAFailedEmailIsNamedWithoutEnumerationProtection(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+
+        $this->getWebUser()->enableUserEnumerationProtection = false;
+        $this->mailer->isFailing = true;
+
+        $this->open('admin/account/recover');
+        $this->submitPasswordRecoverForm($user->email);
+
+        self::assertAnyValidationErrorSame("The email to $user->email could not be sent. Please try again later.");
+        self::assertNull($user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
+    }
+
     protected function submitPasswordRecoverForm(string $email): void
     {
         $this->submit(values: $this->prefixFormValues(PasswordRecoverForm::instance(), [

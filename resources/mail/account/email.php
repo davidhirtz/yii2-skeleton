@@ -5,11 +5,11 @@ declare(strict_types=1);
 /**
  * @var yii\web\View $this
  * @var MessageInterface $message
- * @var AccountUpdateForm $form
+ * @var AccountCredentialsForm $form
  * @var string $url
  */
 
-use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
+use Hirtz\Skeleton\Models\Forms\AccountCredentialsForm;
 use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_EMAIL_TITLE');

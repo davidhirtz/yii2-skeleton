@@ -27,6 +27,19 @@ class EmailControllerTest extends TestCase
         self::assertEquals('Test email', $message->getSubject());
     }
 
+    public function testAFailedSendNamesItsReason(): void
+    {
+        $this->mailer->isFailing = true;
+
+        $controller = $this->createEmailController();
+        $controller->actionTest('test@test.com');
+
+        $output = $controller->flushStdOutBuffer();
+
+        self::assertStringStartsWith('Testing email functionality ... failed', $output);
+        self::assertStringContainsString('The test transport refuses every message.', $output);
+    }
+
     protected function createEmailController(): EmailControllerMock
     {
         return new EmailControllerMock('email', Yii::$app);

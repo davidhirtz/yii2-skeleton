@@ -1,9 +1,15 @@
 ## Unreleased
 
+- Fixed the confirmation link for a changed email address being sent to the old address
 - Replaced `yiisoft/yii2-symfonymailer` with `symfony/mailer` directly:
   `mailerDsn` resolves against every installed Symfony mailer bridge (`resend+api://` with `symfony/resend-mailer`),
   the transport is built on the first send, and the message reads addresses back as `['a@b.c' => 'Name']` (never `''`);
   signing, encryption and the header helpers are gone (use `Message::$email`)
+- Changed `Mail\Mailer` to log a transport failure and answer `false` instead of throwing
+  (`getLastTransportException()` keeps the reason, which `email/test` prints); the password recovery,
+  the confirmation resend, the signup, the email change and the admin's credentials email handle it, and
+  `PasswordRecoverForm::sendPasswordResetEmail()`, `SignupEmailTrait::sendSignupEmail()` and the protected send
+  methods of `AccountResendConfirmForm`, `AccountCredentialsForm` and `UserForm` answer `bool`
 
 ## 3.1.1 (September 24, 2026)
 

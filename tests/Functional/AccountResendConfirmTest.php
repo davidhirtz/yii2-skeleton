@@ -83,6 +83,37 @@ class AccountResendConfirmTest extends TestCase
         self::assertSelectorNotExists('.form-error');
     }
 
+    public function testAFailedEmailReportsTheSameSuccessAndLetsTheRetryThrough(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->mailer->isFailing = true;
+
+        $this->submitAccountResendConfirmForm($user->email);
+
+        self::assertSelectorNotExists('.form-error');
+        self::assertNull($user->getLatestToken(UserToken::TYPE_VERIFICATION));
+
+        $this->mailer->isFailing = false;
+
+        $this->open('admin/account/resend');
+        $this->submitAccountResendConfirmForm($user->email);
+
+        self::assertSame($user->email, $this->mailer->getLastMessageTo());
+    }
+
+    public function testAFailedEmailIsNamedWithoutEnumerationProtection(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+
+        $this->getWebUser()->enableUserEnumerationProtection = false;
+        $this->mailer->isFailing = true;
+
+        $this->submitAccountResendConfirmForm($user->email);
+
+        self::assertAnyValidationErrorSame("The email to $user->email could not be sent. Please try again later.");
+        self::assertNull($user->getLatestToken(UserToken::TYPE_VERIFICATION));
+    }
+
     private function submitAccountResendConfirmForm(string $email = ''): void
     {
         $this->submit(values: $this->prefixFormValues(AccountResendConfirmForm::instance(), [

@@ -91,17 +91,22 @@ class AccountResendConfirmForm extends Model
             return false;
         }
 
-        // An address with nothing to confirm reports the same success, so nothing here says which exist.
-        if ($this->user) {
-            $this->sendConfirmEmail();
+        // An address with nothing to confirm and, under enumeration protection, one whose email failed report the
+        // same success, so nothing here says which exist.
+        if ($this->user && !$this->sendConfirmEmail()) {
+            // Without the token of the failed attempt the spam protection lets a retry through.
+            $this->user->getLatestToken(UserToken::TYPE_VERIFICATION)?->delete();
+            $this->addIdentityError(Yii::t('skeleton', 'COMMON_ERROR_EMAIL_NOT_SENT', [
+                'email' => $this->user->email,
+            ]));
         }
 
-        return true;
+        return !$this->hasErrors();
     }
 
-    protected function sendConfirmEmail(): void
+    protected function sendConfirmEmail(): bool
     {
-        Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/confirm', [
+        return Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/confirm', [
             'user' => $this->user,
             'url' => $this->user->createEmailConfirmationUrl(),
         ])
