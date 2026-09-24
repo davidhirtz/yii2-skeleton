@@ -1,3 +1,8 @@
+## Unreleased
+
+- Added `Mail\Mailer::getTransportError()`: the system page and `email/test` name a missing mailer bridge or HTTP client
+- Fixed an error response to an admin request emptying the page behind its modal
+
 ## 3.2.0 (September 24, 2026)
 
 - Replaced `yiisoft/yii2-symfonymailer` with `symfony/mailer` directly:

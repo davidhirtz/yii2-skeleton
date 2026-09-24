@@ -54,8 +54,18 @@ onLoad(($container) => {
 });
 
 
-htmx.on('htmx:response:error', (event: Event) => {
+// htmx 4 swaps an error response like any other and pushes a boosted form's URL, so a 500 emptied the page behind
+// the modal (the exception page has no `#wrap` for `hx-select`) and left the POST's URL in the address bar.
+// `htmx:after:request` is the last cancelable event before both; every `HX-*` header the server sends comes with
+// a 200, so nothing an error response carries is lost by stopping here.
+htmx.on('htmx:after:request', (event: Event) => {
     const {ctx} = (event as CustomEvent).detail;
+
+    if (ctx.response.status < 400) {
+        return;
+    }
+
+    event.preventDefault();
 
     const iframe = document.createElement('iframe');
 
