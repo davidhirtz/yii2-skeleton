@@ -124,7 +124,7 @@ class AdminModelTraitTest extends TestCase
         self::assertEquals('Test type', $model->getAdminType());
     }
 
-    public function testAdminIconIsNullWithoutTypeOrStatus(): void
+    public function testAdminIconIsNullWithoutTypeOrDefault(): void
     {
         $model = new class () extends Model implements AdminModelInterface {
             use AdminModelTrait;
@@ -151,12 +151,37 @@ class AdminModelTraitTest extends TestCase
         self::assertEquals('star', $model->getAdminIcon());
     }
 
-    public function testAdminIconFallsBackToStatusIcon(): void
+    public function testAdminIconIgnoresStatusIcon(): void
     {
         $model = new AdminModelRecord();
         $model->status = AdminModelRecord::STATUS_ENABLED;
 
-        self::assertEquals($model->getStatusIcon(), $model->getAdminIcon());
+        self::assertNotSame('', $model->getStatusIcon());
+        self::assertNull($model->getAdminIcon());
+    }
+
+    public function testAdminIconFallsBackToDefaultIcon(): void
+    {
+        $model = new class () extends Model implements AdminModelInterface {
+            use AdminModelTrait;
+
+            public function getAdminRoute(): array|false
+            {
+                return false;
+            }
+
+            public function getPermissionName(): string
+            {
+                return 'test';
+            }
+
+            protected function getDefaultAdminIcon(): string
+            {
+                return 'book';
+            }
+        };
+
+        self::assertEquals('book', $model->getAdminIcon());
     }
 
     public function testAdminParentIndexBreadcrumbAndSubtitleDefaultToNull(): void

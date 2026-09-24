@@ -684,6 +684,11 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return Yii::t('skeleton', 'COMMON_USER');
     }
 
+    protected function getDefaultAdminIcon(): ?string
+    {
+        return 'user';
+    }
+
     public function isDeletable(): bool
     {
         return !$this->isOwner();

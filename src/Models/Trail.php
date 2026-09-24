@@ -27,11 +27,10 @@ use yii\db\ActiveRecordInterface;
  * @property string|null $model_class
  * @property int|null $user_id
  * @property string|null $message
- * @property array|null $data
+ * @property array<string, mixed>|null $data
  * @property DateTime $created_at
  *
  * @property-read User|null $user {@see Trail::getUser}
- * @property array<string, mixed>|null $data
  * @property list<int|string>|int|string|null $model_id
  */
 class Trail extends ActiveRecord implements TypeAttributeInterface
@@ -40,9 +39,6 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
 
     final public const string AUTH_TRAIL_INDEX = 'trailIndex';
 
-    /**
-     * A plain message, and the type of a trail that names none.
-     */
     final public const int TYPE_DEFAULT = 13;
 
     final public const int TYPE_CREATE = 1;

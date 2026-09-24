@@ -5,7 +5,8 @@
 - Removed `FileHelper::getExtensionFromUrl`
 - Replaced `FileHelper::createConfigFile()` with `Helpers\ConfigFile::write()`, which sorts the keys
 - Changed `TypeSelectField` to render a hidden input when there is only one type
-- Added `TypeAttributeTrait::getDefaultType()`, the type of a model nothing declares types for
+- Added `TypeAttributeTrait::getDefaultType()`
+- Added `getDefaultAdminIcon()` as a fallback for `AdminModelTrait::getAdminIcon()`
 
 ## 3.2.0 (September 24, 2026)
 
@@ -125,7 +126,7 @@
 - Changed the credentials mail to carry a reset link, never a password; a user created in the admin needs no password
 - Changed `Web\User::renewIdentityCookie()` to drop a stale cookie; the logout deletes the cookie in every scope and `Web\Response`
   deletes a host-only twin of the session and CSRF cookies
-- Changed `Web\Response::redirect()` to answer an htmx request with `HX-Location`; `setHtmxRedirectTarget(null)` sends an ordinary
+- Changed `Web\Response::redirect()` to answer a htmx request with `HX-Location`; `setHtmxRedirectTarget(null)` sends an ordinary
   redirect and `setHtmxReload()` asks for a full document load, which every login and logout does
 - Replaced `yii\log\FileTarget` with `Log\FileTarget` under the target key `file` (UTC timestamps, `$maskQueryParams`, wildcard
   `maskVars`); `logVars` drops `_COOKIE` and `_SESSION`; added `Log\SentryTarget` under `sentry` when `params.sentryDsn` is set
