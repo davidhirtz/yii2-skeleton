@@ -91,6 +91,7 @@ return [
     'COMMON_ID_LABEL' => 'ID',
     'COMMON_LOGIN' => 'Login',
     'COMMON_MODEL_ID' => '{model} #{id}',
+    'COMMON_MODEL_POSITION_TOTAL' => '{model} {position}/{total}',
     'COMMON_NAME' => 'Name',
     'COMMON_NEW_PASSWORD' => 'New password',
     'COMMON_NEW_REDIRECT' => 'New Redirect',

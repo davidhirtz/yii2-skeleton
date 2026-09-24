@@ -88,8 +88,14 @@
   width: .25rem;
 }
 
+// Below `md` the subtitle wraps under the title rather than following it, so the bar has nothing to lead from.
 .header-subtitle-item:first-child::before {
+  display: none;
   width: 1.25rem;
+
+  @include media-breakpoint-up(md) {
+    display: block;
+  }
 }
 
 .header-subtitle-item {

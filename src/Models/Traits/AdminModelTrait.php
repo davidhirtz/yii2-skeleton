@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use ReflectionClass;
 use Yii;
 use yii\base\Model;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\Inflector;
 
@@ -68,13 +69,31 @@ trait AdminModelTrait
      * Read through `getAttribute()` rather than the magic property, which is undeclared on a model without the
      * column.
      *
+     * Given its siblings, the record reads as "Section 2/4": the rank is counted rather than read off `position`,
+     * which a delete leaves with a gap.
+     *
      * @param string|null $type a noun to use in place of {@see static::getAdminType()}, for a record whose type
      *     name repeats what the subtitle already says before it
+     * @param ActiveQuery<covariant \yii\db\ActiveRecord>|null $siblings the record and its siblings
      */
-    protected function getAdminPositionLabel(?string $type = null): string
+    protected function getAdminPositionLabel(?string $type = null, ?ActiveQuery $siblings = null): string
     {
         $type ??= $this->getAdminType();
         $position = $this instanceof ActiveRecordInterface ? $this->getAttribute('position') : null;
+
+        if ($siblings && is_numeric($position)) {
+            $total = (int)$siblings->count();
+            $rank = (int)(clone $siblings)->andWhere(['<=', 'position', $position])->count();
+
+            if ($rank > 0 && $rank <= $total) {
+                return Yii::t('skeleton', 'COMMON_MODEL_POSITION_TOTAL', [
+                    'model' => $type,
+                    'position' => $rank,
+                    'total' => $total,
+                ]);
+            }
+        }
+
         $position ??= $this->getAdminId();
 
         return is_scalar($position)
