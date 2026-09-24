@@ -42,10 +42,14 @@ div.tox-tinymce {
 }
 
 .tox-toolbar,
-.tox-toolbar__overflow,
 .tox-toolbar-overlord,
 .tox-toolbar__primary {
   background: none !important;
+}
+
+// The overflow floats over the content in the aux sink, so it needs a background of its own.
+.tox .tox-toolbar__overflow {
+  background: var(--dropdown-bg) !important;
 }
 
 .tox .tox-edit-area::before {
