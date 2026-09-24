@@ -50,9 +50,10 @@ jobs:
       - name: Use the MariaDB client
         run: sudo apt-get install -y --no-install-recommends mariadb-client
 
-      # Ubuntu ships libheif's decoders as plugins: without one, Imagick writes an AVIF it cannot read back.
-      - name: Decode AVIF
-        run: sudo apt-get install -y --no-install-recommends libheif-plugin-dav1d
+      # Ubuntu ships libheif's codecs as plugins: without the encoder, Imagick writes every AVIF as an empty file and
+      # says nothing; the tests read the result back through the decoder.
+      - name: Use libheif's AV1 codecs
+        run: sudo apt-get install -y --no-install-recommends libheif-plugin-aomenc libheif-plugin-dav1d
 
       - name: Find the Composer cache
         id: composer-cache
