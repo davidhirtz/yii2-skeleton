@@ -89,7 +89,8 @@ class ServerInfo extends InfoList
     }
 
     /**
-     * The DSN carries the credentials, so only its scheme, host and port are reported.
+     * The DSN carries the credentials, so only its scheme, host and port are reported. A transport that cannot be
+     * built is flagged with Symfony's reason, which names the package to install.
      */
     protected function addMailerRow(): void
     {
@@ -112,7 +113,14 @@ class ServerInfo extends InfoList
             : $parts['scheme'] . '://' . ($parts['host'] ?? '')
                 . (isset($parts['port']) ? ':' . $parts['port'] : '');
 
-        $this->addRow(Yii::t('skeleton', 'SYSTEM_MAILER'), $transport);
+        $error = $mailer->getTransportError();
+
+        $this->addRow(
+            Yii::t('skeleton', 'SYSTEM_MAILER'),
+            $error === null
+                ? $transport
+                : $this->getValue(Span::make()->class('badge badge-error')->text($transport), $error),
+        );
     }
 
     protected function addTimeZoneRow(): void

@@ -44,6 +44,16 @@ class MailerTest extends TestCase
         self::assertSame($transport, $mailer->getTransport());
     }
 
+    public function testTheTransportErrorNamesWhatIsMissingWithoutSending(): void
+    {
+        self::assertNull((new Mailer(['transport' => 'null://null']))->getTransportError());
+        self::assertSame('No transport was configured.', (new Mailer())->getTransportError());
+        self::assertStringContainsString(
+            'composer require symfony/postmark-mailer',
+            (string)(new Mailer(['transport' => 'postmark+api://KEY@default']))->getTransportError(),
+        );
+    }
+
     public function testAMailerWithoutTransportCannotSend(): void
     {
         $this->expectException(InvalidConfigException::class);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Mail;
 
+use LogicException;
 use Override;
 use Yii;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -45,6 +46,21 @@ class Mailer extends BaseMailer
         }
 
         return $this->transport;
+    }
+
+    /**
+     * Why no transport can be built, without sending anything: none configured, a malformed DSN, a bridge that is
+     * not installed, or a bridge missing its own dependency (`symfony/http-client` for the HTTP API ones).
+     */
+    public function getTransportError(): ?string
+    {
+        try {
+            $this->getTransport();
+        } catch (InvalidConfigException|LogicException $exception) {
+            return $exception->getMessage();
+        }
+
+        return null;
     }
 
     #[Override]

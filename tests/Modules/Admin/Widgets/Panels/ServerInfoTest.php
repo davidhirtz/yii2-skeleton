@@ -56,6 +56,18 @@ class ServerInfoTest extends TestCase
         self::assertStringNotContainsString('postmaster', $html);
     }
 
+    public function testATransportThatCannotBeBuiltIsFlaggedWithItsReason(): void
+    {
+        Yii::$app->params['mailerDsn'] = 'postmark+api://KEY@default';
+        Yii::$app->getMailer()->setTransport('postmark+api://KEY@default');
+
+        $html = ServerInfo::make()->render();
+
+        self::assertStringContainsString('<span class="badge badge-error">postmark+api://default</span>', $html);
+        self::assertStringContainsString('composer require symfony/postmark-mailer', $html);
+        self::assertStringNotContainsString('KEY', $html);
+    }
+
     public function testTheFileTransportIsNamedWithItsPath(): void
     {
         Yii::$app->getMailer()->useFileTransport = true;

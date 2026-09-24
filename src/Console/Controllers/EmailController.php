@@ -28,9 +28,14 @@ class EmailController extends Controller
             return;
         }
 
-        $this->interactiveStartStdout('Testing email functionality ...');
-
         $mailer = Yii::$app->getMailer();
+
+        if (!$mailer->useFileTransport && ($error = $mailer->getTransportError())) {
+            $this->stderr($error . PHP_EOL, Console::FG_RED);
+            return;
+        }
+
+        $this->interactiveStartStdout('Testing email functionality ...');
 
         $success = $mailer
             ->compose()

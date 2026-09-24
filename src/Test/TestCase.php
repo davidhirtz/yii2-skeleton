@@ -152,6 +152,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
                 ],
                 'mailer' => [
                     'class' => TestMailer::class,
+                    'transport' => 'null://null',
                 ],
             ],
             'params' => [

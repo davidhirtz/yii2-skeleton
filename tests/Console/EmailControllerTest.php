@@ -40,6 +40,17 @@ class EmailControllerTest extends TestCase
         self::assertStringContainsString('The test transport refuses every message.', $output);
     }
 
+    public function testATransportThatCannotBeBuiltIsNamedBeforeSending(): void
+    {
+        $this->mailer->setTransport('postmark+api://KEY@default');
+
+        $controller = $this->createEmailController();
+        $controller->actionTest('test@test.com');
+
+        self::assertStringContainsString('composer require symfony/postmark-mailer', $controller->flushStdOutBuffer());
+        self::assertFalse($this->mailer->hasMessages());
+    }
+
     protected function createEmailController(): EmailControllerMock
     {
         return new EmailControllerMock('email', Yii::$app);
