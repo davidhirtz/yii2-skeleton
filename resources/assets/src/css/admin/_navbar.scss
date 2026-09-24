@@ -13,6 +13,7 @@
   z-index: 30;
 
   @include media-breakpoint-up(md) {
+    border-bottom: 0;
     position: absolute;
     right: 1rem;
     top: 0;
