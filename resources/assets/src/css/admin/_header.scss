@@ -55,17 +55,26 @@
   white-space: nowrap;
 }
 
+.header-title {
+  display: grid;
+  align-items: center;
+  gap: 0.125rem;
 
-.header-title,
+  @include media-breakpoint-up(sm) {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
 .header-subtitle,
 .header-subtitle-item {
   align-items: center;
   display: flex;
-  gap: 1rem;
-}
+  gap: .5rem;
 
-.header-title {
-  flex-wrap: wrap; // the subtitle drops below the title rather than pushing it off a narrow screen
+  @include media-breakpoint-up(sm) {
+    gap: 1rem;
+  }
 }
 
 // Side-scrolls rather than wrapping, as the breadcrumb bar and the submenu tabs do: a chain of four records
@@ -93,7 +102,7 @@
   display: none;
   width: 1.25rem;
 
-  @include media-breakpoint-up(md) {
+  @include media-breakpoint-up(sm) {
     display: block;
   }
 }
