@@ -162,9 +162,10 @@ textarea {
   resize: vertical;
 }
 
+// The muted colour, so a placeholder and a stand-in showing nothing is set (`.input.text-muted`) read alike.
 ::placeholder {
   opacity: 1;
-  color: color-mix(in oklab, currentColor 50%, transparent);
+  color: var(--muted-color);
 }
 
 ::-webkit-inner-spin-button {
