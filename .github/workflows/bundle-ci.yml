@@ -41,7 +41,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, gd, imagick, zip, dom, pdo_mysql
+          extensions: mbstring, intl, gd, imagick, exif, zip, dom, pdo_mysql
           ini-values: memory_limit=1G
           coverage: none
 
