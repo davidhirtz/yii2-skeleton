@@ -1,3 +1,7 @@
+## Unreleased
+
+- Changed the `LinkTrait::link()` and `GridSearchForm` `button()`, `input()` and `form()` closures to stack; `button()` receives the `Button` widget
+
 ## 3.3.0 (September 25, 2026)
 
 - Changed `migrate/backup` to dump binary columns as hex, so the dump is valid UTF-8

@@ -29,9 +29,18 @@ class GridSearchForm extends Widget
     protected string $value;
     protected string $paramName;
 
-    protected ?Closure $button = null;
-    protected ?Closure $input = null;
-    protected ?Closure $form = null;
+    /**
+     * @var list<Closure>|null
+     */
+    private ?array $buttonClosures = null;
+    /**
+     * @var list<Closure>|null
+     */
+    private ?array $formClosures = null;
+    /**
+     * @var list<Closure>|null
+     */
+    private ?array $inputClosures = null;
 
     /**
      * @param array<string, mixed> $config
@@ -42,21 +51,30 @@ class GridSearchForm extends Widget
         parent::__construct($config);
     }
 
-    public function button(?Closure $button): static
+    /**
+     * @param Closure(Button): Button $button
+     */
+    public function button(Closure $button): static
     {
-        $this->button = $button;
+        $this->buttonClosures[] = $button;
         return $this;
     }
 
-    public function input(?Closure $input): static
+    /**
+     * @param Closure(TextInput): TextInput $input
+     */
+    public function input(Closure $input): static
     {
-        $this->input = $input;
+        $this->inputClosures[] = $input;
         return $this;
     }
 
-    public function form(?Closure $form): static
+    /**
+     * @param Closure(Form): Form $form
+     */
+    public function form(Closure $form): static
     {
-        $this->form = $form;
+        $this->formClosures[] = $form;
         return $this;
     }
 
@@ -87,7 +105,7 @@ class GridSearchForm extends Widget
             ->method('get')
             ->content(...[...$this->getHiddenInputs($parts[1] ?? ''), $this->getInputGroup()]);
 
-        return $this->form ? ($this->form)($form) : $form;
+        return $this->evaluate($this->formClosures, $form);
     }
 
     /**
@@ -118,15 +136,10 @@ class GridSearchForm extends Widget
         $button = Button::make()
             ->class('btn')
             ->icon($this->icon)
-            ->type('submit')
-            ->render();
-
-        if ($this->button) {
-            $button = ($this->button)($button);
-        }
+            ->type('submit');
 
         return InputGroup::make()
-            ->prepend($button)
+            ->prepend($this->evaluate($this->buttonClosures, $button))
             ->content($this->getInput());
     }
 
@@ -143,6 +156,6 @@ class GridSearchForm extends Widget
             $input->attribute('onfocus', 'this.setSelectionRange(this.value.length,this.value.length);');
         }
 
-        return $this->input ? ($this->input)($input) : $input;
+        return $this->evaluate($this->inputClosures, $input);
     }
 }

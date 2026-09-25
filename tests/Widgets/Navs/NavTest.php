@@ -100,10 +100,11 @@ class NavTest extends TestCase
                 ->url('/')
                 ->badge(fn (Badge $badge) => $badge->value('New')->class('badge'))
                 ->icon(fn (Icon $icon) => $icon->name('home')->addClass('hidden'))
-                ->link(fn (A $link) => $link->addClass('home')))
+                ->link(fn (A $link) => $link->addClass('home'))
+                ->link(fn (A $link) => $link->addClass('start')))
             ->render();
 
-        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active home" href="/"><span class="hidden nav-link-icon fas fa-home"></span><span class="nav-link-label">Home</span><span class="badge">New</span></a></li></ul>', $content);
+        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active home start" href="/"><span class="hidden nav-link-icon fas fa-home"></span><span class="nav-link-label">Home</span><span class="badge">New</span></a></li></ul>', $content);
     }
 
     public function testActiveItemFromUrl(): void

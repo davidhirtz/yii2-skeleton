@@ -6,24 +6,25 @@ namespace Hirtz\Skeleton\Widgets\Traits;
 
 use Closure;
 use Hirtz\Skeleton\Html\A;
-use Stringable;
 
 trait LinkTrait
 {
-    protected ?Closure $link = null;
+    /**
+     * @var list<Closure>|null
+     */
+    private ?array $linkClosures = null;
 
     /**
-     * @param Closure(A):(string|Stringable)|null $link
-     * @return $this
+     * @param Closure(A): A $link
      */
-    public function link(?Closure $link): static
+    public function link(Closure $link): static
     {
-        $this->link = $link;
+        $this->linkClosures[] = $link;
         return $this;
     }
 
-    protected function getLink(A $link): string|Stringable|null
+    protected function getLink(A $link): A
     {
-        return $this->link ? ($this->link)($link) : $link;
+        return $this->evaluate($this->linkClosures, $link);
     }
 }
