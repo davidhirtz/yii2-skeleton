@@ -1,4 +1,4 @@
-## Unreleased
+## 3.4.0 (September 25, 2026)
 
 - Changed the `LinkTrait::link()` and `GridSearchForm` `button()`, `input()` and `form()` closures to stack; `button()` receives the `Button` widget
 
