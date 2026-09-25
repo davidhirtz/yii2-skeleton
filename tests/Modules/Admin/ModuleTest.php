@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Modules\Admin;
 
+use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\Admin\ModuleInterface;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\MainMenu;
@@ -17,6 +18,7 @@ use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
 use Hirtz\Skeleton\Widgets\Widget;
 use Yii;
 use yii\base\Event;
+use yii\rbac\Item;
 
 class ModuleTest extends TestCase
 {
@@ -58,6 +60,22 @@ class ModuleTest extends TestCase
     public function testDashboard(): void
     {
         self::assertStringContainsString('Test Module', Dashboard::make()->render());
+    }
+
+    public function testSortAuthItemsListsAdminAndManagerFirst(): void
+    {
+        $items = [];
+
+        foreach (['author' => Item::TYPE_ROLE, 'user' => Item::TYPE_PERMISSION, 'manager' => Item::TYPE_ROLE, 'entry' => Item::TYPE_PERMISSION, 'admin' => Item::TYPE_ROLE, 'editor' => Item::TYPE_ROLE] as $name => $type) {
+            $item = AuthItem::create();
+            $item->name = $name;
+            $item->type = $type;
+
+            $items[$name] = $item;
+        }
+
+        $names = array_keys($this->module->sortAuthItems($items));
+        self::assertSame(['admin', 'manager', 'author', 'editor', 'user', 'entry'], $names);
     }
 
     public function testConfigureEventOnMainMenu(): void

@@ -9,6 +9,7 @@
 - Added `TypeAttributeTrait::getDefaultType()`
 - Added `getDefaultAdminIcon()` as a fallback for `AdminModelTrait::getAdminIcon()`
 - Changed search results to be named like the page header, replacing `SearchableTrait::getSearchResultTitle()`
+- Added `Modules\Admin\Module::sortRoles()`: the admin lists admin and manager before the other roles
 
 ## 3.2.0 (September 24, 2026)
 

@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UserLoginController;
 use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Request;
@@ -260,6 +261,40 @@ class Module extends \Hirtz\Skeleton\Base\Module
         }
 
         return $dashboard;
+    }
+
+    /**
+     * The auth items of the admin's permission lists: roles first, in the order of {@see sortRoles()}, then
+     * permissions by name.
+     *
+     * @param array<string, AuthItem> $items
+     * @return array<string, AuthItem>
+     */
+    public function sortAuthItems(array $items): array
+    {
+        $roles = array_filter($items, fn (AuthItem $item): bool => $item->isRole());
+        return $this->sortRoles($roles) + $items;
+    }
+
+    /**
+     * Admin and manager lead, the rest follow by name. A project overrides it for roles of its own.
+     *
+     * @param array<string, AuthItem> $roles by name
+     * @return array<string, AuthItem>
+     */
+    public function sortRoles(array $roles): array
+    {
+        ksort($roles);
+
+        $sorted = [];
+
+        foreach ([User::AUTH_ROLE_ADMIN, User::AUTH_ROLE_MANAGER] as $name) {
+            if (isset($roles[$name])) {
+                $sorted[$name] = $roles[$name];
+            }
+        }
+
+        return $sorted + $roles;
     }
 
     /**

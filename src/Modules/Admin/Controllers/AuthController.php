@@ -47,7 +47,7 @@ class AuthController extends Controller
             ->allWithChildren();
 
         $provider = new ArrayDataProvider([
-            'allModels' => $items,
+            'allModels' => $this->module->sortAuthItems($items),
             'pagination' => false,
         ]);
 
