@@ -1,4 +1,4 @@
-## Unreleased
+## 3.3.0 (September 25, 2026)
 
 - Changed `migrate/backup` to dump binary columns as hex, so the dump is valid UTF-8
 - Added `Mail\Mailer::getTransportError()`: the system page and `email/test` name a missing mailer bridge or HTTP client
