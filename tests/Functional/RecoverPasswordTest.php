@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Functional;
 
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserToken;
@@ -37,7 +39,7 @@ class RecoverPasswordTest extends TestCase
         $this->open('admin/account/recover');
         $this->submitPasswordRecoverForm($user->email);
 
-        $known = self::$crawler->html();
+        $known = $this->getNormalizedLoginPage($user->email);
 
         self::assertTrue($this->mailer->hasMessages());
         self::assertSelectorNotExists('.form-error');
@@ -48,8 +50,8 @@ class RecoverPasswordTest extends TestCase
         $this->submitPasswordRecoverForm('invalid-email@domain.com');
 
         // Same page, same redirect, no email — an unknown address is indistinguishable from a known one
-        self::assertEquals($known, self::$crawler->html());
-        self::assertCurrentUrlEquals('');
+        self::assertEquals($known, $this->getNormalizedLoginPage('invalid-email@domain.com'));
+        self::assertCurrentUrlEquals('/admin/account/login');
         self::assertFalse($this->mailer->hasMessages());
     }
 
@@ -69,6 +71,9 @@ class RecoverPasswordTest extends TestCase
 
         $this->open("admin/account/recover");
         $this->submitPasswordRecoverForm($user->email);
+
+        self::assertCurrentUrlEquals('/admin/account/login');
+        self::assertInputValueSame(Html::getInputName(LoginForm::instance(), 'email'), $user->email);
 
         $user = User::findOne($user->id);
         self::assertNotNull($user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
@@ -119,6 +124,14 @@ class RecoverPasswordTest extends TestCase
 
         self::assertAnyValidationErrorSame("The email to $user->email could not be sent. Please try again later.");
         self::assertNull($user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
+    }
+
+    private function getNormalizedLoginPage(string $email): string
+    {
+        $html = self::$crawler->filter('main')->html() . self::$crawler->filter('flash-alert')->last()->html();
+        $html = str_replace($email, '{email}', $html);
+
+        return preg_replace('/name="_csrf" value="[^"]+"/', '', $html) ?? self::fail('Invalid HTML.');
     }
 
     protected function submitPasswordRecoverForm(string $email): void

@@ -238,15 +238,17 @@ class AccountController extends Controller
         $form->email = $this->request->get('email', Application::current()->getSession()->get('email'));
 
         if ($form->load($this->request->post())) {
+            Application::current()->getSession()->set('email', $form->email);
+
             if ($form->recover()) {
                 $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SENT_EMAIL', [
                     'email' => $form->email,
                 ]));
 
-                return $this->goHome();
+                return $this->webuser->getIsGuest()
+                    ? $this->redirect(['login'])
+                    : $this->goHome();
             }
-
-            Application::current()->getSession()->set('email', $form->email);
         }
 
         return $this->render('recover', [
