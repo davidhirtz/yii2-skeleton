@@ -22,6 +22,7 @@ import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
 
 import './includes/FlashAlert';
+import './includes/submitOnEnter';
 
 declare global {
     interface Window {
