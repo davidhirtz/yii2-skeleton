@@ -56,7 +56,7 @@ class PasswordResetTest extends TestCase
         $user = $this->openPasswordResetUrl();
 
         self::submitPasswordResetForm('new-password', 'new-password');
-        self::assertCurrentUrlEquals('/');
+        self::assertCurrentUrlEquals('/admin/dashboard/index');
 
         self::assertFalse($this->getWebUser()->getIsGuest());
         self::assertEquals($user->id, $this->getWebUser()->getId());
