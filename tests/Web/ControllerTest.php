@@ -5,13 +5,39 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Web;
 
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Web\Controller;
 use Stringable;
 use Yii;
 use yii\base\Model;
+use yii\base\Module;
 
 class ControllerTest extends TestCase
 {
+    use UserFixtureTrait;
+
+    public function testGoHomeLeadsToTheWebsite(): void
+    {
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
+        $controller = new Controller('test', Yii::$app);
+
+        self::assertSame('/', $this->getGoHomePath($controller));
+    }
+
+    public function testGoHomeLeadsAGuestInTheAdminToTheWebsite(): void
+    {
+        $controller = new Controller('test', Yii::$app->getModule('admin'));
+        self::assertSame('/', $this->getGoHomePath($controller));
+    }
+
+    public function testGoHomeLeadsAUserInTheAdminToTheDashboard(): void
+    {
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
+        $controller = new Controller('test', Yii::$app->getModule('admin'));
+
+        self::assertSame('/admin/dashboard/index', $this->getGoHomePath($controller));
+    }
+
     public function testErrorOrSuccessWithModelHavingErrors(): void
     {
         $model = new Model();
@@ -97,5 +123,14 @@ class ControllerTest extends TestCase
         });
 
         self::assertSame('<a href="/admin">Link</a>', $this->getWebSession()->getAllFlashes()['success'][0]);
+    }
+
+    /**
+     * @param Controller<covariant Module> $controller
+     */
+    private function getGoHomePath(Controller $controller): ?string
+    {
+        $location = $controller->goHome()->getHeaders()->get('Location');
+        return is_string($location) ? (parse_url($location, PHP_URL_PATH) ?: null) : null;
     }
 }

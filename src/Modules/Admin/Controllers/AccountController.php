@@ -277,7 +277,9 @@ class AccountController extends Controller
 
             // A user who owes a second factor is not logged in by the reset, so the login form is where the
             // flow has to continue.
-            return $this->redirect($this->webuser->getIsGuest() ? ['login'] : ['/admin/dashboard/index']);
+            return $this->webuser->getIsGuest()
+                ? $this->redirect(['login'])
+                : $this->goHome();
         }
 
         return $this->render('reset', [

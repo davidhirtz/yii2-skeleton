@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Web;
 
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Modules\Admin\Module as AdminModule;
 use Override;
 use Stringable;
 use Yii;
 use yii\base\Event;
 use yii\base\Model;
 use yii\base\Module;
+use yii\web\Response;
 
 /**
  * @template T of Module
@@ -80,6 +82,32 @@ class Controller extends \yii\web\Controller
     {
         $content = parent::render($view, $params);
         return $this->spacelessOutput ? $this->stripWhitespaceFromHtml($content) : $content;
+    }
+
+    /**
+     * Inside the admin a signed-in user's home is the dashboard, not the website.
+     */
+    #[Override]
+    public function goHome(): Response
+    {
+        return !$this->webuser->getIsGuest() && $this->isInAdminModule()
+            ? $this->redirect(['/admin/dashboard/index'])
+            : parent::goHome();
+    }
+
+    protected function isInAdminModule(): bool
+    {
+        $module = $this->module;
+
+        while ($module !== null) {
+            if ($module instanceof AdminModule) {
+                return true;
+            }
+
+            $module = $module->module;
+        }
+
+        return false;
     }
 
     protected function stripWhitespaceFromHtml(string $html): string
