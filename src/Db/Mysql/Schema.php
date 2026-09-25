@@ -29,6 +29,7 @@ class Schema extends \yii\db\mysql\Schema
             ->addArg('--comments')
             ->addArg('--create-options')
             ->addArg('--dump-date')
+            ->addArg('--hex-blob')
             ->addArg('--no-autocommit')
             ->addArg('--routines')
             ->addArg('--default-character-set=', $this->db->charset)

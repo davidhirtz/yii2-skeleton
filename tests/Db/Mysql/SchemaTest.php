@@ -31,6 +31,16 @@ class SchemaTest extends TestCase
     }
 
     /**
+     * Raw bytes such as `user_login.ip_address` are not UTF-8, and an importer reading the dump as text refuses it.
+     */
+    public function testGetBackupCommandDumpsBinaryColumnsAsHex(): void
+    {
+        $schema = new Schema(['db' => self::createConnection()]);
+
+        self::assertSame(2, substr_count($schema->getBackupCommand(), "'--hex-blob'"));
+    }
+
+    /**
      * Without the ceiling a table another connection still holds a shared metadata lock on blocks the dump's
      * `DROP TABLE` for `lock_wait_timeout`, a day on MariaDB (monorepo #141).
      */

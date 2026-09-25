@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Changed `migrate/backup` to dump binary columns as hex, so the dump is valid UTF-8
 - Added `Mail\Mailer::getTransportError()`: the system page and `email/test` name a missing mailer bridge or HTTP client
 - Fixed an error response to an admin request emptying the page behind its modal
 - Removed `FileHelper::getExtensionFromUrl`
