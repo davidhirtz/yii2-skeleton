@@ -23,6 +23,7 @@ use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
+use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
@@ -58,6 +59,7 @@ class TrailGridView extends GridView
             $this->getDataColumn(),
             $this->getUserColumn(),
             $this->getCreatedAtColumn(),
+            $this->getRestoreColumn(),
         ];
 
         parent::configure();
@@ -267,19 +269,37 @@ class TrailGridView extends GridView
         }
 
         return $rows
-            ? $this->getTrailAttributesTable($rows)->addClass('trail-update') . $this->getRestoreButton($trail)
+            ? $this->getTrailAttributesTable($rows)->addClass('trail-update')
             : '';
+    }
+
+    /**
+     * Last, and only while a row on the page can be restored at all.
+     */
+    protected function getRestoreColumn(): ?Column
+    {
+        $restorable = array_filter($this->provider->getModels(), $this->canRestore(...));
+
+        return ButtonColumn::make()
+            ->content(fn (Trail $trail): array => array_filter([$this->getRestoreButton($trail)]))
+            ->visible($restorable !== []);
+    }
+
+    protected function canRestore(mixed $trail): bool
+    {
+        $model = $trail instanceof Trail && RestoreTrail::isRestorable($trail) ? $trail->getModelRecord() : null;
+        return $model instanceof TrailModelInterface && $this->webuser->can($model->getPermissionName());
     }
 
     /**
      * @see TrailController::actionRestore()
      */
-    protected function getRestoreButton(Trail $trail): string|Stringable
+    protected function getRestoreButton(Trail $trail): ?Stringable
     {
-        $model = RestoreTrail::isRestorable($trail) ? $trail->getModelRecord() : null;
+        $model = $this->canRestore($trail) ? $trail->getModelRecord() : null;
 
-        if (!$model instanceof TrailModelInterface || !$this->webuser->can($model->getPermissionName())) {
-            return '';
+        if (!$model instanceof TrailModelInterface) {
+            return null;
         }
 
         $label = Yii::t('skeleton', 'TRAIL_BUTTON_RESTORE');
@@ -295,8 +315,8 @@ class TrailGridView extends GridView
 
         return Button::make()
             ->secondary()
-            ->text($label)
             ->icon('rotate-left')
+            ->tooltip($label)
             ->modal($modal);
     }
 
