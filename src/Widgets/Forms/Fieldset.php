@@ -102,10 +102,19 @@ class Fieldset extends Widget
                 continue;
             }
 
+            // Only a translated attribute is a language's row: every other one comes back once, in the app's language.
+            $isTranslated = $this->model->isI18nAttribute($field->property);
+
             foreach ($this->model->getI18nAttributeNames($field->property) as $language => $property) {
-                $rows[] = (clone $field)
+                $clone = (clone $field)
                     ->language($language)
                     ->property($property);
+
+                if ($isTranslated) {
+                    $clone->rowAttributes['data-language'] = $language;
+                }
+
+                $rows[] = $clone;
             }
         }
 

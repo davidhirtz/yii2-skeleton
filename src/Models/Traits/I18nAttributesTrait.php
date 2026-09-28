@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Traits;
 
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Validators\UniqueValidator;
 use Yii;
 use yii\validators\UniqueValidator as BaseUniqueValidator;
@@ -226,5 +227,37 @@ trait I18nAttributesTrait
     public function isI18nAttribute(string $attribute): bool
     {
         return in_array($attribute, $this->getI18nAttributes(), true);
+    }
+
+    /**
+     * The languages lacking a translation: one a visible attribute is empty in while the source language has it.
+     * An attribute left empty in the source is not expected anywhere else.
+     *
+     * @return list<string>
+     */
+    public function getMissingTranslationLanguages(): array
+    {
+        $i18n = Yii::$app->getI18n();
+        $missing = [];
+
+        foreach ($this->getI18nAttributes() as $attribute) {
+            if ($this instanceof VisibleAttributeInterface && !$this->isAttributeVisible($attribute)) {
+                continue;
+            }
+
+            if ($this->$attribute === null || $this->$attribute === '') {
+                continue;
+            }
+
+            foreach ($i18n->getLanguages() as $language) {
+                $name = $i18n->getAttributeName($attribute, $language);
+
+                if ($name !== $attribute && ($this->$name === null || $this->$name === '')) {
+                    $missing[$language] = $language;
+                }
+            }
+        }
+
+        return array_values($missing);
     }
 }

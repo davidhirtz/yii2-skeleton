@@ -11,6 +11,11 @@ interface I18nAttributeInterface
      */
     public function getI18nAttributes(): array;
 
+    /**
+     * @return list<string>
+     */
+    public function getMissingTranslationLanguages(): array;
+
     public function getI18nAttribute(string $attribute, ?string $language = null, bool $fallback = false): mixed;
     public function getI18nAttributeName(string $attribute, ?string $language = null, bool $fallback = false): string;
     /**

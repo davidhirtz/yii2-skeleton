@@ -24,6 +24,9 @@ class Module extends \Hirtz\Skeleton\Base\Module
 {
     final public const string AUTH_SYSTEM = 'system';
 
+    final public const string TRANSLATION_LAYOUT_INLINE = 'inline';
+    final public const string TRANSLATION_LAYOUT_TABS = 'tabs';
+
     /**
      * The value the aside cookie and the layout's `data-aside` attribute carry, `includes/aside.ts` writing
      * the same literal.
@@ -41,6 +44,12 @@ class Module extends \Hirtz\Skeleton\Base\Module
      * of {@see \Hirtz\Skeleton\Behaviors\SearchBehavior} and the `search` console commands.
      */
     public bool $enableSearch = true;
+
+    /**
+     * @var string how a form lays out its translations until an editor switches: `inline`, every language beneath
+     * the other, or `tabs`, one language at a time. The switch on the form is remembered per browser.
+     */
+    public string $translationLayout = self::TRANSLATION_LAYOUT_INLINE;
 
     /**
      * @var string[]|null the languages the admin interface is offered in, defaulting to the application's content

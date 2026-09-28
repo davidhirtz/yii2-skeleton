@@ -23,6 +23,7 @@ import tooltip from './includes/tooltips';
 import networkError from './includes/networkError';
 import {rememberFocus, restoreFocus} from './includes/focus';
 import {confirmLeaving, hasUnsavedChanges, trackUnsavedForm} from './includes/unsaved';
+import translationLayout from './includes/translationLayout';
 
 import './includes/FlashAlert';
 import './includes/submitOnEnter';
@@ -51,6 +52,7 @@ onLoad(($container) => {
     queryAll('[data-sticky]', sticky);
     queryAll('[data-tooltip]', tooltip);
     queryAll('form[data-unsaved]', trackUnsavedForm);
+    queryAll('form[data-translation-layout]', translationLayout);
     queryAll('[data-timezone-offset]', timezone);
 
     queryAll('[aria-invalid]', ($input: HTMLElement) => {

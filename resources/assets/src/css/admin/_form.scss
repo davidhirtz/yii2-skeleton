@@ -176,3 +176,31 @@
   display: grid;
   gap: .5rem;
 }
+
+// the languages of a translated form, one at a time or all together (`includes/translationLayout.ts`)
+.translation-toolbar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.translation-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+
+  .btn[aria-pressed="true"] {
+    background-color: var(--btn-primary-bg);
+    border-color: var(--btn-primary-border-color);
+    color: var(--btn-primary-color);
+  }
+
+  // a language the record lacks a translation for
+  .btn[data-missing]::after {
+    content: "•";
+    margin-left: .25rem;
+  }
+}

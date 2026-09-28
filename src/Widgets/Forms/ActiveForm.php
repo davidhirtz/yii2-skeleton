@@ -11,7 +11,9 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
+use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\StaleSaveInterface;
+use Hirtz\Skeleton\Modules\Admin\Module as AdminModule;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
@@ -121,6 +123,12 @@ class ActiveForm extends Widget
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-boost'] ??= "true";
 
+        $module = Yii::$app->getModule('admin');
+
+        if ($module instanceof AdminModule && $this->hasTranslationToolbar()) {
+            $this->attributes['data-translation-layout'] ??= $module->translationLayout;
+        }
+
         if ($this->warnOnLeave && !$this->readonly) {
             $this->attributes['data-unsaved'] ??= Yii::t('skeleton', 'COMMON_UNSAVED_CHANGES_CONFIRM');
 
@@ -197,7 +205,7 @@ class ActiveForm extends Widget
     {
         return strtr($this->layout, [
             '{errors}' => $this->getErrors(),
-            '{rows}' => $this->getStaleSaveInput() . $this->getRows(),
+            '{rows}' => $this->getStaleSaveInput() . $this->getTranslatedRows(),
             '{buttons}' => $this->getButtons(),
             '{footer}' => $this->getFooter(),
         ]);
@@ -217,6 +225,62 @@ class ActiveForm extends Widget
         $value = $loadedAt && !$this->model->hasErrors('loadedAt') ? $loadedAt : time();
 
         return Html::hiddenInput(Html::getInputName($this->model, 'loadedAt'), (string)$value);
+    }
+
+    /**
+     * One button per language and the switch between every language at once and one at a time, driven by
+     * `includes/translationLayout.ts`; the rows it hides carry `data-language` ({@see Fieldset}). A language the
+     * record lacks a translation for is marked.
+     */
+    protected function getTranslationToolbar(): string
+    {
+        if (!$this->hasTranslationToolbar() || !$this->model instanceof I18nAttributeInterface) {
+            return '';
+        }
+
+        $i18n = Yii::$app->getI18n();
+        $languages = $i18n->getLanguages();
+        $missing = $this->model->getMissingTranslationLanguages();
+        $tabs = Div::make()
+            ->class('translation-tabs')
+            ->attribute('role', 'group')
+            ->attribute('aria-label', Yii::t('skeleton', 'FORM_TRANSLATION_LANGUAGES'));
+
+        foreach ($languages as $language) {
+            $tabs->addContent(Button::make()
+                ->class('btn btn-secondary')
+                ->attribute('data-translation-language', $language)
+                ->attribute('data-missing', in_array($language, $missing, true) ? true : null)
+                ->text($i18n->getLabel($language)));
+        }
+
+        return (string)Div::make()
+            ->class('translation-toolbar')
+            ->attribute('data-translation-toolbar', true)
+            ->content($tabs, Button::make()
+                ->class('btn btn-link')
+                ->attribute('data-translation-toggle', true)
+                ->attribute('data-label-inline', Yii::t('skeleton', 'FORM_TRANSLATION_SHOW_ONE'))
+                ->attribute('data-label-tabs', Yii::t('skeleton', 'FORM_TRANSLATION_SHOW_ALL'))
+                ->text(Yii::t('skeleton', 'FORM_TRANSLATION_SHOW_ONE')));
+    }
+
+    /**
+     * The toolbar only where the rows hold a translated field: a model may declare translations its form leaves out.
+     */
+    protected function getTranslatedRows(): string
+    {
+        $rows = (string)$this->getRows();
+
+        return (str_contains($rows, ' data-language="') ? $this->getTranslationToolbar() : '') . $rows;
+    }
+
+    protected function hasTranslationToolbar(): bool
+    {
+        return Yii::$app->getModule('admin') instanceof AdminModule
+            && $this->model instanceof I18nAttributeInterface
+            && $this->model->getI18nAttributes()
+            && count(Yii::$app->getI18n()->getLanguages()) > 1;
     }
 
     protected function getErrors(): string|Stringable
