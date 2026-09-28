@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it} from 'vitest';
-import initHotspot from '../../resources/assets/src/js/includes/tooltips';
+import initHotspot from '../../../src/js/includes/tooltips';
 
 const render = (html: string): HTMLElement => {
     document.body.innerHTML = html;
