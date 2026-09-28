@@ -105,6 +105,7 @@ class GridView extends Widget
     protected bool $showOnEmpty = true;
 
     protected ?string $emptyMessage = null;
+    protected ?Stringable $emptyButton = null;
 
     /**
      * @var bool whether the status icon cycles the record's status on a click. Public so a project can switch it off
@@ -267,6 +268,15 @@ class GridView extends Widget
      * What the grid is for, rendered in place of the bare "no records" summary while it is empty. A grid whose
      * empty state is not self-explanatory sets it in `configure()`.
      */
+    /**
+     * The way to the first record, shown with the empty message: the page's create button.
+     */
+    public function emptyButton(?Stringable $emptyButton): static
+    {
+        $this->emptyButton = $emptyButton;
+        return $this;
+    }
+
     public function emptyMessage(?string $emptyMessage): static
     {
         $this->emptyMessage = $emptyMessage;
@@ -277,7 +287,8 @@ class GridView extends Widget
     {
         return GridSummary::make()
             ->grid($this)
-            ->emptyMessage($this->emptyMessage);
+            ->emptyMessage($this->emptyMessage)
+            ->emptyButton($this->emptyButton);
     }
 
     protected function getItems(): ?Stringable

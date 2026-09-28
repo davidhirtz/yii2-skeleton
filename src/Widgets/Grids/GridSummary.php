@@ -20,6 +20,7 @@ class GridSummary extends Widget
 
     protected ?string $message = null;
     protected ?string $emptyMessage = null;
+    protected ?Stringable $emptyButton = null;
     /**
      * @var array<string, mixed>
      */
@@ -41,6 +42,16 @@ class GridSummary extends Widget
         return $this;
     }
 
+    /**
+     * The way to the grid's first record, shown beside the empty message — the create button of the page, which
+     * checks its own permission.
+     */
+    public function emptyButton(?Stringable $emptyButton): static
+    {
+        $this->emptyButton = $emptyButton;
+        return $this;
+    }
+
     #[Override]
     protected function renderContent(): string|Stringable
     {
@@ -56,6 +67,10 @@ class GridSummary extends Widget
             $alert->info();
         } else {
             $alert->warning();
+        }
+
+        if ($this->emptyButton && !$this->grid->provider->getCount() && !$this->grid->search->getValue()) {
+            $alert->button($this->emptyButton);
         }
 
         if ($this->grid->search->getValue()) {

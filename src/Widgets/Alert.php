@@ -23,13 +23,13 @@ class Alert extends Widget
      */
     protected array $buttons = [];
 
-    public function button(Button $btn): static
+    public function button(Button|Stringable $btn): static
     {
         $this->buttons[] = $btn;
         return $this;
     }
 
-    public function buttons(Button ...$buttons): static
+    public function buttons(Button|Stringable ...$buttons): static
     {
         $this->buttons = array_values($buttons);
         return $this;
