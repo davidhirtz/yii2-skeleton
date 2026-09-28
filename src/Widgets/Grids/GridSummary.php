@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids;
 
+use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
@@ -90,8 +91,9 @@ class GridSummary extends Widget
         $count = $this->grid->provider->getCount();
         $totalCount = $this->grid->provider->getTotalCount();
 
+        // The summary is markup, and the search is whatever the URL says: `?q=<img onerror=…>` ran in the admin.
         $params = [
-            'search' => $this->grid->search->getValue(),
+            'search' => Html::encode($this->grid->search->getValue()),
             'totalCount' => $this->grid->provider->getTotalCount(),
         ];
 
