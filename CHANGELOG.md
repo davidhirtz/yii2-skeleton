@@ -1,6 +1,6 @@
 ## Unreleased
 
-- Added a translation layout to `ActiveForm`: one language at a time or all together, defaulting to `Modules\Admin\Module::$translationLayout`, and `I18nAttributeInterface::getMissingTranslationLanguages()`, shown by `Widgets\Grids\MissingTranslations`
+- Added a translation layout to `ActiveForm`: one language at a time or all together, defaulting to `Modules\Admin\Module::$translationLayout`, and `I18nAttributeInterface::getMissingTranslationLanguages()`, shown by `Widgets\Grids\Columns\MissingTranslationsColumn`
 - Added `ActiveForm::$warnOnLeave`: leaving a form with unsaved changes asks first
 - Added `Models\Actions\RestoreTrail` and `TrailController::actionRestore()`: an update's previous values are restored from the history
 - Added `StaleSaveInterface` and `StaleSaveTrait`: `ActiveForm` posts when it was rendered, and a save is refused while the record's trail holds an update from after that
