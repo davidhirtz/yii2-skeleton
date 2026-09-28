@@ -52,6 +52,11 @@
     color: var(--table-color);
   }
 
+  // Without the outline, the colour is what shows a keyboard user where the focus is.
+  td a:not(.btn,.badge):focus-visible {
+    color: var(--link-hover-color);
+  }
+
   a.asc, a.desc {
     text-decoration: underline;
   }

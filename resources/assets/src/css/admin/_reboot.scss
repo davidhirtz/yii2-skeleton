@@ -77,6 +77,12 @@ a {
   &:hover {
     --link-color: var(--link-hover-color);
   }
+
+  // A text link shows its focus in its colour, as it does its hover; a button or a nav link draws its own.
+  &:not(.btn, .nav-link):focus-visible {
+    --link-color: var(--link-hover-color);
+    outline: 0;
+  }
 }
 
 
