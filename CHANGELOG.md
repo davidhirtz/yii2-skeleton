@@ -1,4 +1,4 @@
-## Unreleased
+## 3.5.0 (September 28, 2026)
 
 - Added `Web\ContentSecurityPolicy`, the application's `contentSecurityPolicy` component: the admin allows only scripts carrying the page's nonce, which `Web\View::$nonce` stamps on every script it renders; `Web\Controller::$strictContentSecurityPolicy` sends it elsewhere
 - Changed `Web\Controller::$contentSecurityPolicy` to add `object-src 'none'; base-uri 'self'`
