@@ -240,6 +240,9 @@ class ActiveForm extends Widget
 
         if ($error !== null) {
             Application::current()->getSession()->addFlash('warning', $error);
+
+            // Saving again is the answer to the warning, so `includes/staleSave.ts` takes the flash away on submit.
+            $this->attributes['data-stale-save'] = $error;
         }
     }
 
