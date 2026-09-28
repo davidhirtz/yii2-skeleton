@@ -8,8 +8,7 @@ use Override;
 use Yii;
 
 /**
- * The web Request class extends the default Yii class by a draft mode and the option to set the host info via
- * application params.
+ * The web Request class extends the default Yii class by a draft mode, environments and allowed hosts.
  */
 class Request extends \yii\web\Request
 {
@@ -24,6 +23,14 @@ class Request extends \yii\web\Request
         self::ENVIRONMENT_LOCAL => ['localhost', '*.localhost'],
         self::ENVIRONMENT_STAGE => ['stage.*', '*.stage.*'],
     ];
+
+    /**
+     * @var list<string> the host names a request may carry, matched with `fnmatch()` like {@see $environments};
+     * anything else is refused before routing. Empty means any host. Defaults to `params.allowedHosts`. A local host
+     * always passes. Without it, a link built from the request — a password reset mailed to a user — names whatever
+     * host the request claimed.
+     */
+    public array $allowedHosts = [];
 
     /**
      * @var string the parameter name used to add the language to a URL via `UrlManager::$i18nUrl` and to switch the
@@ -48,12 +55,6 @@ class Request extends \yii\web\Request
         return $request instanceof static ? $request : null;
     }
 
-    /**
-     * Sets the host info via params after draft mode is checked. Setting the host info manually can be useful if
-     * multiple domains link to a single website and the URLs (e.g., in the sitemap.xml) should be consistent or to
-     * prevent faked header attacks (see https://www.acunetix.com/vulnerabilities/web/host-header-attack). The original
-     * value of `$hostInfo` is still available via `Request::getRequestHostInfo()`.
-     */
     #[Override]
     public function init(): void
     {
@@ -61,7 +62,36 @@ class Request extends \yii\web\Request
             $this->cookieValidationKey = Yii::$app->params['cookieValidationKey'] ?? '';
         }
 
+        if (!$this->allowedHosts) {
+            $hosts = Yii::$app->params['allowedHosts'] ?? [];
+            $this->allowedHosts = is_array($hosts) ? array_values(array_filter($hosts, is_string(...))) : [];
+        }
+
         parent::init();
+    }
+
+    public function addAllowedHosts(string ...$hosts): void
+    {
+        $this->allowedHosts = array_values(array_unique([...$this->allowedHosts, ...$hosts]));
+    }
+
+    public function isAllowedHost(): bool
+    {
+        if (!$this->allowedHosts || $this->getEnvironment() === self::ENVIRONMENT_LOCAL) {
+            return true;
+        }
+
+        $host = $this->getHostName();
+
+        if ($host !== null) {
+            foreach ($this->allowedHosts as $pattern) {
+                if (fnmatch($pattern, $host)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

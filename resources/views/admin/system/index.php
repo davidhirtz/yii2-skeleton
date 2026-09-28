@@ -8,6 +8,7 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Modules\Admin\Controllers\SystemController;
+use Hirtz\Skeleton\Modules\Admin\Widgets\HostAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\MigrationAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SystemSubmenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\ApplicationInfo;
@@ -23,4 +24,5 @@ echo Header::make()
 echo SystemSubmenu::make();
 echo MigrationAlert::make();
 echo SentryAlert::make();
+echo HostAlert::make();
 echo ApplicationInfo::make();

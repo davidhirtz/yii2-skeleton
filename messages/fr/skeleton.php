@@ -164,6 +164,7 @@ return [
     'GRID_SUMMARY_NO_RESULTS' => 'Désolé, aucun enregistrement trouvé.',
     'GRID_SUMMARY_NO_RESULTS_SEARCH' => 'Désolé, aucun résultat ne correspond à « {search} ».',
     'HEADER_PAGE' => 'Page {page}',
+    'HOST_ALERT_MESSAGE' => 'Les liens de cette installation, y compris ceux des e-mails de réinitialisation du mot de passe, reprennent l’hôte de la requête. Veuillez définir allowedHosts dans config/params.php ou fixer urlManager.hostInfo.',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Votre adresse e-mail est introuvable.',
     'LOCATION_TAGS' => 'Étiquettes',

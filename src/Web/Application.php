@@ -12,6 +12,7 @@ use yii\base\InvalidCallException;
 use yii\debug\Module as YiiDebugModule;
 use Hirtz\Skeleton\Modules\Debug\Module as DebugModule;
 use Hirtz\Skeleton\Mail\Mailer;
+use yii\web\BadRequestHttpException;
 use yii\web\Cookie;
 
 /**
@@ -96,6 +97,22 @@ class Application extends \yii\web\Application
         parent::bootstrap();
 
         $this->setDefaultEmail();
+    }
+
+    /**
+     * Before routing, since everything a route builds from the host — a mailed link, a canonical URL, a cached page —
+     * would carry the one the request claimed.
+     *
+     * @param \yii\web\Request $request
+     */
+    #[Override]
+    public function handleRequest($request): \yii\web\Response
+    {
+        if ($request instanceof Request && !$request->isAllowedHost()) {
+            throw new BadRequestHttpException();
+        }
+
+        return parent::handleRequest($request);
     }
 
     /**

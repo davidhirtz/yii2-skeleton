@@ -52,9 +52,15 @@ class UrlManager extends \yii\web\UrlManager
     public $enablePrettyUrl = true;
     public $showScriptName = false;
 
+    private ?string $configuredHostInfo = null;
+    private bool $isHostInfoFromRequest = false;
+    private bool $isInitialized = false;
+
     #[Override]
     public function init(): void
     {
+        $this->isInitialized = true;
+
         if (!$this->enablePrettyUrl) {
             $this->i18nUrl = false;
         }
@@ -122,6 +128,32 @@ class UrlManager extends \yii\web\UrlManager
     }
 
     /**
+     * A host set in the configuration is the canonical one: the request's never replaces it.
+     *
+     * @param string|null $value
+     */
+    #[Override]
+    public function setHostInfo($value): void
+    {
+        parent::setHostInfo($value);
+
+        if (!$this->isInitialized) {
+            $this->configuredHostInfo = $value;
+        }
+
+        $this->isHostInfoFromRequest = false;
+    }
+
+    /**
+     * Whether absolute URLs name the host the request claimed, since neither the configuration nor anything after
+     * it pinned one.
+     */
+    public function isHostInfoFromRequest(): bool
+    {
+        return $this->isHostInfoFromRequest;
+    }
+
+    /**
      * @param array<int|string, mixed>|string $params
      */
     public function createDraftUrl(array|string $params): string
@@ -150,7 +182,11 @@ class UrlManager extends \yii\web\UrlManager
     public function parseRequest($request): bool|array
     {
         $this->parseRedirectMap($request, $this->redirectMap);
-        $this->setHostInfo($request->getHostInfo());
+
+        if ($this->configuredHostInfo === null) {
+            $this->setHostInfo($request->getHostInfo());
+            $this->isHostInfoFromRequest = true;
+        }
 
         if ($this->draftSubdomain) {
             $this->setDraftStatus($request);

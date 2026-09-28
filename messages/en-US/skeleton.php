@@ -164,6 +164,7 @@ return [
     'GRID_SUMMARY_NO_RESULTS' => 'Sorry, no records found.',
     'GRID_SUMMARY_NO_RESULTS_SEARCH' => 'Sorry, no results found matching matching "{search}".',
     'HEADER_PAGE' => 'Page {page}',
+    'HOST_ALERT_MESSAGE' => 'Links on this installation, password reset emails among them, take their host from the request. Set allowedHosts in config/params.php, or pin urlManager.hostInfo.',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Your email was not found.',
     'LOCATION_TAGS' => 'Tags',

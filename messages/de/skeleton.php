@@ -164,6 +164,7 @@ return [
     'GRID_SUMMARY_NO_RESULTS' => 'Leider wurden keine Ergebnisse gefunden.',
     'GRID_SUMMARY_NO_RESULTS_SEARCH' => 'Leider wurden keine Ergebnisse für die Suchanfrage "{search}" gefunden.',
     'HEADER_PAGE' => 'Seite {page}',
+    'HOST_ALERT_MESSAGE' => 'Links dieser Installation, auch die in E-Mails zum Zurücksetzen des Passworts, übernehmen den Host der Anfrage. Bitte allowedHosts in config/params.php setzen oder urlManager.hostInfo festlegen.',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Ihre E-Mail-Adresse wurde nicht gefunden.',
     'LOCATION_TAGS' => 'Tags',

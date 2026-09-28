@@ -164,6 +164,7 @@ return [
     'GRID_SUMMARY_NO_RESULTS' => 'Lamentamos, não foram encontrados registos.',
     'GRID_SUMMARY_NO_RESULTS_SEARCH' => 'Lamentamos, não foram encontrados resultados correspondentes a "{search}".',
     'HEADER_PAGE' => 'Página {page}',
+    'HOST_ALERT_MESSAGE' => 'As ligações desta instalação, incluindo as dos e-mails de reposição da palavra-passe, usam o anfitrião do pedido. Defina allowedHosts em config/params.php ou fixe urlManager.hostInfo.',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'O seu e-mail não foi encontrado.',
     'LOCATION_TAGS' => 'Etiquetas',

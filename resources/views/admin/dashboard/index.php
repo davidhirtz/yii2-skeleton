@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 use Hirtz\Skeleton\Modules\Admin\Widgets\DirectoryAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\EnvironmentAlert;
+use Hirtz\Skeleton\Modules\Admin\Widgets\HostAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\MigrationAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\DashboardHeader;
 use Hirtz\Skeleton\Modules\Admin\Widgets\SentryAlert;
@@ -22,4 +23,5 @@ echo MigrationAlert::make();
 echo DirectoryAlert::make();
 echo EnvironmentAlert::make();
 echo SentryAlert::make();
+echo HostAlert::make();
 echo Dashboard::make();

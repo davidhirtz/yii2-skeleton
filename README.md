@@ -64,6 +64,7 @@ answer `null` there instead.
 | `passwordPepper` | none | appended to every password before hashing; `./yii params/pepper` |
 | `secretKey` | `cookieValidationKey` | encrypts 2FA secrets and signs tokens |
 | `adminAlias` | `admin` | the URL prefix of the admin module |
+| `allowedHosts` | none | host names a request may carry (`fnmatch()` patterns, `*.example.com`); any other gets a 400 before routing, local hosts always pass. Without it, or a pinned `urlManager.hostInfo`, links built from the request (password resets) name whatever host it claimed, and the admin says so |
 | `email` | `hostmaster@<server name>` | the sender of every mail |
 | `mailerDsn` | `sendmail://default` | the Symfony mailer transport; any installed bridge's scheme (`resend+api://KEY@default` with `symfony/resend-mailer` and `symfony/http-client`); `native://default` where the host's `sendmail` has no `-bs` mode |
 | `cookieDomain` | none | the `Domain` of the session and auth cookies |
