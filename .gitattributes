@@ -13,3 +13,4 @@
 /resources/tests/ export-ignore
 /tests/ export-ignore
 /tsconfig.json export-ignore
+/vitest.config.js export-ignore

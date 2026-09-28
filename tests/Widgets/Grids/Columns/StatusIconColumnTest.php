@@ -36,7 +36,9 @@ class StatusIconColumnTest extends TestCase
         self::assertStringContainsString('hx-post="/admin/user/status?id=1"', $html);
         self::assertStringContainsString('<span class="fas fa-user"></span>', $html);
 
-        // The tooltip names the status a click moves to, and the aria label is that status alone.
+        // The tooltip names the current status and the one a click moves to; `tooltips.ts` makes it the button's
+        // accessible name, since "Disabled" alone reads as a state rather than an action.
+        self::assertStringNotContainsString('aria-label', $html);
         self::assertStringContainsString(
             'title="' . Yii::t('skeleton', 'COMMON_STATUS_BUTTON_TOOLTIP', [
                 'status' => Yii::t('skeleton', 'COMMON_ENABLED'),

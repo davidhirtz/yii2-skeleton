@@ -84,7 +84,6 @@ class StatusIconColumn extends LinkColumn
                 'status' => $model->getStatusName(),
                 'next' => $next->getName(),
             ]))
-            ->ariaLabel($next->getName())
             // The grid alone, so a status toggle leaves the user where they are.
             ->replace($url, "#{$this->grid->getId()}");
     }

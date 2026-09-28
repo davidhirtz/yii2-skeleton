@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Fixed tooltips rendering their `title` as HTML; they now also show on keyboard focus and keep the text as the element's accessible name
 - Added `mailer` and `sentry` to the registry report without credentials or options
 - Added `Mail\Mailer::getMaskedTransportDsn()`
 

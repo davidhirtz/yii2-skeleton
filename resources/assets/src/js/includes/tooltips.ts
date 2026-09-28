@@ -15,17 +15,27 @@ document.addEventListener('tooltip:init', (event) => {
 const initHotspot = ($hotspot: HTMLElement) => {
     const $arrow = document.createElement('div');
     const $tooltip = document.createElement('div');
+    const $inner = document.createElement('div');
+    const title = $hotspot.title;
 
     $tooltip.classList.add('tooltip');
     $tooltip.setAttribute('role', 'tooltip');
-    $tooltip.innerHTML = `<div class="tooltip-inner">${$hotspot.title}</div>`;
+
+    // `title` comes back entity-decoded: written as markup, an escaped record name would run as HTML.
+    $inner.classList.add('tooltip-inner');
+    $inner.textContent = title;
 
     $arrow.classList.add('tooltip-arrow');
-    $tooltip.prepend($arrow);
+    $tooltip.append($arrow, $inner);
 
+    // The native tooltip would double this one, but the text stays the element's accessible name or description.
     $hotspot.removeAttribute('title');
 
-    $hotspot.addEventListener('mouseenter', () => {
+    if (!$hotspot.hasAttribute('aria-label')) {
+        $hotspot.setAttribute($hotspot.textContent?.trim() ? 'aria-description' : 'aria-label', title);
+    }
+
+    const show = () => {
         $hotspot.after($tooltip);
 
         computePosition($hotspot, $tooltip, {
@@ -59,9 +69,20 @@ const initHotspot = ($hotspot: HTMLElement) => {
                 [staticSide]: '-4px',
             });
         });
-    });
+    };
 
-    $hotspot.addEventListener('mouseleave', () => $tooltip.remove());
+    const hide = () => $tooltip.remove();
+
+    $hotspot.addEventListener('mouseenter', show);
+    $hotspot.addEventListener('mouseleave', hide);
+    $hotspot.addEventListener('focus', show);
+    $hotspot.addEventListener('blur', hide);
+
+    $hotspot.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            hide();
+        }
+    });
 }
 
 export default initHotspot;
