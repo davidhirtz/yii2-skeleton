@@ -7,12 +7,19 @@ namespace Hirtz\Skeleton\Filters;
 use Hirtz\Skeleton\Web\Application;
 use Override;
 use Yii;
+use yii\base\Event;
 use yii\base\InvalidConfigException;
 use yii\caching\TagDependency;
 
 class PageCache extends \yii\filters\PageCache
 {
     public const string TAG_DEPENDENCY_KEY = 'page-cache';
+
+    /**
+     * Triggered from `init()` before anything is derived from the configuration, so a listener may still change
+     * the duration, the variations or whether the page is cached at all.
+     */
+    public const string EVENT_CONFIGURE = 'configure';
 
     /**
      * @var bool whether to cache the response for logged-in users
@@ -47,6 +54,9 @@ class PageCache extends \yii\filters\PageCache
     #[Override]
     public function init(): void
     {
+        // A filter is a behavior, not a component: the event goes out through the class.
+        Event::trigger($this, self::EVENT_CONFIGURE);
+
         $request = Application::current()->getRequest();
 
         if ($this->enabled) {
