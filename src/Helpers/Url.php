@@ -18,6 +18,18 @@ class Url extends BaseUrl
     }
 
     /**
+     * A path on this host, safe to redirect to: `//host`, a backslash (which browsers read as a slash) and control
+     * characters would leave it.
+     */
+    public static function isLocalPath(string $url): bool
+    {
+        return str_starts_with($url, '/')
+            && !str_starts_with($url, '//')
+            && !str_contains($url, '\\')
+            && !preg_match('/[\x00-\x1f]/', $url);
+    }
+
+    /**
      * Trims the surrounding slashes and whitespace and encodes whatever whitespace is left, so two URLs that
      * differ in nothing else compare equal.
      */

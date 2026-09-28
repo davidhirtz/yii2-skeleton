@@ -174,6 +174,17 @@ class AccountSecurityTest extends TestCase
         self::assertStringEndsWith('/somewhere', (string)$response->getHeaders()->get('location'));
     }
 
+    public function testTheTimezoneNeverRedirectsOffTheHost(): void
+    {
+        $this->login('owner');
+
+        $response = $this->post('admin/account/timezone', ['timezone' => 'UTC'], ['redirect' => 'https://www.attacker.com']);
+
+        self::assertInstanceOf(Response::class, $response);
+        self::assertStringNotContainsString('attacker', (string)$response->getHeaders()->get('location'));
+        self::assertStringContainsString('dashboard', (string)$response->getHeaders()->get('location'));
+    }
+
     public function testAGuestIsSentToTheLoginPage(): void
     {
         self::assertNull(Yii::$app->runAction('admin/account/security'));

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Models\Forms\AccountConfirmForm;
 use Hirtz\Skeleton\Models\Forms\AccountCredentialsForm;
 use Hirtz\Skeleton\Models\Forms\AccountDeleteForm;
@@ -454,6 +455,8 @@ class AccountController extends Controller
         $user->update();
 
         $this->errorOrSuccess($user, Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_TIMEZONE'));
-        return $this->redirect($redirect ?? ['/admin/dashboard/index']);
+        return $this->redirect($redirect !== null && Url::isLocalPath($redirect)
+            ? $redirect
+            : ['/admin/dashboard/index']);
     }
 }
