@@ -113,6 +113,16 @@ describe('translationLayout', () => {
         setItem.mockRestore();
     });
 
+    it('shows every field when the browser rejects one that does not show', () => {
+        render('tabs');
+        expect(hidden('name-de')).toBe(true);
+
+        document.querySelector('#name-de input')!.dispatchEvent(new Event('invalid', {cancelable: true}));
+
+        expect(hidden('name-de')).toBe(false);
+        expect(active()).toEqual(['All fields']);
+    });
+
     it('keeps the language when its own field was rejected', () => {
         window.localStorage.setItem('translationLanguage', 'de');
         render('inline', 'aria-invalid="true"');

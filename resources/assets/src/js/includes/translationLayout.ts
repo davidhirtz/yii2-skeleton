@@ -80,6 +80,15 @@ const translationLayout = ($form: HTMLFormElement): void => {
         });
     };
 
+    // The browser's own check (`required`) cannot point at a field it cannot focus, and blocks the submit without a
+    // word. `invalid` fires before it looks for one, so a field hidden in another language brings every field back.
+    $form.addEventListener('invalid', (event) => {
+        if (choice !== ALL && (event.target as HTMLElement).closest<HTMLElement>('[data-language]')?.hidden) {
+            choice = ALL;
+            apply();
+        }
+    }, true);
+
     [$all, ...$languages].forEach(($button) => $button.addEventListener('click', () => {
         choice = $button.dataset.translationLanguage ?? ALL;
         write(choice);
