@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
+use Hirtz\Skeleton\Widgets\Modal;
+use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Modules\Admin\Controllers\TrailController;
+use Hirtz\Skeleton\Models\Actions\RestoreTrail;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Helpers\Url;
@@ -263,8 +267,37 @@ class TrailGridView extends GridView
         }
 
         return $rows
-            ? $this->getTrailAttributesTable($rows)->addClass('trail-update')
+            ? $this->getTrailAttributesTable($rows)->addClass('trail-update') . $this->getRestoreButton($trail)
             : '';
+    }
+
+    /**
+     * @see TrailController::actionRestore()
+     */
+    protected function getRestoreButton(Trail $trail): string|Stringable
+    {
+        $model = RestoreTrail::isRestorable($trail) ? $trail->getModelRecord() : null;
+
+        if (!$model instanceof TrailModelInterface || !$this->webuser->can($model->getPermissionName())) {
+            return '';
+        }
+
+        $label = Yii::t('skeleton', 'TRAIL_BUTTON_RESTORE');
+
+        $modal = Modal::make()
+            ->title($label)
+            ->text(Yii::t('skeleton', 'TRAIL_CONFIRM_RESTORE', ['model' => $model->getAdminName()]))
+            ->footer(Button::make()
+                ->primary()
+                ->text($label)
+                ->icon('rotate-left')
+                ->post(['/admin/trail/restore', 'id' => $trail->id]));
+
+        return Button::make()
+            ->secondary()
+            ->text($label)
+            ->icon('rotate-left')
+            ->modal($modal);
     }
 
     protected function getUpdatedAttributeContent(mixed $oldValue, mixed $newValue): string|Stringable

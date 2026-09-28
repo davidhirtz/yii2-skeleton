@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `Models\Actions\RestoreTrail` and `TrailController::actionRestore()`: an update's previous values are restored from the history
 - Added `StaleSaveInterface` and `StaleSaveTrait`: `ActiveForm` posts when it was rendered, and a save is refused while the record's trail holds an update from after that
 - Added `Filters\PageCache::EVENT_CONFIGURE`
 - Added a status dropdown to `SelectionTrait` (`canUpdateSelection()`, `getUpdateSelectionRoute()`); `getDeleteSelectionLabel()` and `getDeleteSelectionRoute()` are optional, a grid without a bulk delete offers none
