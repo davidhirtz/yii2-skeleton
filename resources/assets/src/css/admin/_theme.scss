@@ -41,19 +41,14 @@
 :root {
   --color-red-50: #FFEDEE;
   --color-red-200: #FFBEC2;
-  --color-red-300: #FFB3B8;
-  --color-red-350: #FF8A91;
   --color-red-400: #E97F81;
   --color-red-450: #E5575C;
   --color-red-500: #FB2C36;
   --color-red-600: #FA141F;
   --color-red-650: #D93F45;
   --color-red-900: #82181A;
-  --color-red-910: #6B2A30;
-  --color-red-930: #5A262B;
   --color-red-950: #3F1F22;
 
-  --color-yellow-50: #FEFCE8;
   --color-yellow-100: #FEF9C2;
   --color-yellow-300: #F0E08A;
   --color-yellow-400: #EDE36B;
@@ -63,11 +58,7 @@
 
   --color-green-50: #EDF6EE;
   --color-green-200: #BEDEC2;
-  --color-green-250: #9FE0B0;
-  --color-green-400: #6FCF8A;
   --color-green-500: #00C950;
-  --color-green-600: #00A63E;
-  --color-green-800: #2F5E3E;
   --color-green-900: #2A4534;
   --color-green-950: #1F3A28;
 
@@ -76,39 +67,27 @@
   --color-blue-200: #D2E8EF;
   --color-blue-400: #75BCD2;
   --color-blue-600: #67A5B6;
-  --color-blue-900: #1C398E;
 
   --color-slate-400: #B7C5D8;
-  --color-slate-500: #62748E;
 
-  --color-gray-50: #F9FAFB;
-  --color-gray-100: #F3F4F6;
-  --color-gray-200: #E5E7EB;
-  --color-gray-300: #D1D5DC;
-  --color-gray-500: #6A7282;
-  --color-gray-700: #2A2A2A;
-  --color-gray-900: #101828;
-
-  --color-neutral-100: #EAEAEA;
-  --color-neutral-200: #D8D8D8;
-  --color-neutral-400: #A0A0A0;
-  --color-neutral-600: #5C5C5C;
-  --color-neutral-650: #4A4A4A;
-  --color-neutral-700: #3D3D3D;
-  --color-neutral-750: #333333;
-  --color-neutral-800: #2A2A2A;
-  --color-neutral-850: #262626;
-  --color-neutral-900: #212121;
-  --color-neutral-950: #1A1A1A;
+  --color-gray-50: #F9F9F9;
+  --color-gray-100: #F3F3F3;
+  --color-gray-200: #EAEAEA;
+  --color-gray-300: #D8D8D8;
+  --color-gray-400: #A0A0A0;
+  --color-gray-500: #666666;
+  --color-gray-600: #4A4A4A;
+  --color-gray-700: #3D3D3D;
+  --color-gray-750: #333333;
+  --color-gray-800: #2A2A2A;
+  --color-gray-900: #212121;
+  --color-gray-950: #1A1A1A;
 
   --color-indigo-100: #C9C7FF;
-  --color-indigo-200: #9E9BFF;
   --color-indigo-300: #7B77FF;
   --color-indigo-400: #625DFF;
   --color-indigo-500: #504BFF;
   --color-indigo-800: #383690;
-  --color-indigo-850: #302E68;
-  --color-indigo-900: #2B2A52;
   --color-indigo-950: #2A2949;
 
   --color-cyan-300: #6BE6ED;
@@ -136,7 +115,7 @@
   --alert-success-border-color: var(--alert-success-bg);
   --alert-success-color: var(--color-green-900);
   --alert-success-link-color: var(--color-green-500);
-  --alert-success-link-hover-color: var(--color-green-600);
+  --alert-success-link-hover-color: var(--color-green-900);
 
   --alert-info-bg: var(--color-blue-50);
   --alert-info-border-color: var(--alert-info-bg);
@@ -144,7 +123,7 @@
   --alert-info-link-color: var(--color-blue-400);
   --alert-info-link-hover-color: var(--color-blue-600);
 
-  --alert-warning-bg: var(--color-yellow-50);
+  --alert-warning-bg: var(--color-yellow-100);
   --alert-warning-border-color: var(--alert-warning-bg);
   --alert-warning-color: var(--color-black);
   --alert-warning-link-color: var(--color-yellow-500);
@@ -154,7 +133,7 @@
   --alert-danger-border-color: var(--alert-danger-bg);
   --alert-danger-color: var(--color-red-900);
   --alert-danger-link-color: var(--color-red-500);
-  --alert-danger-link-hover-color: var(--color-red-600);
+  --alert-danger-link-hover-color: var(--color-red-900);
 
   // Badge
   --badge-active-bg: var(--badge-bg);
@@ -164,14 +143,14 @@
   --badge-error-bg: var(--color-red-50);
   --badge-error-color: var(--color-red-900);
   --badge-info-bg: var(--color-blue-50);
-  --badge-info-color: var(--color-blue-900);
+  --badge-info-color: var(--color-black);
   --badge-success-bg: var(--color-green-50);
   --badge-success-color: var(--color-green-900);
   --badge-warning-bg: var(--color-yellow-100);
   --badge-warning-color: var(--color-black);
 
   // Button
-  --btn-primary-bg: var(--color-gray-700);
+  --btn-primary-bg: var(--color-gray-800);
   --btn-primary-border-color: var(--btn-primary-bg);
   --btn-primary-color: var(--color-white);
   --btn-primary-hover-bg: var(--color-black);
@@ -181,7 +160,7 @@
   --btn-secondary-bg: var(--color-slate-400);
   --btn-secondary-border-color: var(--btn-secondary-bg);
   --btn-secondary-color: var(--color-white);
-  --btn-secondary-hover-bg: var(--color-gray-700);
+  --btn-secondary-hover-bg: var(--color-gray-800);
   --btn-secondary-hover-border-color: var(--btn-secondary-hover-bg);
   --btn-secondary-hover-color: var(--color-white);
 
@@ -260,12 +239,12 @@
 
   --input-disabled-bg-color: var(--color-gray-100);
   --input-disabled-border-color: var(--border-color);
-  --input-disabled-color: var(--color-gray-700);
+  --input-disabled-color: var(--color-gray-800);
 
   --input-group-bg: var(--color-gray-100);
   --input-group-btn-hover-bg: var(--color-gray-200);
 
-  --input-caret: #{caret('#E5E7EB')};
+  --input-caret: #{caret('#EAEAEA')};
   --input-caret-hover: #{caret('#000')};
 
   --checkbox-bg: var(--color-white);
@@ -323,8 +302,8 @@
   --page-link-hover-bg: var(--color-gray-200);
   --page-link-hover-border-color: var(--color-gray-200);
   --page-link-hover-color: var(--color-black);
-  --page-link-active-bg: var(--color-gray-700);
-  --page-link-active-border-color: var(--color-gray-700);
+  --page-link-active-bg: var(--color-gray-800);
+  --page-link-active-border-color: var(--color-gray-800);
   --page-link-active-color: var(--color-white);
 
   // Progress
@@ -338,7 +317,7 @@
   --stack-link-hover-color: var(--stack-link-color);
 
   // Submenu
-  --submenu-border-color: var(--color-gray-700);
+  --submenu-border-color: var(--color-gray-800);
 
   // Table
   --table-bg: var(--color-white);
@@ -365,34 +344,34 @@
   ----trail-property-bg: transparent;
 
   // Tooltip
-  --tooltip-bg: var(--color-gray-700);
+  --tooltip-bg: var(--color-gray-800);
   --tooltip-color: var(--color-white);
 }
 // Only what differs from the light scheme; a token derived from another (`var(--…)`) follows it.
 @mixin dark {
   color-scheme: dark;
 
-  --body-bg: var(--color-neutral-900);
-  --body-color: var(--color-neutral-100);
+  --body-bg: var(--color-gray-900);
+  --body-color: var(--color-gray-200);
 
-  --border-color: color-mix(in srgb, var(--color-neutral-200) 16%, transparent);
+  --border-color: color-mix(in srgb, var(--color-gray-300) 16%, transparent);
 
-  --link-color: var(--color-neutral-100);
+  --link-color: var(--color-gray-200);
   --link-hover-color: var(--color-indigo-300);
 
   --highlight-bg: color-mix(in srgb, var(--color-indigo-500) 35%, transparent);
   --highlight-color: var(--color-white);
-  --muted-color: var(--color-neutral-400);
+  --muted-color: var(--color-gray-400);
 
   // Alert
   --alert-success-bg: var(--color-green-950);
-  --alert-success-color: var(--color-green-250);
-  --alert-success-link-color: var(--color-green-400);
-  --alert-success-link-hover-color: var(--color-green-250);
+  --alert-success-color: var(--color-green-200);
+  --alert-success-link-color: var(--color-green-500);
+  --alert-success-link-hover-color: var(--color-green-200);
 
   --alert-info-bg: var(--color-indigo-950);
   --alert-info-color: var(--color-indigo-100);
-  --alert-info-link-color: var(--color-indigo-200);
+  --alert-info-link-color: var(--color-indigo-300);
   --alert-info-link-hover-color: var(--color-indigo-100);
 
   --alert-warning-bg: var(--color-yellow-950);
@@ -401,14 +380,14 @@
   --alert-warning-link-hover-color: var(--color-yellow-300);
 
   --alert-danger-bg: var(--color-red-950);
-  --alert-danger-color: var(--color-red-300);
-  --alert-danger-link-color: var(--color-red-350);
-  --alert-danger-link-hover-color: var(--color-red-300);
+  --alert-danger-color: var(--color-red-200);
+  --alert-danger-link-color: var(--color-red-400);
+  --alert-danger-link-hover-color: var(--color-red-200);
 
   // Badge
-  --badge-active-color: var(--color-neutral-100);
-  --badge-bg: var(--color-neutral-700);
-  --badge-color: var(--color-neutral-100);
+  --badge-active-color: var(--color-gray-200);
+  --badge-bg: var(--color-gray-700);
+  --badge-color: var(--color-gray-200);
   --badge-error-bg: var(--alert-danger-bg);
   --badge-error-color: var(--alert-danger-color);
   --badge-info-bg: var(--alert-info-bg);
@@ -423,86 +402,86 @@
   --btn-primary-hover-bg: var(--color-indigo-400);
   --btn-primary-hover-border-color: var(--color-indigo-400);
 
-  --btn-secondary-bg: var(--color-neutral-700);
-  --btn-secondary-color: var(--color-neutral-100);
-  --btn-secondary-hover-bg: var(--color-neutral-650);
+  --btn-secondary-bg: var(--color-gray-700);
+  --btn-secondary-color: var(--color-gray-200);
+  --btn-secondary-hover-bg: var(--color-gray-600);
   --btn-secondary-hover-color: var(--color-white);
 
   --btn-accent-bg: var(--color-cyan-300);
-  --btn-accent-color: var(--color-neutral-900);
+  --btn-accent-color: var(--color-gray-900);
 
   --btn-danger-bg: var(--color-red-650);
   --btn-danger-hover-bg: var(--color-red-450);
 
   // Card
   --card-bg: var(--body-bg);
-  --card-color: var(--color-neutral-100);
-  --card-header-color: var(--color-neutral-100);
-  --card-danger-header-bg: var(--color-red-930);
-  --card-danger-header-color: var(--color-red-300);
+  --card-color: var(--color-gray-200);
+  --card-header-color: var(--color-gray-200);
+  --card-danger-header-bg: var(--color-red-900);
+  --card-danger-header-color: var(--color-red-200);
 
   // Dropdown
-  --dropdown-bg: var(--color-neutral-800);
-  --dropdown-color: var(--color-neutral-100);
+  --dropdown-bg: var(--color-gray-800);
+  --dropdown-color: var(--color-gray-200);
 
-  --dropdown-btn-active-bg: var(--color-neutral-650);
-  --dropdown-btn-bg-color: var(--color-neutral-750);
-  --dropdown-btn-color: var(--color-neutral-100);
-  --dropdown-btn-hover-bg: var(--color-neutral-700);
+  --dropdown-btn-active-bg: var(--color-gray-600);
+  --dropdown-btn-bg-color: var(--color-gray-750);
+  --dropdown-btn-color: var(--color-gray-200);
+  --dropdown-btn-hover-bg: var(--color-gray-700);
   --dropdown-btn-hover-color: var(--color-white);
 
   --dropdown-option-selected-bg: color-mix(in srgb, var(--color-indigo-500) 22%, transparent);
-  --dropdown-option-color: var(--color-neutral-100);
-  --dropdown-option-disabled-color: var(--color-neutral-600);
-  --dropdown-option-hover-bg: var(--color-neutral-750);
+  --dropdown-option-color: var(--color-gray-200);
+  --dropdown-option-disabled-color: var(--color-gray-500);
+  --dropdown-option-hover-bg: var(--color-gray-750);
 
   --dropdown-caret: #{caret('#EAEAEA')};
   --dropup-caret: #{dropup-caret('#EAEAEA')};
 
   // Form
-  --form-invalid-bg: var(--color-neutral-950);
-  --form-invalid-border: var(--color-red-350);
-  --form-invalid-color: var(--color-red-300);
+  --form-invalid-bg: var(--color-gray-950);
+  --form-invalid-border: var(--color-red-400);
+  --form-invalid-color: var(--color-red-200);
 
-  --input-bg-color: var(--color-neutral-950);
-  --input-border-color: color-mix(in srgb, var(--color-neutral-200) 28%, transparent);
-  --input-color: var(--color-neutral-100);
-  --input-focus-bg-color: var(--color-neutral-950);
+  --input-bg-color: var(--color-gray-950);
+  --input-border-color: color-mix(in srgb, var(--color-gray-300) 28%, transparent);
+  --input-color: var(--color-gray-200);
+  --input-focus-bg-color: var(--color-gray-950);
   --input-focus-border-color: var(--color-indigo-300);
-  --input-focus-color: var(--color-neutral-100);
+  --input-focus-color: var(--color-gray-200);
 
-  --input-disabled-bg-color: var(--color-neutral-800);
-  --input-disabled-color: var(--color-neutral-400);
+  --input-disabled-bg-color: var(--color-gray-800);
+  --input-disabled-color: var(--color-gray-400);
 
-  --input-group-bg: var(--color-neutral-750);
-  --input-group-btn-hover-bg: var(--color-neutral-700);
+  --input-group-bg: var(--color-gray-750);
+  --input-group-btn-hover-bg: var(--color-gray-700);
 
-  --input-caret: #{caret('#5C5C5C')};
+  --input-caret: #{caret('#666666')};
   --input-caret-hover: #{caret('#EAEAEA')};
 
-  --checkbox-bg: var(--color-neutral-950);
-  --checkbox-checked-bg: var(--color-neutral-950) #{checkmark('#EAEAEA')} no-repeat center;
+  --checkbox-bg: var(--color-gray-950);
+  --checkbox-checked-bg: var(--color-gray-950) #{checkmark('#EAEAEA')} no-repeat center;
 
-  --radio-bg: var(--color-neutral-950);
-  --radio-checked-bg: var(--color-neutral-950) #{radio-dot('#EAEAEA')} no-repeat center;
+  --radio-bg: var(--color-gray-950);
+  --radio-checked-bg: var(--color-gray-950) #{radio-dot('#EAEAEA')} no-repeat center;
 
   // Modal
   --modal-backdrop-bg: color-mix(in srgb, var(--color-black) 60%, transparent);
   --busy-backdrop-bg: color-mix(in srgb, var(--color-black) 60%, transparent);
-  --modal-bg: var(--color-neutral-800);
-  --modal-btn-icon-focus-bg: var(--color-neutral-750);
-  --modal-btn-icon-hover-bg: var(--color-neutral-750);
-  --modal-header-bg: var(--color-neutral-800);
+  --modal-bg: var(--color-gray-800);
+  --modal-btn-icon-focus-bg: var(--color-gray-750);
+  --modal-btn-icon-hover-bg: var(--color-gray-750);
+  --modal-header-bg: var(--color-gray-800);
 
   // Nav
-  --nav-link-color: var(--color-neutral-100);
+  --nav-link-color: var(--color-gray-200);
   --nav-link-active-bg: var(--color-indigo-500);
   --nav-link-hover-bg: var(--color-indigo-800);
   --nav-link-hover-color: var(--color-white);
 
   // Aside
   --aside-link-active-bg: var(--color-indigo-500);
-  --aside-link-color: var(--color-neutral-100);
+  --aside-link-color: var(--color-gray-200);
   --aside-link-hover-bg: var(--color-indigo-800);
   --aside-link-hover-color: var(--color-white);
   --aside-backdrop-bg: color-mix(in srgb, var(--color-black) 50%, transparent);
@@ -514,49 +493,49 @@
   --aside-tree-hover-after: #{aside-tree-hover-after('#FFF')};
 
   // Pagination
-  --page-link-bg: var(--color-neutral-750);
-  --page-link-border-color: var(--color-neutral-750);
-  --page-link-color: var(--color-neutral-100);
-  --page-link-hover-bg: var(--color-neutral-700);
-  --page-link-hover-border-color: var(--color-neutral-700);
+  --page-link-bg: var(--color-gray-750);
+  --page-link-border-color: var(--color-gray-750);
+  --page-link-color: var(--color-gray-200);
+  --page-link-hover-bg: var(--color-gray-700);
+  --page-link-hover-border-color: var(--color-gray-700);
   --page-link-hover-color: var(--color-white);
   --page-link-active-bg: var(--color-indigo-500);
   --page-link-active-border-color: var(--color-indigo-500);
 
   // Progress
-  --progress-bg: var(--color-neutral-750);
-  --progress-bar-bg: var(--color-neutral-100);
+  --progress-bg: var(--color-gray-750);
+  --progress-bar-bg: var(--color-gray-200);
 
   // Stack
-  --stack-link-bg: var(--color-neutral-750);
-  --stack-link-color: var(--color-neutral-100);
-  --stack-link-hover-bg: var(--color-neutral-700);
+  --stack-link-bg: var(--color-gray-750);
+  --stack-link-color: var(--color-gray-200);
+  --stack-link-hover-bg: var(--color-gray-700);
 
   // Submenu
-  --submenu-border-color: var(--color-neutral-650);
+  --submenu-border-color: var(--color-gray-600);
 
   // Table
   --table-bg: var(--card-bg);
-  --table-color: var(--color-neutral-100);
-  --table-striped-bg: var(--color-neutral-850);
-  --table-hover-bg: var(--color-neutral-750);
-  --table-striped-color: var(--color-neutral-100);
+  --table-color: var(--color-gray-200);
+  --table-striped-bg: var(--color-gray-800);
+  --table-hover-bg: var(--color-gray-750);
+  --table-striped-color: var(--color-gray-200);
   --table-hover-color: var(--color-white);
 
-  --table-selected-bg: var(--color-indigo-900);
-  --table-selected-hover-bg: var(--color-indigo-850);
+  --table-selected-bg: var(--color-indigo-950);
+  --table-selected-hover-bg: var(--color-indigo-800);
   --table-selected-td-border-color: var(--card-bg);
-  --table-sort-color: var(--color-neutral-100);
+  --table-sort-color: var(--color-gray-200);
 
   // Trail
   --trail-delete-bg: var(--alert-danger-bg);
-  --trail-delete-color: var(--color-red-910);
+  --trail-delete-color: var(--color-red-900);
   --trail-insert-bg: var(--alert-success-bg);
-  --trail-insert-color: var(--color-green-800);
+  --trail-insert-color: var(--color-green-900);
 
   // Tooltip
-  --tooltip-bg: var(--color-neutral-100);
-  --tooltip-color: var(--color-neutral-900);
+  --tooltip-bg: var(--color-gray-200);
+  --tooltip-color: var(--color-gray-900);
 }
 
 :root[data-theme="dark"] {
