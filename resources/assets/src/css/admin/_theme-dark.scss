@@ -41,14 +41,14 @@
   --badge-active-color: var(--color-gray-200);
   --badge-bg: var(--color-gray-700);
   --badge-color: var(--color-gray-200);
-  --badge-error-bg: var(--alert-danger-bg);
-  --badge-error-color: var(--alert-danger-color);
-  --badge-info-bg: var(--alert-info-bg);
-  --badge-info-color: var(--alert-info-color);
-  --badge-success-bg: var(--alert-success-bg);
-  --badge-success-color: var(--alert-success-color);
-  --badge-warning-bg: var(--alert-warning-bg);
-  --badge-warning-color: var(--alert-warning-color);
+  --badge-error-bg: var(--color-red-950);
+  --badge-error-color: var(--color-red-200);
+  --badge-info-bg: var(--color-indigo-950);
+  --badge-info-color: var(--color-indigo-100);
+  --badge-success-bg: var(--color-green-950);
+  --badge-success-color: var(--color-green-200);
+  --badge-warning-bg: var(--color-yellow-950);
+  --badge-warning-color: var(--color-yellow-300);
 
   // Button
   --btn-primary-bg: var(--color-indigo-500);
@@ -62,12 +62,13 @@
 
   --btn-accent-bg: var(--color-cyan-300);
   --btn-accent-color: var(--color-gray-900);
+  --btn-accent-hover-bg: var(--color-indigo-400);
 
   --btn-danger-bg: var(--color-red-650);
   --btn-danger-hover-bg: var(--color-red-450);
 
   // Card
-  --card-bg: var(--body-bg);
+  --card-bg: var(--color-gray-900);
   --card-color: var(--color-gray-200);
   --card-header-color: var(--color-gray-200);
   --card-danger-header-bg: var(--color-red-900);
@@ -168,7 +169,7 @@
   --submenu-border-color: var(--color-gray-600);
 
   // Table
-  --table-bg: var(--card-bg);
+  --table-bg: var(--color-gray-900);
   --table-color: var(--color-gray-200);
   --table-striped-bg: var(--color-gray-800);
   --table-hover-bg: var(--color-gray-750);
@@ -177,13 +178,14 @@
 
   --table-selected-bg: var(--color-indigo-950);
   --table-selected-hover-bg: var(--color-indigo-800);
-  --table-selected-td-border-color: var(--card-bg);
+  --table-selected-td-border-color: var(--color-gray-900);
   --table-sort-color: var(--color-gray-200);
 
   // Trail
-  --trail-delete-bg: var(--alert-danger-bg);
+  --trail-table-bg: repeating-linear-gradient(-45deg, var(--color-gray-750), var(--color-gray-750) 0.5em, transparent 0.5em, transparent 1em);
+  --trail-delete-bg: var(--color-red-950);
   --trail-delete-color: var(--color-red-900);
-  --trail-insert-bg: var(--alert-success-bg);
+  --trail-insert-bg: var(--color-green-950);
   --trail-insert-color: var(--color-green-900);
 
   // Tooltip
