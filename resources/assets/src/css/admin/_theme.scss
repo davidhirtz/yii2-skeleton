@@ -1,7 +1,23 @@
 @use "../shared/breakpoints" as *;
 @use "../shared/svg" as *;
 
-// The aside's tree lines are images, so each colour scheme renders its own.
+// Images cannot read custom properties, so each colour scheme renders its own.
+@function caret($color) {
+  @return svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#{$color}" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>');
+}
+
+@function dropup-caret($color) {
+  @return svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#{$color}" stroke-linecap="round" stroke-linejoin="round" d="m2 11 6-6 6 6"/></svg>');
+}
+
+@function checkmark($color) {
+  @return svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="none" stroke="#{$color}" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m6 10 3 3 6-6"/></svg>');
+}
+
+@function radio-dot($color) {
+  @return svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 8 8"><circle r="2" fill="#{$color}"/></svg>');
+}
+
 @function aside-tree-line($color) {
   @return svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 28"><path fill="#{$color}" d="M9 0h1.5v28H9z"/></svg>');
 }
@@ -23,42 +39,55 @@
 }
 
 :root {
-  --color-red-50: #ffedee;
-  --color-red-200: #ffbec2;
-  --color-red-400: #e97f81;
+  --color-red-50: #FFEDEE;
+  --color-red-200: #FFBEC2;
+  --color-red-300: #FFB3B8;
+  --color-red-350: #FF8A91;
+  --color-red-400: #E97F81;
+  --color-red-450: #E5575C;
   --color-red-500: #FB2C36;
-  --color-red-600: #fa141f;
+  --color-red-600: #FA141F;
+  --color-red-650: #D93F45;
   --color-red-900: #82181A;
+  --color-red-910: #6B2A30;
+  --color-red-930: #5A262B;
+  --color-red-950: #3F1F22;
 
-  --color-yellow-50: oklch(98.7% 0.026 102.212);
-  --color-yellow-100: oklch(97.3% 0.071 103.193);
+  --color-yellow-50: #FEFCE8;
+  --color-yellow-100: #FEF9C2;
+  --color-yellow-300: #F0E08A;
   --color-yellow-400: #EDE36B;
-  --color-yellow-500: oklch(79.5% 0.184 86.047);
-  --color-yellow-600: oklch(68.1% 0.162 75.834);
+  --color-yellow-500: #F0B100;
+  --color-yellow-600: #D08700;
+  --color-yellow-950: #3A3417;
 
-  --color-green-50: #edf6ee;
-  --color-green-200: #bedec2;
-  --color-green-500: oklch(72.3% 0.219 149.579);
-  --color-green-600: oklch(62.7% 0.194 149.214);
-  --color-green-900: #2a4534;
+  --color-green-50: #EDF6EE;
+  --color-green-200: #BEDEC2;
+  --color-green-250: #9FE0B0;
+  --color-green-400: #6FCF8A;
+  --color-green-500: #00C950;
+  --color-green-600: #00A63E;
+  --color-green-800: #2F5E3E;
+  --color-green-900: #2A4534;
+  --color-green-950: #1F3A28;
 
-  --color-blue-50: #f5f9ff;
+  --color-blue-50: #F5F9FF;
   --color-blue-100: #E3F1F4;
   --color-blue-200: #D2E8EF;
   --color-blue-400: #75BCD2;
-  --color-blue-600: #67a5b6;
-  --color-blue-900: oklch(37.9% 0.146 265.522);
+  --color-blue-600: #67A5B6;
+  --color-blue-900: #1C398E;
 
   --color-slate-400: #B7C5D8;
-  --color-slate-500: oklch(55.4% 0.046 257.417);
+  --color-slate-500: #62748E;
 
-  --color-gray-50: oklch(98.5% 0.002 247.839);
-  --color-gray-100: oklch(96.7% 0.003 264.542);
-  --color-gray-200: oklch(92.8% 0.006 264.531);
-  --color-gray-300: oklch(87.2% 0.01 258.338);
-  --color-gray-500: oklch(55.1% 0.027 264.364);
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DC;
+  --color-gray-500: #6A7282;
   --color-gray-700: #2A2A2A;
-  --color-gray-900: oklch(21% 0.034 264.665);
+  --color-gray-900: #101828;
 
   --color-neutral-100: #EAEAEA;
   --color-neutral-200: #D8D8D8;
@@ -72,15 +101,20 @@
   --color-neutral-900: #212121;
   --color-neutral-950: #1A1A1A;
 
+  --color-indigo-100: #C9C7FF;
+  --color-indigo-200: #9E9BFF;
   --color-indigo-300: #7B77FF;
   --color-indigo-400: #625DFF;
   --color-indigo-500: #504BFF;
   --color-indigo-800: #383690;
+  --color-indigo-850: #302E68;
+  --color-indigo-900: #2B2A52;
+  --color-indigo-950: #2A2949;
 
   --color-cyan-300: #6BE6ED;
 
   --color-black: #000;
-  --color-white: #fff;
+  --color-white: #FFF;
 
   color-scheme: light;
 
@@ -204,10 +238,10 @@
   --dropdown-option-hover-bg: var(--color-gray-50);
   --dropdown-option-hover-color: inherit;
 
-  --dropdown-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#000" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
-  --dropdown-active-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
-  --dropup-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#000" stroke-linecap="round" stroke-linejoin="round" d="m2 11 6-6 6 6"/></svg>')};
-  --dropup--active-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m2 11 6-6 6 6"/></svg>')};
+  --dropdown-caret: #{caret('#000')};
+  --dropdown-active-caret: #{caret('#FFF')};
+  --dropup-caret: #{dropup-caret('#000')};
+  --dropup--active-caret: #{dropup-caret('#FFF')};
 
   // Form
   --form-footer-border-color: transparent;
@@ -231,22 +265,22 @@
   --input-group-bg: var(--color-gray-100);
   --input-group-btn-hover-bg: var(--color-gray-200);
 
-  --input-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#E5E7EBFF" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
-  --input-caret-hover: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#000" stroke-width="2px" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
+  --input-caret: #{caret('#E5E7EB')};
+  --input-caret-hover: #{caret('#000')};
 
   --checkbox-bg: var(--color-white);
-  --checkbox-checked-bg: var(--color-white) #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m6 10 3 3 6-6"/></svg>')} no-repeat center;
+  --checkbox-checked-bg: var(--color-white) #{checkmark('#000')} no-repeat center;
 
   --radio-bg: var(--color-white);
-  --radio-checked-bg: var(--color-white) #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 8 8"><circle r="2" fill="#000"/></svg>')} no-repeat center;
+  --radio-checked-bg: var(--color-white) #{radio-dot('#000')} no-repeat center;
 
   // Grid
   --grid-footer-border-color: var(--table-th-border-color);
   --grid-footer-sticky-border-color: var(--border-color);
 
   // Modal
-  --modal-backdrop-bg: rgba(0, 0, 0, .4);
-  --busy-backdrop-bg: rgba(0, 0, 0, .4);
+  --modal-backdrop-bg: color-mix(in srgb, var(--color-black) 40%, transparent);
+  --busy-backdrop-bg: color-mix(in srgb, var(--color-black) 40%, transparent);
   --modal-bg: var(--color-white);
   --modal-border-color: transparent;
   --modal-btn-icon-focus-bg: var(--color-gray-100);
@@ -274,13 +308,13 @@
   --aside-link-color: var(--color-black);
   --aside-link-hover-bg: var(--color-blue-50);
   --aside-link-hover-color: var(--color-black);
-  --aside-backdrop-bg: rgba(0, 0, 0, .2);
+  --aside-backdrop-bg: color-mix(in srgb, var(--color-black) 20%, transparent);
 
   --aside-tree-line: #{aside-tree-line('#000')};
   --aside-tree-start: #{aside-tree-start('#000')};
   --aside-tree-active: #{aside-tree-active('#000')};
-  --aside-tree-hover: #{aside-tree-hover('#75bcd2')};
-  --aside-tree-hover-after: #{aside-tree-hover-after('#75bcd2')};
+  --aside-tree-hover: #{aside-tree-hover('#75BCD2')};
+  --aside-tree-hover-after: #{aside-tree-hover-after('#75BCD2')};
 
   // Pagination
   --page-link-bg: var(--color-gray-100);
@@ -341,35 +375,35 @@
   --body-bg: var(--color-neutral-900);
   --body-color: var(--color-neutral-100);
 
-  --border-color: rgb(216 216 216 / 16%);
+  --border-color: color-mix(in srgb, var(--color-neutral-200) 16%, transparent);
 
   --link-color: var(--color-neutral-100);
   --link-hover-color: var(--color-indigo-300);
 
-  --highlight-bg: rgb(80 75 255 / 35%);
+  --highlight-bg: color-mix(in srgb, var(--color-indigo-500) 35%, transparent);
   --highlight-color: var(--color-white);
   --muted-color: var(--color-neutral-400);
 
   // Alert
-  --alert-success-bg: #1F3A28;
-  --alert-success-color: #9FE0B0;
-  --alert-success-link-color: #6FCF8A;
-  --alert-success-link-hover-color: #9FE0B0;
+  --alert-success-bg: var(--color-green-950);
+  --alert-success-color: var(--color-green-250);
+  --alert-success-link-color: var(--color-green-400);
+  --alert-success-link-hover-color: var(--color-green-250);
 
-  --alert-info-bg: #2A2949;
-  --alert-info-color: #C9C7FF;
-  --alert-info-link-color: #9E9BFF;
-  --alert-info-link-hover-color: #C9C7FF;
+  --alert-info-bg: var(--color-indigo-950);
+  --alert-info-color: var(--color-indigo-100);
+  --alert-info-link-color: var(--color-indigo-200);
+  --alert-info-link-hover-color: var(--color-indigo-100);
 
-  --alert-warning-bg: #3A3417;
-  --alert-warning-color: #F0E08A;
+  --alert-warning-bg: var(--color-yellow-950);
+  --alert-warning-color: var(--color-yellow-300);
   --alert-warning-link-color: var(--color-yellow-400);
-  --alert-warning-link-hover-color: #F0E08A;
+  --alert-warning-link-hover-color: var(--color-yellow-300);
 
-  --alert-danger-bg: #3F1F22;
-  --alert-danger-color: #FFB3B8;
-  --alert-danger-link-color: #FF8A91;
-  --alert-danger-link-hover-color: #FFB3B8;
+  --alert-danger-bg: var(--color-red-950);
+  --alert-danger-color: var(--color-red-300);
+  --alert-danger-link-color: var(--color-red-350);
+  --alert-danger-link-hover-color: var(--color-red-300);
 
   // Badge
   --badge-active-color: var(--color-neutral-100);
@@ -397,15 +431,15 @@
   --btn-accent-bg: var(--color-cyan-300);
   --btn-accent-color: var(--color-neutral-900);
 
-  --btn-danger-bg: #D93F45;
-  --btn-danger-hover-bg: #E5575C;
+  --btn-danger-bg: var(--color-red-650);
+  --btn-danger-hover-bg: var(--color-red-450);
 
   // Card
   --card-bg: var(--body-bg);
   --card-color: var(--color-neutral-100);
   --card-header-color: var(--color-neutral-100);
-  --card-danger-header-bg: #5A262B;
-  --card-danger-header-color: #FFB3B8;
+  --card-danger-header-bg: var(--color-red-930);
+  --card-danger-header-color: var(--color-red-300);
 
   // Dropdown
   --dropdown-bg: var(--color-neutral-800);
@@ -417,21 +451,21 @@
   --dropdown-btn-hover-bg: var(--color-neutral-700);
   --dropdown-btn-hover-color: var(--color-white);
 
-  --dropdown-option-selected-bg: rgb(80 75 255 / 22%);
+  --dropdown-option-selected-bg: color-mix(in srgb, var(--color-indigo-500) 22%, transparent);
   --dropdown-option-color: var(--color-neutral-100);
   --dropdown-option-disabled-color: var(--color-neutral-600);
   --dropdown-option-hover-bg: var(--color-neutral-750);
 
-  --dropdown-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#EAEAEA" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
-  --dropup-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#EAEAEA" stroke-linecap="round" stroke-linejoin="round" d="m2 11 6-6 6 6"/></svg>')};
+  --dropdown-caret: #{caret('#EAEAEA')};
+  --dropup-caret: #{dropup-caret('#EAEAEA')};
 
   // Form
   --form-invalid-bg: var(--color-neutral-950);
-  --form-invalid-border: #FF8A91;
-  --form-invalid-color: #FFB3B8;
+  --form-invalid-border: var(--color-red-350);
+  --form-invalid-color: var(--color-red-300);
 
   --input-bg-color: var(--color-neutral-950);
-  --input-border-color: rgb(216 216 216 / 28%);
+  --input-border-color: color-mix(in srgb, var(--color-neutral-200) 28%, transparent);
   --input-color: var(--color-neutral-100);
   --input-focus-bg-color: var(--color-neutral-950);
   --input-focus-border-color: var(--color-indigo-300);
@@ -443,18 +477,18 @@
   --input-group-bg: var(--color-neutral-750);
   --input-group-btn-hover-bg: var(--color-neutral-700);
 
-  --input-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#5C5C5C" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
-  --input-caret-hover: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#EAEAEA" stroke-width="2px" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
+  --input-caret: #{caret('#5C5C5C')};
+  --input-caret-hover: #{caret('#EAEAEA')};
 
   --checkbox-bg: var(--color-neutral-950);
-  --checkbox-checked-bg: var(--color-neutral-950) #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="none" stroke="#EAEAEA" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m6 10 3 3 6-6"/></svg>')} no-repeat center;
+  --checkbox-checked-bg: var(--color-neutral-950) #{checkmark('#EAEAEA')} no-repeat center;
 
   --radio-bg: var(--color-neutral-950);
-  --radio-checked-bg: var(--color-neutral-950) #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 8 8"><circle r="2" fill="#EAEAEA"/></svg>')} no-repeat center;
+  --radio-checked-bg: var(--color-neutral-950) #{radio-dot('#EAEAEA')} no-repeat center;
 
   // Modal
-  --modal-backdrop-bg: rgba(0, 0, 0, .6);
-  --busy-backdrop-bg: rgba(0, 0, 0, .6);
+  --modal-backdrop-bg: color-mix(in srgb, var(--color-black) 60%, transparent);
+  --busy-backdrop-bg: color-mix(in srgb, var(--color-black) 60%, transparent);
   --modal-bg: var(--color-neutral-800);
   --modal-btn-icon-focus-bg: var(--color-neutral-750);
   --modal-btn-icon-hover-bg: var(--color-neutral-750);
@@ -471,13 +505,13 @@
   --aside-link-color: var(--color-neutral-100);
   --aside-link-hover-bg: var(--color-indigo-800);
   --aside-link-hover-color: var(--color-white);
-  --aside-backdrop-bg: rgba(0, 0, 0, .5);
+  --aside-backdrop-bg: color-mix(in srgb, var(--color-black) 50%, transparent);
 
   --aside-tree-line: #{aside-tree-line('#EAEAEA')};
   --aside-tree-start: #{aside-tree-start('#EAEAEA')};
   --aside-tree-active: #{aside-tree-active('#EAEAEA')};
-  --aside-tree-hover: #{aside-tree-hover('#FFFFFF')};
-  --aside-tree-hover-after: #{aside-tree-hover-after('#FFFFFF')};
+  --aside-tree-hover: #{aside-tree-hover('#FFF')};
+  --aside-tree-hover-after: #{aside-tree-hover-after('#FFF')};
 
   // Pagination
   --page-link-bg: var(--color-neutral-750);
@@ -509,16 +543,16 @@
   --table-striped-color: var(--color-neutral-100);
   --table-hover-color: var(--color-white);
 
-  --table-selected-bg: #2B2A52;
-  --table-selected-hover-bg: #302E68;
+  --table-selected-bg: var(--color-indigo-900);
+  --table-selected-hover-bg: var(--color-indigo-850);
   --table-selected-td-border-color: var(--card-bg);
   --table-sort-color: var(--color-neutral-100);
 
   // Trail
   --trail-delete-bg: var(--alert-danger-bg);
-  --trail-delete-color: #6B2A30;
+  --trail-delete-color: var(--color-red-910);
   --trail-insert-bg: var(--alert-success-bg);
-  --trail-insert-color: #2F5E3E;
+  --trail-insert-color: var(--color-green-800);
 
   // Tooltip
   --tooltip-bg: var(--color-neutral-100);
