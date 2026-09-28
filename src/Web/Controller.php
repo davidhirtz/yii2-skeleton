@@ -46,10 +46,12 @@ class Controller extends \yii\web\Controller
     public ?bool $strictContentSecurityPolicy = null;
 
     /**
-     * @var string|false the `Strict-Transport-Security` header, only ever sent over a secure connection — set on a
-     * plain HTTP response it would be ignored, and over a proxy that terminates TLS it needs `Request::$trustedHosts`.
+     * @var string|false the `Strict-Transport-Security` header, e.g. `max-age=31536000`. Off by default: it is a
+     * promise about the whole host, which the web server makes for every response — sent here as well, the browser
+     * receives it twice and a scanner reads neither. Only ever sent over a secure connection, which behind a proxy
+     * terminating TLS needs `Request::$trustedHosts`.
      */
-    public string|false $strictTransportSecurity = 'max-age=31536000';
+    public string|false $strictTransportSecurity = false;
 
     protected User $webuser;
 

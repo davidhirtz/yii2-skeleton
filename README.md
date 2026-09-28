@@ -114,6 +114,9 @@ A frontend page sends `Web\Controller::$contentSecurityPolicy`,
 every visitor. A controller whose pages are never cached as a whole can send the strict policy instead
 (`$strictContentSecurityPolicy = true`); a cached page cannot, since every visitor would get the nonce it was cached with.
 
+`Strict-Transport-Security` is the web server's to send, for every response of the host. A project whose server does
+not sets `Web\Controller::$strictTransportSecurity = 'max-age=31536000'`; both at once is a duplicate header scanners reject.
+
 A model is configured through the container rather than subclassed; a type's name is a `Yii::t()` result, hence the closure:
 
 ```php
