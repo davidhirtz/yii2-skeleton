@@ -169,6 +169,7 @@ return [
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'O seu e-mail não foi encontrado.',
     'LOCATION_TAGS' => 'Etiquetas',
     'LOGIN_TOO_MANY_ATTEMPTS' => 'Demasiadas tentativas de início de sessão falhadas. Aguarde alguns minutos antes de tentar novamente.',
+    'LOGIN_TWO_FACTOR_EXPIRED' => 'O início de sessão expirou. Introduza novamente o seu e-mail e a sua palavra-passe.',
     'LOG_DATE' => 'Data',
     'LOG_ERROR' => 'Erro',
     'LOG_FILE_ACTION_DROPDOWN_OPEN_FILE' => 'Abrir ficheiro',

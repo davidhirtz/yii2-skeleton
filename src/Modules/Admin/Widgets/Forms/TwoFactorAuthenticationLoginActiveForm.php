@@ -41,11 +41,9 @@ class TwoFactorAuthenticationLoginActiveForm extends ActiveForm
     #[Override]
     protected function getDefaultRows(): array
     {
+        // The code alone: the account and the remember-me choice wait in the session (`LoginForm::PENDING_SESSION_KEY`).
         return [
             $this->getCodeField(),
-            $this->getEmailField(),
-            $this->getPasswordField(),
-            $this->getRememberMeField(),
         ];
     }
 
@@ -58,26 +56,5 @@ class TwoFactorAuthenticationLoginActiveForm extends ActiveForm
             ->prepend(Icon::make()
                 ->name('qrcode'))
             ->placeholder();
-    }
-
-    public function getEmailField(): ?Stringable
-    {
-        return InputField::make()
-            ->property('email')
-            ->type('hidden');
-    }
-
-    public function getPasswordField(): ?Stringable
-    {
-        return InputField::make()
-            ->property('password')
-            ->type('hidden');
-    }
-
-    public function getRememberMeField(): ?Stringable
-    {
-        return InputField::make()
-            ->property('rememberMe')
-            ->type('hidden');
     }
 }

@@ -169,6 +169,7 @@ return [
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Ihre E-Mail-Adresse wurde nicht gefunden.',
     'LOCATION_TAGS' => 'Tags',
     'LOGIN_TOO_MANY_ATTEMPTS' => 'Zu viele fehlgeschlagene Anmeldeversuche. Bitte warten Sie einige Minuten, bevor Sie es erneut versuchen.',
+    'LOGIN_TWO_FACTOR_EXPIRED' => 'Die Anmeldung ist abgelaufen. Bitte E-Mail-Adresse und Passwort erneut eingeben.',
     'LOG_DATE' => 'Datum',
     'LOG_ERROR' => 'Fehler',
     'LOG_FILE_ACTION_DROPDOWN_OPEN_FILE' => 'Datei öffnen',

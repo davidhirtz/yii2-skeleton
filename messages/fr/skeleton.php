@@ -169,6 +169,7 @@ return [
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Votre adresse e-mail est introuvable.',
     'LOCATION_TAGS' => 'Étiquettes',
     'LOGIN_TOO_MANY_ATTEMPTS' => 'Trop de tentatives de connexion échouées. Veuillez patienter quelques minutes avant de réessayer.',
+    'LOGIN_TWO_FACTOR_EXPIRED' => 'La connexion a expiré. Veuillez saisir à nouveau votre adresse e-mail et votre mot de passe.',
     'LOG_DATE' => 'Date',
     'LOG_ERROR' => 'Erreur',
     'LOG_FILE_ACTION_DROPDOWN_OPEN_FILE' => 'Ouvrir le fichier',

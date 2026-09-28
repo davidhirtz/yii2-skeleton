@@ -25,11 +25,22 @@ class LoginForm extends Model
      */
     private const string DUMMY_PASSWORD_HASH = '$2y$13$DbNN/izySYY01sK3RTJb2OZa1Kc1Kr/PImftEuYLT.2IbCbvukEWu';
 
+    /**
+     * The session key of a login whose password was right and whose two-factor code is still to come.
+     */
+    final public const string PENDING_SESSION_KEY = 'pendingLogin';
+
     public ?string $password = null;
     public ?string $code = null;
     public bool|string $rememberMe = true;
 
+    /**
+     * @var int the seconds the second step may follow the first
+     */
+    public int $pendingDuration = 300;
+
     private bool $is2FaRequired = false;
+    private bool $isPending = false;
 
     #[Override]
     public function rules(): array
@@ -42,20 +53,22 @@ class LoginForm extends Model
             [
                 ['email', 'password'],
                 'required',
+                'when' => fn () => !$this->isPending,
             ],
             [
                 ['email'],
                 'email',
+                'when' => fn () => !$this->isPending,
             ],
             [
                 ['email'],
                 $this->validateEmail(...),
-                'when' => fn () => !$this->hasErrors(),
+                'when' => fn () => !$this->isPending && !$this->hasErrors(),
             ],
             [
                 ['password'],
                 $this->validatePassword(...),
-                'when' => fn () => !$this->hasErrors('password'),
+                'when' => fn () => !$this->isPending && !$this->hasErrors('password'),
             ],
             [
                 ['code'],
@@ -157,19 +170,31 @@ class LoginForm extends Model
     {
         $webuser = Application::current()->getUser();
 
+        // The second step posts the code alone: the password stays out of the page it would have to be written into.
+        if ($this->password === null && $this->code !== null && !$this->resumePendingLogin()) {
+            $this->addError('email', Yii::t('skeleton', 'LOGIN_TWO_FACTOR_EXPIRED'));
+            return false;
+        }
+
         if ($this->validate()) {
+            $this->removePendingLogin();
+
             $webuser->loginType = UserLogin::TYPE_LOGIN;
             $webuser->resetFailedLoginAttempts($this->email);
 
-            if ($this->user->isPasswordHashOutdated()) {
-                $this->user->generatePasswordHash($this->password);
+            if (!$this->isPending && $this->user->isPasswordHashOutdated()) {
+                $this->user->generatePasswordHash((string)$this->password);
             }
 
             return $webuser->login($this->user, $this->rememberMe ? $webuser->cookieLifetime : 0);
         }
 
+        if ($this->isOnlyTheCodeMissing()) {
+            $this->setPendingLogin();
+        }
+
         // A blank form is a mistake, not an attempt — only a submission that got as far as a credential counts.
-        if ($this->email && $this->password) {
+        if ($this->email && ($this->password || $this->isPending)) {
             $webuser->addFailedLoginAttempt($this->email);
         }
 
@@ -178,6 +203,66 @@ class LoginForm extends Model
         }
 
         return false;
+    }
+
+    private function isOnlyTheCodeMissing(): bool
+    {
+        return $this->is2FaRequired
+            && $this->user !== null
+            && array_keys($this->getErrors()) === ['code'];
+    }
+
+    /**
+     * The password is verified at this point and is not seen again, so an outdated hash is renewed now, whatever
+     * the code turns out to be.
+     */
+    private function setPendingLogin(): void
+    {
+        if (!$this->isPending) {
+            if ($this->user->isPasswordHashOutdated()) {
+                $this->user->generatePasswordHash((string)$this->password);
+                $this->user->updateAttributes(['password_hash', 'password_scheme']);
+            }
+
+            Application::current()->getSession()->set(self::PENDING_SESSION_KEY, [
+                'id' => $this->user->id,
+                'authKey' => $this->user->auth_key,
+                'rememberMe' => (bool)$this->rememberMe,
+                'expires' => time() + $this->pendingDuration,
+            ]);
+        }
+    }
+
+    /**
+     * A pending login ends with its time, and with the account's auth key, which a password change rotates.
+     */
+    private function resumePendingLogin(): bool
+    {
+        $pending = Application::current()->getSession()->get(self::PENDING_SESSION_KEY);
+
+        if (!is_array($pending) || (int)($pending['expires'] ?? 0) < time()) {
+            $this->removePendingLogin();
+            return false;
+        }
+
+        $user = User::findOne(['id' => (int)($pending['id'] ?? 0)]);
+
+        if (!$user || !hash_equals((string)$user->auth_key, (string)($pending['authKey'] ?? ''))) {
+            $this->removePendingLogin();
+            return false;
+        }
+
+        $this->user = $user;
+        $this->email = $user->email;
+        $this->rememberMe = (bool)($pending['rememberMe'] ?? false);
+        $this->isPending = true;
+
+        return true;
+    }
+
+    private function removePendingLogin(): void
+    {
+        Application::current()->getSession()->remove(self::PENDING_SESSION_KEY);
     }
 
     public function isTwoFactorAuthenticationCodeRequired(): bool

@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Fixed the two-factor step writing the password back into the page: the login waits in the session (`LoginForm::PENDING_SESSION_KEY`, `$pendingDuration`) and the step posts the code alone; removed `TwoFactorAuthenticationLoginActiveForm::getEmailField()`, `getPasswordField()` and `getRememberMeField()`
 - Added `Helpers\Url::isLocalPath()`; fixed `AccountController::actionTimezone()` redirecting to any URL it was given
 - Fixed a successful login clearing the per-IP failed-attempt count; `Web\User::resetFailedLoginAttempts()` resets the account's only
 - Added `Request::$allowedHosts` (`params.allowedHosts`, comma-separated): a request for any other host is refused before routing, and `HostAlert` warns a production host that has neither it nor a pinned host

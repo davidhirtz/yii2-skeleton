@@ -93,6 +93,50 @@ class LoginTest extends TestCase
         self::assertCurrentUrlEquals('admin/dashboard/index');
     }
 
+    public function testTheCodeStepCarriesNoPassword(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignAdminRole($user->id);
+
+        $this->submitLoginForm($user->email, 'password');
+
+        self::assertSelectorExists('input[name="Login[code]"]');
+        self::assertSelectorNotExists('input[name="Login[password]"]');
+        self::assertSelectorNotExists('input[name="Login[email]"]');
+    }
+
+    public function testAnExpiredCodeStepStartsOver(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignAdminRole($user->id);
+
+        $this->submitLoginForm($user->email, 'password');
+
+        $pending = $this->getWebSession()->get(LoginForm::PENDING_SESSION_KEY);
+        self::assertIsArray($pending);
+        $this->getWebSession()->set(LoginForm::PENDING_SESSION_KEY, [...$pending, 'expires' => time() - 1]);
+
+        $this->submitLoginForm(code: '000000');
+
+        self::assertAnyValidationErrorSame(Yii::t('skeleton', 'LOGIN_TWO_FACTOR_EXPIRED'));
+        self::assertSelectorExists('input[name="Login[password]"]');
+    }
+
+    public function testAPasswordChangeEndsTheCodeStep(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignAdminRole($user->id);
+
+        $this->submitLoginForm($user->email, 'password');
+
+        $user->generateAuthKey();
+        $user->updateAttributes(['auth_key']);
+
+        $this->submitLoginForm(code: '000000');
+
+        self::assertAnyValidationErrorSame(Yii::t('skeleton', 'LOGIN_TWO_FACTOR_EXPIRED'));
+    }
+
     public function testDisabledAccountNamesItsReasonWithoutEnumerationProtection(): void
     {
         $this->getWebUser()->enableUserEnumerationProtection = false;

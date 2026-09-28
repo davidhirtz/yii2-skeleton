@@ -169,6 +169,7 @@ return [
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Your email was not found.',
     'LOCATION_TAGS' => 'Tags',
     'LOGIN_TOO_MANY_ATTEMPTS' => 'Too many failed login attempts. Please wait a few minutes before trying again.',
+    'LOGIN_TWO_FACTOR_EXPIRED' => 'The login has expired. Please enter your email and password again.',
     'LOG_DATE' => 'Date',
     'LOG_ERROR' => 'Error',
     'LOG_FILE_ACTION_DROPDOWN_OPEN_FILE' => 'Open file',
