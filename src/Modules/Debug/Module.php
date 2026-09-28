@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Debug;
 
 use Hirtz\Skeleton\Assets\EmptyAssetBundle;
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Web\View as WebView;
 use Override;
 use Yii;
 use yii\grid\GridViewAsset;
@@ -52,6 +54,22 @@ class Module extends \yii\debug\Module
     public function getBasePath(): string
     {
         return Yii::getAlias('@yii/debug');
+    }
+
+    /**
+     * The toolbar echoes its script inline, which the admin's `Content-Security-Policy` refuses without the nonce.
+     *
+     * @param \yii\base\Event $event
+     */
+    #[Override]
+    public function renderToolbar($event): void
+    {
+        ob_start();
+        parent::renderToolbar($event);
+        $html = (string)ob_get_clean();
+
+        $nonce = $event->sender instanceof WebView ? $event->sender->nonce : null;
+        echo $nonce ? str_replace('<script>', '<script nonce="' . Html::encode($nonce) . '">', $html) : $html;
     }
 
     #[Override]

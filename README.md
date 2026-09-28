@@ -95,6 +95,25 @@ Other components the skeleton configures: `request` (`Web\Request`, `environment
 `views`, `useSitemapIndex`), `upload` (`Upload\Upload`: `path`, `maxSize`, `enableStreamUploads`, `uploadLimit`),
 `view` (`Web\View::$titleTemplate`), `log` (targets `file` and `sentry`).
 
+### Content Security Policy
+
+The admin sends a strict policy, the `contentSecurityPolicy` component (`Web\ContentSecurityPolicy`):
+`script-src 'self' 'strict-dynamic' 'nonce-…'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'`. Every script
+`Web\View` renders carries the nonce (`registerJs()`, `registerJsFile()`, asset bundles, `registerJsModule()`); a script
+added by hand has to as well, `$this->renderScript($js)` or `nonce="<?= $this->nonce ?>"`. An inline event handler
+(`onclick`) or a `javascript:` URL is refused. `'strict-dynamic'` trusts whatever a trusted script loads itself, so a
+bundle or project widens only the other directives, from its `Bootstrap` or the component's configuration:
+
+```php
+Hirtz\Skeleton\Web\Application::current()->getContentSecurityPolicy()
+    ->addSource('frame-src', 'https://www.youtube-nocookie.com');
+```
+
+A frontend page sends `Web\Controller::$contentSecurityPolicy`,
+`frame-ancestors 'self'; object-src 'none'; base-uri 'self'`, which restricts no script and so survives a page cached for
+every visitor. A controller whose pages are never cached as a whole can send the strict policy instead
+(`$strictContentSecurityPolicy = true`); a cached page cannot, since every visitor would get the nonce it was cached with.
+
 A model is configured through the container rather than subclassed; a type's name is a `Yii::t()` result, hence the closure:
 
 ```php

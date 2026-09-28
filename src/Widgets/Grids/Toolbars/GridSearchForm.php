@@ -153,7 +153,7 @@ class GridSearchForm extends Widget
             ->value($this->grid->search->getValue());
 
         if ($this->grid->search->getValue()) {
-            $input->attribute('onfocus', 'this.setSelectionRange(this.value.length,this.value.length);');
+            $input->attribute('data-caret-end', true);
         }
 
         return $this->evaluate($this->inputClosures, $input);

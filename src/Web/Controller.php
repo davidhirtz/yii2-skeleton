@@ -31,11 +31,19 @@ class Controller extends \yii\web\Controller
     public bool $spacelessOutput = false;
 
     /**
-     * @var string|false whether a Content-Security-Policy header should be sent, defaults to only allowing the current
-     * site to frame the content. To be more strict, this can be changed to `frame-ancestors 'none'`.
+     * @var string|false the `Content-Security-Policy` header of a page outside the admin. It restricts nothing a page
+     * runs, so a page cached as a whole can send it: only the site itself may frame the content (`frame-ancestors
+     * 'none'` for nobody), no plugin is loaded and no foreign `<base>` resolves the page's links.
      * @link https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Clickjacking_Defense_Cheat_Sheet.md
      */
-    public string|false $contentSecurityPolicy = "frame-ancestors 'self'";
+    public string|false $contentSecurityPolicy = "frame-ancestors 'self'; object-src 'none'; base-uri 'self'";
+
+    /**
+     * @var bool|null whether the application's `contentSecurityPolicy` is sent instead, allowing only the scripts
+     * `Web\View` stamps with its nonce; `null` sends it inside the admin alone. A page cached as a whole cannot: every
+     * visitor would get the nonce it was cached with.
+     */
+    public ?bool $strictContentSecurityPolicy = null;
 
     /**
      * @var string|false the `Strict-Transport-Security` header, only ever sent over a secure connection — set on a
@@ -66,7 +74,11 @@ class Controller extends \yii\web\Controller
     #[Override]
     public function beforeAction($action): bool
     {
-        if ($this->contentSecurityPolicy) {
+        if ($this->strictContentSecurityPolicy ?? $this->isInAdminModule()) {
+            $policy = Application::current()->getContentSecurityPolicy();
+            $this->getView()->nonce = $policy->getNonce();
+            $this->response->getHeaders()->set('Content-Security-Policy', $policy->getPolicy());
+        } elseif ($this->contentSecurityPolicy) {
             $this->response->getHeaders()->set('Content-Security-Policy', $this->contentSecurityPolicy);
         }
 

@@ -1,5 +1,8 @@
 ## Unreleased
 
+- Added `Web\ContentSecurityPolicy`, the application's `contentSecurityPolicy` component: the admin allows only scripts carrying the page's nonce, which `Web\View::$nonce` stamps on every script it renders; `Web\Controller::$strictContentSecurityPolicy` sends it elsewhere
+- Changed `Web\Controller::$contentSecurityPolicy` to add `object-src 'none'; base-uri 'self'`
+- Removed the inline `onclick` of `AdminButton` and the `onfocus` of `GridSearchForm`
 - Added `GridView::emptyLink()`: a sentence after a grid's empty message linking to its first record
 - Added a character counter to a field whose hint holds `{count}`
 - Added `Helpers\StringHelper::enumerate()`

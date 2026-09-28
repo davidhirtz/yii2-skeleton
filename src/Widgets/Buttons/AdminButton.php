@@ -14,6 +14,7 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 use Yii;
+use Hirtz\Skeleton\Web\View;
 
 class AdminButton extends Widget
 {
@@ -62,12 +63,12 @@ class AdminButton extends Widget
     {
         $environment = Application::current()->getRequest()->getEnvironmentName();
         $this->registerCss();
+        $this->registerJs();
 
         return A::make()
             ->content($this->icon, $this->getBadge($environment))
             ->href(['/admin/dashboard/index'])
             ->class('admin-btn')
-            ->attribute('onclick', 'document.documentElement.classList.toggle(\'is-admin\');return false')
             ->target('_blank');
     }
 
@@ -81,6 +82,18 @@ class AdminButton extends Widget
                 ->class('admin-btn-badge')
                 ->text($environment)
             : null;
+    }
+
+    /**
+     * A registered script rather than an `onclick`, which a strict `Content-Security-Policy` refuses.
+     */
+    protected function registerJs(): void
+    {
+        $this->view->registerJs(
+            "document.addEventListener('click',e=>{if(e.target.closest('.admin-btn')){e.preventDefault();document.documentElement.classList.toggle('is-admin')}})",
+            View::POS_END,
+            self::class,
+        );
     }
 
     protected function registerCss(): void

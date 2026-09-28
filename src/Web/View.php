@@ -30,6 +30,12 @@ class View extends \yii\web\View
      */
     public int $depth = 0;
 
+    /**
+     * The nonce of the page's `Content-Security-Policy`, set by the controller sending the strict policy. Every
+     * script rendered here carries it; without one a page renders as before, so a cached one is unchanged.
+     */
+    public ?string $nonce = null;
+
     protected string|null $description = null;
     /**
      * @var non-empty-string
@@ -37,15 +43,27 @@ class View extends \yii\web\View
     protected string $jsImportName = 'a';
 
     #[Override]
+    protected function renderHeadHtml(): string
+    {
+        $js = $this->renderPosition(self::POS_HEAD);
+        return $this->joinHtml(parent::renderHeadHtml(), $js);
+    }
+
+    #[Override]
+    protected function renderBodyBeginHtml(): string
+    {
+        $js = $this->renderPosition(self::POS_BEGIN);
+        return $this->joinHtml(parent::renderBodyBeginHtml(), $js);
+    }
+
+    #[Override]
     protected function renderBodyEndHtml($ajaxMode): string
     {
         // jQuery is no longer supported
         unset($this->js[self::POS_READY], $this->js[self::POS_LOAD]);
 
-        $html = parent::renderBodyEndHtml($ajaxMode);
-        $html .= $this->renderJsModules();
-
-        return $html;
+        $js = $this->renderPosition(self::POS_END);
+        return $this->joinHtml(parent::renderBodyEndHtml($ajaxMode), $js, $this->renderJsModules());
     }
 
     public function renderJsModules(): string
@@ -53,7 +71,48 @@ class View extends \yii\web\View
         $scripts = implode('', $this->js[self::POS_IMPORT] ?? []);
         $scripts .= implode('', $this->js[self::POS_MODULE] ?? []);
 
-        return $scripts ? Html::script($scripts, ['type' => 'module']) : '';
+        return $scripts ? $this->renderScript($scripts, ['type' => 'module']) : '';
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function renderScript(string $js, array $options = []): string
+    {
+        return Html::script($js, [...$options, 'nonce' => $this->nonce]);
+    }
+
+    /**
+     * Yii builds a file's tag when it is registered, an asset bundle's included.
+     *
+     * @param string $url
+     * @param array<string, mixed> $options
+     * @param string|null $key
+     */
+    #[Override]
+    public function registerJsFile($url, $options = [], $key = null): void
+    {
+        if ($this->nonce !== null) {
+            $options['nonce'] ??= $this->nonce;
+        }
+
+        parent::registerJsFile($url, $options, $key);
+    }
+
+    /**
+     * Yii renders a position's code blocks last and without attributes, so they are taken out and rendered here.
+     */
+    protected function renderPosition(int $position): string
+    {
+        $js = $this->js[$position] ?? [];
+        unset($this->js[$position]);
+
+        return $js ? $this->renderScript(implode("\n", $js)) : '';
+    }
+
+    protected function joinHtml(string ...$html): string
+    {
+        return implode("\n", array_filter($html));
     }
 
     public function title(string $title): static

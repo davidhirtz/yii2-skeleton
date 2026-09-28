@@ -59,6 +59,12 @@ class Application extends \yii\web\Application
         return $app;
     }
 
+    public function getContentSecurityPolicy(): ContentSecurityPolicy
+    {
+        /** @var ContentSecurityPolicy */
+        return $this->get('contentSecurityPolicy');
+    }
+
     /**
      * @param array<array-key, mixed> $config
      */
@@ -123,6 +129,9 @@ class Application extends \yii\web\Application
     {
         return [
             ...parent::coreComponents(),
+            'contentSecurityPolicy' => [
+                'class' => ContentSecurityPolicy::class,
+            ],
             'errorHandler' => [
                 'class' => ErrorHandler::class,
             ],

@@ -58,7 +58,7 @@ trait AjaxRouteTrait
         $js = implode(';', $js);
 
         if ($js) {
-            $html .= "<script>$js</script>";
+            $html .= $view->renderScript($js);
         }
 
         return $html;

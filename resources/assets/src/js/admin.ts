@@ -65,6 +65,11 @@ onLoad(($container) => {
     queryAll('[data-character-counter]', characterCounter);
     queryAll('[data-timezone-offset]', timezone);
 
+    // A search renders its term back, and the caret belongs behind it.
+    queryAll('[data-caret-end]', ($input: HTMLInputElement) => {
+        $input.addEventListener('focus', () => $input.setSelectionRange($input.value.length, $input.value.length));
+    });
+
     queryAll('[aria-invalid]', ($input: HTMLElement) => {
         $input.addEventListener('input', () => $input.removeAttribute('aria-invalid'));
     });
