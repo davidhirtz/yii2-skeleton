@@ -53,6 +53,14 @@ class SelectionTraitTest extends TestCase
         self::assertStringNotContainsString('flex-has-selection', $html);
     }
 
+    public function testAGridWithoutADeleteRouteOffersNoBulkDelete(): void
+    {
+        $grid = $this->createGrid();
+        $grid->deleteRoute = null;
+
+        self::assertStringNotContainsString('hx-post="/admin/redirect/delete-all"', (string)$grid);
+    }
+
     private function createGrid(): SelectionTraitGridView
     {
         $redirect = Redirect::create();
@@ -75,6 +83,11 @@ class SelectionTraitGridView extends GridView
     use SelectionTrait;
 
     public bool $canDelete = true;
+
+    /**
+     * @var array<int|string, mixed>|null
+     */
+    public ?array $deleteRoute = ['/admin/redirect/delete-all'];
 
     protected string $layout = '{items}{footer}';
 
@@ -110,10 +123,10 @@ class SelectionTraitGridView extends GridView
     }
 
     /**
-     * @return array<int|string, mixed>
+     * @return array<int|string, mixed>|null
      */
-    protected function getDeleteSelectionRoute(): array
+    protected function getDeleteSelectionRoute(): ?array
     {
-        return ['/admin/redirect/delete-all'];
+        return $this->deleteRoute;
     }
 }
