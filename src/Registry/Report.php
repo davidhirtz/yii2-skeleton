@@ -18,10 +18,6 @@ use yii\base\InvalidConfigException;
 class Report implements JsonSerializable
 {
     final public const int SCHEMA = 1;
-
-    /**
-     * Enough of the Sentry DSN's public key to tell the Sentry project apart, not the key itself.
-     */
     final public const int SENTRY_KEY_LENGTH = 8;
 
     /**

@@ -49,9 +49,7 @@ class Mailer extends BaseMailer
     }
 
     /**
-     * The transport's DSN without its credentials or options, for what an installation reports about itself. A
-     * `failover(…)` or `roundrobin(…)` DSN nests several, each masked; a transport instance names itself, and no
-     * Symfony transport puts its credentials into its name.
+     * The transport's DSN without its credentials or options, for what an installation reports about itself.
      */
     public function getMaskedTransportDsn(): ?string
     {

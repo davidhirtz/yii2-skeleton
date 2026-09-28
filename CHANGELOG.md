@@ -1,11 +1,12 @@
 ## Unreleased
 
-- Added `mailer` and `sentry` to the registry report: the mailer DSN without credentials or options, and the beginning of the Sentry DSN's public key
+- Added `mailer` and `sentry` to the registry report without credentials or options
 - Added `Mail\Mailer::getMaskedTransportDsn()`
 
 ## 3.4.0 (September 25, 2026)
 
-- Changed the `LinkTrait::link()` and `GridSearchForm` `button()`, `input()` and `form()` closures to stack; `button()` receives the `Button` widget
+- Changed the `LinkTrait::link()` and `GridSearchForm` `button()`, `input()` and `form()` closures to stack; `button()` 
+  receives the `Button` widget
 
 ## 3.3.0 (September 25, 2026)
 
