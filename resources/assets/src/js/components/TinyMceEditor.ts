@@ -25,7 +25,16 @@ window.customElements.get('tinymce-editor') || window.customElements.define('tin
         // The promise is kept so a disconnect within the timeout window still awaits and removes the editor, which a
         // drag between two positions does.
         this.#editors = new Promise((resolve) => {
-            setTimeout(async () => resolve(await tinymce.init({...config, selector: `#${$textarea.id}`})), 1);
+            setTimeout(async () => {
+                const editors = await tinymce.init({...config, selector: `#${$textarea.id}`});
+
+                // Typing happens in the editor's iframe, so the form learns of it from the textarea it stands for.
+                editors.forEach((editor) => editor.on('input change undo redo', () => {
+                    $textarea.dispatchEvent(new Event('input', {bubbles: true}));
+                }));
+
+                resolve(editors);
+            }, 1);
         });
     }
 

@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Models\Interfaces\StaleSaveInterface;
+use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
 use Hirtz\Skeleton\Widgets\Forms\Footers\FormFooter;
@@ -42,6 +43,12 @@ class ActiveForm extends Widget
     public array|string|null $action = null;
 
     public bool $hasStickyButtons = true;
+
+    /**
+     * @var bool whether leaving the page with unsaved changes asks first (`includes/unsaved.ts`); a sign-in form,
+     * whose input nobody minds losing, turns it off
+     */
+    public bool $warnOnLeave = true;
     protected string $layout = "{errors}{rows}{buttons}{footer}";
 
     /**
@@ -113,6 +120,15 @@ class ActiveForm extends Widget
         $this->attributes['hx-select'] ??= "#{$this->getId()}";
         $this->attributes['hx-target'] ??= $this->attributes['hx-select'];
         $this->attributes['hx-boost'] ??= "true";
+
+        if ($this->warnOnLeave && !$this->readonly) {
+            $this->attributes['data-unsaved'] ??= Yii::t('skeleton', 'COMMON_UNSAVED_CHANGES_CONFIRM');
+
+            // Rendered with input nobody saved yet: a save that failed, or a reload after a type change.
+            if ($this->model?->hasErrors() || Request::current()?->isFormReload()) {
+                $this->attributes['data-dirty'] ??= true;
+            }
+        }
 
         $this->fieldsets = $this->normalizeRows($this->fieldsets ?? $this->getDefaultRows());
 

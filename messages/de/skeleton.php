@@ -119,6 +119,7 @@ return [
     'COMMON_TYPE_EXACT' => 'Bitte bestätigen Sie mit dem Feld "{attribute}" die Löschung des Datensatzes. Bitte beachten Sie, dass auch alle dazugehörigen Daten unwiderruflich gelöscht werden!',
     'COMMON_TYPE_LABEL' => 'Typ',
     'COMMON_UNKNOWN' => 'Unbekannt',
+    'COMMON_UNSAVED_CHANGES_CONFIRM' => 'Dieses Formular enthält ungespeicherte Änderungen. Die Seite trotzdem verlassen?',
     'COMMON_UPDATE' => 'Aktualisieren',
     'COMMON_UPDATED' => 'Aktualisiert',
     'COMMON_UPDATED_AT' => 'Letzte Aktualisierung {timestamp}',

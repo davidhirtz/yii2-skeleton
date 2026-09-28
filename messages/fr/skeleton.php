@@ -119,6 +119,7 @@ return [
     'COMMON_TYPE_EXACT' => 'Saisissez exactement {attribute} dans le champ ci-dessous pour supprimer cet enregistrement. Tous les fichiers associés seront également supprimés définitivement. Cette action est irréversible, veuillez confirmer !',
     'COMMON_TYPE_LABEL' => 'Type',
     'COMMON_UNKNOWN' => 'Inconnu',
+    'COMMON_UNSAVED_CHANGES_CONFIRM' => 'Ce formulaire contient des modifications non enregistrées. Quitter la page quand même ?',
     'COMMON_UPDATE' => 'Mettre à jour',
     'COMMON_UPDATED' => 'Mis à jour',
     'COMMON_UPDATED_AT' => 'Dernière mise à jour {timestamp}',

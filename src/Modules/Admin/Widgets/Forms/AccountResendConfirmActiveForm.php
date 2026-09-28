@@ -19,6 +19,8 @@ class AccountResendConfirmActiveForm extends ActiveForm
 {
     use LoginActiveFormTrait;
 
+    public bool $warnOnLeave = false;
+
     /**
      * @var array<string, mixed>
      */

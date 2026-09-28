@@ -18,6 +18,7 @@ use Yii;
  */
 class PasswordRecoverActiveForm extends ActiveForm
 {
+    public bool $warnOnLeave = false;
     /**
      * @var array<string, mixed>
      */

@@ -22,6 +22,7 @@ import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
 import networkError from './includes/networkError';
 import {rememberFocus, restoreFocus} from './includes/focus';
+import {confirmLeaving, hasUnsavedChanges, trackUnsavedForm} from './includes/unsaved';
 
 import './includes/FlashAlert';
 import './includes/submitOnEnter';
@@ -49,6 +50,7 @@ onLoad(($container) => {
     queryAll('[data-select-link]', selectLink);
     queryAll('[data-sticky]', sticky);
     queryAll('[data-tooltip]', tooltip);
+    queryAll('form[data-unsaved]', trackUnsavedForm);
     queryAll('[data-timezone-offset]', timezone);
 
     queryAll('[aria-invalid]', ($input: HTMLElement) => {
@@ -85,7 +87,20 @@ htmx.on('htmx:after:request', (event: Event) => {
 
 htmx.on('htmx:error', networkError);
 
-htmx.on('htmx:before:request', rememberFocus);
+htmx.on('htmx:before:request', (event: Event) => {
+    if (!confirmLeaving((event as CustomEvent).detail.ctx)) {
+        event.preventDefault();
+        return;
+    }
+
+    rememberFocus();
+});
+
+window.addEventListener('beforeunload', (event: BeforeUnloadEvent) => {
+    if (hasUnsavedChanges()) {
+        event.preventDefault();
+    }
+});
 
 htmx.on('htmx:after:swap', (event: Event) => {
     restoreFocus((event as CustomEvent).detail.ctx);

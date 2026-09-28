@@ -119,6 +119,7 @@ return [
     'COMMON_TYPE_EXACT' => 'Please type the exact {attribute} in the text field below to delete this record. All related files will also be unrecoverably deleted. This cannot be undone, please be certain!',
     'COMMON_TYPE_LABEL' => 'Type',
     'COMMON_UNKNOWN' => 'Unknown',
+    'COMMON_UNSAVED_CHANGES_CONFIRM' => 'This form has unsaved changes. Leave the page anyway?',
     'COMMON_UPDATE' => 'Update',
     'COMMON_UPDATED' => 'Updated',
     'COMMON_UPDATED_AT' => 'Last updated {timestamp}',

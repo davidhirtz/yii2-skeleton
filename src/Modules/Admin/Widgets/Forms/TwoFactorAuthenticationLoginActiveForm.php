@@ -17,6 +17,7 @@ use Yii;
  */
 class TwoFactorAuthenticationLoginActiveForm extends ActiveForm
 {
+    public bool $warnOnLeave = false;
     /**
      * @var array<string, mixed>
      */

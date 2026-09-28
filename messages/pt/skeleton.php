@@ -119,6 +119,7 @@ return [
     'COMMON_TYPE_EXACT' => 'Escreva exatamente {attribute} no campo abaixo para eliminar este registo. Todos os ficheiros associados serão também eliminados de forma irrecuperável. Esta ação não pode ser anulada, tenha a certeza!',
     'COMMON_TYPE_LABEL' => 'Tipo',
     'COMMON_UNKNOWN' => 'Desconhecido',
+    'COMMON_UNSAVED_CHANGES_CONFIRM' => 'Este formulário tem alterações por guardar. Sair da página na mesma?',
     'COMMON_UPDATE' => 'Atualizar',
     'COMMON_UPDATED' => 'Atualizado',
     'COMMON_UPDATED_AT' => 'Última atualização {timestamp}',
