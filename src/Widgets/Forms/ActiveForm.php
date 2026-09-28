@@ -269,7 +269,7 @@ class ActiveForm extends Widget
 
         foreach ($languages as $language) {
             $tabs->addContent(Button::make()
-                ->class('btn btn-secondary')
+                ->class('btn btn-border btn-sm')
                 ->attribute('data-translation-language', $language)
                 ->attribute('data-missing', in_array($language, $missing, true) ? true : null)
                 ->text($i18n->getLabel($language)));
@@ -279,7 +279,7 @@ class ActiveForm extends Widget
             ->class('translation-toolbar')
             ->attribute('data-translation-toolbar', true)
             ->content($tabs, Button::make()
-                ->class('btn btn-link')
+                ->class('btn btn-border btn-sm')
                 ->attribute('data-translation-toggle', true)
                 ->attribute('data-label-inline', Yii::t('skeleton', 'FORM_TRANSLATION_SHOW_ONE'))
                 ->attribute('data-label-tabs', Yii::t('skeleton', 'FORM_TRANSLATION_SHOW_ALL'))
