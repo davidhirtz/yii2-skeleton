@@ -1,5 +1,5 @@
-import {beforeEach, describe, expect, it} from 'vitest';
-import translationLayout from '../../../src/js/includes/translationLayout';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import translationLayout, {initTranslationTabs} from '../../../src/js/includes/translationLayout';
 
 const render = (layout = 'inline', invalid = '') => {
     document.body.innerHTML = `<form data-translation-layout="${layout}">
@@ -81,10 +81,42 @@ describe('translationLayout', () => {
         expect(hidden('name')).toBe(true);
     });
 
-    it('brings a language with a rejected field to the front', () => {
+    it('shows every field again while a rejected one is in another language', () => {
         render('tabs', 'aria-invalid="true"');
 
-        expect(hidden('name')).toBe(true);
+        expect(hidden('name')).toBe(false);
         expect(hidden('name-de')).toBe(false);
+        expect(active()).toEqual(['All fields']);
+
+        // Not remembered: the next form opens on the editor's choice again.
+        render('tabs');
+        expect(active()).toEqual(['EN']);
+    });
+
+    it('binds tabs swapped in after their form, once', () => {
+        document.body.innerHTML = `<ul data-translation-toolbar="entry">
+                <li><button data-translation-all>All fields</button></li>
+                <li><button data-translation-language="de">DE</button></li>
+            </ul>
+            <form id="entry" data-translation-layout="tabs"><div id="name-de" data-language="de"></div><div id="name" data-language="en-US"></div></form>`;
+
+        const $toolbar = document.querySelector<HTMLElement>('[data-translation-toolbar]')!;
+        initTranslationTabs($toolbar);
+        translationLayout(document.querySelector('form')!);
+
+        expect(active()).toEqual(['DE']);
+
+        const setItem = vi.spyOn(window.localStorage, 'setItem');
+        click('[data-translation-all]');
+
+        expect(setItem).toHaveBeenCalledTimes(1);
+        setItem.mockRestore();
+    });
+
+    it('keeps the language when its own field was rejected', () => {
+        window.localStorage.setItem('translationLanguage', 'de');
+        render('inline', 'aria-invalid="true"');
+
+        expect(active()).toEqual(['DE']);
     });
 });

@@ -23,7 +23,7 @@ import tooltip from './includes/tooltips';
 import networkError from './includes/networkError';
 import {rememberFocus, restoreFocus} from './includes/focus';
 import {confirmLeaving, hasUnsavedChanges, trackUnsavedForm} from './includes/unsaved';
-import translationLayout from './includes/translationLayout';
+import translationLayout, {initTranslationTabs} from './includes/translationLayout';
 import staleSave from './includes/staleSave';
 import characterCounter from './includes/characterCounter';
 
@@ -37,7 +37,12 @@ declare global {
 }
 
 onLoad(($container) => {
+    // A form swapped in by a failed save is the container itself, so it is asked too.
     const queryAll = (selector: string, method: Function) => {
+        if ($container.matches(selector)) {
+            method($container);
+        }
+
         $container.querySelectorAll(selector).forEach(($el: Element) => method($el));
     };
 
@@ -55,6 +60,7 @@ onLoad(($container) => {
     queryAll('[data-tooltip]', tooltip);
     queryAll('form[data-unsaved]', trackUnsavedForm);
     queryAll('form[data-translation-layout]', translationLayout);
+    queryAll('[data-translation-toolbar]', initTranslationTabs);
     queryAll('form[data-stale-save]', staleSave);
     queryAll('[data-character-counter]', characterCounter);
     queryAll('[data-timezone-offset]', timezone);

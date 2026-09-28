@@ -139,6 +139,12 @@ class ActiveForm extends Widget
 
         if ($module instanceof AdminModule && $this->hasTranslationToolbar()) {
             $this->attributes['data-translation-layout'] ??= $module->translationLayout;
+
+            // A failed save swaps the form alone, so tabs standing outside it are named for the swap to renew them;
+            // naming any element replaces the inherited list, so the flashes are named again.
+            if (!$this->inlineTranslationTabs) {
+                $this->attributes['hx-select-oob'] ??= "#flashes:beforeend,#{$this->getTranslationTabsId()}";
+            }
         }
 
         $this->flashStaleSaveError();
@@ -302,6 +308,7 @@ class ActiveForm extends Widget
 
         return (string)Ul::make()
             ->class('nav tabs translation-tabs')
+            ->attribute('id', $this->getTranslationTabsId())
             ->attribute('data-translation-toolbar', $this->getId())
             ->attribute('aria-label', Yii::t('skeleton', 'FORM_TRANSLATION_LANGUAGES'))
             ->content(...$items);
@@ -321,6 +328,11 @@ class ActiveForm extends Widget
     public function getTranslationTabs(): string
     {
         return $this->translationTabs;
+    }
+
+    protected function getTranslationTabsId(): string
+    {
+        return $this->getId() . '-translations';
     }
 
     protected function hasTranslationToolbar(): bool

@@ -94,14 +94,15 @@ class FieldsetTest extends TestCase
         $html = ActiveForm::make()->model($model)->rows(['name', 'email'])->render();
 
         self::assertStringContainsString('data-translation-layout="inline"', $html);
-        self::assertStringContainsString('<ul class="nav tabs translation-tabs" data-translation-toolbar', $html);
+        self::assertStringContainsString('<ul id="test-active-record-translations" class="nav tabs translation-tabs" data-translation-toolbar', $html);
         self::assertStringContainsString('<button type="button" class="nav-link" data-translation-all>All fields</button>', $html);
         self::assertMatchesRegularExpression('/data-translation-language="en-US"[^>]*>EN</', $html);
         self::assertMatchesRegularExpression('/data-translation-language="de" data-missing><div class="icon-text"><span class="fas fa-exclamation-triangle"><\/span><div>DE</', $html);
 
         // In a form container the tabs stand before the card, aligned with the submenu, and name their form.
         $html = FormContainer::make()->form(ActiveForm::make()->model($model)->rows(['name']))->render();
-        self::assertMatchesRegularExpression('/^<div class="container"><ul class="nav tabs translation-tabs" data-translation-toolbar="test-active-record"/', $html);
+        self::assertMatchesRegularExpression('/^<div class="container"><ul id="test-active-record-translations" class="nav tabs translation-tabs" data-translation-toolbar="test-active-record"/', $html);
+        self::assertStringContainsString('hx-select-oob="#flashes:beforeend,#test-active-record-translations"', $html);
         self::assertStringNotContainsString('data-translation-toolbar', (string)strstr($html, '<form'));
 
         // A form leaving the translated fields out offers no languages either.

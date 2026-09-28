@@ -2,8 +2,8 @@
  * A form's languages as tabs: "All fields" shows every translated row (`data-language`) beneath the other, a
  * language button only that language's. The server names the project's default (`data-translation-layout`:
  * `inline` for every field, `tabs` for the first language); the choice is remembered per browser. Switching only
- * hides rows, so nothing typed is lost and every language still posts. A language holding a rejected field comes to
- * the front. The tabs sit inside the form or, placed by `FormContainer`, in a container of their own before it.
+ * hides rows, so nothing typed is lost and every language still posts. A rejected field in a language that does not
+ * show brings every field back. The tabs sit inside the form or, placed by `FormContainer`, in a container of their own before it.
  */
 const KEY = 'translationLanguage';
 const ALL = 'all';
@@ -24,20 +24,35 @@ const write = (value: string): void => {
     }
 };
 
-export default ($form: HTMLFormElement): void => {
+/**
+ * Tabs swapped in after their form (a failed save renews them out of band) initialise from their side.
+ */
+export const initTranslationTabs = ($toolbar: HTMLElement): void => {
+    const $form = document.getElementById($toolbar.dataset.translationToolbar ?? '');
+
+    if ($form instanceof HTMLFormElement) {
+        translationLayout($form);
+    }
+};
+
+const translationLayout = ($form: HTMLFormElement): void => {
     // Inside the form, or in a container of its own beside it, naming the form.
     const $toolbar = $form.querySelector<HTMLElement>('[data-translation-toolbar]')
         ?? document.querySelector<HTMLElement>(`[data-translation-toolbar="${CSS.escape($form.id)}"]`);
     const $all = $toolbar?.querySelector<HTMLButtonElement>('[data-translation-all]');
     const $languages = [...($toolbar?.querySelectorAll<HTMLButtonElement>('[data-translation-language]') ?? [])];
 
-    if (!$toolbar || !$all || !$languages.length) {
+    // Bound once: a page load reaches the tabs from their form and on their own.
+    if (!$toolbar || !$all || !$languages.length || $toolbar.dataset.translationBound !== undefined) {
         return;
     }
 
+    $toolbar.dataset.translationBound = '';
+
     const codes = $languages.map(($button) => $button.dataset.translationLanguage!);
     const fallback = $form.dataset.translationLayout === 'tabs' ? codes[0] : ALL;
-    const $invalid = $form.querySelector<HTMLElement>('[data-language]:has([aria-invalid="true"])');
+    const invalid = [...$form.querySelectorAll<HTMLElement>('[data-language]:has([aria-invalid="true"])')]
+        .map(($row) => $row.dataset.language!);
 
     let choice = read() ?? fallback;
 
@@ -45,8 +60,9 @@ export default ($form: HTMLFormElement): void => {
         choice = fallback;
     }
 
-    if ($invalid && choice !== ALL) {
-        choice = $invalid.dataset.language!;
+    // A rejected field in a language that does not show would go unseen: every field shows until the next choice.
+    if (choice !== ALL && invalid.some((language) => language !== choice)) {
+        choice = ALL;
     }
 
     const apply = () => {
@@ -72,3 +88,5 @@ export default ($form: HTMLFormElement): void => {
 
     apply();
 };
+
+export default translationLayout;
