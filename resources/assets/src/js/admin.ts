@@ -20,6 +20,7 @@ import selectLink from './includes/selectLink';
 import sticky from './includes/sticky';
 import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
+import networkError from './includes/networkError';
 
 import './includes/FlashAlert';
 import './includes/submitOnEnter';
@@ -80,6 +81,8 @@ htmx.on('htmx:after:request', (event: Event) => {
     $dialog.style.width = 'min(90rem, 90vw)';
     $dialog.style.height = 'min(60rem, 90vh)';
 });
+
+htmx.on('htmx:error', networkError);
 
 // `hx-include` serializes the form without firing `submit`, which is when TinyMCE writes to its textarea. htmx
 // collects the values inside its own listener for the triggering event and fires no event of its own before

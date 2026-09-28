@@ -33,7 +33,18 @@ class Flashes extends Widget
             $content->addContent($this->getAlerts($status, $alerts));
         }
 
-        return $content;
+        return $content . $this->renderNetworkErrorTemplate();
+    }
+
+    /**
+     * Beside the container rather than in it, which would no longer count as empty. `includes/networkError.ts`
+     * clones it into the container when a request never reached the server.
+     */
+    protected function renderNetworkErrorTemplate(): string
+    {
+        return Html::tag('template', (string)$this->getAlerts('danger', Yii::t('skeleton', 'COMMON_NETWORK_ERROR')), [
+            'id' => 'network-error-flash',
+        ]);
     }
 
     /**

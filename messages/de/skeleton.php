@@ -94,6 +94,7 @@ return [
     'COMMON_MODEL_ID' => '{model} #{id}',
     'COMMON_MODEL_POSITION_TOTAL' => '{model} {position}/{total}',
     'COMMON_NAME' => 'Name',
+    'COMMON_NETWORK_ERROR' => 'Die Anfrage hat den Server nicht erreicht, es wurde nichts gespeichert. Bitte die Verbindung prüfen und es erneut versuchen.',
     'COMMON_NEW_PASSWORD' => 'Neues Passwort',
     'COMMON_NEW_REDIRECT' => 'Neue Weiterleitung',
     'COMMON_PASSWORD' => 'Passwort',

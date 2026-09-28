@@ -94,6 +94,7 @@ return [
     'COMMON_MODEL_ID' => '{model} n.º {id}',
     'COMMON_MODEL_POSITION_TOTAL' => '{model} {position}/{total}',
     'COMMON_NAME' => 'Nome',
+    'COMMON_NETWORK_ERROR' => 'O pedido não chegou ao servidor, por isso nada foi guardado. Verifique a ligação e tente novamente.',
     'COMMON_NEW_PASSWORD' => 'Nova palavra-passe',
     'COMMON_NEW_REDIRECT' => 'Novo redirecionamento',
     'COMMON_PASSWORD' => 'Palavra-passe',
