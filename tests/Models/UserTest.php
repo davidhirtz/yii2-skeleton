@@ -15,6 +15,19 @@ class UserTest extends TestCase
 {
     use UserFixtureTrait;
 
+    public function testTheAuthKeyMatchesItselfOnly(): void
+    {
+        $user = User::create();
+        $user->generateAuthKey();
+
+        self::assertTrue($user->validateAuthKey($user->auth_key));
+        self::assertFalse($user->validateAuthKey('wrong'));
+
+        $user->auth_key = null;
+
+        self::assertFalse($user->validateAuthKey(''));
+    }
+
     public function testCustomAttributesAreStoredAndTrailed(): void
     {
         Yii::$container->set(User::class, [

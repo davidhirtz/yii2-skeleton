@@ -238,9 +238,13 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         ];
     }
 
+    /**
+     * A record without a key matches nothing.
+     */
     public function validateAuthKey($authKey): bool
     {
-        return $this->getAuthKey() === $authKey;
+        $key = $this->getAuthKey();
+        return $key !== null && hash_equals($key, $authKey);
     }
 
     public function validatePassword(string $password): bool
