@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\CustomAttributes;
 
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Validators\FileValidator;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
@@ -152,8 +153,25 @@ class UploadCustomAttribute extends CustomAttribute
         $upload = $this->getUpload();
 
         if ($upload->isToken($value)) {
-            if ($upload->getTempFile($value) === null) {
+            $path = $upload->getTempFile($value);
+
+            if ($path === null) {
                 $owner->addError($attribute, Yii::t('skeleton', 'UPLOAD_EXPIRED_ERROR'));
+                return;
+            }
+
+            // The token is not bound to the attribute that parked the file: one parked for a more permissive
+            // attribute is held to this one's rules before it is kept.
+            $error = $this->validateUploadedFile(new UploadedFile([
+                'name' => $upload->getFilenameFromToken($value),
+                'tempName' => $path,
+                'type' => (string)FileHelper::getMimeType($path),
+                'size' => (int)filesize($path),
+                'error' => UPLOAD_ERR_OK,
+            ]));
+
+            if ($error !== null) {
+                $owner->addError($attribute, $error);
             }
 
             return;

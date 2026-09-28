@@ -241,6 +241,30 @@ class UploadCustomAttributeTest extends TestCase
         self::assertArrayHasKey('attachment', $record->getErrors());
     }
 
+    /**
+     * The token names no attribute: one parked for a more permissive attribute is held to the rules of the one it
+     * is handed to.
+     */
+    public function testATokenIsHeldToTheRulesOfTheAttributeItIsHandedTo(): void
+    {
+        $record = $this->createRecord(UploadRecord::TYPE_RESTRICTED);
+        $record->attachment = $this->createToken('notes.txt');
+
+        self::assertFalse($record->validate());
+        self::assertArrayHasKey('attachment', $record->getErrors());
+
+        $record = $this->createRecord(UploadRecord::TYPE_RESTRICTED);
+        $record->attachment = $this->createToken('large.pdf', str_repeat('x', 100));
+
+        self::assertFalse($record->validate());
+        self::assertArrayHasKey('attachment', $record->getErrors());
+
+        $record = $this->createRecord(UploadRecord::TYPE_RESTRICTED);
+        $record->attachment = $this->createToken('small.pdf');
+
+        self::assertTrue($record->validate(), print_r($record->getErrors(), true));
+    }
+
     public function testTheTrailReportsTheFilename(): void
     {
         $record = $this->createRecord();
