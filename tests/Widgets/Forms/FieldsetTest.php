@@ -16,6 +16,7 @@ use Hirtz\Skeleton\Validators\SensitiveAttributeValidator;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Hirtz\Skeleton\Widgets\Forms\Fieldset;
+use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 use Override;
 use Yii;
 
@@ -97,6 +98,11 @@ class FieldsetTest extends TestCase
         self::assertStringContainsString('<button type="button" class="nav-link" data-translation-all>All fields</button>', $html);
         self::assertMatchesRegularExpression('/data-translation-language="en-US"[^>]*>EN</', $html);
         self::assertMatchesRegularExpression('/data-translation-language="de" data-missing[^>]*>DE</', $html);
+
+        // In a form container the tabs stand before the card, aligned with the submenu, and name their form.
+        $html = FormContainer::make()->form(ActiveForm::make()->model($model)->rows(['name']))->render();
+        self::assertMatchesRegularExpression('/^<div class="container"><ul class="nav tabs translation-tabs" data-translation-toolbar="test-active-record"/', $html);
+        self::assertStringNotContainsString('data-translation-toolbar', (string)strstr($html, '<form'));
 
         // A form leaving the translated fields out offers no languages either.
         self::assertStringNotContainsString('data-translation-toolbar', ActiveForm::make()->model($model)->rows(['email'])->render());

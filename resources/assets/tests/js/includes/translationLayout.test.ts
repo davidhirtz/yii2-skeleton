@@ -63,6 +63,24 @@ describe('translationLayout', () => {
         expect(active()).toEqual(['DE']);
     });
 
+    it('finds tabs placed before the form, and tells the styles what shows', () => {
+        document.body.innerHTML = `<ul data-translation-toolbar="entry">
+                <li><button data-translation-all>All fields</button></li>
+                <li><button data-translation-language="de">DE</button></li>
+            </ul>
+            <form id="entry"><div id="name-de" data-language="de"><input></div><div id="name" data-language="en-US"></div></form>`;
+
+        const $form = document.querySelector('form')!;
+        translationLayout($form);
+
+        expect($form.dataset.translationChoice).toBe('all');
+
+        click('[data-translation-language="de"]');
+
+        expect($form.dataset.translationChoice).toBe('de');
+        expect(hidden('name')).toBe(true);
+    });
+
     it('brings a language with a rejected field to the front', () => {
         render('tabs', 'aria-invalid="true"');
 

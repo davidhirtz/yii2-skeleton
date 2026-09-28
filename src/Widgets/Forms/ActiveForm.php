@@ -50,6 +50,14 @@ class ActiveForm extends Widget
     public bool $hasStickyButtons = true;
 
     /**
+     * @var bool whether the language tabs render inside the form; a container placing them beside it
+     * ({@see FormContainer}) turns it off and asks {@see getTranslationTabs()} after the form rendered
+     */
+    public bool $inlineTranslationTabs = true;
+
+    private string $translationTabs = '';
+
+    /**
      * @var bool whether leaving the page with unsaved changes asks first (`includes/unsaved.ts`); a sign-in form,
      * whose input nobody minds losing, turns it off
      */
@@ -287,7 +295,7 @@ class ActiveForm extends Widget
 
         return (string)Ul::make()
             ->class('nav tabs translation-tabs')
-            ->attribute('data-translation-toolbar', true)
+            ->attribute('data-translation-toolbar', $this->getId())
             ->attribute('aria-label', Yii::t('skeleton', 'FORM_TRANSLATION_LANGUAGES'))
             ->content(...$items);
     }
@@ -298,8 +306,17 @@ class ActiveForm extends Widget
     protected function getTranslatedRows(): string
     {
         $rows = (string)$this->getRows();
+        $this->translationTabs = str_contains($rows, ' data-language="') ? $this->getTranslationToolbar() : '';
 
-        return (str_contains($rows, ' data-language="') ? $this->getTranslationToolbar() : '') . $rows;
+        return ($this->inlineTranslationTabs ? $this->translationTabs : '') . $rows;
+    }
+
+    /**
+     * The language tabs of the form that just rendered, empty while it has no translated field.
+     */
+    public function getTranslationTabs(): string
+    {
+        return $this->translationTabs;
     }
 
     protected function hasTranslationToolbar(): bool

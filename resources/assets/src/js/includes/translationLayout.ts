@@ -3,7 +3,7 @@
  * language button only that language's. The server names the project's default (`data-translation-layout`:
  * `inline` for every field, `tabs` for the first language); the choice is remembered per browser. Switching only
  * hides rows, so nothing typed is lost and every language still posts. A language holding a rejected field comes to
- * the front.
+ * the front. The tabs sit inside the form or, placed by `FormContainer`, in a container of their own before it.
  */
 const KEY = 'translationLanguage';
 const ALL = 'all';
@@ -25,7 +25,9 @@ const write = (value: string): void => {
 };
 
 export default ($form: HTMLFormElement): void => {
-    const $toolbar = $form.querySelector<HTMLElement>('[data-translation-toolbar]');
+    // Inside the form, or in a container of its own beside it, naming the form.
+    const $toolbar = $form.querySelector<HTMLElement>('[data-translation-toolbar]')
+        ?? document.querySelector<HTMLElement>(`[data-translation-toolbar="${CSS.escape($form.id)}"]`);
     const $all = $toolbar?.querySelector<HTMLButtonElement>('[data-translation-all]');
     const $languages = [...($toolbar?.querySelectorAll<HTMLButtonElement>('[data-translation-language]') ?? [])];
 
@@ -48,6 +50,9 @@ export default ($form: HTMLFormElement): void => {
     }
 
     const apply = () => {
+        // Read by the styles, which mark the labels of the translated fields while one language shows.
+        $form.dataset.translationChoice = choice;
+
         [$all, ...$languages].forEach(($button) => {
             const isActive = ($button.dataset.translationLanguage ?? ALL) === choice;
             $button.classList.toggle('active', isActive);

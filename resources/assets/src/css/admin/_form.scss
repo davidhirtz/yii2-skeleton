@@ -179,10 +179,27 @@
 
 // the languages of a translated form as tabs, like a submenu (`includes/translationLayout.ts`)
 .translation-tabs {
-  padding: 0 0 1rem;
-
   // a language the record lacks a translation for
   .nav-link[data-missing]::after {
     content: "•";
+  }
+}
+
+// While one language shows, a dot at the end of the label column points out the fields that are its translations.
+@include media-breakpoint-up(sm) {
+  form:not([data-translation-choice="all"]) [data-language] > .form-label {
+    position: relative;
+
+    &::after {
+      background: var(--nav-link-active-bg);
+      border-radius: 50%;
+      content: "";
+      height: .375rem;
+      position: absolute;
+      right: .75rem;
+      top: calc(.5rem + .5lh);
+      translate: 0 -50%;
+      width: .375rem;
+    }
   }
 }
