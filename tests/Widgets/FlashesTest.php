@@ -24,6 +24,18 @@ class FlashesTest extends TestCase
         self::assertStringNotContainsString('hx-swap-oob', $html);
     }
 
+    public function testFlashesAreAnnouncedAndFailuresInterrupt(): void
+    {
+        $this->getWebSession()->setFlash('success', 'Saved.');
+        $this->getWebSession()->setFlash('danger', 'Failed.');
+
+        $html = (string)Flashes::make();
+
+        self::assertStringContainsString('<div id="flashes" class="flashes hidden-empty" aria-live="polite">', $html);
+        self::assertStringContainsString('<div class="alert" data-alert="success">', $html);
+        self::assertStringContainsString('<div class="alert" role="alert" data-alert="danger"><div class="icon"><span class="fas fa-exclamation-circle"></span></div><div class="alert-content">Failed.', $html);
+    }
+
     /**
      * Rendered empty and beside the container, which stays empty until a script clones it in.
      */
@@ -31,7 +43,7 @@ class FlashesTest extends TestCase
     {
         $html = (string)Flashes::make();
 
-        self::assertStringContainsString('<div id="flashes" class="flashes hidden-empty"></div><template id="network-error-flash">', $html);
+        self::assertStringContainsString('<div id="flashes" class="flashes hidden-empty" aria-live="polite"></div><template id="network-error-flash">', $html);
         self::assertStringContainsString(Yii::t('skeleton', 'COMMON_NETWORK_ERROR'), $html);
         self::assertStringContainsString('data-alert="danger"', $html);
     }

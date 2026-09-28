@@ -25,8 +25,10 @@ class Flashes extends Widget
         // The container is page furniture, so it must not carry `hx-swap-oob`: the body's `hx-select-oob` delivers
         // the alerts of every response, while an attribute that survives in the DOM is consumed out of the page
         // htmx restores from its history cache, leaving the next response without a target.
+        // `polite` for every flash; a failure interrupts through its own `role="alert"`.
         $content = Div::make()
             ->attribute('id', 'flashes')
+            ->attribute('aria-live', 'polite')
             ->class('flashes hidden-empty');
 
         foreach ($this->alerts as $status => $alerts) {
@@ -60,6 +62,7 @@ class Flashes extends Widget
     protected function renderAlert(string $status, string $message): string|Stringable
     {
         return Alert::make()
+            ->attribute('role', in_array($status, ['danger', 'error'], true) ? 'alert' : null)
             ->content($message)
             ->icon($this->getStatusIcon($status))
             ->status($status)

@@ -28,8 +28,11 @@ window.customElements.get('flash-alert') || window.customElements.define('flash-
 
             const start = () => timer = window.setTimeout(() => close(this), TIMEOUT);
 
+            // Held while it is read, whether by pointer or keyboard.
             $alert.onmouseenter = () => clearTimeout(timer);
             $alert.onmouseleave = start;
+            $alert.addEventListener('focusin', () => clearTimeout(timer));
+            $alert.addEventListener('focusout', start);
 
             start();
         }
