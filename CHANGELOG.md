@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `StaleSaveInterface` and `StaleSaveTrait`: `ActiveForm` posts when it was rendered, and a save is refused while the record's trail holds an update from after that
 - Added `Filters\PageCache::EVENT_CONFIGURE`
 - Added a status dropdown to `SelectionTrait` (`canUpdateSelection()`, `getUpdateSelectionRoute()`); `getDeleteSelectionLabel()` and `getDeleteSelectionRoute()` are optional, a grid without a bulk delete offers none
 - Added `GridView::header()`, taking a closure like `columns()`

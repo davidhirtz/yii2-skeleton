@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Forms;
 
 use Closure;
+use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
+use Hirtz\Skeleton\Models\Interfaces\StaleSaveInterface;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
 use Hirtz\Skeleton\Widgets\Forms\Footers\FormFooter;
@@ -19,6 +21,7 @@ use Override;
 use Stringable;
 use Yii;
 use yii\db\ActiveRecordInterface;
+use yii\db\BaseActiveRecord;
 use yii\helpers\Inflector;
 use yii\base\InvalidConfigException;
 use yii\web\Controller;
@@ -178,10 +181,26 @@ class ActiveForm extends Widget
     {
         return strtr($this->layout, [
             '{errors}' => $this->getErrors(),
-            '{rows}' => $this->getRows(),
+            '{rows}' => $this->getStaleSaveInput() . $this->getRows(),
             '{buttons}' => $this->getButtons(),
             '{footer}' => $this->getFooter(),
         ]);
+    }
+
+    /**
+     * When the form was rendered, posted back for {@see \Hirtz\Skeleton\Models\Traits\StaleSaveTrait}. A conflict it reported starts the clock
+     * again, so saving once more overwrites knowingly; any other error keeps the time the form was opened.
+     */
+    protected function getStaleSaveInput(): string
+    {
+        if (!$this->model instanceof StaleSaveInterface || !$this->model instanceof BaseActiveRecord || $this->model->getIsNewRecord()) {
+            return '';
+        }
+
+        $loadedAt = $this->model->getLoadedAt();
+        $value = $loadedAt && !$this->model->hasErrors('loadedAt') ? $loadedAt : time();
+
+        return Html::hiddenInput(Html::getInputName($this->model, 'loadedAt'), (string)$value);
     }
 
     protected function getErrors(): string|Stringable

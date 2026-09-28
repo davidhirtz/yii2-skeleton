@@ -106,6 +106,7 @@ return [
     'COMMON_SEND_EMAIL' => 'Envoyer un e-mail',
     'COMMON_SETTINGS' => 'Paramètres',
     'COMMON_SORRY_SIGNING_UP' => 'Désolé, les inscriptions sont actuellement désactivées !',
+    'COMMON_STALE_SAVE_ERROR' => '{user} a modifié cet enregistrement à {time}, après que vous l’avez ouvert. Vos modifications sont toujours dans le formulaire : comparez-les avec l’historique, puis enregistrez à nouveau pour écraser.',
     'COMMON_STATUS' => 'Statut',
     'COMMON_STATUS_ATTRIBUTE_DRAFT' => 'Brouillon',
     'COMMON_STATUS_BUTTON_TOOLTIP' => '{status} — cliquez pour définir « {next} »',

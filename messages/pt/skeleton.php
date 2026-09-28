@@ -106,6 +106,7 @@ return [
     'COMMON_SEND_EMAIL' => 'Enviar e-mail',
     'COMMON_SETTINGS' => 'Definições',
     'COMMON_SORRY_SIGNING_UP' => 'Lamentamos, os registos estão atualmente desativados!',
+    'COMMON_STALE_SAVE_ERROR' => '{user} alterou este registo às {time}, depois de o ter aberto. As suas alterações continuam no formulário: compare-as com o histórico e guarde novamente para substituir.',
     'COMMON_STATUS' => 'Estado',
     'COMMON_STATUS_ATTRIBUTE_DRAFT' => 'Rascunho',
     'COMMON_STATUS_BUTTON_TOOLTIP' => '{status} — clique para definir «{next}»',

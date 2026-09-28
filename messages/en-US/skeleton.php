@@ -106,6 +106,7 @@ return [
     'COMMON_SEND_EMAIL' => 'Send Email',
     'COMMON_SETTINGS' => 'Settings',
     'COMMON_SORRY_SIGNING_UP' => 'Sorry, signing up is currently disabled!',
+    'COMMON_STALE_SAVE_ERROR' => '{user} changed this record at {time}, after you opened it. Your changes are still in the form: compare them with the history, then save again to overwrite.',
     'COMMON_STATUS' => 'Status',
     'COMMON_STATUS_ATTRIBUTE_DRAFT' => 'Draft',
     'COMMON_STATUS_BUTTON_TOOLTIP' => '{status} — click to set “{next}”',

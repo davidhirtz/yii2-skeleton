@@ -106,6 +106,7 @@ return [
     'COMMON_SEND_EMAIL' => 'E-Mail versenden',
     'COMMON_SETTINGS' => 'Einstellungen',
     'COMMON_SORRY_SIGNING_UP' => 'Leider ist momentan keine Registrierung möglich!',
+    'COMMON_STALE_SAVE_ERROR' => '{user} hat diesen Datensatz um {time} geändert, nachdem Sie ihn geöffnet haben. Ihre Änderungen sind noch im Formular: Bitte mit dem Verlauf vergleichen und erneut speichern, um zu überschreiben.',
     'COMMON_STATUS' => 'Status',
     'COMMON_STATUS_ATTRIBUTE_DRAFT' => 'Entwurf',
     'COMMON_STATUS_BUTTON_TOOLTIP' => '{status} — klicken, um auf „{next}“ zu setzen',
