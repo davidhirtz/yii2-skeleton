@@ -55,13 +55,12 @@ class ActiveForm extends Widget
      */
     public bool $inlineTranslationTabs = true;
 
-    private string $translationTabs = '';
-
     /**
      * @var bool whether leaving the page with unsaved changes asks first (`includes/unsaved.ts`); a sign-in form,
      * whose input nobody minds losing, turns it off
      */
     public bool $warnOnLeave = true;
+
     protected string $layout = "{errors}{rows}{buttons}{footer}";
 
     /**
@@ -92,6 +91,8 @@ class ActiveForm extends Widget
      * @var list<Fieldset>|null
      */
     protected ?array $fieldsets = null;
+
+    private string $translationTabs = '';
 
     /**
      * @param array<int|string, mixed>|string|null $action
@@ -289,8 +290,7 @@ class ActiveForm extends Widget
                     ->class('nav-link')
                     ->attribute('data-translation-language', $language)
                     ->attribute('data-missing', in_array($language, $missing, true) ? true : null)
-                    ->text(strtoupper($i18n->getLanguageCode($language)))
-                    ->tooltip($i18n->getLabel($language)));
+                    ->text(strtoupper($i18n->getLanguageCode($language))));
         }
 
         return (string)Ul::make()
@@ -311,9 +311,6 @@ class ActiveForm extends Widget
         return ($this->inlineTranslationTabs ? $this->translationTabs : '') . $rows;
     }
 
-    /**
-     * The language tabs of the form that just rendered, empty while it has no translated field.
-     */
     public function getTranslationTabs(): string
     {
         return $this->translationTabs;

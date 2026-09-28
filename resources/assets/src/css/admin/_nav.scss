@@ -12,6 +12,7 @@
   background: var(--nav-link-bg);
   border: 1px solid var(--nav-link-border-color);
   border-radius: .25rem;
+  color: var(--link-color); // Needed for buttons
   display: flex;
   font-family: "Bebas Neue", sans-serif;
   letter-spacing: .0625em;
@@ -58,7 +59,6 @@
 .nav-logout-link {
   --nav-link-hover-bg: var(--btn-danger-bg);
 }
-
 
 
 .tabs {
