@@ -1,4 +1,4 @@
-## Unreleased
+## 3.5.1 (September 28, 2026)
 
 - Fixed a translatable custom attribute being translated with a single content language, which left a German-only application without the attribute (cms `Section::$content` since cms 3.3.0)
 
