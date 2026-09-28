@@ -63,11 +63,24 @@ class Request extends \yii\web\Request
         }
 
         if (!$this->allowedHosts) {
-            $hosts = Yii::$app->params['allowedHosts'] ?? [];
-            $this->allowedHosts = is_array($hosts) ? array_values(array_filter($hosts, is_string(...))) : [];
+            $this->allowedHosts = $this->parseAllowedHosts(Yii::$app->params['allowedHosts'] ?? null);
         }
 
         parent::init();
+    }
+
+    /**
+     * `config/params.php` holds scalars only — `./yii params` and the config admin compare and print them as
+     * strings — so the parameter is a comma-separated list; an array written by hand is taken as well.
+     *
+     * @return list<string>
+     */
+    protected function parseAllowedHosts(mixed $hosts): array
+    {
+        $hosts = is_string($hosts) ? explode(',', $hosts) : (is_array($hosts) ? $hosts : []);
+        $hosts = array_map(static fn (mixed $host): string => is_string($host) ? trim($host) : '', $hosts);
+
+        return array_values(array_filter($hosts));
     }
 
     public function addAllowedHosts(string ...$hosts): void

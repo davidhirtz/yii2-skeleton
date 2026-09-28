@@ -46,12 +46,20 @@ class AllowedHostsTest extends TestCase
         ];
     }
 
-    public function testTheListDefaultsToTheParams(): void
+    public function testTheListDefaultsToTheCommaSeparatedParam(): void
     {
-        $this->config['params']['allowedHosts'] = ['www.example.com'];
+        $this->config['params']['allowedHosts'] = 'www.example.com, *.example.org,';
         $this->reloadApplication();
 
-        self::assertSame(['www.example.com'], $this->getWebRequest()->allowedHosts);
+        self::assertSame(['www.example.com', '*.example.org'], $this->getWebRequest()->allowedHosts);
+    }
+
+    public function testAnArrayParamIsTakenAsWell(): void
+    {
+        $this->config['params']['allowedHosts'] = ['www.example.com', ' www.example.org '];
+        $this->reloadApplication();
+
+        self::assertSame(['www.example.com', 'www.example.org'], $this->getWebRequest()->allowedHosts);
     }
 
     public function testAddedHostsAreKeptOnce(): void
