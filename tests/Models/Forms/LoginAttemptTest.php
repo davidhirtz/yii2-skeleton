@@ -61,6 +61,24 @@ class LoginAttemptTest extends TestCase
         self::assertFalse($webuser->isLoginAttemptLimitReached($email));
     }
 
+    public function testASuccessfulLoginKeepsTheOriginsCount(): void
+    {
+        $webuser = $this->getWebUser();
+        $webuser->loginAttemptLimit = 3;
+        $webuser->ipAddress = '192.0.2.1';
+
+        $owner = $this->getUserFixtureData('owner')['email'];
+
+        self::assertFalse($this->createForm('first@example.com', 'guess')->login());
+        self::assertFalse($this->createForm('second@example.com', 'guess')->login());
+        self::assertTrue($this->createForm($owner, 'password')->login());
+
+        $webuser->logout();
+
+        self::assertFalse($this->createForm('third@example.com', 'guess')->login());
+        self::assertTrue($webuser->isLoginAttemptLimitReached('fourth@example.com'));
+    }
+
     public function testBlankFormIsNotAnAttempt(): void
     {
         $webuser = $this->getWebUser();

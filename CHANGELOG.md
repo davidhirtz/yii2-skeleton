@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Fixed a successful login clearing the per-IP failed-attempt count; `Web\User::resetFailedLoginAttempts()` resets the account's only
 - Added `Request::$allowedHosts` (`params.allowedHosts`, comma-separated): a request for any other host is refused before routing, and `HostAlert` warns a production host that has neither it nor a pinned host
 - Fixed a configured `urlManager.hostInfo` being replaced by the request's host
 - Fixed tooltips rendering their `title` as HTML; they now also show on keyboard focus and keep the text as the element's accessible name

@@ -398,12 +398,14 @@ class User extends \yii\web\User
         }
     }
 
+    /**
+     * The account's count only: the origin's expires on its own, or one valid account logged into between guesses
+     * would keep an address spraying passwords at every other account forever.
+     */
     public function resetFailedLoginAttempts(?string $email = null): void
     {
-        $cache = Yii::$app->getCache();
-
-        foreach ($this->getLoginAttemptCacheKeys($email) as $key) {
-            $cache->delete($key);
+        if ($key = $this->getEmailLoginAttemptCacheKey($email)) {
+            Yii::$app->getCache()->delete($key);
         }
     }
 
@@ -416,10 +418,9 @@ class User extends \yii\web\User
     private function getLoginAttemptCacheKeys(?string $email): array
     {
         $keys = [];
-        $email = mb_strtolower(trim((string)$email));
 
-        if ($email !== '') {
-            $keys[] = [self::class, 'login-attempts', 'email', $email];
+        if ($key = $this->getEmailLoginAttemptCacheKey($email)) {
+            $keys[] = $key;
         }
 
         if ($this->ipAddress) {
@@ -427,6 +428,15 @@ class User extends \yii\web\User
         }
 
         return $keys;
+    }
+
+    /**
+     * @return array{string, string, string, string}|null
+     */
+    private function getEmailLoginAttemptCacheKey(?string $email): ?array
+    {
+        $email = mb_strtolower(trim((string)$email));
+        return $email !== '' ? [self::class, 'login-attempts', 'email', $email] : null;
     }
 
     /**
