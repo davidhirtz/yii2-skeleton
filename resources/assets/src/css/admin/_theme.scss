@@ -1,6 +1,27 @@
 @use "../shared/breakpoints" as *;
 @use "../shared/svg" as *;
 
+// The aside's tree lines are images, so each colour scheme renders its own.
+@function aside-tree-line($color) {
+  @return svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 28"><path fill="#{$color}" d="M9 0h1.5v28H9z"/></svg>');
+}
+
+@function aside-tree-start($color) {
+  @return svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 28"><path fill="#{$color}" d="M9 24.75a.75.75 0 0 1 1.5 0V28H9z"/></svg>');
+}
+
+@function aside-tree-active($color) {
+  @return svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 28"><path fill="#{$color}" d="M16.999 12.976h.75v1.5h-.75zm-6.922-.888.668-.341zm1.311 1.311.341-.668zM10.5 0v8.926H9V0zm4.05 12.976h2.449v1.5H14.55zm-4.05-4.05c0 .852 0 1.447.038 1.909.037.454.106.715.207.912l-1.336.681c-.226-.444-.321-.924-.365-1.471-.044-.538-.043-1.204-.043-2.031h1.5Zm4.05 5.55c-.828 0-1.494 0-2.031-.043-.547-.045-1.027-.139-1.471-.365l.681-1.337c.197.101.458.17.912.207.463.038 1.057.038 1.909.038zm-3.805-2.728c.216.423.56.768.983.983l-.681 1.337a3.75 3.75 0 0 1-1.639-1.639z"/><path fill="none" stroke="#{$color}" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m14.999 10.726 3 3-3 3z"/></svg>');
+}
+
+@function aside-tree-hover($color) {
+  @return svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 28"><path fill="#{$color}" d="m18.467 13.193-3-3a.75.75 0 0 0-1.28.53v6a.75.75 0 0 0 1.28.53l3-3a.75.75 0 0 0 0-1.061Z"/><path fill="#{$color}" d="M16.017 14.49c-.813 0-2.975 0-3.506-.043-.547-.045-1.027-.139-1.471-.365a3.75 3.75 0 0 1-1.639-1.639c-.226-.444-.321-.924-.365-1.471-.043-.531-.043-1.186-.043-1.999V6.741a.75.75 0 0 1 1.5 0v2.2c0 .852 0 1.447.038 1.909.037.454.106.715.207.912.216.423.56.767.983.983.197.101.458.17.912.207.463.038 2.544.038 3.396.038z"/></svg>');
+}
+
+@function aside-tree-hover-after($color) {
+  @return svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 28"><path fill="#{$color}" d="M16.965 12.996h-3.389c-.852 0-1.447 0-1.909-.038-.454-.037-.715-.106-.912-.207a2 2 0 0 1-.229-.134v1.654c.316.099.652.152 1.019.182.531.043 1.186.043 1.999.043h3.421z"/><path fill="#{$color}" d="m18.478 13.197-3-3a.75.75 0 0 0-1.28.53v6a.75.75 0 0 0 1.28.53l3-3a.75.75 0 0 0 0-1.061Z"/></svg>');
+}
+
 :root {
   // Colors
   --color-red-50: #ffedee; // oklch(97.1% 0.013 17.38);
@@ -76,8 +97,28 @@
   --color-gray-900: oklch(21% 0.034 264.665);
   //--color-gray-950: oklch(13% 0.028 261.692);
 
+  --color-neutral-100: #EAEAEA;
+  --color-neutral-200: #D8D8D8;
+  --color-neutral-400: #A0A0A0;
+  --color-neutral-600: #5C5C5C;
+  --color-neutral-650: #4A4A4A;
+  --color-neutral-700: #3D3D3D;
+  --color-neutral-750: #333333;
+  --color-neutral-800: #2A2A2A;
+  --color-neutral-850: #2F2F2F;
+  --color-neutral-900: #212121;
+  --color-neutral-950: #1A1A1A;
+
+  --color-indigo-300: #7B77FF;
+  --color-indigo-400: #625DFF;
+  --color-indigo-500: #504BFF;
+
+  --color-cyan-300: #6BE6ED;
+
   --color-black: #000;
   --color-white: #fff;
+
+  color-scheme: light;
 
   --body-bg: var(--color-white);
   --body-color: var(--color-black);
@@ -269,6 +310,13 @@
   --aside-link-color: var(--color-black);
   --aside-link-hover-bg: var(--color-blue-50);
   --aside-link-hover-color: var(--color-black);
+  --aside-backdrop-bg: rgba(0, 0, 0, .2);
+
+  --aside-tree-line: #{aside-tree-line('#000')};
+  --aside-tree-start: #{aside-tree-start('#000')};
+  --aside-tree-active: #{aside-tree-active('#000')};
+  --aside-tree-hover: #{aside-tree-hover('#75bcd2')};
+  --aside-tree-hover-after: #{aside-tree-hover-after('#75bcd2')};
 
   // Pagination
   --page-link-bg: var(--color-gray-100);
@@ -307,6 +355,7 @@
   --table-selected-td-border-color: var(--color-white);
 
   --table-td-border-color: transparent;
+  --table-sort-color: var(--color-black);
   --table-th-border-color: transparent;
 
   // Trail
@@ -320,4 +369,204 @@
   // Tooltip
   --tooltip-bg: var(--color-gray-700);
   --tooltip-color: var(--color-white);
+}
+// Only what differs from the light scheme; a token derived from another (`var(--…)`) follows it.
+@mixin dark {
+  color-scheme: dark;
+
+  --body-bg: var(--color-neutral-900);
+  --body-color: var(--color-neutral-100);
+
+  --border-color: rgb(216 216 216 / 16%);
+
+  --link-color: var(--color-neutral-100);
+  --link-hover-color: var(--color-indigo-300);
+
+  --highlight-bg: rgb(80 75 255 / 35%);
+  --highlight-color: var(--color-white);
+  --muted-color: var(--color-neutral-400);
+
+  // Alert
+  --alert-success-bg: #1F3A28;
+  --alert-success-color: #9FE0B0;
+  --alert-success-link-color: #6FCF8A;
+  --alert-success-link-hover-color: #9FE0B0;
+
+  --alert-info-bg: #2A2949;
+  --alert-info-color: #C9C7FF;
+  --alert-info-link-color: #9E9BFF;
+  --alert-info-link-hover-color: #C9C7FF;
+
+  --alert-warning-bg: #3A3417;
+  --alert-warning-color: #F0E08A;
+  --alert-warning-link-color: var(--color-yellow-400);
+  --alert-warning-link-hover-color: #F0E08A;
+
+  --alert-danger-bg: #3F1F22;
+  --alert-danger-color: #FFB3B8;
+  --alert-danger-link-color: #FF8A91;
+  --alert-danger-link-hover-color: #FFB3B8;
+
+  // Badge
+  --badge-active-color: var(--color-neutral-100);
+  --badge-bg: var(--color-neutral-700);
+  --badge-color: var(--color-neutral-100);
+  --badge-error-bg: var(--alert-danger-bg);
+  --badge-error-color: var(--alert-danger-color);
+  --badge-info-bg: var(--alert-info-bg);
+  --badge-info-color: var(--alert-info-color);
+  --badge-success-bg: var(--alert-success-bg);
+  --badge-success-color: var(--alert-success-color);
+  --badge-warning-bg: var(--alert-warning-bg);
+  --badge-warning-color: var(--alert-warning-color);
+
+  // Button
+  --btn-primary-bg: var(--color-indigo-500);
+  --btn-primary-hover-bg: var(--color-indigo-400);
+  --btn-primary-hover-border-color: var(--color-indigo-400);
+
+  --btn-secondary-bg: var(--color-neutral-700);
+  --btn-secondary-color: var(--color-neutral-100);
+  --btn-secondary-hover-bg: var(--color-neutral-650);
+  --btn-secondary-hover-color: var(--color-white);
+
+  --btn-accent-bg: var(--color-cyan-300);
+  --btn-accent-color: var(--color-neutral-900);
+
+  --btn-danger-bg: #D93F45;
+  --btn-danger-hover-bg: #E5575C;
+
+  // Card
+  --card-bg: var(--color-neutral-800);
+  --card-color: var(--color-neutral-100);
+  --card-header-color: var(--color-neutral-100);
+  --card-danger-header-bg: #5A262B;
+  --card-danger-header-color: #FFB3B8;
+
+  // Dropdown
+  --dropdown-bg: var(--color-neutral-800);
+  --dropdown-color: var(--color-neutral-100);
+
+  --dropdown-btn-active-bg: var(--color-neutral-650);
+  --dropdown-btn-bg-color: var(--color-neutral-750);
+  --dropdown-btn-color: var(--color-neutral-100);
+  --dropdown-btn-hover-bg: var(--color-neutral-700);
+  --dropdown-btn-hover-color: var(--color-white);
+
+  --dropdown-option-selected-bg: rgb(80 75 255 / 22%);
+  --dropdown-option-color: var(--color-neutral-100);
+  --dropdown-option-disabled-color: var(--color-neutral-600);
+  --dropdown-option-hover-bg: var(--color-neutral-750);
+
+  --dropdown-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#EAEAEA" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
+  --dropup-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#EAEAEA" stroke-linecap="round" stroke-linejoin="round" d="m2 11 6-6 6 6"/></svg>')};
+
+  // Form
+  --form-invalid-bg: var(--color-neutral-950);
+  --form-invalid-border: #FF8A91;
+  --form-invalid-color: #FFB3B8;
+
+  --input-bg-color: var(--color-neutral-950);
+  --input-border-color: rgb(216 216 216 / 28%);
+  --input-color: var(--color-neutral-100);
+  --input-focus-bg-color: var(--color-neutral-950);
+  --input-focus-border-color: var(--color-indigo-300);
+  --input-focus-color: var(--color-neutral-100);
+
+  --input-disabled-bg-color: var(--color-neutral-800);
+  --input-disabled-color: var(--color-neutral-400);
+
+  --input-group-bg: var(--color-neutral-750);
+  --input-group-btn-hover-bg: var(--color-neutral-700);
+
+  --input-caret: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke-width="2px" stroke="#5C5C5C" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
+  --input-caret-hover: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="none" stroke="#EAEAEA" stroke-width="2px" stroke-linecap="round" stroke-linejoin="round" d="m2 5 6 6 6-6"/></svg>')};
+
+  --checkbox-bg: var(--color-neutral-950);
+  --checkbox-checked-bg: var(--color-neutral-950) #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="none" stroke="#EAEAEA" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m6 10 3 3 6-6"/></svg>')} no-repeat center;
+
+  --radio-bg: var(--color-neutral-950);
+  --radio-checked-bg: var(--color-neutral-950) #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 8 8"><circle r="2" fill="#EAEAEA"/></svg>')} no-repeat center;
+
+  // Modal
+  --modal-backdrop-bg: rgba(0, 0, 0, .6);
+  --busy-backdrop-bg: rgba(0, 0, 0, .6);
+  --modal-bg: var(--color-neutral-800);
+  --modal-btn-icon-focus-bg: var(--color-neutral-750);
+  --modal-btn-icon-hover-bg: var(--color-neutral-750);
+  --modal-header-bg: var(--color-neutral-800);
+
+  // Nav
+  --nav-link-color: var(--color-neutral-100);
+  --nav-link-active-bg: var(--color-indigo-500);
+  --nav-link-hover-bg: var(--color-indigo-500);
+  --nav-link-hover-color: var(--color-white);
+
+  // Aside
+  --aside-link-active-bg: var(--color-indigo-500);
+  --aside-link-color: var(--color-neutral-100);
+  --aside-link-hover-bg: var(--color-indigo-500);
+  --aside-link-hover-color: var(--color-white);
+  --aside-backdrop-bg: rgba(0, 0, 0, .5);
+
+  --aside-tree-line: #{aside-tree-line('#EAEAEA')};
+  --aside-tree-start: #{aside-tree-start('#EAEAEA')};
+  --aside-tree-active: #{aside-tree-active('#EAEAEA')};
+  --aside-tree-hover: #{aside-tree-hover('#FFFFFF')};
+  --aside-tree-hover-after: #{aside-tree-hover-after('#FFFFFF')};
+
+  // Pagination
+  --page-link-bg: var(--color-neutral-750);
+  --page-link-border-color: var(--color-neutral-750);
+  --page-link-color: var(--color-neutral-100);
+  --page-link-hover-bg: var(--color-neutral-700);
+  --page-link-hover-border-color: var(--color-neutral-700);
+  --page-link-hover-color: var(--color-white);
+  --page-link-active-bg: var(--color-indigo-500);
+  --page-link-active-border-color: var(--color-indigo-500);
+
+  // Progress
+  --progress-bg: var(--color-neutral-750);
+  --progress-bar-bg: var(--color-neutral-100);
+
+  // Stack
+  --stack-link-bg: var(--color-neutral-750);
+  --stack-link-color: var(--color-neutral-100);
+  --stack-link-hover-bg: var(--color-neutral-700);
+
+  // Submenu
+  --submenu-border-color: var(--color-neutral-650);
+
+  // Table
+  --table-bg: var(--color-neutral-800);
+  --table-color: var(--color-neutral-100);
+  --table-striped-bg: var(--color-neutral-850);
+  --table-hover-bg: var(--color-neutral-750);
+  --table-striped-color: var(--color-neutral-100);
+  --table-hover-color: var(--color-white);
+
+  --table-selected-bg: #323159;
+  --table-selected-hover-bg: #36356E;
+  --table-selected-td-border-color: var(--color-neutral-800);
+  --table-sort-color: var(--color-neutral-100);
+
+  // Trail
+  --trail-delete-bg: var(--alert-danger-bg);
+  --trail-delete-color: #6B2A30;
+  --trail-insert-bg: var(--alert-success-bg);
+  --trail-insert-color: #2F5E3E;
+
+  // Tooltip
+  --tooltip-bg: var(--color-neutral-100);
+  --tooltip-color: var(--color-neutral-900);
+}
+
+:root[data-theme="dark"] {
+  @include dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    @include dark;
+  }
 }

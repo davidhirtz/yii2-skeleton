@@ -1,5 +1,4 @@
 @use "../shared/breakpoints" as *;
-@use "../shared/svg" as *;
 
 :root {
   --aside-width: 12rem;
@@ -182,7 +181,7 @@
     left: .5rem;
     height: 100%;
     aspect-ratio: 3 / 4;
-    content: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 28"><path d="M9 24.75a.75.75 0 0 1 1.5 0V28H9z"/></svg>')};
+    content: var(--aside-tree-start);
   }
 }
 
@@ -213,12 +212,12 @@
 
     @media (hover: hover) {
       &:hover {
-        --before: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 28"><path fill="#75bcd2" d="m18.467 13.193-3-3a.75.75 0 0 0-1.28.53v6a.75.75 0 0 0 1.28.53l3-3a.75.75 0 0 0 0-1.061Z"/><path fill="#75bcd2" d="M16.017 14.49c-.813 0-2.975 0-3.506-.043-.547-.045-1.027-.139-1.471-.365a3.75 3.75 0 0 1-1.639-1.639c-.226-.444-.321-.924-.365-1.471-.043-.531-.043-1.186-.043-1.999V6.741a.75.75 0 0 1 1.5 0v2.2c0 .852 0 1.447.038 1.909.037.454.106.715.207.912.216.423.56.767.983.983.197.101.458.17.912.207.463.038 2.544.038 3.396.038z"/></svg>')};
+        --before: var(--aside-tree-hover);
       }
     }
 
     &.active {
-      --before: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 28"><path d="M16.999 12.976h.75v1.5h-.75zm-6.922-.888.668-.341zm1.311 1.311.341-.668zM10.5 0v8.926H9V0zm4.05 12.976h2.449v1.5H14.55zm-4.05-4.05c0 .852 0 1.447.038 1.909.037.454.106.715.207.912l-1.336.681c-.226-.444-.321-.924-.365-1.471-.044-.538-.043-1.204-.043-2.031h1.5Zm4.05 5.55c-.828 0-1.494 0-2.031-.043-.547-.045-1.027-.139-1.471-.365l.681-1.337c.197.101.458.17.912.207.463.038 1.057.038 1.909.038zm-3.805-2.728c.216.423.56.768.983.983l-.681 1.337a3.75 3.75 0 0 1-1.639-1.639z"/><path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m14.999 10.726 3 3-3 3z"/></svg>')};
+      --before: var(--aside-tree-active);
     }
 
     &:after,
@@ -240,11 +239,11 @@
   }
 
   & > li:has(~ li .active) .nav-link {
-    --before: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 28"><path d="M9 0h1.5v28H9z"/></svg>')};
+    --before: var(--aside-tree-line);
 
     @media (hover: hover) {
       &:hover {
-        --after: #{svg-url('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 28"><path fill="#75bcd2" d="M16.965 12.996h-3.389c-.852 0-1.447 0-1.909-.038-.454-.037-.715-.106-.912-.207a2 2 0 0 1-.229-.134v1.654c.316.099.652.152 1.019.182.531.043 1.186.043 1.999.043h3.421z"/><path fill="#75bcd2" d="m18.478 13.197-3-3a.75.75 0 0 0-1.28.53v6a.75.75 0 0 0 1.28.53l3-3a.75.75 0 0 0 0-1.061Z"/></svg>')};
+        --after: var(--aside-tree-hover-after);
       }
     }
   }
@@ -258,7 +257,7 @@
   width: 100%;
   height: 100%;
   z-index: 38;
-  background: rgba(0, 0, 0, .2);
+  background: var(--aside-backdrop-bg);
   transition-behavior: allow-discrete;
 
   @starting-style {

@@ -26,7 +26,18 @@ window.customElements.get('tinymce-editor') || window.customElements.define('tin
         // drag between two positions does.
         this.#editors = new Promise((resolve) => {
             setTimeout(async () => {
-                const editors = await tinymce.init({...config, selector: `#${$textarea.id}`});
+                const editors = await tinymce.init({
+                    ...config,
+                    selector: `#${$textarea.id}`,
+                    // The iframe's document follows the admin's colour scheme, not only the browser's.
+                    setup: (editor: Editor) => editor.on('PreInit', () => {
+                        const theme = document.documentElement.dataset.theme;
+
+                        if (theme) {
+                            editor.getDoc().documentElement.dataset.theme = theme;
+                        }
+                    }),
+                });
 
                 // Typing happens in the editor's iframe, so the form learns of it from the textarea it stands for.
                 editors.forEach((editor) => editor.on('input change undo redo', () => {

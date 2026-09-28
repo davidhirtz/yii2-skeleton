@@ -11,6 +11,10 @@ div.tox-tinymce {
   }
 }
 
+.tox .tox-edit-area__iframe {
+  background-color: var(--input-bg-color);
+}
+
 .tox-edit-focus .tox-edit-area__iframe {
   background-color: var(--input-focus-bg-color);
 }
@@ -33,12 +37,39 @@ div.tox-tinymce {
   margin: 0;
 }
 
+// Oxide colours every state of a toolbar button itself; the icons follow the text instead, so the tokens reach them.
+.tox .tox-tbtn svg,
+.tox .tox-tbtn__select-chevron svg {
+  fill: currentColor !important;
+}
+
+.tox .tox-tbtn,
+.tox .tox-tbtn:focus,
+.tox .tox-tbtn:focus:not(.tox-tbtn--disabled) {
+  background: none;
+  color: var(--input-color);
+}
+
+.tox .tox-tbtn:hover {
+  background-color: var(--input-group-btn-hover-bg);
+  color: var(--input-color);
+}
+
+.tox .tox-tbtn--disabled,
+.tox .tox-tbtn--disabled:hover,
+.tox .tox-tbtn:disabled,
+.tox .tox-tbtn:disabled:hover {
+  background: none;
+  color: var(--muted-color);
+}
+
 .tox .tox-tbtn:active,
 .tox .tox-tbtn--active,
 .tox .tox-tbtn--enabled,
 .tox .tox-tbtn--enabled:focus,
 .tox .tox-tbtn--enabled:hover {
   background-color: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
 }
 
 .tox-toolbar,
