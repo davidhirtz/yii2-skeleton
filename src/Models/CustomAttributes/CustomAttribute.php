@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Stringable;
+use Yii;
 use yii\base\Model;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
@@ -94,9 +95,14 @@ abstract class CustomAttribute
         return $this->placeholder;
     }
 
+    /**
+     * A single content language leaves nothing to translate: its attribute keeps the bare name, which the source
+     * language would otherwise own — a German-only application (`language` `de`, `sourceLanguage` `en-US`) had no
+     * `content` at all, only a `content_de` its stored values were never written to.
+     */
     public function isTranslatable(): bool
     {
-        return $this->translatable;
+        return $this->translatable && count(Yii::$app->getI18n()->getLanguages()) > 1;
     }
 
     public function isRequired(Model $owner): bool
@@ -132,7 +138,7 @@ abstract class CustomAttribute
      */
     public function getAttributeNames(Model $owner): array
     {
-        return $this->translatable && $owner instanceof I18nAttributeInterface
+        return $this->isTranslatable() && $owner instanceof I18nAttributeInterface
             ? array_values($owner->getI18nAttributeNames($this->name))
             : [$this->name];
     }

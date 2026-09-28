@@ -1,3 +1,7 @@
+## Unreleased
+
+- Fixed a translatable custom attribute being translated with a single content language, which left a German-only application without the attribute (cms `Section::$content` since cms 3.3.0)
+
 ## 3.5.0 (September 28, 2026)
 
 - Added `Web\ContentSecurityPolicy`, the application's `contentSecurityPolicy` component: the admin allows only scripts carrying the page's nonce, which `Web\View::$nonce` stamps on every script it renders; `Web\Controller::$strictContentSecurityPolicy` sends it elsewhere

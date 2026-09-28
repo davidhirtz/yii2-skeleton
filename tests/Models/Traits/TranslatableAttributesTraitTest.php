@@ -72,6 +72,27 @@ class TranslatableAttributesTraitTest extends TestCase
     }
 
     /**
+     * The one language of a German-only application is not the source language, so translating would have left the
+     * attribute only under `name_de`, where none of its stored values are.
+     */
+    public function testASingleLanguageKeepsTheBareName(): void
+    {
+        Yii::$app->language = 'de';
+        Yii::$app->getI18n()->setLanguages(['de']);
+
+        $record = $this->createRecord(['name']);
+
+        self::assertSame([], $record->getTranslatableCustomAttributeNames());
+        self::assertContains('name', $record->attributes());
+        self::assertNotContains('name_de', $record->attributes());
+
+        $record->name = 'Name';
+        self::assertTrue($record->insert());
+
+        self::assertSame('Name', TranslatableAttributeRecord::findOne($record->id)?->name);
+    }
+
+    /**
      * The per-language value lives in the JSON column under its suffixed name, never in the `translation` table.
      */
     public function testTheTranslationIsStoredInTheJsonColumn(): void
