@@ -93,9 +93,10 @@ class FieldsetTest extends TestCase
         $html = ActiveForm::make()->model($model)->rows(['name', 'email'])->render();
 
         self::assertStringContainsString('data-translation-layout="inline"', $html);
-        self::assertStringContainsString('data-translation-toolbar', $html);
-        self::assertStringContainsString('data-translation-language="en-US">', $html);
-        self::assertStringContainsString('data-translation-language="de" data-missing>', $html);
+        self::assertStringContainsString('<ul class="nav tabs translation-tabs" data-translation-toolbar', $html);
+        self::assertStringContainsString('<button type="button" class="nav-link" data-translation-all>All fields</button>', $html);
+        self::assertMatchesRegularExpression('/data-translation-language="en-US"[^>]*>EN</', $html);
+        self::assertMatchesRegularExpression('/data-translation-language="de" data-missing[^>]*>DE</', $html);
 
         // A form leaving the translated fields out offers no languages either.
         self::assertStringNotContainsString('data-translation-toolbar', ActiveForm::make()->model($model)->rows(['email'])->render());

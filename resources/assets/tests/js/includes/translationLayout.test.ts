@@ -3,11 +3,11 @@ import translationLayout from '../../../src/js/includes/translationLayout';
 
 const render = (layout = 'inline', invalid = '') => {
     document.body.innerHTML = `<form data-translation-layout="${layout}">
-        <div data-translation-toolbar>
-            <button data-translation-language="en-US">English</button>
-            <button data-translation-language="de">Deutsch</button>
-            <button data-translation-toggle data-label-inline="One" data-label-tabs="All">One</button>
-        </div>
+        <ul data-translation-toolbar>
+            <li><button data-translation-all>All fields</button></li>
+            <li><button data-translation-language="en-US">EN</button></li>
+            <li><button data-translation-language="de">DE</button></li>
+        </ul>
         <div id="status"></div>
         <div id="name" data-language="en-US"><input></div>
         <div id="name-de" data-language="de"><input ${invalid}></div>
@@ -17,41 +17,50 @@ const render = (layout = 'inline', invalid = '') => {
 };
 
 const hidden = (id: string) => document.getElementById(id)!.hidden;
+const active = () => [...document.querySelectorAll('.active')].map(($button) => $button.textContent);
+const click = (selector: string) => document.querySelector<HTMLElement>(selector)!.click();
 
 describe('translationLayout', () => {
     beforeEach(() => window.localStorage.clear());
 
-    it('shows every language inline by default', () => {
+    it('shows every field by default', () => {
         render();
 
         expect(hidden('name')).toBe(false);
         expect(hidden('name-de')).toBe(false);
-        expect(document.querySelector<HTMLElement>('[data-translation-language]')!.hidden).toBe(true);
+        expect(active()).toEqual(['All fields']);
     });
 
-    it('shows one language at a time and keeps the rest of the form', () => {
+    it('starts on the first language where the project says so', () => {
         render('tabs');
 
         expect(hidden('name')).toBe(false);
         expect(hidden('name-de')).toBe(true);
-        expect(hidden('status')).toBe(false);
+        expect(active()).toEqual(['EN']);
+    });
 
-        document.querySelector<HTMLElement>('[data-translation-language="de"]')!.click();
+    it('shows one language at a time and keeps the rest of the form', () => {
+        render();
+        click('[data-translation-language="de"]');
 
         expect(hidden('name')).toBe(true);
         expect(hidden('name-de')).toBe(false);
+        expect(hidden('status')).toBe(false);
+        expect(active()).toEqual(['DE']);
+
+        click('[data-translation-all]');
+
+        expect(hidden('name')).toBe(false);
     });
 
-    it('remembers the switch for the next form', () => {
+    it('remembers the choice for the next form', () => {
         render();
-        document.querySelector<HTMLElement>('[data-translation-toggle]')!.click();
-
-        expect(hidden('name-de')).toBe(true);
-        expect(document.querySelector('[data-translation-toggle]')!.textContent).toBe('All');
+        click('[data-translation-language="de"]');
 
         render();
 
-        expect(hidden('name-de')).toBe(true);
+        expect(hidden('name')).toBe(true);
+        expect(active()).toEqual(['DE']);
     });
 
     it('brings a language with a rejected field to the front', () => {

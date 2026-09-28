@@ -9,6 +9,8 @@ use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Form;
+use Hirtz\Skeleton\Html\Ul;
+use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
@@ -215,10 +217,6 @@ class ActiveForm extends Widget
     }
 
     /**
-     * When the form was rendered, posted back for {@see \Hirtz\Skeleton\Models\Traits\StaleSaveTrait}. A conflict it reported starts the clock
-     * again, so saving once more overwrites knowingly; any other error keeps the time the form was opened.
-     */
-    /**
      * The conflict is about the whole record, not a field, so it is a flash rather than a line in the summary. The
      * view renders before the layout, whose flashes pick it up in the same response.
      */
@@ -236,6 +234,11 @@ class ActiveForm extends Widget
         }
     }
 
+    /**
+     * When the form was rendered, posted back for {@see \Hirtz\Skeleton\Models\Traits\StaleSaveTrait}.
+     * A conflict it reported starts the clock again, so saving once more overwrites knowingly; any other error keeps
+     * the time the form was opened.
+     */
     protected function getStaleSaveInput(): string
     {
         if (!$this->model instanceof StaleSaveInterface || !$this->model instanceof BaseActiveRecord || $this->model->getIsNewRecord()) {
@@ -249,7 +252,7 @@ class ActiveForm extends Widget
     }
 
     /**
-     * One button per language and the switch between every language at once and one at a time, driven by
+     * The form's languages as tabs, like a submenu: every field, then one language at a time, driven by
      * `includes/translationLayout.ts`; the rows it hides carry `data-language` ({@see Fieldset}). A language the
      * record lacks a translation for is marked.
      */
@@ -260,30 +263,33 @@ class ActiveForm extends Widget
         }
 
         $i18n = Yii::$app->getI18n();
-        $languages = $i18n->getLanguages();
         $missing = $this->model->getMissingTranslationLanguages();
-        $tabs = Div::make()
-            ->class('translation-tabs')
-            ->attribute('role', 'group')
-            ->attribute('aria-label', Yii::t('skeleton', 'FORM_TRANSLATION_LANGUAGES'));
 
-        foreach ($languages as $language) {
-            $tabs->addContent(Button::make()
-                ->class('btn btn-border btn-sm')
-                ->attribute('data-translation-language', $language)
-                ->attribute('data-missing', in_array($language, $missing, true) ? true : null)
-                ->text($i18n->getLabel($language)));
+        $items = [
+            Li::make()
+                ->class('nav-item')
+                ->content(Button::make()
+                    ->class('nav-link')
+                    ->attribute('data-translation-all', true)
+                    ->text(Yii::t('skeleton', 'FORM_TRANSLATION_ALL_FIELDS'))),
+        ];
+
+        foreach ($i18n->getLanguages() as $language) {
+            $items[] = Li::make()
+                ->class('nav-item')
+                ->content(Button::make()
+                    ->class('nav-link')
+                    ->attribute('data-translation-language', $language)
+                    ->attribute('data-missing', in_array($language, $missing, true) ? true : null)
+                    ->text(strtoupper($i18n->getLanguageCode($language)))
+                    ->tooltip($i18n->getLabel($language)));
         }
 
-        return (string)Div::make()
-            ->class('translation-toolbar')
+        return (string)Ul::make()
+            ->class('nav tabs translation-tabs')
             ->attribute('data-translation-toolbar', true)
-            ->content($tabs, Button::make()
-                ->class('btn btn-border btn-sm')
-                ->attribute('data-translation-toggle', true)
-                ->attribute('data-label-inline', Yii::t('skeleton', 'FORM_TRANSLATION_SHOW_ONE'))
-                ->attribute('data-label-tabs', Yii::t('skeleton', 'FORM_TRANSLATION_SHOW_ALL'))
-                ->text(Yii::t('skeleton', 'FORM_TRANSLATION_SHOW_ONE')));
+            ->attribute('aria-label', Yii::t('skeleton', 'FORM_TRANSLATION_LANGUAGES'))
+            ->content(...$items);
     }
 
     /**

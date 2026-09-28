@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
+use Hirtz\Skeleton\Helpers\StringHelper;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Widgets\Icon;
 use Stringable;
@@ -52,6 +53,6 @@ class MissingTranslationsColumn extends Column
         return Icon::make()
             ->name('exclamation-triangle')
             ->addClass('text-warning')
-            ->tooltip(Yii::t('skeleton', 'GRID_MISSING_TRANSLATIONS', ['languages' => implode(', ', $codes)]));
+            ->tooltip(Yii::t('skeleton', 'GRID_MISSING_TRANSLATIONS', ['languages' => StringHelper::enumerate($codes)]));
     }
 }

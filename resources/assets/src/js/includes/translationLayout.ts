@@ -1,23 +1,24 @@
 /**
- * A form's translated rows (`data-language`) either stand beneath each other — `inline` — or one language shows at a
- * time, picked from the toolbar's buttons — `tabs`. The server names the project's default
- * (`data-translation-layout`); the switch and the language are remembered per browser. Switching only hides rows,
- * so nothing typed is lost and every language still posts. A language holding a rejected field comes to the front.
+ * A form's languages as tabs: "All fields" shows every translated row (`data-language`) beneath the other, a
+ * language button only that language's. The server names the project's default (`data-translation-layout`:
+ * `inline` for every field, `tabs` for the first language); the choice is remembered per browser. Switching only
+ * hides rows, so nothing typed is lost and every language still posts. A language holding a rejected field comes to
+ * the front.
  */
-const LAYOUT_KEY = 'translationLayout';
-const LANGUAGE_KEY = 'translationLanguage';
+const KEY = 'translationLanguage';
+const ALL = 'all';
 
-const read = (key: string): string | null => {
+const read = (): string | null => {
     try {
-        return window.localStorage.getItem(key);
+        return window.localStorage.getItem(KEY);
     } catch {
         return null;
     }
 };
 
-const write = (key: string, value: string): void => {
+const write = (value: string): void => {
     try {
-        window.localStorage.setItem(key, value);
+        window.localStorage.setItem(KEY, value);
     } catch {
         // A private window or blocked storage keeps the choice for this page only.
     }
@@ -25,48 +26,42 @@ const write = (key: string, value: string): void => {
 
 export default ($form: HTMLFormElement): void => {
     const $toolbar = $form.querySelector<HTMLElement>('[data-translation-toolbar]');
-    const $toggle = $toolbar?.querySelector<HTMLButtonElement>('[data-translation-toggle]');
-    const $tabs = [...($toolbar?.querySelectorAll<HTMLButtonElement>('[data-translation-language]') ?? [])];
+    const $all = $toolbar?.querySelector<HTMLButtonElement>('[data-translation-all]');
+    const $languages = [...($toolbar?.querySelectorAll<HTMLButtonElement>('[data-translation-language]') ?? [])];
 
-    if (!$toolbar || !$toggle || !$tabs.length) {
+    if (!$toolbar || !$all || !$languages.length) {
         return;
     }
 
-    const languages = $tabs.map(($tab) => $tab.dataset.translationLanguage!);
+    const codes = $languages.map(($button) => $button.dataset.translationLanguage!);
+    const fallback = $form.dataset.translationLayout === 'tabs' ? codes[0] : ALL;
     const $invalid = $form.querySelector<HTMLElement>('[data-language]:has([aria-invalid="true"])');
 
-    let layout = read(LAYOUT_KEY) ?? $form.dataset.translationLayout ?? 'inline';
-    let language = $invalid?.dataset.language ?? read(LANGUAGE_KEY) ?? languages[0];
+    let choice = read() ?? fallback;
 
-    if (!languages.includes(language)) {
-        language = languages[0];
+    if (choice !== ALL && !codes.includes(choice)) {
+        choice = fallback;
+    }
+
+    if ($invalid && choice !== ALL) {
+        choice = $invalid.dataset.language!;
     }
 
     const apply = () => {
-        const isTabs = layout === 'tabs';
-
-        $form.dataset.translationLayout = layout;
-        $toggle.textContent = (isTabs ? $toggle.dataset.labelTabs : $toggle.dataset.labelInline) ?? '';
-
-        $tabs.forEach(($tab) => {
-            $tab.hidden = !isTabs;
-            $tab.setAttribute('aria-pressed', String($tab.dataset.translationLanguage === language));
+        [$all, ...$languages].forEach(($button) => {
+            const isActive = ($button.dataset.translationLanguage ?? ALL) === choice;
+            $button.classList.toggle('active', isActive);
+            $button.setAttribute('aria-pressed', String(isActive));
         });
 
         $form.querySelectorAll<HTMLElement>('[data-language]').forEach(($row) => {
-            $row.hidden = isTabs && $row.dataset.language !== language;
+            $row.hidden = choice !== ALL && $row.dataset.language !== choice;
         });
     };
 
-    $toggle.addEventListener('click', () => {
-        layout = layout === 'tabs' ? 'inline' : 'tabs';
-        write(LAYOUT_KEY, layout);
-        apply();
-    });
-
-    $tabs.forEach(($tab) => $tab.addEventListener('click', () => {
-        language = $tab.dataset.translationLanguage!;
-        write(LANGUAGE_KEY, language);
+    [$all, ...$languages].forEach(($button) => $button.addEventListener('click', () => {
+        choice = $button.dataset.translationLanguage ?? ALL;
+        write(choice);
         apply();
     }));
 
