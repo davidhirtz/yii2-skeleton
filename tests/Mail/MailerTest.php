@@ -44,6 +44,15 @@ class MailerTest extends TestCase
         self::assertSame($transport, $mailer->getTransport());
     }
 
+    public function testTheMaskedDsnKeepsNeitherCredentialsNorOptions(): void
+    {
+        self::assertNull((new Mailer())->getMaskedTransportDsn());
+        self::assertSame('smtp://smtp.example.com:587', (new Mailer(['transport' => 'smtp://user:p@ss@smtp.example.com:587?verify_peer=0']))->getMaskedTransportDsn());
+        self::assertSame('resend+api://default', (new Mailer(['transport' => ['dsn' => 'resend+api://re_secret@default']]))->getMaskedTransportDsn());
+        self::assertSame('failover(smtp://a.example.com smtp://b.example.com)', (new Mailer(['transport' => 'failover(smtp://u:p@a.example.com smtp://u:p@b.example.com?local_domain=x)']))->getMaskedTransportDsn());
+        self::assertSame('null://', (new Mailer(['transport' => new NullTransport()]))->getMaskedTransportDsn());
+    }
+
     public function testTheTransportErrorNamesWhatIsMissingWithoutSending(): void
     {
         self::assertNull((new Mailer(['transport' => 'null://null']))->getTransportError());

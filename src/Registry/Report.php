@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Registry;
 
 use Hirtz\Skeleton\Db\MigrationHistory;
 use Hirtz\Skeleton\Helpers\VersionHelper;
+use Hirtz\Skeleton\Log\SentryTarget;
 use JsonSerializable;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -17,6 +18,11 @@ use yii\base\InvalidConfigException;
 class Report implements JsonSerializable
 {
     final public const int SCHEMA = 1;
+
+    /**
+     * Enough of the Sentry DSN's public key to tell the Sentry project apart, not the key itself.
+     */
+    final public const int SENTRY_KEY_LENGTH = 8;
 
     /**
      * @var string|null the installation's URL, for a console application whose URL manager has no `hostInfo`
@@ -61,6 +67,8 @@ class Report implements JsonSerializable
             'yii' => Yii::getVersion(),
             'extensions' => VersionHelper::getInstalledExtensions(),
             'migration' => $this->getMigration(),
+            'mailer' => $this->getMailer(),
+            'sentry' => $this->getSentry(),
             'reported_at' => time(),
         ];
 
@@ -102,6 +110,36 @@ class Report implements JsonSerializable
             'applied_at' => $last['applyTime'] ?? null,
             'pending' => count($history->getPending()),
         ];
+    }
+
+    /**
+     * A file transport sends nothing, so it reports no mailer.
+     */
+    protected function getMailer(): ?string
+    {
+        $mailer = Yii::$app->getMailer();
+
+        if ($mailer->useFileTransport) {
+            return null;
+        }
+
+        $dsn = $mailer->getMaskedTransportDsn();
+        return $dsn !== null ? mb_substr($dsn, 0, 255) : null;
+    }
+
+    /**
+     * @return string|null the beginning of the Sentry DSN's public key, `null` without an enabled Sentry target
+     */
+    protected function getSentry(): ?string
+    {
+        foreach (Yii::$app->getLog()->targets as $target) {
+            if ($target instanceof SentryTarget && $target->getEnabled()) {
+                $key = parse_url((string)$target->dsn, PHP_URL_USER);
+                return substr(is_string($key) ? $key : '', 0, self::SENTRY_KEY_LENGTH);
+            }
+        }
+
+        return null;
     }
 
     /**

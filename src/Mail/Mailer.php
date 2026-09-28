@@ -49,6 +49,25 @@ class Mailer extends BaseMailer
     }
 
     /**
+     * The transport's DSN without its credentials or options, for what an installation reports about itself. A
+     * `failover(…)` or `roundrobin(…)` DSN nests several, each masked; a transport instance names itself, and no
+     * Symfony transport puts its credentials into its name.
+     */
+    public function getMaskedTransportDsn(): ?string
+    {
+        if ($this->transport instanceof TransportInterface) {
+            return (string)$this->transport;
+        }
+
+        if ($this->transport === null) {
+            return null;
+        }
+
+        // up to the last `@`, so that one left unencoded in a password cannot leave the rest of it behind
+        return preg_replace(['#(?<=://)[^\s()]*@#', '#\?[^\s()]*#'], '', $this->transport);
+    }
+
+    /**
      * Why no transport can be built, without sending anything: none configured, a malformed DSN, a bridge that is
      * not installed, or a bridge missing its own dependency (`symfony/http-client` for the HTTP API ones).
      */

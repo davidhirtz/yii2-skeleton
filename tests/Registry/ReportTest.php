@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Tests\Registry;
 use Hirtz\Skeleton\Console\Application;
 use Hirtz\Skeleton\Db\MigrationHistory;
 use Hirtz\Skeleton\Helpers\VersionHelper;
+use Hirtz\Skeleton\Log\SentryTarget;
 use Hirtz\Skeleton\Registry\Report;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
@@ -82,6 +83,28 @@ class ReportTest extends TestCase
 
         Yii::$app->getUrlManager()->setHostInfo('https://www.configured.com');
         self::assertSame('https://www.configured.com', Report::create()->toArray()['url']);
+    }
+
+    public function testTheMailerIsReportedWithoutItsCredentials(): void
+    {
+        self::assertSame('null://null', Report::create()->toArray()['mailer']);
+
+        Yii::$app->getMailer()->setTransport('smtp://user:secret@smtp.example.com:587');
+        self::assertSame('smtp://smtp.example.com:587', Report::create()->toArray()['mailer']);
+
+        Yii::$app->getMailer()->useFileTransport = true;
+        self::assertNull(Report::create()->toArray()['mailer']);
+    }
+
+    public function testSentryIsReportedByTheBeginningOfItsKey(): void
+    {
+        self::assertNull(Report::create()->toArray()['sentry']);
+
+        Yii::$app->getLog()->targets['sentry'] = new SentryTarget(['dsn' => 'https://0123456789abcdef@o1.ingest.sentry.io/2']);
+        self::assertSame('01234567', Report::create()->toArray()['sentry']);
+
+        Yii::$app->getLog()->targets['sentry']->setEnabled(false);
+        self::assertNull(Report::create()->toArray()['sentry']);
     }
 
     public function testExtraKeysAreOnlyWrittenWhenSet(): void
