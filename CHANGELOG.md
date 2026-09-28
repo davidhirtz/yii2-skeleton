@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added a status dropdown to `SelectionTrait` (`canUpdateSelection()`, `getUpdateSelectionRoute()`); `getDeleteSelectionLabel()` and `getDeleteSelectionRoute()` are optional, a grid without a bulk delete offers none
 - Added `GridView::header()`, taking a closure like `columns()`
 - Changed `User::validateAuthKey()` to compare with `hash_equals()`; a record without a key matches nothing
 - Fixed `UploadCustomAttribute` accepting a token parked for another attribute without its own extensions and size limit

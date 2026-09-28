@@ -152,6 +152,7 @@ class RedirectGridView extends GridView
 
     /**
      * @see RedirectController::actionDeleteAll()
+     * @return array<int|string, mixed>
      */
     protected function getDeleteSelectionRoute(): array
     {

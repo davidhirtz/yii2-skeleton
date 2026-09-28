@@ -109,6 +109,9 @@ class SelectionTraitGridView extends GridView
         return 'Delete selected';
     }
 
+    /**
+     * @return array<int|string, mixed>
+     */
     protected function getDeleteSelectionRoute(): array
     {
         return ['/admin/redirect/delete-all'];
