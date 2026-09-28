@@ -170,6 +170,21 @@ class GridView extends Widget
         return $this;
     }
 
+    /**
+     * Like {@see columns()}: a listener adds a dropdown of its own through the closure form.
+     *
+     * @param list<string|Stringable>|GridHeader|Closure(list<string|Stringable>): list<string|Stringable> $header
+     * @return $this
+     */
+    public function header(array|GridHeader|Closure $header): static
+    {
+        $this->header = $header instanceof Closure
+            ? $header(is_array($this->header) ? $this->header : [])
+            : $header;
+
+        return $this;
+    }
+
     protected function ensureColumns(): void
     {
         $this->visibleColumns = [];
