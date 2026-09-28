@@ -139,6 +139,7 @@
 
 .btn-group {
   display: flex;
+  flex-wrap: wrap;
   gap: .5rem;
 
   &:not(:first-child) {
