@@ -21,6 +21,7 @@ import sticky from './includes/sticky';
 import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
 import networkError from './includes/networkError';
+import {focusFirstInvalid} from './includes/focus';
 
 import './includes/FlashAlert';
 import './includes/submitOnEnter';
@@ -83,6 +84,10 @@ htmx.on('htmx:after:request', (event: Event) => {
 });
 
 htmx.on('htmx:error', networkError);
+
+htmx.on('htmx:after:swap', (event: Event) => {
+    focusFirstInvalid((event as CustomEvent).detail.ctx?.request?.method);
+});
 
 // `hx-include` serializes the form without firing `submit`, which is when TinyMCE writes to its textarea. htmx
 // collects the values inside its own listener for the triggering event and fires no event of its own before

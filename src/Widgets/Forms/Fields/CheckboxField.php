@@ -36,6 +36,8 @@ class CheckboxField extends Field
     #[Override]
     protected function renderContent(): string|Stringable
     {
+        $this->setDescribedBy();
+
         return FormRow::make()
             ->attributes($this->rowAttributes)
             ->addClass('form-checkbox-row')

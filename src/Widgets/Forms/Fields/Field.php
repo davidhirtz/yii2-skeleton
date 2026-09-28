@@ -104,7 +104,8 @@ abstract class Field extends Widget
             }
 
             if ($this->model->hasErrors($this->property)) {
-                $this->attributes['aria-invalid'] = true;
+                // A string: a boolean renders the bare attribute, whose empty value ARIA reads as "not invalid".
+                $this->attributes['aria-invalid'] = 'true';
             }
         }
 
@@ -115,6 +116,8 @@ abstract class Field extends Widget
 
     protected function renderContent(): string|Stringable
     {
+        $this->setDescribedBy();
+
         $content = strtr($this->layout, [
             '{input}' => $this->getControl(),
             '{hint}' => $this->getHint(),
@@ -160,15 +163,43 @@ abstract class Field extends Widget
     {
         return $this->hint
             ? Div::make()
+                ->attribute('id', $this->getHintId())
                 ->addClass('form-hint')
                 ->text($this->hint)
             : '';
+    }
+
+    /**
+     * At render time rather than in `configure()`, so a hint a `prepare()` closure added is linked as well; a
+     * subclass rendering its own layout calls it before the input.
+     */
+    protected function setDescribedBy(): void
+    {
+        $describedBy = array_filter([
+            $this->error ? $this->getErrorId() : null,
+            $this->hint ? $this->getHintId() : null,
+        ]);
+
+        if ($describedBy) {
+            $this->attributes['aria-describedby'] ??= implode(' ', $describedBy);
+        }
+    }
+
+    protected function getHintId(): string
+    {
+        return $this->getId() . '-hint';
+    }
+
+    protected function getErrorId(): string
+    {
+        return $this->getId() . '-error';
     }
 
     protected function getError(): string|Stringable
     {
         return $this->error
             ? Div::make()
+                ->attribute('id', $this->getErrorId())
                 ->addClass('form-error')
                 ->text($this->error)
             : '';
