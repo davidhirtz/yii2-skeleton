@@ -332,6 +332,12 @@ class GridView extends Widget
     {
         if ($this->isSortable()) {
             $this->tableBodyAttributes['data-sort-url'] ??= Url::to($this->orderRoute);
+
+            // A pattern for `sortable.ts`, which announces where a row moved by keyboard landed.
+            $this->tableBodyAttributes['data-sort-announcement'] ??= Yii::t('skeleton', 'GRID_SORT_ANNOUNCEMENT', [
+                'position' => '{position}',
+                'count' => '{count}',
+            ]);
             Yii::$app->getView()->registerAssetBundle(SortableAssetBundle::class);
         }
 

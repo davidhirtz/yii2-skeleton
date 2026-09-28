@@ -6,6 +6,16 @@
   display: none;
 }
 
+// Read by assistive technology, never shown.
+.visually-hidden {
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
 // A selected `<option>` matches `:checked`, so a plain `:has(:checked)` is true for every page carrying a select.
 :has([data-check]:checked) {
   .block-has-selection {

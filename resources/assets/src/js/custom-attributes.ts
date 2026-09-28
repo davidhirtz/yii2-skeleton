@@ -3,6 +3,7 @@ import htmx from "htmx.org";
 
 import onLoad from './includes/onLoad';
 import Sortable from './includes/sortable';
+import {moveRowByKey} from './includes/sortableKeyboard';
 
 // Matches `Widgets\Forms\Fields\GroupField::POSITION_PLACEHOLDER`.
 const POSITION_PLACEHOLDER = '__POSITION__';
@@ -162,6 +163,12 @@ onLoad(($node) => {
                 animation: 150,
                 onEnd: renumber,
             } as SortableOptions);
+
+            $items.addEventListener('keydown', (event: KeyboardEvent) => {
+                if (moveRowByKey(event, $items)) {
+                    renumber();
+                }
+            });
         }
 
         update();

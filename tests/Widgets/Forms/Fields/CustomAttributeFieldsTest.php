@@ -415,7 +415,7 @@ class CustomAttributeFieldsTest extends TestCase
             ->rows(['links'])
             ->render();
 
-        self::assertStringContainsString('class="btn sortable-handle" hidden>', $content);
+        self::assertStringContainsString('class="btn sortable-handle" hidden aria-label=', $content);
 
         // Not in the template: the row it stands for is never the only one.
         self::assertSame(1, substr_count($content, 'sortable-handle" hidden'));

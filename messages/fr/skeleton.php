@@ -156,6 +156,8 @@ return [
     'FILTER_DROPDOWN_SHOW_ALL' => 'Tout afficher',
     'FOLDER_NAME_LABEL' => 'Nom',
     'GRID_SEARCH_SEARCH' => 'Rechercher ...',
+    'GRID_SORT_ANNOUNCEMENT' => 'Déplacé en position {position} sur {count}.',
+    'GRID_SORT_HANDLE_LABEL' => 'Déplacer — faites glisser ou utilisez les flèches',
     'GRID_SUMMARY_CLEAR_SEARCH' => 'Effacer la recherche',
     'GRID_SUMMARY_DISPLAYING_ALL_RECORDS' => 'Affichage des {totalCount, number} enregistrements.',
     'GRID_SUMMARY_DISPLAYING_ALL_RESULTS_MATCHING' => 'Affichage des {totalCount, number} résultats correspondant à « {search} ».',
