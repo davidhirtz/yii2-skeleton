@@ -14,14 +14,14 @@
 - Added `Filters\PageCache::EVENT_CONFIGURE`
 - Added a status dropdown to `SelectionTrait` (`canUpdateSelection()`, `getUpdateSelectionRoute()`); `getDeleteSelectionLabel()` and `getDeleteSelectionRoute()` are optional, a grid without a bulk delete offers none
 - Added `GridView::header()`, taking a closure like `columns()`
-- Changed `User::validateAuthKey()` to compare with `hash_equals()`; a record without a key matches nothing
+- Changed `User::validateAuthKey()` to compare with `hash_equals()`
 - Fixed `UploadCustomAttribute` accepting a token parked for another attribute without its own extensions and size limit
 - Fixed the two-factor step writing the password back into the page: the login waits in the session (`LoginForm::PENDING_SESSION_KEY`, `$pendingDuration`) and the step posts the code alone; removed `TwoFactorAuthenticationLoginActiveForm::getEmailField()`, `getPasswordField()` and `getRememberMeField()`
 - Added `Helpers\Url::isLocalPath()`; fixed `AccountController::actionTimezone()` redirecting to any URL it was given
 - Fixed a successful login clearing the per-IP failed-attempt count; `Web\User::resetFailedLoginAttempts()` resets the account's only
-- Added `Request::$allowedHosts` (`params.allowedHosts`, comma-separated): a request for any other host is refused before routing, and `HostAlert` warns a production host that has neither it nor a pinned host
+- Added `Request::$allowedHosts` (`params.allowedHosts`, comma-separated): a request for any other host is refused before routing
 - Fixed a configured `urlManager.hostInfo` being replaced by the request's host
-- Fixed tooltips rendering their `title` as HTML; they now also show on keyboard focus and keep the text as the element's accessible name
+- Fixed tooltips rendering their `title` as HTML
 - Added `mailer` and `sentry` to the registry report without credentials or options
 - Added `Mail\Mailer::getMaskedTransportDsn()`
 
