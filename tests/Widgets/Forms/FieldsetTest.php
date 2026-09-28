@@ -97,7 +97,7 @@ class FieldsetTest extends TestCase
         self::assertStringContainsString('<ul class="nav tabs translation-tabs" data-translation-toolbar', $html);
         self::assertStringContainsString('<button type="button" class="nav-link" data-translation-all>All fields</button>', $html);
         self::assertMatchesRegularExpression('/data-translation-language="en-US"[^>]*>EN</', $html);
-        self::assertMatchesRegularExpression('/data-translation-language="de" data-missing[^>]*>DE</', $html);
+        self::assertMatchesRegularExpression('/data-translation-language="de" data-missing><div class="icon-text"><span class="fas fa-exclamation-triangle"><\/span><div>DE</', $html);
 
         // In a form container the tabs stand before the card, aligned with the submenu, and name their form.
         $html = FormContainer::make()->form(ActiveForm::make()->model($model)->rows(['name']))->render();

@@ -287,13 +287,17 @@ class ActiveForm extends Widget
         ];
 
         foreach ($i18n->getLanguages() as $language) {
+            $isMissing = in_array($language, $missing, true);
+
+            $button = Button::make()
+                ->class('nav-link')
+                ->attribute('data-translation-language', $language)
+                ->attribute('data-missing', $isMissing ? true : null)
+                ->text(strtoupper($i18n->getLanguageCode($language)));
+
             $items[] = Li::make()
                 ->class('nav-item')
-                ->content(Button::make()
-                    ->class('nav-link')
-                    ->attribute('data-translation-language', $language)
-                    ->attribute('data-missing', in_array($language, $missing, true) ? true : null)
-                    ->text(strtoupper($i18n->getLanguageCode($language))));
+                ->content($isMissing ? $button->icon('exclamation-triangle') : $button);
         }
 
         return (string)Ul::make()

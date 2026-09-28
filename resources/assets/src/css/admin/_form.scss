@@ -179,9 +179,9 @@
 
 // the languages of a translated form as tabs, like a submenu (`includes/translationLayout.ts`)
 .translation-tabs {
-  // a language the record lacks a translation for
-  .nav-link[data-missing]::after {
-    content: "•";
+  // a language the record lacks a translation for, marked like the grids' column
+  .nav-link[data-missing] .fas {
+    color: var(--color-yellow-600);
   }
 }
 
