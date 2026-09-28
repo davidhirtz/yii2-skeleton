@@ -28,6 +28,9 @@ trait ConfigTrait
             'boolean' => $this->stdout($value ? 'true' : 'false', Console::BOLD),
             'integer', 'double' => $this->stdout((string)$value),
             'NULL' => $this->stdout('null', Console::BOLD),
+            // Written by hand: `params.php` holds scalars, and nothing here writes anything else.
+            'array' => $this->stdout((string)json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)),
+            'object' => $this->stdout($value::class),
             default => $this->stdout("'$value'", Console::FG_GREEN),
         };
     }

@@ -36,6 +36,19 @@ class ParamsControllerTest extends TestCase
         self::assertStringContainsString("- *cookieValidationKey*  'test'" . PHP_EOL, $controller->flushStdOutBuffer());
     }
 
+    /**
+     * `params.php` holds scalars, but a hand-edited array must not take the listing down.
+     */
+    public function testActionIndexListsAnArray(): void
+    {
+        Yii::$app->params['hosts'] = ['www.example.com', '*.example.org'];
+
+        $controller = $this->createParamsController();
+        $controller->actionIndex();
+
+        self::assertStringContainsString('["www.example.com","*.example.org"]', $controller->flushStdOutBuffer());
+    }
+
     public function testActionIndexGeneratesTheMissingSecrets(): void
     {
         Yii::$app->params = [];
