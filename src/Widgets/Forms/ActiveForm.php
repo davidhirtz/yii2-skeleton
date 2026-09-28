@@ -14,6 +14,7 @@ use Hirtz\Skeleton\Html\Traits\TagIdTrait;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\StaleSaveInterface;
 use Hirtz\Skeleton\Modules\Admin\Module as AdminModule;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
@@ -129,6 +130,8 @@ class ActiveForm extends Widget
             $this->attributes['data-translation-layout'] ??= $module->translationLayout;
         }
 
+        $this->flashStaleSaveError();
+
         if ($this->warnOnLeave && !$this->readonly) {
             $this->attributes['data-unsaved'] ??= Yii::t('skeleton', 'COMMON_UNSAVED_CHANGES_CONFIRM');
 
@@ -215,6 +218,24 @@ class ActiveForm extends Widget
      * When the form was rendered, posted back for {@see \Hirtz\Skeleton\Models\Traits\StaleSaveTrait}. A conflict it reported starts the clock
      * again, so saving once more overwrites knowingly; any other error keeps the time the form was opened.
      */
+    /**
+     * The conflict is about the whole record, not a field, so it is a flash rather than a line in the summary. The
+     * view renders before the layout, whose flashes pick it up in the same response.
+     */
+    protected function flashStaleSaveError(): void
+    {
+        if (!$this->model instanceof StaleSaveInterface) {
+            return;
+        }
+
+        $this->excludedErrorProperties[] = 'loadedAt';
+        $error = $this->model->getFirstError('loadedAt');
+
+        if ($error !== null) {
+            Application::current()->getSession()->addFlash('warning', $error);
+        }
+    }
+
     protected function getStaleSaveInput(): string
     {
         if (!$this->model instanceof StaleSaveInterface || !$this->model instanceof BaseActiveRecord || $this->model->getIsNewRecord()) {
