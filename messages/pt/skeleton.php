@@ -89,6 +89,7 @@ return [
     'COMMON_ENUMERATION' => '{items} e {last}',
     'COMMON_ERROR_EMAIL_NOT_SENT' => 'Não foi possível enviar o e-mail para {email}. Tente novamente mais tarde.',
     'COMMON_ERROR_LOGS' => 'Registos de erros',
+    'COMMON_HERE' => 'aqui',
     'COMMON_HISTORY' => 'Histórico',
     'COMMON_ID_LABEL' => 'ID',
     'COMMON_LOGIN' => 'Iniciar sessão',

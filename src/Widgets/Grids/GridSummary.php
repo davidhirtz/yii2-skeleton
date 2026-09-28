@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Grids;
 
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Helpers\Url;
+use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
@@ -21,7 +23,12 @@ class GridSummary extends Widget
 
     protected ?string $message = null;
     protected ?string $emptyMessage = null;
-    protected ?Stringable $emptyButton = null;
+    protected ?string $emptyLinkText = null;
+
+    /**
+     * @var array<int|string, mixed>|string|null
+     */
+    protected array|string|null $emptyLinkUrl = null;
     /**
      * @var array<string, mixed>
      */
@@ -44,12 +51,16 @@ class GridSummary extends Widget
     }
 
     /**
-     * The way to the grid's first record, shown beside the empty message — the create button of the page, which
-     * checks its own permission.
+     * The way to the grid's first record, a sentence after the empty message whose `{here}` links to it — "Click
+     * {here} to create the first section." A grid names it only where the user may follow it.
+     *
+     * @param array<int|string, mixed>|string|null $url
      */
-    public function emptyButton(?Stringable $emptyButton): static
+    public function emptyLink(?string $text, array|string|null $url): static
     {
-        $this->emptyButton = $emptyButton;
+        $this->emptyLinkText = $text;
+        $this->emptyLinkUrl = $url;
+
         return $this;
     }
 
@@ -70,10 +81,6 @@ class GridSummary extends Widget
             $alert->warning();
         }
 
-        if ($this->emptyButton && !$this->grid->provider->getCount() && !$this->grid->search->getValue()) {
-            $alert->button($this->emptyButton);
-        }
-
         if ($this->grid->search->getValue()) {
             $alert->button(Button::make()
                 ->class('btn-icon icon')
@@ -83,6 +90,19 @@ class GridSummary extends Widget
         }
 
         return $alert;
+    }
+
+    protected function getEmptyLink(): string
+    {
+        if (!$this->emptyLinkText || $this->emptyLinkUrl === null) {
+            return '';
+        }
+
+        $link = A::make()
+            ->href(Url::to($this->emptyLinkUrl))
+            ->text(Yii::t('skeleton', 'COMMON_HERE'));
+
+        return ' ' . Yii::$app->getI18n()->format($this->emptyLinkText, ['here' => (string)$link], Yii::$app->language);
     }
 
     protected function getAlertContent(): string
@@ -113,7 +133,8 @@ class GridSummary extends Widget
         }
 
         if ($this->emptyMessage && !$count && !$this->grid->search->getValue()) {
-            return Yii::$app->getI18n()->format($this->emptyMessage, $params, Yii::$app->language);
+            return Yii::$app->getI18n()->format($this->emptyMessage, $params, Yii::$app->language)
+                . $this->getEmptyLink();
         }
 
         if ($this->grid->search->getValue()) {

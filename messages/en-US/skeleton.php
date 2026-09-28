@@ -89,6 +89,7 @@ return [
     'COMMON_ENUMERATION' => '{items} and {last}',
     'COMMON_ERROR_EMAIL_NOT_SENT' => 'The email to {email} could not be sent. Please try again later.',
     'COMMON_ERROR_LOGS' => 'Error logs',
+    'COMMON_HERE' => 'here',
     'COMMON_HISTORY' => 'History',
     'COMMON_ID_LABEL' => 'ID',
     'COMMON_LOGIN' => 'Login',

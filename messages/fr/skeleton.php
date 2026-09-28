@@ -89,6 +89,7 @@ return [
     'COMMON_ENUMERATION' => '{items} et {last}',
     'COMMON_ERROR_EMAIL_NOT_SENT' => 'L’e-mail à {email} n’a pas pu être envoyé. Veuillez réessayer plus tard.',
     'COMMON_ERROR_LOGS' => 'Journaux d’erreurs',
+    'COMMON_HERE' => 'ici',
     'COMMON_HISTORY' => 'Historique',
     'COMMON_ID_LABEL' => 'ID',
     'COMMON_LOGIN' => 'Connexion',
