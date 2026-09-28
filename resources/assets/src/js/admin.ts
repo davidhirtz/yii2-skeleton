@@ -25,6 +25,7 @@ import {rememberFocus, restoreFocus} from './includes/focus';
 import {confirmLeaving, hasUnsavedChanges, trackUnsavedForm} from './includes/unsaved';
 import translationLayout from './includes/translationLayout';
 import staleSave from './includes/staleSave';
+import characterCounter from './includes/characterCounter';
 
 import './includes/FlashAlert';
 import './includes/submitOnEnter';
@@ -55,6 +56,7 @@ onLoad(($container) => {
     queryAll('form[data-unsaved]', trackUnsavedForm);
     queryAll('form[data-translation-layout]', translationLayout);
     queryAll('form[data-stale-save]', staleSave);
+    queryAll('[data-character-counter]', characterCounter);
     queryAll('[data-timezone-offset]', timezone);
 
     queryAll('[aria-invalid]', ($input: HTMLElement) => {

@@ -31,6 +31,18 @@ class FieldDescriptionTest extends TestCase
         self::assertMatchesRegularExpression('/<div id="[\w-]+-hint" class="form-hint">Shown in the menu\./', $content);
     }
 
+    public function testAHintHoldingACountCountsTheCharacters(): void
+    {
+        $content = InputField::make()
+            ->model(new DynamicModel(['description' => 'Grüße']))
+            ->property('description')
+            ->hint('At most 160 <characters>, now {count}.')
+            ->render();
+
+        self::assertStringContainsString('data-character-counter', $content);
+        self::assertStringContainsString('At most 160 &lt;characters&gt;, now <span data-character-count>5</span>.', $content);
+    }
+
     public function testAControlWithNeitherNamesNothing(): void
     {
         $content = InputField::make()

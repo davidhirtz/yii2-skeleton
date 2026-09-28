@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Label;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
@@ -118,6 +119,10 @@ abstract class Field extends Widget
     {
         $this->setDescribedBy();
 
+        if ($this->hasCharacterCounter()) {
+            $this->attributes['data-character-counter'] ??= true;
+        }
+
         $content = strtr($this->layout, [
             '{input}' => $this->getControl(),
             '{hint}' => $this->getHint(),
@@ -159,14 +164,39 @@ abstract class Field extends Widget
 
     abstract protected function getInput(): string|Stringable;
 
+    /**
+     * A hint holding `{count}` counts the characters typed into the field, kept current by
+     * `includes/characterCounter.ts` — "ideally at most 160 characters, now {count}".
+     */
     protected function getHint(): string|Stringable
     {
-        return $this->hint
-            ? Div::make()
-                ->attribute('id', $this->getHintId())
-                ->addClass('form-hint')
-                ->text($this->hint)
-            : '';
+        if (!$this->hint) {
+            return '';
+        }
+
+        $hint = Div::make()
+            ->attribute('id', $this->getHintId())
+            ->addClass('form-hint');
+
+        if (!$this->hasCharacterCounter()) {
+            return $hint->text($this->hint);
+        }
+
+        [$before, $after] = explode('{count}', $this->hint, 2);
+        $value = $this->model && $this->property ? $this->model->{$this->property} : null;
+
+        return $hint->content(
+            Html::encode($before),
+            Span::make()
+                ->attribute('data-character-count', true)
+                ->text((string)mb_strlen(is_scalar($value) ? (string)$value : '')),
+            Html::encode($after),
+        );
+    }
+
+    protected function hasCharacterCounter(): bool
+    {
+        return $this->hint !== null && str_contains($this->hint, '{count}');
     }
 
     /**

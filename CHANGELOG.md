@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added a character counter to a field whose hint holds `{count}`
 - Added `Helpers\StringHelper::enumerate()`
 - Added a translation layout to `ActiveForm`: one language at a time or all together, defaulting to `Modules\Admin\Module::$translationLayout`, and `I18nAttributeInterface::getMissingTranslationLanguages()`, shown by `Widgets\Grids\Columns\MissingTranslationsColumn`
 - Added `ActiveForm::$warnOnLeave`: leaving a form with unsaved changes asks first
