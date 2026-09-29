@@ -1,7 +1,11 @@
+## Unreleased
+
+- Added `Base\ConfigBootstrapInterface`: a `Bootstrap` returns its defaults from `getDefaultConfig()`, merged between the core configuration
+
 ## 3.7.0 (September 29, 2026)
 
-- Replaced `davidhirtz/yii2-datetime-behavior` with `Db\DateTime`, `Db\Date` and `Validators\DateTimeValidator`: `AttributeTypecastBehavior` makes every `datetime` and `date` column one after a find and casts a posted date, so a model no longer attaches `DateTimeBehavior`
-- Changed dates to be immutable, so a record's attribute and its old value share one instance; removed the `ActiveRecord::getDirtyAttributes()` and `isAttributeChanged()` overrides that compared dates by timestamp
+- Replaced `davidhirtz/yii2-datetime-behavior` with `Db\DateTime`, `Db\Date` and `Validators\DateTimeValidator`: `AttributeTypecastBehavior` replaces `DateTimeBehavior`
+- Changed dates to be immutable, so a record's attribute and its old value share one instance; removed the `ActiveRecord::getDirtyAttributes()` and `isAttributeChanged()` overrides
 
 ## 3.6.0 (September 29, 2026)
 

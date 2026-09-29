@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Base\Traits;
 
 use Hirtz\Skeleton\Assets\EmptyAssetBundle;
+use Hirtz\Skeleton\Base\ConfigBootstrapInterface;
 use Hirtz\Skeleton\Base\RootPackage;
 use Hirtz\Skeleton\Controllers\HealthController;
 use Hirtz\Skeleton\Controllers\SitemapController;
@@ -125,10 +126,7 @@ trait ApplicationTrait
                         'file' => [
                             'class' => FileTarget::class,
                             'levels' => ['error', 'warning'],
-                            'fileMode' => 0770, // Make sure both web and console user can write to file
-                            // The session id and the identity cookie are credentials, and a reset or
-                            // confirmation link carries its token in the query string — which `maskVars` cannot
-                            // reach inside `_SERVER.REQUEST_URI`, hence the target's own `maskQueryParams`.
+                            'fileMode' => 0770,
                             'logVars' => [
                                 '_GET',
                                 '_POST',
@@ -213,7 +211,7 @@ trait ApplicationTrait
             'viewPath' => '@views',
         ];
 
-        $config = ArrayHelper::merge($core, $config);
+        $config = ArrayHelper::merge($core, ...[...$this->getBootstrapConfigs($config), $config]);
 
         $this->addRootPackageBootstrap($config);
 
@@ -246,9 +244,6 @@ trait ApplicationTrait
     }
 
     /**
-     * Beside the file target rather than instead of it, and only where the parameter is set: an installation with
-     * no `sentryDsn` never builds a Sentry client.
-     *
      * @param array<array-key, mixed> $config
      */
     protected function setSentryLogTarget(&$config): void
@@ -263,7 +258,6 @@ trait ApplicationTrait
             'class' => SentryTarget::class,
             'dsn' => $dsn,
             'levels' => ['error', 'warning'],
-            // A 404 is not an error worth a report, while a 5xx is the one that matters most.
             'except' => [
                 'yii\\web\\HttpException:4*',
             ],
@@ -286,6 +280,38 @@ trait ApplicationTrait
         if (($bootstrap = $package->getBootstrap()) !== null) {
             $config['bootstrap'][] = $bootstrap;
         }
+    }
+
+    /**
+     * @param array<array-key, mixed> $config
+     * @return list<array<string, mixed>>
+     */
+    protected function getBootstrapConfigs(array &$config): array
+    {
+        if (!isset($config['extensions'])) {
+            // an alias in `vendorPath` may not be defined yet, and Yii then reads the file itself
+            $file = Yii::getAlias(($config['vendorPath'] ?? "{$config['basePath']}/vendor") . '/yiisoft/extensions.php', false);
+
+            if ($file !== false && is_file($file)) {
+                $config['extensions'] = require($file);
+            }
+        }
+
+        $bootstraps = [
+            ...array_column($config['extensions'] ?? [], 'bootstrap'),
+            ...$config['bootstrap'] ?? [],
+            (new RootPackage($config['basePath']))->getBootstrap(),
+        ];
+
+        $configs = [];
+
+        foreach (array_unique(array_filter($bootstraps, is_string(...))) as $class) {
+            if (is_subclass_of($class, ConfigBootstrapInterface::class)) {
+                $configs[] = $class::getDefaultConfig();
+            }
+        }
+
+        return $configs;
     }
 
     /**
@@ -339,8 +365,6 @@ trait ApplicationTrait
     }
 
     /**
-     * Extends given application component.
-     *
      * @param array<string, mixed> $definition
      */
     public function extendComponent(string $id, array $definition): void
