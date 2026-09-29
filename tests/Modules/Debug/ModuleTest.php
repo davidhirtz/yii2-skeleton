@@ -58,6 +58,19 @@ class ModuleTest extends TestCase
         self::assertSame(['class' => EmptyAssetBundle::class], $bundles[JqueryAsset::class]);
     }
 
+    public function testIgnoredPathsAreNotRecorded(): void
+    {
+        $module = $this->createModule();
+        $method = new ReflectionMethod($module, 'isIgnoredRequest');
+
+        $request = $this->getWebRequest();
+        $request->setPathInfo('.well-known/appspecific/com.chrome.devtools.json');
+        self::assertTrue($method->invoke($module, $request));
+
+        $request->setPathInfo('admin/entry/index');
+        self::assertFalse($method->invoke($module, $request));
+    }
+
     /**
      * @param array<string, mixed> $config
      */

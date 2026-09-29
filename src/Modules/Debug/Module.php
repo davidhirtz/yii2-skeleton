@@ -9,9 +9,13 @@ use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Web\View as WebView;
 use Override;
 use Yii;
+use yii\base\Application;
 use yii\grid\GridViewAsset;
+use yii\helpers\StringHelper;
+use yii\log\Target;
 use yii\validators\ValidationAsset;
 use yii\web\JqueryAsset;
+use yii\web\Request;
 use yii\web\View;
 use yii\web\YiiAsset;
 use yii\widgets\ActiveFormAsset;
@@ -45,6 +49,26 @@ class Module extends \yii\debug\Module
     public ?string $jqueryPath = '@vendor/components/jquery';
 
     public string $jqueryFile = 'jquery.min.js';
+
+    /**
+     * @var list<string> wildcard patterns of request paths never recorded, such as the DevTools probe Chrome
+     *     sends on every page with the console open.
+     */
+    public array $ignoredPaths = [
+        '.well-known/appspecific/*',
+    ];
+
+    #[Override]
+    public function bootstrap($app): void
+    {
+        parent::bootstrap($app);
+
+        $app->on(Application::EVENT_BEFORE_REQUEST, function () use ($app): void {
+            if ($this->logTarget instanceof Target && $this->isIgnoredRequest($app->getRequest())) {
+                $this->logTarget->enabled = false;
+            }
+        });
+    }
 
     /**
      * Yii derives a module's view path from the directory of its class, which for a subclass is no longer the
@@ -96,6 +120,23 @@ class Module extends \yii\debug\Module
         }
 
         Yii::$app->getAssetManager()->bundles = $bundles;
+    }
+
+    protected function isIgnoredRequest(mixed $request): bool
+    {
+        if (!$request instanceof Request) {
+            return false;
+        }
+
+        $path = $request->getPathInfo();
+
+        foreach ($this->ignoredPaths as $pattern) {
+            if (StringHelper::matchWildcard($pattern, $path)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function resolveJqueryPath(): ?string
