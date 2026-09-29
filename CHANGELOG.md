@@ -1,3 +1,8 @@
+## Unreleased
+
+- Changed `Widget`, `Grids\Columns\Column` and `Grids\GridSearch` to implement `yii\base\Configurable`: a container definition or config sets a public property or calls the public method of the same name, so protected options with a fluent setter are configurable; anything else throws `InvalidConfigException`
+- Added `Modules\Debug\Module::$ignoredPaths`, request paths the debugger does not record (Chrome's DevTools probe by default)
+
 ## 3.5.1 (September 28, 2026)
 
 - Fixed a translatable custom attribute being translated with a single content language, which left a German-only application without the attribute (cms `Section::$content` since cms 3.3.0)

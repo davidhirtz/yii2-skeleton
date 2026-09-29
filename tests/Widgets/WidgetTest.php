@@ -10,7 +10,9 @@ use Hirtz\Skeleton\Widgets\Navs\Dropdown;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
+use Yii;
 use yii\base\Event;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 
 class WidgetTest extends TestCase
@@ -71,6 +73,59 @@ class WidgetTest extends TestCase
             ->render();
 
         self::assertStringContainsString('Prepared', $content);
+    }
+
+    public function testTheContainerReachesProtectedOptionsThroughTheirSetters(): void
+    {
+        Yii::$container->set(TestConfigurableWidget::class, [
+            'label' => 'Label',
+            'parts' => ['a', 'b'],
+            'suffix' => '!',
+        ]);
+
+        try {
+            self::assertSame('Label:a,b!', TestConfigurableWidget::make()->render());
+            self::assertSame('Other:a,b!', TestConfigurableWidget::make()->label('Other')->render());
+            self::assertSame('Label:c!', TestConfigurableWidget::make(['parts' => ['c']])->render());
+        } finally {
+            Yii::$container->clear(TestConfigurableWidget::class);
+        }
+    }
+
+    public function testAProtectedPropertyWithoutSetterCannotBeConfigured(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+        new TestConfigurableWidget(['secret' => 'x']);
+    }
+}
+
+class TestConfigurableWidget extends Widget
+{
+    public string $suffix = '';
+    protected string $label = '';
+    protected string $secret = '';
+
+    /**
+     * @var list<string>
+     */
+    protected array $parts = [];
+
+    public function label(string $label): static
+    {
+        $this->label = $label;
+        return $this;
+    }
+
+    public function parts(string ...$parts): static
+    {
+        $this->parts = array_values($parts);
+        return $this;
+    }
+
+    #[Override]
+    protected function renderContent(): string|Stringable
+    {
+        return $this->label . ':' . implode(',', $this->parts) . $this->suffix . $this->secret;
     }
 }
 

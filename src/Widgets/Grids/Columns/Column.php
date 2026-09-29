@@ -16,13 +16,13 @@ use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
 use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Stringable;
-use Yii;
 use yii\base\Model;
+use yii\base\Configurable;
 
 /**
  * @template TModel of array|Model = Model
  */
-class Column
+class Column implements Configurable
 {
     use ContainerConfigurationTrait;
     use EvaluateClosureTrait;
@@ -60,7 +60,7 @@ class Column
         $this->webuser ??= Application::current()->getUser();
 
         if ($config) {
-            Yii::configure($this, $config);
+            $this->configureProperties($config);
         }
     }
 

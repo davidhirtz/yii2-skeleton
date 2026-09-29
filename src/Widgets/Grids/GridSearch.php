@@ -9,9 +9,9 @@ use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
-use Yii;
+use yii\base\Configurable;
 
-class GridSearch
+class GridSearch implements Configurable
 {
     use ContainerConfigurationTrait;
     use UrlTrait;
@@ -30,7 +30,7 @@ class GridSearch
     public function __construct(array $config = [])
     {
         if ($config) {
-            Yii::configure($this, $config);
+            $this->configureProperties($config);
         }
     }
 

@@ -13,13 +13,14 @@ use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
 use Stringable;
 use Yii;
+use yii\base\Configurable;
 use yii\base\Event;
 use yii\base\ViewContextInterface;
 
 /**
  * @property View $view
  */
-abstract class Widget implements Stringable, ViewContextInterface
+abstract class Widget implements Configurable, Stringable, ViewContextInterface
 {
     use ContainerConfigurationTrait;
     use EvaluateClosureTrait;
@@ -49,7 +50,7 @@ abstract class Widget implements Stringable, ViewContextInterface
         $this->webuser ??= Application::current()->getUser();
 
         if ($config) {
-            Yii::configure($this, $config);
+            $this->configureProperties($config);
         }
     }
 
