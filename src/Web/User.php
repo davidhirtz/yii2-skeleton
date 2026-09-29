@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
-use davidhirtz\yii2\datetime\DateTime;
+use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Helpers\CookieHelper;
 use Hirtz\Skeleton\Models\UserLogin;
 use Override;

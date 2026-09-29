@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Controllers;
 
-use davidhirtz\yii2\datetime\DateTime;
+use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
 use Hirtz\Skeleton\Test\TestCase;

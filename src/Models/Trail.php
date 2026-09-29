@@ -18,7 +18,7 @@ use Hirtz\Skeleton\Web\User as WebUser;
 use Override;
 use ReflectionClass;
 use Yii;
-use davidhirtz\yii2\datetime\DateTime;
+use Hirtz\Skeleton\Db\DateTime;
 use yii\base\Model;
 use yii\db\ActiveRecordInterface;
 

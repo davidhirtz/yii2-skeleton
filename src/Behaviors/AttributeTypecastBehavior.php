@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Behaviors;
 
+use DateTimeInterface;
+use DateTimeZone;
+use Exception;
 use Hirtz\Skeleton\Db\ActiveRecord as SkeletonActiveRecord;
+use Hirtz\Skeleton\Db\Date;
+use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Validators\Interfaces\AttributeTypeInterface;
 use yii\base\Behavior;
@@ -20,6 +25,7 @@ use yii\validators\NumberValidator;
 use yii\validators\StringValidator;
 use Closure;
 use Stringable;
+use Yii;
 
 /**
  * Casts the attributes to the type their validators describe when they enter the record (after
@@ -29,6 +35,10 @@ use Stringable;
  *
  * A value is only cast when nothing is lost: `"abc"` stays a string for the `integer` rule to reject. `null` is never
  * cast. A boolean is an integer and a `decimal` column a string at the column's scale, which is what MySQL returns.
+ *
+ * Dates are the one type the database returns differently: a `datetime` or `date` column is a {@see DateTime} or
+ * {@see Date} from the find on, typed by its column rather than a rule. A posted date is read in the application's
+ * time zone; one that would write what the record holds keeps the old instance, so it does not read as changed.
  *
  * A model's own `beforeSave()` runs before the cast when it assigns ahead of `parent::beforeSave()`, which triggers the
  * event, but only `save(false)` reaches it with anything uncast.
@@ -44,6 +54,8 @@ class AttributeTypecastBehavior extends Behavior
     final public const string TYPE_FLOAT = 'float';
     final public const string TYPE_BOOLEAN = 'boolean';
     final public const string TYPE_STRING = 'string';
+    final public const string TYPE_DATETIME = 'datetime';
+    final public const string TYPE_DATE = 'date';
 
     /**
      * @var array<string, mixed>|null the attribute types, auto-detected from the validators when `null`.
@@ -61,6 +73,11 @@ class AttributeTypecastBehavior extends Behavior
     private ?array $decimalScales = null;
 
     /**
+     * @var array<string, self::TYPE_DATETIME|self::TYPE_DATE>|null the type of each `datetime` and `date` column
+     */
+    private ?array $dateAttributes = null;
+
+    /**
      * @var array<string, array<string, mixed>>
      */
     private static array $autoDetectedAttributeTypes = [];
@@ -76,6 +93,11 @@ class AttributeTypecastBehavior extends Behavior
     private static array $autoDetectedDecimalScales = [];
 
     /**
+     * @var array<string, array<string, self::TYPE_DATETIME|self::TYPE_DATE>>
+     */
+    private static array $autoDetectedDateAttributes = [];
+
+    /**
      * @return array<string, string|Closure>
      */
     #[\Override]
@@ -84,6 +106,7 @@ class AttributeTypecastBehavior extends Behavior
         $handler = fn () => $this->typecastAttributes();
 
         return [
+            BaseActiveRecord::EVENT_AFTER_FIND => $this->populateDateAttributes(...),
             SkeletonActiveRecord::EVENT_AFTER_LOAD => $handler,
             Model::EVENT_BEFORE_VALIDATE => $handler,
             BaseActiveRecord::EVENT_BEFORE_INSERT => $handler,
@@ -117,19 +140,25 @@ class AttributeTypecastBehavior extends Behavior
 
     protected function typecastAttribute(string $attributeName): mixed
     {
-        $type = $this->getAttributeTypes()[$attributeName] ?? null;
+        $type = $this->getDateAttributes()[$attributeName] ?? $this->getAttributeTypes()[$attributeName] ?? null;
         $value = $this->owner->$attributeName;
 
         if (!is_scalar($type)) {
             return $type ? call_user_func($type, $value) : $value;
         }
 
-        if ($value instanceof Stringable) {
+        $isDate = $type === self::TYPE_DATETIME || $type === self::TYPE_DATE;
+
+        if (!$isDate && $value instanceof Stringable) {
             $value = (string)$value;
         }
 
         if ($this->isEmpty($value) && in_array($attributeName, $this->getNullableAttributes(), true)) {
             return null;
+        }
+
+        if ($isDate) {
+            return $this->typecastDate($attributeName, $value, $type === self::TYPE_DATE);
         }
 
         return match ($type) {
@@ -172,6 +201,95 @@ class AttributeTypecastBehavior extends Behavior
             is_scalar($value) => (string)$value,
             default => $value,
         };
+    }
+
+    /**
+     * A date that writes what the record holds is the old instance, so neither `isAttributeChanged()` nor the dirty
+     * attributes see a difference the column cannot store, such as microseconds.
+     */
+    protected function typecastDate(string $attributeName, mixed $value, bool $isDate): mixed
+    {
+        $date = $this->createDate($value, $isDate);
+
+        if ($date === null) {
+            return $value;
+        }
+
+        $oldValue = $this->owner instanceof BaseActiveRecord ? $this->owner->getOldAttribute($attributeName) : null;
+
+        return $oldValue instanceof $date && (string)$oldValue === (string)$date ? $oldValue : $date;
+    }
+
+    /**
+     * A string is read in the application's time zone, which is what an editor typed. One PHP reads only by rolling
+     * it over, such as `2024-02-31`, stays a string.
+     */
+    protected function createDate(mixed $value, bool $isDate): Date|DateTime|null
+    {
+        $timeZone = new DateTimeZone(Yii::$app->getTimeZone());
+
+        if ($value instanceof ($isDate ? Date::class : DateTime::class)) {
+            return $value;
+        }
+
+        if (is_int($value)) {
+            $value = new DateTime("@$value");
+        }
+
+        if ($value instanceof DateTimeInterface) {
+            $date = DateTime::createFromInterface($value)->setTimezone($timeZone);
+            return $isDate ? new Date($date->format('Y-m-d'), $timeZone) : $date;
+        }
+
+        if (!is_string($value) || trim($value) === '') {
+            return null;
+        }
+
+        try {
+            $date = $isDate ? new Date($value, $timeZone) : new DateTime($value, $timeZone);
+        } catch (Exception) {
+            return null;
+        }
+
+        if (DateTime::getLastErrors()) {
+            return null;
+        }
+
+        return $isDate ? $date->setTime(0, 0) : $date->setTimezone($timeZone);
+    }
+
+    /**
+     * The column holds UTC; the record holds the application's time zone. The old value is the same instance.
+     */
+    protected function populateDateAttributes(): void
+    {
+        if (!$this->owner instanceof BaseActiveRecord) {
+            return;
+        }
+
+        $dateAttributes = $this->getDateAttributes();
+
+        if (!$dateAttributes) {
+            return;
+        }
+
+        $timeZone = new DateTimeZone(Yii::$app->getTimeZone());
+        $utc = new DateTimeZone('UTC');
+
+        foreach ($dateAttributes as $attributeName => $type) {
+            $value = $this->owner->getAttribute($attributeName);
+
+            if (!is_string($value) || $value === '') {
+                continue;
+            }
+
+            $date = $type === self::TYPE_DATE
+                ? new Date($value, $timeZone)
+                : (new DateTime($value, $utc))->setTimezone($timeZone);
+
+            $this->owner->setAttribute($attributeName, $date);
+            $this->owner->setOldAttribute($attributeName, $date);
+        }
     }
 
     protected function isEmpty(mixed $value): bool
@@ -302,6 +420,41 @@ class AttributeTypecastBehavior extends Behavior
     }
 
     /**
+     * @return array<string, self::TYPE_DATETIME|self::TYPE_DATE>
+     */
+    public function getDateAttributes(): array
+    {
+        if ($this->dateAttributes === null) {
+            self::$autoDetectedDateAttributes[$this->owner::class] ??= $this->detectDateAttributes();
+            $this->dateAttributes = self::$autoDetectedDateAttributes[$this->owner::class];
+        }
+
+        return $this->dateAttributes;
+    }
+
+    /**
+     * @return array<string, self::TYPE_DATETIME|self::TYPE_DATE>
+     */
+    protected function detectDateAttributes(): array
+    {
+        $dateAttributes = [];
+
+        foreach ($this->getColumnSchemas() as $column) {
+            $type = match ($column->type) {
+                Schema::TYPE_DATETIME => self::TYPE_DATETIME,
+                Schema::TYPE_DATE => self::TYPE_DATE,
+                default => null,
+            };
+
+            if ($type !== null) {
+                $dateAttributes[$column->name] = $type;
+            }
+        }
+
+        return $dateAttributes;
+    }
+
+    /**
      * @return array<string, ColumnSchema>
      */
     private function getColumnSchemas(): array
@@ -318,5 +471,6 @@ class AttributeTypecastBehavior extends Behavior
         self::$autoDetectedAttributeTypes = [];
         self::$autoDetectedNullableAttributes = [];
         self::$autoDetectedDecimalScales = [];
+        self::$autoDetectedDateAttributes = [];
     }
 }

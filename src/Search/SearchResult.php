@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Search;
 
-use davidhirtz\yii2\datetime\DateTime;
+use Hirtz\Skeleton\Db\DateTime;
 
 /**
  * Built by {@see \Hirtz\Skeleton\Models\Interfaces\SearchableInterface::getSearchResult()}, which returns `null`

@@ -13,6 +13,7 @@ use Hirtz\Skeleton\I18n\I18N;
 use Hirtz\Skeleton\Log\FileTarget;
 use Hirtz\Skeleton\Log\SentryTarget;
 use Hirtz\Skeleton\Mail\Mailer;
+use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\DatabaseComponents;
@@ -65,6 +66,7 @@ trait ApplicationTrait
         Yii::$classMap = [...Yii::$classMap, ...ArrayHelper::remove($config, 'classMap', [])];
 
         ActiveQuery::resetStatus();
+        AttributeTypecastBehavior::clearAutoDetectedAttributeTypes();
         CacheComponents::reset();
         DatabaseComponents::reset();
         DefinitionRegistry::reset();

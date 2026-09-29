@@ -68,6 +68,9 @@ project (see *Data and schema*), and the bundle itself carries one baseline migr
 | `assets\AdminAsset`, `FontAwesomeAsset`, `SignupAsset`, `FileUploadAsset` | `Assets\AdminAssetBundle`, `FontAwesomeAssetBundle`, `SignupAssetBundle`, `FileUploadAssetBundle` |
 | `assets\BootboxAsset`, `JuiAsset`, `TimeZoneDetectAsset` | removed |
 | `auth\clients\*`, `models\AuthClient`, `models\forms\AuthClientSignupForm`, `models\forms\UserPictureForm`, `gii\*` | removed |
+| `davidhirtz\yii2\datetime\DateTime` (`davidhirtz/yii2-datetime-behavior`) | `Db\DateTime`, immutable: `modify()` answers a new date |
+| `davidhirtz\yii2\datetime\DateTimeValidator` | `Validators\DateTimeValidator`, which validates what the typecast read |
+| `davidhirtz\yii2\datetime\DateTimeBehavior`, `Date`, `Timestamp`, `DateTimeInput` | removed; `Behaviors\AttributeTypecastBehavior` makes every `datetime` and `date` column a `Db\DateTime` or `Db\Date`, `Widgets\Forms\Fields\DateTimeField` |
 | `log\ActiveRecordErrorLogger` | `Log\ActiveRecordErrorLogger`; `yii\log\FileTarget` in the core config is `Log\FileTarget` |
 
 ### Methods

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
-use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\datetime\DateTimeBehavior;
+use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Behaviors\BlameableBehavior;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
@@ -48,7 +47,6 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
     {
         return [
             ...parent::behaviors(),
-            'DateTimeBehavior' => DateTimeBehavior::class,
             'TrailBehavior' => TrailBehavior::class,
         ];
     }

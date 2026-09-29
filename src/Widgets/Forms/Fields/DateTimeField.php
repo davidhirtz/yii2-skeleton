@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
 use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use DateTimeZone;
 use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Html\TextInput;
@@ -37,8 +39,8 @@ class DateTimeField extends Field
         $this->attributes['type'] ??= 'datetime-local';
         $this->attributes['value'] ??= $this->model?->{$this->property};
 
-        if ($this->attributes['value'] instanceof DateTime) {
-            $value = $this->attributes['value']->setTimezone($this->timeZone);
+        if ($this->attributes['value'] instanceof DateTimeInterface) {
+            $value = DateTimeImmutable::createFromInterface($this->attributes['value'])->setTimezone($this->timeZone);
             $this->attributes['value'] = $value->format('Y-m-d\TH:i');
         }
 

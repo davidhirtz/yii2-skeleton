@@ -10,12 +10,11 @@ use Hirtz\Skeleton\Test\TestCase;
 
 class ExtensionVersionsTest extends TestCase
 {
-    public function testTheDefaultBlockListLeavesOutTheFrameworkAndTheDateTimeBehavior(): void
+    public function testTheDefaultBlockListLeavesOutTheFramework(): void
     {
         $installed = array_keys(VersionHelper::getExtensions());
 
         self::assertContains('yiisoft/yii2-debug', $installed);
-        self::assertContains('davidhirtz/yii2-datetime-behavior', $installed);
 
         $widget = ExtensionVersions::make();
         $widget->render();
@@ -23,7 +22,6 @@ class ExtensionVersionsTest extends TestCase
         $listed = array_keys($widget->getExtensions());
 
         self::assertNotContains('yiisoft/yii2-debug', $listed);
-        self::assertNotContains('davidhirtz/yii2-datetime-behavior', $listed);
         self::assertContains('davidhirtz/yii2-skeleton', $listed);
     }
 

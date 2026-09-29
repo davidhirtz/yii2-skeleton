@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
-use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\datetime\DateTimeBehavior;
+use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Search\SearchQuery;
 use Override;
@@ -27,15 +26,6 @@ use Yii;
  */
 class Search extends ActiveRecord
 {
-    #[Override]
-    public function behaviors(): array
-    {
-        return [
-            ...parent::behaviors(),
-            'DateTimeBehavior' => DateTimeBehavior::class,
-        ];
-    }
-
     /**
      * @return SearchQuery<static>
      */

@@ -13,7 +13,6 @@ use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Override;
 use Yii;
-use davidhirtz\yii2\datetime\DateTime;
 use yii\helpers\Inflector;
 
 class ActiveRecord extends \yii\db\ActiveRecord
@@ -427,40 +426,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         $query = Yii::createObject(BatchInsertQueryBuild::class, [static::class, ...func_get_args()]);
         return $query->command->execute();
-    }
-
-    /**
-     * Extends the default functionality by checking for DateTime objects, which unfortunately cannot be compared by
-     * checking identical values using `===` as it always returns `true` even if the date was not changed.
-     *
-     * @return array<string, mixed>
-     */
-    #[Override]
-    public function getDirtyAttributes($names = null): array
-    {
-        return array_filter(parent::getDirtyAttributes($names), function ($name): bool {
-            $new = $this->getAttribute($name);
-            $old = $this->getOldAttribute($name);
-
-            return !$new instanceof \DateTime
-                || !$old instanceof \DateTime
-                || $new->getTimestamp() !== $old->getTimestamp();
-        }, ARRAY_FILTER_USE_KEY);
-    }
-
-    /**
-     * Extends the default functionality by setting $identical to `false` for DateTime objects, which unfortunately
-     * cannot be compared by checking identical values using `===` as it always returns `true` even if the date was not
-     * changed.
-     */
-    #[Override]
-    public function isAttributeChanged($name, $identical = true): bool
-    {
-        if ($this->getAttribute($name) instanceof \DateTime) {
-            $identical = false;
-        }
-
-        return parent::isAttributeChanged($name, $identical);
     }
 
     /**

@@ -6,8 +6,8 @@ namespace Hirtz\Skeleton\Tests\Behaviors;
 
 use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Test\TestCase;
-use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\datetime\DateTimeValidator;
+use Hirtz\Skeleton\Db\DateTime;
+use Hirtz\Skeleton\Validators\DateTimeValidator;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;

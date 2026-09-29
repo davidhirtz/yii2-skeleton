@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
-use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\datetime\DateTimeBehavior;
+use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
@@ -56,15 +55,6 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
                 ['type'],
                 'required',
             ],
-        ];
-    }
-
-    #[Override]
-    public function behaviors(): array
-    {
-        return [
-            ...parent::behaviors(),
-            'DateTimeBehavior' => DateTimeBehavior::class,
         ];
     }
 

@@ -17,7 +17,6 @@
     "ext-openssl": "*",
     "ext-simplexml": "*",
     "ext-xmlwriter": "*",
-    "davidhirtz/yii2-datetime-behavior": "^1.1",
     "guzzlehttp/guzzle": "^7.9",
     "jfcherng/php-diff": "^6.9",
     "mikehaertl/php-shellcommand": "^1.7",

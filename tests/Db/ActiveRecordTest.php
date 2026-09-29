@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Db;
 
-use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\datetime\DateTimeBehavior;
+use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
@@ -157,9 +156,9 @@ class ActiveRecordTest extends TestCase
     }
 
     /**
-     * Tests overriding the identical checks for date attributes.
+     * The cast hands back the old instance for a date that writes what the record holds, microseconds included.
      */
-    public function testGetDirtyAttributes(): void
+    public function testAnEqualDateIsNotChanged(): void
     {
         $model = new TestActiveRecord();
         $model->name = 'Test';
@@ -167,10 +166,16 @@ class ActiveRecordTest extends TestCase
         $model->insert();
 
         $model = TestActiveRecord::find()->one();
-        $model->updated_at = (new DateTime())->setTimestamp($model->updated_at->getTimestamp());
+        self::assertNotNull($model);
 
-        self::assertCount(0, $model->getDirtyAttributes());
-        self::assertFalse($model->isAttributeChanged('updated_at'));
+        $updatedAt = $model->updated_at;
+        self::assertNotNull($updatedAt);
+
+        $model->updated_at = $updatedAt->modify('+1 microsecond');
+        self::assertTrue($model->validate());
+
+        self::assertSame($updatedAt, $model->updated_at);
+        self::assertSame([], $model->getDirtyAttributes());
         self::assertFalse($model->hasChangedAttributes(['name', 'updated_at']));
 
         $model->name = 'New Test';
@@ -243,15 +248,6 @@ class TestActiveRecord extends ActiveRecord
     use UpdatedByUserTrait;
 
     public bool $isConfigured = false;
-
-    #[Override]
-    public function behaviors(): array
-    {
-        return [
-            ...parent::behaviors(),
-            'DateTimeBehavior' => DateTimeBehavior::class,
-        ];
-    }
 
     #[Override]
     public function rules(): array

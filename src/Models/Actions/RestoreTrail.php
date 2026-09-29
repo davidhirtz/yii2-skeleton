@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Actions;
 
-use davidhirtz\yii2\datetime\DateTime;
+use Hirtz\Skeleton\Db\DateTime;
 use DateTimeZone;
 use Exception;
 use Hirtz\Skeleton\Db\ActiveRecord;

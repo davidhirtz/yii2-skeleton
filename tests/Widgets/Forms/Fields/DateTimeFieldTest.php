@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Widgets\Forms\Fields;
 
-use davidhirtz\yii2\datetime\DateTime;
+use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Widgets\Forms\Fields\DateTimeField;
 

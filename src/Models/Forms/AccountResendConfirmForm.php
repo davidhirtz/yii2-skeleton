@@ -10,7 +10,7 @@ use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Web\Application;
 use Override;
 use Yii;
-use davidhirtz\yii2\datetime\DateTime;
+use Hirtz\Skeleton\Db\DateTime;
 use yii\base\Model;
 
 class AccountResendConfirmForm extends Model

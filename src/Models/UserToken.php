@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
-use davidhirtz\yii2\datetime\DateTime;
-use davidhirtz\yii2\datetime\DateTimeBehavior;
+use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\SecretKey;
@@ -56,7 +55,6 @@ class UserToken extends ActiveRecord
     {
         return [
             ...parent::behaviors(),
-            'DateTimeBehavior' => DateTimeBehavior::class,
             'TimestampBehavior' => [
                 'class' => TimestampBehavior::class,
                 'updatedAtAttribute' => false,
