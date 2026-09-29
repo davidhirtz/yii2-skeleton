@@ -360,6 +360,12 @@ does not autoload every model. `Modules\Admin\ModuleInterface::aside(Nav)` and `
 `getNavBarItems()` / `getDashboardPanels()` pairs. `Widgets\AdminLink` (from `yii2-cms`) renders the frontend overlay for
 any `AdminModelInterface`; its class is `admin` alone.
 
+A widget's options are **protected**, set through the setter of the same name and read through a getter where one
+exists (`getModel()`, `getProvider()`, `getProperty()`, `getAttribute()`): `$form->model` becomes `$form->getModel()`,
+`$button->attributes['x'] = …` becomes `$button->attribute('x', …)`. A container definition or a `make([...])` config
+keeps its array keys, each applied through its setter (an array spread into a variadic one); a key with neither a
+public property nor a public method throws `InvalidConfigException`.
+
 ### Sitemaps
 
 A sitemap is a `Sitemap\SitemapInterface` object listed under `components.sitemap.sitemaps`; the model carries nothing.
