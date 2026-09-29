@@ -14,7 +14,7 @@ use Override;
  */
 class TypeSelectField extends SelectField
 {
-    public ?string $property = 'type';
+    protected ?string $property = 'type';
 
     #[Override]
     protected function configure(): void

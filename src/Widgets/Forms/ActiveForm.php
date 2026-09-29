@@ -45,7 +45,7 @@ class ActiveForm extends Widget
     /**
      * @var array<int|string, mixed>|string|null
      */
-    public array|string|null $action = null;
+    protected array|string|null $action = null;
 
     public bool $hasStickyButtons = true;
 
@@ -101,6 +101,14 @@ class ActiveForm extends Widget
     {
         $this->action = $action ? Url::to($action) : $action;
         return $this;
+    }
+
+    /**
+     * @return array<int|string, mixed>|string|null
+     */
+    public function getAction(): array|string|null
+    {
+        return $this->action;
     }
 
     /**

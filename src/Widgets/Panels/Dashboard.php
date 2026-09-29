@@ -48,7 +48,7 @@ class Dashboard extends Widget
     #[Override]
     protected function renderContent(): Stringable
     {
-        usort($this->items, fn (DashboardItem $a, DashboardItem $b) => $a->order <=> $b->order);
+        usort($this->items, fn (DashboardItem $a, DashboardItem $b) => $a->getOrder() <=> $b->getOrder());
 
         return Ul::make()
             ->class('dashboard')

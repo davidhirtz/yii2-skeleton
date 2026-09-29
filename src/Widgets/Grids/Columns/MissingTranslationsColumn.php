@@ -30,7 +30,7 @@ class MissingTranslationsColumn extends Column
 
     protected function hasMissingTranslations(): bool
     {
-        foreach ($this->grid->provider->getModels() as $model) {
+        foreach ($this->grid->getProvider()->getModels() as $model) {
             if ($model instanceof I18nAttributeInterface && $model->getMissingTranslationLanguages()) {
                 return true;
             }

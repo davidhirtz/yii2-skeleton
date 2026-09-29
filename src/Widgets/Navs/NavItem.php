@@ -127,7 +127,7 @@ class NavItem extends Widget
             $link->addContent($badge);
         }
 
-        $this->active ??= $this->hasActiveRoute() ?? Application::current()->getRequest()->getUrl() === $link->attributes['href'];
+        $this->active ??= $this->hasActiveRoute() ?? Application::current()->getRequest()->getUrl() === $link->getAttribute('href');
 
         if ($this->active) {
             $link->addClass('active');

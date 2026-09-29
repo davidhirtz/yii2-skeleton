@@ -12,7 +12,7 @@ trait TagAttributesTrait
     /**
      * @var array<string, mixed>
      */
-    public array $attributes = [];
+    protected array $attributes = [];
 
     /**
      * @param array<string, mixed> $attributes
@@ -21,6 +21,11 @@ trait TagAttributesTrait
     {
         $this->attributes = [...$this->attributes, ...$attributes];
         return $this;
+    }
+
+    final public function getAttribute(string $name): mixed
+    {
+        return $this->attributes[$name] ?? null;
     }
 
     final public function attribute(string $name, mixed $value): static

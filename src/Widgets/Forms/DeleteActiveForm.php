@@ -21,7 +21,7 @@ class DeleteActiveForm extends ActiveForm
     /**
      * @var array<string, mixed>
      */
-    public array $inputAttributes = ['autocomplete' => 'off'];
+    protected array $inputAttributes = ['autocomplete' => 'off'];
     public bool $hasStickyButtons = false;
 
     protected ?string $message = null;

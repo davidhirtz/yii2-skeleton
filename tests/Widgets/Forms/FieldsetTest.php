@@ -220,7 +220,7 @@ class FieldsetTest extends TestCase
                 InputField::make()
                     ->property('name')
                     ->model($model)
-                    ->prepare(fn (InputField $field) => $field->value($field->language)),
+                    ->prepare(fn (InputField $field) => $field->value($field->getLanguage())),
             ]);
 
         $expected = '<div class="form-group form-row" data-language="en-US" data-id="testactiverecord-name"><div class="form-label"><label class="label" for="testactiverecord-name">Name</label></div><div class="form-content"><input type="text" id="testactiverecord-name" class="input" name="TestActiveRecord[name]" value="en-US" maxlength="255" required></div></div>';

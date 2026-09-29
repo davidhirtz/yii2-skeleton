@@ -21,7 +21,7 @@ class TwoFactorAuthenticationLoginActiveForm extends ActiveForm
     /**
      * @var array<string, mixed>
      */
-    public array $attributes = ['class' => 'form-plain'];
+    protected array $attributes = ['class' => 'form-plain'];
     /**
      * @var list<string>
      */

@@ -46,7 +46,7 @@ abstract class Field extends Widget
 
     protected string $layout = '{input}{error}{hint}';
     protected bool $showRow = true;
-    public string $language;
+    protected string $language;
 
     protected ?string $error = null;
     protected ?string $hint = null;
@@ -77,6 +77,11 @@ abstract class Field extends Widget
     {
         $this->language = $language;
         return $this;
+    }
+
+    public function getLanguage(): string
+    {
+        return $this->language;
     }
 
     /**
@@ -271,7 +276,7 @@ abstract class Field extends Widget
                 return;
             }
 
-            $field->attributes['hx-post'] ??= $field->form->action ?: '';
+            $field->attributes['hx-post'] ??= $field->form->getAction() ?: '';
             $field->attributes['hx-trigger'] ??= 'change';
             $field->attributes['hx-include'] ??= 'closest form';
             $field->attributes['hx-select'] ??= '#wrap';

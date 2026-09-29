@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Changed every widget option with a setter to protected (`$attributes`, `$model`, `$provider`, `$property`, `$rowAttributes`, `$order`, `ActiveForm::$action`, `GridSearch::$paramName`, …): configure through the setter or a container definition, read through the new `getModel()`, `getProvider()`, `getProperty()`, `getOrder()`, `getAttribute()`, `Field::getLanguage()`, `ActiveForm::getAction()` and `GridSearch::getParamName()`; `addRowAttributes()` merges
 - Changed `Widget`, `Grids\Columns\Column` and `Grids\GridSearch` to implement `yii\base\Configurable`: a container definition or config sets a public property or calls the public method of the same name, so protected options with a fluent setter are configurable; anything else throws `InvalidConfigException`
 - Added `Modules\Debug\Module::$ignoredPaths`, request paths the debugger does not record (Chrome's DevTools probe by default)
 

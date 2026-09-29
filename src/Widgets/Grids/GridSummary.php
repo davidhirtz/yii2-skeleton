@@ -75,7 +75,7 @@ class GridSummary extends Widget
         $alert = Alert::make()
             ->content($this->getAlertContent());
 
-        if ($this->grid->provider->getTotalCount()) {
+        if ($this->grid->getProvider()->getTotalCount()) {
             $alert->info();
         } else {
             $alert->warning();
@@ -107,14 +107,14 @@ class GridSummary extends Widget
 
     protected function getAlertContent(): string
     {
-        $pagination = $this->grid->provider->getPagination();
-        $count = $this->grid->provider->getCount();
-        $totalCount = $this->grid->provider->getTotalCount();
+        $pagination = $this->grid->getProvider()->getPagination();
+        $count = $this->grid->getProvider()->getCount();
+        $totalCount = $this->grid->getProvider()->getTotalCount();
 
         // The summary is markup, and the search is whatever the URL says: `?q=<img onerror=…>` ran in the admin.
         $params = [
             'search' => Html::encode($this->grid->search->getValue()),
-            'totalCount' => $this->grid->provider->getTotalCount(),
+            'totalCount' => $this->grid->getProvider()->getTotalCount(),
         ];
 
         if ($pagination !== false) {

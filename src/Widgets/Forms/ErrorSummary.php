@@ -18,8 +18,8 @@ class ErrorSummary extends Widget
 {
     use TitleTrait;
 
-    public ?string $icon = 'exclamation-triangle';
-    public bool $showAllErrors = true;
+    protected ?string $icon = 'exclamation-triangle';
+    protected bool $showAllErrors = true;
 
     /**
      * @var list<string>|null

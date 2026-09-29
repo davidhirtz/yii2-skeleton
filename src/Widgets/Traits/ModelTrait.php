@@ -14,7 +14,7 @@ trait ModelTrait
     /**
      * @var T
      */
-    public ?Model $model = null;
+    protected ?Model $model = null;
 
     /**
      * @param T $model
@@ -23,5 +23,13 @@ trait ModelTrait
     {
         $this->model = $model;
         return $this;
+    }
+
+    /**
+     * @return T
+     */
+    public function getModel(): ?Model
+    {
+        return $this->model;
     }
 }

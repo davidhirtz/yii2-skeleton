@@ -13,7 +13,7 @@ trait FormWidgetTrait
     public function form(?ActiveForm $form): static
     {
         $this->form = $form;
-        $this->model ??= $form?->model;
+        $this->model ??= $form?->getModel();
 
         return $this;
     }

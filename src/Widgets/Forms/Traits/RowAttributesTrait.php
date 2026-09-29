@@ -9,7 +9,16 @@ trait RowAttributesTrait
     /**
      * @var array<string, mixed>
      */
-    public array $rowAttributes = [];
+    protected array $rowAttributes = [];
+
+    /**
+     * @param array<string, mixed> $attributes
+     */
+    public function addRowAttributes(array $attributes): static
+    {
+        $this->rowAttributes = [...$this->rowAttributes, ...$attributes];
+        return $this;
+    }
 
     /**
      * @param array<string, mixed> $attributes

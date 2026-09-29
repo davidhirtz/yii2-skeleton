@@ -84,11 +84,11 @@ class DataColumn extends Column
     protected function getSort(): A|Div|null
     {
         $title = $this->title
-            ?? current($this->grid->provider->getModels())?->getAttributeLabel($this->property)
+            ?? current($this->grid->getProvider()->getModels())?->getAttributeLabel($this->property)
             ?: Inflector::camel2words($this->property);
 
 
-        $sort = $this->enableSorting ? $this->grid->provider->getSort() ?: null : null;
+        $sort = $this->enableSorting ? $this->grid->getProvider()->getSort() ?: null : null;
 
         if (!$sort?->hasAttribute($this->property)) {
             return Div::make()->text($title);

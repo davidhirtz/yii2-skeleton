@@ -90,7 +90,9 @@ class Dropdown extends Widget
     #[Override]
     protected function configure(): void
     {
-        $this->button->attributes['data-autofocus'] ??= $this->autofocus;
+        if ($this->button->getAttribute('data-autofocus') === null) {
+            $this->button->attribute('data-autofocus', $this->autofocus);
+        }
 
         parent::configure();
     }
@@ -112,7 +114,7 @@ class Dropdown extends Widget
                 ->class('dropdown-list')
                 ->content(...$content)));
 
-        $this->button->attributes['popovertarget'] = $popover->getId();
+        $this->button->attribute('popovertarget', $popover->getId());
 
         return Div::make()
             ->attributes($this->attributes)

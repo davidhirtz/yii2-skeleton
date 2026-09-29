@@ -16,7 +16,7 @@ class GridSearch implements Configurable
     use ContainerConfigurationTrait;
     use UrlTrait;
 
-    public string $paramName = 'q';
+    protected string $paramName = 'q';
     protected ?string $value = null;
 
     /**
@@ -40,6 +40,11 @@ class GridSearch implements Configurable
         $this->value = null;
 
         return $this;
+    }
+
+    public function getParamName(): string
+    {
+        return $this->paramName;
     }
 
     public function getUrl(): ?string

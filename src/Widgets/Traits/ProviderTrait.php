@@ -14,7 +14,7 @@ trait ProviderTrait
     /**
      * @var TProvider
      */
-    public ?DataProviderInterface $provider = null;
+    protected ?DataProviderInterface $provider = null;
 
     /**
      * @param TProvider $provider
@@ -23,5 +23,13 @@ trait ProviderTrait
     {
         $this->provider = $provider;
         return $this;
+    }
+
+    /**
+     * @return TProvider
+     */
+    public function getProvider(): ?DataProviderInterface
+    {
+        return $this->provider;
     }
 }

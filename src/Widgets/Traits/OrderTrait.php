@@ -6,11 +6,16 @@ namespace Hirtz\Skeleton\Widgets\Traits;
 
 trait OrderTrait
 {
-    public ?int $order = null;
+    protected ?int $order = null;
 
     public function order(?int $order): static
     {
         $this->order = $order;
         return $this;
+    }
+
+    public function getOrder(): ?int
+    {
+        return $this->order;
     }
 }

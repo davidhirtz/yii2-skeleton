@@ -90,28 +90,30 @@ class Fieldset extends Widget
                 continue;
             }
 
+            $attribute = $field->getProperty();
+
             // Before the i18n clones, which carry the language suffix a type's hidden field list does not name.
-            if ($field->property && $this->isAttributeHidden($field->property)) {
+            if ($attribute && $this->isAttributeHidden($attribute)) {
                 continue;
             }
 
             $field->form($this->form);
 
-            if (!$this->model instanceof I18nAttributeInterface || !$field->property) {
+            if (!$this->model instanceof I18nAttributeInterface || !$attribute) {
                 $rows[] = $field;
                 continue;
             }
 
             // Only a translated attribute is a language's row: every other one comes back once, in the app's language.
-            $isTranslated = $this->model->isI18nAttribute($field->property);
+            $isTranslated = $this->model->isI18nAttribute($attribute);
 
-            foreach ($this->model->getI18nAttributeNames($field->property) as $language => $property) {
+            foreach ($this->model->getI18nAttributeNames($attribute) as $language => $property) {
                 $clone = (clone $field)
                     ->language($language)
                     ->property($property);
 
                 if ($isTranslated) {
-                    $clone->rowAttributes['data-language'] = $language;
+                    $clone->addRowAttributes(['data-language' => $language]);
                 }
 
                 $rows[] = $clone;
@@ -123,7 +125,7 @@ class Fieldset extends Widget
             // model accepts its attribute has to be answered before that, since configuring reads the attribute.
             // A disabled field is unsafe by definition and still renders.
             if ($field instanceof Field && !$field->isSafe() && !$field->isDisabled()) {
-                Yii::debug("Skipping field for unsafe attribute '$field->property'");
+                Yii::debug("Skipping field for unsafe attribute '{$field->getProperty()}'");
                 unset($rows[$key]);
             }
         }

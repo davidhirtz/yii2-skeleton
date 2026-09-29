@@ -80,7 +80,7 @@ class TinyMceField extends Field
      * @var array{class: class-string<HtmlValidator>}|class-string<HtmlValidator>|HtmlValidator|null containing the validator configuration. If set to false, no
      * validation will be performed.
      */
-    public array|HtmlValidator|string|null $validator = HtmlValidator::class;
+    protected array|HtmlValidator|string|null $validator = HtmlValidator::class;
 
     private ?HtmlValidator $htmlValidator = null;
 

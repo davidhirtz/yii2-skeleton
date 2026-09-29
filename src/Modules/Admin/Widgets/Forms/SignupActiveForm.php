@@ -31,7 +31,7 @@ class SignupActiveForm extends ActiveForm
     /**
      * @var array<string, mixed>
      */
-    public array $attributes = ['class' => 'form-plain'];
+    protected array $attributes = ['class' => 'form-plain'];
     public bool $hasStickyButtons = false;
     protected string $layout = "{errors}{rows}{buttons}";
     /**
