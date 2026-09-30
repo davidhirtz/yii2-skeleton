@@ -59,6 +59,10 @@ class UrlManager extends \yii\web\UrlManager
     #[Override]
     public function init(): void
     {
+        if ($this->configuredHostInfo === null && ($hostInfo = Yii::$app->params['hostInfo'] ?? null)) {
+            $this->setHostInfo($hostInfo);
+        }
+
         $this->isInitialized = true;
 
         if (!$this->enablePrettyUrl) {

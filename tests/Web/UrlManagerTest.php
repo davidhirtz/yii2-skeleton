@@ -249,6 +249,30 @@ class UrlManagerTest extends TestCase
         self::assertEquals('example.de', $manager->getBaseUrl());
     }
 
+    public function testHostInfoDefaultsToTheParam(): void
+    {
+        Yii::$app->params['hostInfo'] = 'https://www.example.com/';
+        $manager = $this->getUrlManager();
+
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+
+        $manager->parseRequest($this->getRequest([
+            'hostInfo' => 'https://www.attacker.com',
+            'url' => '/',
+        ]));
+
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+        self::assertFalse($manager->isHostInfoFromRequest());
+    }
+
+    public function testConfiguredHostInfoWinsOverTheParam(): void
+    {
+        Yii::$app->params['hostInfo'] = 'https://www.example.com';
+        $manager = $this->getUrlManager(['hostInfo' => 'https://www.example.org']);
+
+        self::assertEquals('https://www.example.org', $manager->getHostInfo());
+    }
+
     public function testImmutableRuleParams(): void
     {
         $manager = $this->getUrlManager([
