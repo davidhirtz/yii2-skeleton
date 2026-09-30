@@ -76,9 +76,6 @@ class SitemapController extends Controller
         return parent::beforeAction($action);
     }
 
-    /**
-     * @throws NotFoundHttpException
-     */
     public function actionIndex(?string $key = null, int $offset = 0): string
     {
         $sitemap = $this->getSitemap();

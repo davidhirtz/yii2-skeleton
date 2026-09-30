@@ -33,7 +33,6 @@ class RelationValidator extends Validator
      *
      * @param ActiveRecord $model
      * @param string $attribute
-     * @throws InvalidConfigException
      */
     #[\Override]
     public function validateAttribute($model, $attribute): void
