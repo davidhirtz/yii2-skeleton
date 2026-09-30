@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
+use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Panels\InfoList;
 use Override;
+use Stringable;
 use Yii;
 
 class ServerInfo extends InfoList
@@ -69,12 +71,52 @@ class ServerInfo extends InfoList
         $this->addRow(
             Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS'),
             $this->getValue(
-                $trustedHosts ? implode(' · ', $trustedHosts) : Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_NONE'),
+                $trustedHosts ? $this->getTrustedHostsValue($trustedHosts) : Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_NONE'),
                 Application::current()->getRequest()->getIsSecureConnection()
                     ? Yii::t('skeleton', 'SYSTEM_CONNECTION_SECURE')
                     : Yii::t('skeleton', 'SYSTEM_CONNECTION_INSECURE'),
             ),
         );
+    }
+
+    /**
+     * `Request::$trustedHosts` lists a host either as a value (trusting every secure header) or as a key holding the
+     * headers trusted from it, the form to use behind a proxy that passes a client's own headers through. Hosts are
+     * grouped by the headers they are trusted for; the non-breaking space keeps a separator off the start of a line.
+     *
+     * @param array<int|string, mixed> $trustedHosts
+     */
+    protected function getTrustedHostsValue(array $trustedHosts): string|Stringable
+    {
+        $groups = [];
+
+        foreach ($trustedHosts as $host => $headers) {
+            if (!is_array($headers)) {
+                $host = $headers;
+                $headers = null;
+            }
+
+            $headers = $headers !== null ? implode(', ', array_map(strval(...), $headers)) : '';
+            $groups[$headers][] = (string)$host;
+        }
+
+        if (array_keys($groups) === ['']) {
+            return implode("\u{00A0}· ", $groups['']);
+        }
+
+        $content = [];
+
+        foreach ($groups as $headers => $hosts) {
+            $content[] = Div::make()->text(implode("\u{00A0}· ", $hosts));
+
+            if ($headers !== '') {
+                $content[] = Div::make()
+                    ->class('form-hint')
+                    ->text(Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_HEADERS', ['headers' => $headers]));
+            }
+        }
+
+        return Div::make()->content(...$content);
     }
 
     protected function findForwardedHeader(): ?string

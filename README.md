@@ -90,7 +90,8 @@ and `loginAttemptDuration` (900 s) counted per email and IP in the cache, `cooki
 derives from the request), `disableRbacForGuests`, `disableRbacForOwner`. The identity cookie is `_auth`, the session cookie `_session`.
 
 Other components the skeleton configures: `request` (`Web\Request`, `environments` maps host patterns to `local` and `stage`,
-`trustedHosts` must be set behind a proxy), `urlManager` (`Web\UrlManager`: `i18nUrl`, `defaultLanguage`, `draftSubdomain`,
+`trustedHosts` must be set behind a proxy; behind a CDN, key each range by the headers it sets,
+`['173.245.48.0/20' => ['X-Forwarded-For', 'X-Forwarded-Proto']]`), `urlManager` (`Web\UrlManager`: `i18nUrl`, `defaultLanguage`, `draftSubdomain`,
 `redirectMap`), `i18n` (`I18n\I18N::$languages`), `db` (`Db\Connection`: `backupOnMigration`, `backupPath`, `maxBackups`),
 `session` (`Web\DbSession`), `search` (`Search\Search::$models`, `$driver`), `sitemap` (`Sitemap\Sitemap::$sitemaps`, `urls`,
 `views`, `useSitemapIndex`), `upload` (`Upload\Upload`: `path`, `maxSize`, `enableStreamUploads`, `uploadLimit`),

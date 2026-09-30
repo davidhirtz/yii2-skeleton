@@ -294,6 +294,7 @@ return [
     'SYSTEM_SUCCESS_REFRESHED_SCHEMA' => 'O cache do esquema foi atualizado.',
     'SYSTEM_TIME_ZONE' => 'Fuso horário',
     'SYSTEM_TRUSTED_HOSTS' => 'Anfitriões fidedignos',
+    'SYSTEM_TRUSTED_HOSTS_HEADERS' => 'Apenas {headers}',
     'SYSTEM_TRUSTED_HOSTS_HINT' => 'Este pedido passou por um proxy ({header}), mas não há nenhum anfitrião fidedigno configurado — os cabeçalhos reencaminhados são ignorados, pelo que a flag secure dos cookies e o HSTS são omitidos.',
     'SYSTEM_TRUSTED_HOSTS_MISSING' => 'Não configurado',
     'SYSTEM_TRUSTED_HOSTS_NONE' => 'Nenhum',

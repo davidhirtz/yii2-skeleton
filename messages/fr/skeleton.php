@@ -294,6 +294,7 @@ return [
     'SYSTEM_SUCCESS_REFRESHED_SCHEMA' => 'Le cache du schéma a été actualisé.',
     'SYSTEM_TIME_ZONE' => 'Fuseau horaire',
     'SYSTEM_TRUSTED_HOSTS' => 'Hôtes de confiance',
+    'SYSTEM_TRUSTED_HOSTS_HEADERS' => 'Uniquement {headers}',
     'SYSTEM_TRUSTED_HOSTS_HINT' => 'Cette requête est passée par un proxy ({header}), mais aucun hôte de confiance n’est configuré — les en-têtes transmis sont ignorés, donc l’indicateur secure des cookies et HSTS sont désactivés.',
     'SYSTEM_TRUSTED_HOSTS_MISSING' => 'Non configuré',
     'SYSTEM_TRUSTED_HOSTS_NONE' => 'Aucun',

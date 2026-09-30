@@ -294,6 +294,7 @@ return [
     'SYSTEM_SUCCESS_REFRESHED_SCHEMA' => 'Der Schema-Cache wurde aktualisiert.',
     'SYSTEM_TIME_ZONE' => 'Zeitzone',
     'SYSTEM_TRUSTED_HOSTS' => 'Vertrauenswürdige Hosts',
+    'SYSTEM_TRUSTED_HOSTS_HEADERS' => 'Nur {headers}',
     'SYSTEM_TRUSTED_HOSTS_HINT' => 'Diese Anfrage kam über einen Proxy ({header}), es ist aber kein vertrauenswürdiger Host konfiguriert — die weitergeleiteten Header werden ignoriert, dadurch entfallen das Secure-Flag der Cookies und HSTS.',
     'SYSTEM_TRUSTED_HOSTS_MISSING' => 'Nicht konfiguriert',
     'SYSTEM_TRUSTED_HOSTS_NONE' => 'Keine',

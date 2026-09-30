@@ -101,6 +101,34 @@ class ServerInfoTest extends TestCase
         self::assertStringContainsString('10.0.0.0/8', $html);
     }
 
+    public function testTrustedHostsAreListedInTheListForm(): void
+    {
+        $this->getWebRequest()->trustedHosts = ['10.0.0.0/8', '192.168.0.0/16'];
+
+        $html = ServerInfo::make()->render();
+
+        self::assertStringContainsString("10.0.0.0/8\u{00A0}· 192.168.0.0/16", $html);
+        self::assertStringNotContainsString('Only', $html);
+    }
+
+    public function testTrustedHostsAreListedWithTheirHeadersInTheKeyedForm(): void
+    {
+        $this->getWebRequest()->trustedHosts = [
+            '173.245.48.0/20' => ['X-Forwarded-For', 'X-Forwarded-Proto'],
+            '2400:cb00::/32' => ['X-Forwarded-For', 'X-Forwarded-Proto'],
+            '10.0.0.0/8',
+            '127.0.0.1' => ['X-Forwarded-For'],
+        ];
+
+        $html = ServerInfo::make()->render();
+
+        self::assertStringNotContainsString('Array', $html);
+        self::assertStringContainsString("<div>173.245.48.0/20\u{00A0}· 2400:cb00::/32</div>"
+            . '<div class="form-hint">Only X-Forwarded-For, X-Forwarded-Proto</div>', $html);
+        self::assertStringContainsString('<div>10.0.0.0/8</div><div>127.0.0.1</div>'
+            . '<div class="form-hint">Only X-Forwarded-For</div>', $html);
+    }
+
     public function testAnUnproxiedRequestIsNotFlagged(): void
     {
         unset($_SERVER['HTTP_X_FORWARDED_FOR']);

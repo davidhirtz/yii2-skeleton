@@ -15,7 +15,9 @@ project (see *Data and schema*), and the bundle itself carries one baseline migr
   `provide`d by the skeleton and never served; the admin runs on htmx 4 without jQuery, Bootstrap or jQuery UI.
 - A deployment behind a proxy must set `components.request.trustedHosts` (see *Configuration*): the spoofable
   `Request::getRemoteIP()` override is gone, and without trusted hosts the client IP, the `secure` cookie flag and the
-  HSTS header all see a plain HTTP request from the proxy.
+  HSTS header all see a plain HTTP request from the proxy. Behind a CDN that passes a client's own headers through
+  (Cloudflare forwards `X-Forwarded-Host`), use the keyed form, trusting only what the proxy sets:
+  `['173.245.48.0/20' => ['X-Forwarded-For', 'X-Forwarded-Proto'], …]`.
 
 ## Renames
 

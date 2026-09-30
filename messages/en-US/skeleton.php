@@ -294,6 +294,7 @@ return [
     'SYSTEM_SUCCESS_REFRESHED_SCHEMA' => 'The schema cache was refreshed.',
     'SYSTEM_TIME_ZONE' => 'Time zone',
     'SYSTEM_TRUSTED_HOSTS' => 'Trusted hosts',
+    'SYSTEM_TRUSTED_HOSTS_HEADERS' => 'Only {headers}',
     'SYSTEM_TRUSTED_HOSTS_HINT' => 'This request arrived through a proxy ({header}), but no trusted host is configured — the forwarded headers are ignored, so the secure cookie flag and HSTS are skipped.',
     'SYSTEM_TRUSTED_HOSTS_MISSING' => 'Not configured',
     'SYSTEM_TRUSTED_HOSTS_NONE' => 'None',
