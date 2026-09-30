@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Models\Forms\UserForm;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Web\Traits\StatusControllerTrait;
 use Override;
@@ -114,11 +115,20 @@ class UserController extends Controller
     {
         $user = $this->findUser($id);
         $form = UserForm::create(['user' => $user]);
+        $colorScheme = $user->getColorScheme();
 
         if ($this->webuser->can(User::AUTH_USER, ['user' => $user])
             && $form->load($this->request->post())
             && $form->save()) {
             $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED'));
+
+            // An administrator editing their own record changes the document's scheme, see `AccountController`.
+            if ($user->id === $this->webuser->getIdentity()?->id
+                && $colorScheme !== $user->getColorScheme()
+                && $this->request->isHtmxRequest()) {
+                return Application::current()->getResponse()->setHtmxReload();
+            }
+
             return $this->refresh();
         }
 

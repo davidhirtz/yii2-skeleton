@@ -78,6 +78,43 @@ class ColorSchemeTest extends TestCase
         self::assertResponseNotHasHeader('hx-refresh');
     }
 
+    public function testAnAdministratorSetsTheSchemeOfAnotherUser(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+
+        $this->login('owner');
+        $this->open("admin/user/update?id={$user->id}");
+
+        $this->submit(
+            selector: '#user-form',
+            values: $this->prefixFormValues($user, [
+                'color_scheme' => User::COLOR_SCHEME_DARK,
+            ]),
+            server: ['HTTP_HX_REQUEST' => 'true'],
+        );
+
+        self::assertResponseNotHasHeader('hx-refresh');
+        self::assertSame(User::COLOR_SCHEME_DARK, User::findOne($user->id)?->color_scheme);
+    }
+
+    public function testTheUserFormRefreshesTheDocumentWhenAnAdministratorChangedTheirOwnScheme(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+
+        $this->login('owner');
+        $this->open("admin/user/update?id={$user->id}");
+
+        $this->submit(
+            selector: '#user-form',
+            values: $this->prefixFormValues($user, [
+                'color_scheme' => User::COLOR_SCHEME_DARK,
+            ]),
+            server: ['HTTP_HX_REQUEST' => 'true'],
+        );
+
+        self::assertResponseHeaderSame('hx-refresh', 'true');
+    }
+
     private function login(string $fixtureKey): void
     {
         $this->open('admin/account/login');

@@ -55,6 +55,7 @@ class UserActiveForm extends ActiveForm
             [
                 $this->getLanguageField(),
                 $this->getTimezoneField(),
+                $this->getColorSchemeField(),
             ],
             [
                 ...$this->getUserCustomAttributeFields(),
