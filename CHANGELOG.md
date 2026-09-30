@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added `UrlCustomAttribute::relative()`: the attribute also accepts a path, a query or a fragment (`/about`, `?page=2`, `#team`)
+
 ## 3.8.0 (September 30, 2026)
 
 - Added `Base\ConfigBootstrapInterface`: a `Bootstrap` returns its defaults from `getDefaultConfig()`, merged between the core configuration

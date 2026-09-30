@@ -62,9 +62,35 @@ class UrlCustomAttributeTest extends TestCase
         self::assertStringContainsString('type="url"', (string)$field->render());
     }
 
-    private function validate(string $url): bool
+    public function testARelativeUrlAcceptsAPathAQueryAndAFragment(): void
     {
-        $record = UrlRecord::create();
+        self::assertTrue($this->validate('/über-uns', RelativeUrlRecord::class));
+        self::assertTrue($this->validate('/about?page=2#team', RelativeUrlRecord::class));
+        self::assertTrue($this->validate('?page=2', RelativeUrlRecord::class));
+        self::assertTrue($this->validate('#team', RelativeUrlRecord::class));
+        self::assertTrue($this->validate('https://example.com/about', RelativeUrlRecord::class));
+
+        self::assertFalse($this->validate('/about us', RelativeUrlRecord::class));
+        self::assertFalse($this->validate('//example.com', RelativeUrlRecord::class));
+        self::assertFalse($this->validate('example.com', RelativeUrlRecord::class));
+
+        self::assertFalse($this->validate('/about'));
+    }
+
+    public function testARelativeUrlFieldIsATextInput(): void
+    {
+        $record = RelativeUrlRecord::create();
+        $field = $record->getCustomAttributeDefinitions()['link']->createField($record);
+
+        self::assertStringNotContainsString('type="url"', (string)$field->render());
+    }
+
+    /**
+     * @param class-string<UrlRecord> $class
+     */
+    private function validate(string $url, string $class = UrlRecord::class): bool
+    {
+        $record = $class::create();
         $record->link = $url;
 
         if ($record->validate(['link'])) {
@@ -94,5 +120,14 @@ class UrlRecord extends ActiveRecord implements CustomAttributeInterface
     public static function tableName(): string
     {
         return 'url_custom_attribute_test';
+    }
+}
+
+class RelativeUrlRecord extends UrlRecord
+{
+    #[Override]
+    public function getCustomAttributes(): array
+    {
+        return [UrlCustomAttribute::make('link')->relative()];
     }
 }
