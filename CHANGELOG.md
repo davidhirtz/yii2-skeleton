@@ -1,4 +1,4 @@
-## Unreleased
+## 3.8.0 (September 30, 2026)
 
 - Added `Base\ConfigBootstrapInterface`: a `Bootstrap` returns its defaults from `getDefaultConfig()`, merged between the core configuration
 - Added `params.hostInfo`: `Web\UrlManager` pins it when its configuration sets no `hostInfo`, so an installation names its URL, the console's included, where the rest of its server-specific values live
