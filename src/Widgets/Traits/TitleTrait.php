@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Traits;
 
-use Hirtz\Skeleton\Helpers\Html;
 use Stringable;
 
 trait TitleTrait
@@ -13,7 +12,7 @@ trait TitleTrait
 
     public function title(string|Stringable|false|null $title): static
     {
-        $this->title = is_string($title) ? Html::encode($title) : $title;
+        $this->title = $title;
         return $this;
     }
 }

@@ -129,7 +129,7 @@ class ErrorSummary extends Widget
         return $this->title
             ? Div::make()
                 ->class('alert-heading')
-                ->content($this->title)
+                ->text($this->title)
             : null;
     }
 }

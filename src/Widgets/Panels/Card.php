@@ -45,7 +45,7 @@ class Card extends Widget
                 $title->addContent(Button::make()
                     ->link()
                     ->attribute('data-collapse', '#' . $this->getId())
-                    ->content($this->title));
+                    ->text($this->title));
 
                 $title->addContent(Button::make()
                     ->attribute('aria-label', Yii::t('skeleton', 'CARD_TOGGLE'))

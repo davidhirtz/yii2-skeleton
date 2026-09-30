@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 use Closure;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Base\Traits\EvaluateClosureTrait;
+use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Html\Th;
 use Hirtz\Skeleton\Web\Application;
@@ -156,6 +157,10 @@ class Column implements Configurable
 
     protected function getHeader(): string|Stringable
     {
-        return $this->title ?: $this->emptyCell;
+        if (!$this->title) {
+            return $this->emptyCell;
+        }
+
+        return is_string($this->title) ? Html::encode($this->title) : $this->title;
     }
 }
