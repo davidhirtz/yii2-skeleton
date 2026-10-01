@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Models\Search;
 use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Models\Traits\SearchableTrait;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Search\Search as SearchComponent;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
 use Yii;
@@ -143,6 +144,29 @@ class SearchBehaviorTest extends TestCase
         self::assertEmpty($this->findDocuments($record));
     }
 
+    public function testASubclassIsStoredUnderTheRegisteredClass(): void
+    {
+        SearchComponent::getComponent()->models = [SearchableActiveRecord::class];
+
+        $record = SearchableSubclassActiveRecord::create();
+        $record->name = 'Subclass';
+        self::assertTrue($record->insert());
+
+        $rows = fn (): array => Search::find()
+            ->select('model_class')
+            ->where(['model_id' => $record->id])
+            ->column();
+
+        self::assertSame([SearchableActiveRecord::class], array_values(array_unique($rows())));
+
+        $record->name = 'Renamed';
+        $record->update();
+        self::assertSame([SearchableActiveRecord::class], array_values(array_unique($rows())));
+
+        $record->delete();
+        self::assertSame([], $rows());
+    }
+
     private function createRecord(): SearchableActiveRecord
     {
         $record = SearchableActiveRecord::create();
@@ -231,4 +255,8 @@ class SearchableActiveRecord extends ActiveRecord implements SearchableInterface
     {
         return '{{%test_searchable}}';
     }
+}
+
+class SearchableSubclassActiveRecord extends SearchableActiveRecord
+{
 }

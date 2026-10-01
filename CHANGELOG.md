@@ -1,5 +1,8 @@
 ## Unreleased
 
+- Added `Search\Search::getRegisteredClass()`; `SearchBehavior` and `getSearchDocuments()` store a container subclass
+  or a per-type class under the registered class `search/rebuild` uses; `search/clear` followed by `search/rebuild`
+  drops the rows an installation holds under a subclass
 - Changed the baseline's RBAC timestamps (`auth_rule`, `auth_item`, `auth_assignment`) to `bigint` for fresh installations
 - Added `ext-fileinfo` to the requirements; without it an upload's MIME type was silently `null`
 - Added `Models\Actions\ReorderActiveRecords::afterCommit()`, which runs once the positions are committed

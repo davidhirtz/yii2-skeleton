@@ -89,6 +89,27 @@ class Search extends Component
         return null;
     }
 
+    /**
+     * The class the documents of `$modelClass` are stored under: the registered class it is or extends, or itself when
+     * none is registered.
+     *
+     * @param class-string<SearchableInterface> $modelClass
+     * @return class-string<SearchableInterface>
+     */
+    public function getRegisteredClass(string $modelClass): string
+    {
+        $registered = $this->getModelClasses();
+
+        foreach ([$modelClass, ...class_parents($modelClass) ?: []] as $class) {
+            if (in_array($class, $registered, true)) {
+                /** @var class-string<SearchableInterface> $class */
+                return $class;
+            }
+        }
+
+        return $modelClass;
+    }
+
     public function index(SearchableInterface ...$models): void
     {
         $documents = [];

@@ -55,13 +55,15 @@ trait SearchableTrait
     }
 
     /**
-     * @param class-string<SearchableInterface>|null $modelClass
+     * @param class-string<SearchableInterface>|null $modelClass the class the documents are stored under, defaults to
+     * the registered class this record is or extends
      * @return list<SearchDocument>
      */
     public function getSearchDocuments(?string $modelClass = null): array
     {
-        $modelClass ??= static::class;
-        $weight = Search::getComponent()->getWeight($modelClass) ?? $this->getSearchWeight();
+        $search = Search::getComponent();
+        $modelClass ??= $search->getRegisteredClass(static::class);
+        $weight = $search->getWeight($modelClass) ?? $this->getSearchWeight();
 
         $status = $this->getSearchStatus();
         $tenantId = $this->getSearchTenantId();

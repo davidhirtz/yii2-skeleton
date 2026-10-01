@@ -25,7 +25,8 @@ use Closure;
 class SearchBehavior extends Behavior
 {
     /**
-     * @var class-string|null if not set, the default class of `owner` will be used
+     * @var class-string|null the class the documents are stored under; if not set, the registered class the owner
+     * extends, so a container subclass or a per-type class writes the rows `search/rebuild` writes
      */
     public ?string $modelClass = null;
 
@@ -44,13 +45,6 @@ class SearchBehavior extends Behavior
      * `getFilename()`, so a rename would leave the index stale without `basename`.
      */
     public array $attributes = self::STATE_ATTRIBUTES;
-
-    #[Override]
-    public function attach($owner): void
-    {
-        $this->modelClass ??= $owner::class;
-        parent::attach($owner);
-    }
 
     /**
      * @return array<string, string|Closure>
@@ -92,7 +86,7 @@ class SearchBehavior extends Behavior
             return;
         }
 
-        $documents = $this->owner->isSearchable() ? $this->owner->getSearchDocuments($this->modelClass) : [];
+        $documents = $this->owner->isSearchable() ? $this->owner->getSearchDocuments($this->getModelClass()) : [];
 
         if ($documents) {
             $search->getDriver()->index(...$documents);
@@ -104,9 +98,17 @@ class SearchBehavior extends Behavior
 
     protected function deleteDocuments(): void
     {
-        /** @var class-string $modelClass */
-        $modelClass = $this->modelClass;
-        $this->getSearch()->getDriver()->delete($modelClass, (int)$this->owner->getPrimaryKey());
+        $this->getSearch()->getDriver()->delete($this->getModelClass(), (int)$this->owner->getPrimaryKey());
+    }
+
+    /**
+     * @return class-string<SearchableInterface>
+     */
+    protected function getModelClass(): string
+    {
+        /** @var class-string<SearchableInterface> $modelClass */
+        $modelClass = $this->modelClass ??= $this->getSearch()->getRegisteredClass($this->owner::class);
+        return $modelClass;
     }
 
     /**
