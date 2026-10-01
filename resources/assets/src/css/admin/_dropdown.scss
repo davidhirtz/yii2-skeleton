@@ -153,7 +153,8 @@
 
   &:hover,
   &:focus,
-  &.active {
+  &.active,
+  &[aria-selected="true"] {
     --dropdown-option-color: var(--dropdown-option-hover-color);
     --dropdown-option-bg: var(--dropdown-option-hover-bg);
     outline: 0;

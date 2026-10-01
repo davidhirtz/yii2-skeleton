@@ -1,7 +1,8 @@
+import combobox from "./combobox";
 import {openUnder} from "./popover";
 
-// The options are rendered by the endpoint and swapped in by htmx, so this only opens the popover, moves the focus
-// through it and writes the picked value back into the input.
+// The options are rendered by the endpoint and swapped in by htmx, so this only opens the popover, moves the active
+// option through it and writes the picked value back into the input.
 export default ($container: HTMLElement) => {
     const $input = $container.querySelector('input') as HTMLInputElement | null;
     const $results = $container.querySelector('[data-autocomplete-results]') as HTMLElement | null;
@@ -12,7 +13,7 @@ export default ($container: HTMLElement) => {
 
     let teardown: (() => void) | null = null;
 
-    const options = () => [...$results.querySelectorAll('[data-autocomplete-value]')] as HTMLElement[];
+    const state = combobox($input, $results, '[data-autocomplete-value]');
 
     // A manual popover gets no light dismiss, and the listener has to go again with it: the field lives inside the
     // swapped region, so a listener left on the document would outlive every navigation.
@@ -26,6 +27,8 @@ export default ($container: HTMLElement) => {
         document.addEventListener('pointerdown', pointerdown);
         teardown = openUnder($input, $results, () => document.removeEventListener('pointerdown', pointerdown))
             ?? teardown;
+
+        state.setExpanded(true);
     };
 
     const close = () => {
@@ -35,6 +38,7 @@ export default ($container: HTMLElement) => {
 
         teardown?.();
         teardown = null;
+        state.setExpanded(false);
     };
 
     const select = ($option: HTMLElement) => {
@@ -64,26 +68,33 @@ export default ($container: HTMLElement) => {
         }
     });
 
-    $container.addEventListener('keydown', (event: KeyboardEvent) => {
+    // The focus stays in the input, so a press on an option must not take it there.
+    $results.addEventListener('mousedown', (event: Event) => event.preventDefault());
+
+    $input.addEventListener('keydown', (event: KeyboardEvent) => {
+        const isOpen = $results.matches(':popover-open');
+
         if (event.key === 'Escape') {
-            close();
+            if (isOpen) {
+                event.preventDefault();
+                close();
+            }
+
             return;
         }
 
-        const $options = options();
-
         if (event.key === 'Enter') {
-            if (!$results.matches(':popover-open')) {
+            if (!isOpen) {
                 return;
             }
 
             // Implicit submission would otherwise save the form while the suggestions are still open.
             event.preventDefault();
 
-            const $focused = document.activeElement as HTMLElement;
+            const $active = state.getActive();
 
-            if ($options.includes($focused)) {
-                select($focused);
+            if ($active) {
+                select($active);
             }
 
             return;
@@ -93,21 +104,23 @@ export default ($container: HTMLElement) => {
             return;
         }
 
-        if (!$options.length) {
+        if (!$results.childElementCount) {
             return;
         }
 
         event.preventDefault();
 
-        const index = $options.indexOf(document.activeElement as HTMLElement);
-        const next = index + (event.key === 'ArrowDown' ? 1 : -1);
+        if (!isOpen) {
+            open();
+        }
 
-        next < 0 ? $input.focus() : $options[Math.min(next, $options.length - 1)].focus();
+        state.move(event.key === 'ArrowDown' ? 1 : -1);
     });
 
     // htmx fires the swap events on the element that issued the request, not on the one it swapped, so this
     // listens on the container the input sits in rather than on the results it fills.
     $container.addEventListener('htmx:after:swap', () => {
+        state.refresh();
         $results.childElementCount ? open() : close();
     });
 }

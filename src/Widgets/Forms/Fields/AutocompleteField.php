@@ -73,7 +73,9 @@ class AutocompleteField extends InputField
             ->attribute('id', $this->getResultsId())
             ->class('dropdown-menu autocomplete-results')
             ->attribute('data-autocomplete-results', '')
-            ->attribute('popover', 'manual');
+            ->attribute('popover', 'manual')
+            ->attribute('role', 'listbox')
+            ->attribute('aria-label', $this->label);
     }
 
     protected function getResultsId(): string
@@ -82,7 +84,8 @@ class AutocompleteField extends InputField
     }
 
     /**
-     * The endpoint answers with the option list alone. The query is not named here: the input's own name carries
+     * The input is a WAI-ARIA combobox: `includes/autocomplete.ts` keeps `aria-expanded` and `aria-activedescendant`
+     * current. The endpoint answers with the option list alone. The query is not named here: the input's own name carries
      * the model and attribute, so `includes/autocomplete.ts` rewrites the parameters to a single `q`.
      */
     protected function addAutocompleteAttributes(): void
@@ -97,6 +100,10 @@ class AutocompleteField extends InputField
             'hx-swap' => 'innerHTML',
             'hx-target' => '#' . $this->getResultsId(),
             'hx-trigger' => 'input changed delay:250ms',
+            'role' => 'combobox',
+            'aria-autocomplete' => 'list',
+            'aria-controls' => $this->getResultsId(),
+            'aria-expanded' => 'false',
         ];
     }
 }

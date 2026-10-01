@@ -31,6 +31,7 @@ class SearchResultList extends Widget
     protected ?string $query = null;
     protected ?string $emptyText = null;
     protected int $snippetLength = 160;
+    protected bool $listbox = false;
 
     /**
      * @param list<SearchResult> $results
@@ -53,6 +54,16 @@ class SearchResultList extends Widget
         return $this;
     }
 
+    /**
+     * Inside the navbar search's popover, which is the listbox, the list and its items step aside for the results;
+     * `includes/combobox.ts` gives these their ids.
+     */
+    public function listbox(bool $listbox = true): static
+    {
+        $this->listbox = $listbox;
+        return $this;
+    }
+
     #[Override]
     protected function renderContent(): string|Stringable
     {
@@ -62,6 +73,7 @@ class SearchResultList extends Widget
 
         return Ul::make()
             ->attributes($this->attributes)
+            ->addAttributes($this->listbox ? ['role' => 'none'] : [])
             ->addClass('search-results')
             ->content(...$items);
     }
@@ -71,6 +83,11 @@ class SearchResultList extends Widget
         $link = A::make()
             ->class('search-result')
             ->href($result->route ?: $result->url);
+
+        if ($this->listbox) {
+            $link->attribute('role', 'option')
+                ->attribute('tabindex', '-1');
+        }
 
         if ($result->icon) {
             $link->addContent(Icon::make()
@@ -92,6 +109,7 @@ class SearchResultList extends Widget
 
         return Li::make()
             ->class('search-result-item')
+            ->addAttributes($this->listbox ? ['role' => 'none'] : [])
             ->content($link);
     }
 
@@ -121,6 +139,7 @@ class SearchResultList extends Widget
     {
         return Li::make()
             ->class('search-result-empty')
+            ->addAttributes($this->listbox ? ['role' => 'option', 'aria-disabled' => 'true'] : [])
             ->text($this->emptyText ?? Yii::t('skeleton', 'SEARCH_EMPTY'));
     }
 

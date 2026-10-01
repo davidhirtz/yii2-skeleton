@@ -27,6 +27,18 @@ class NavBarSearchTest extends TestCase
         self::assertStringContainsString('hx-target="#' . NavBarSearch::RESULTS_ID . '"', $html);
     }
 
+    public function testTheInputIsAComboboxControllingTheResults(): void
+    {
+        $this->login();
+        $html = NavBarSearch::make()->render();
+
+        self::assertMatchesRegularExpression('/<input[^>]*role="combobox"/', $html);
+        self::assertMatchesRegularExpression('/<input[^>]*aria-autocomplete="list"/', $html);
+        self::assertMatchesRegularExpression('/<input[^>]*aria-controls="' . NavBarSearch::RESULTS_ID . '"/', $html);
+        self::assertMatchesRegularExpression('/<input[^>]*aria-expanded="false"/', $html);
+        self::assertMatchesRegularExpression('/<div id="' . NavBarSearch::RESULTS_ID . '"[^>]*role="listbox"[^>]*aria-label="Search"/', $html);
+    }
+
     public function testTheToggleCarriesBothIcons(): void
     {
         $this->login();

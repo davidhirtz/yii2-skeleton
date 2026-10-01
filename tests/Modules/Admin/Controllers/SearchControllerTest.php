@@ -50,6 +50,21 @@ class SearchControllerTest extends TestCase
         self::assertStringContainsString('/admin/user/update?id=' . $user->id, $html);
     }
 
+    /**
+     * The navbar's popover is the listbox, so the hits are its options and stay out of the tab order.
+     */
+    public function testSuggestRendersTheHitsAsOptions(): void
+    {
+        $user = $this->loginUser(User::AUTH_USER);
+        $this->index($user);
+
+        $html = $this->createSearchController()->actionSuggest($user->name);
+
+        self::assertMatchesRegularExpression('/<ul[^>]*role="none"/', $html);
+        self::assertMatchesRegularExpression('/<li[^>]*role="none"/', $html);
+        self::assertMatchesRegularExpression('/<a[^>]*role="option"[^>]*tabindex="-1"/', $html);
+    }
+
     public function testSuggestHidesWhatTheUserMayNotSee(): void
     {
         $user = $this->loginUser();
@@ -58,6 +73,7 @@ class SearchControllerTest extends TestCase
         $html = $this->createSearchController()->actionSuggest($user->name);
 
         self::assertStringContainsString('search-result-empty', $html);
+        self::assertMatchesRegularExpression('/<li[^>]*role="option"[^>]*aria-disabled="true"/', $html);
         self::assertStringNotContainsString('/admin/user/update', $html);
     }
 
@@ -100,6 +116,7 @@ class SearchControllerTest extends TestCase
 
         self::assertIsString($html);
         self::assertStringContainsString('<mark>' . $user->name . '</mark>', $html);
+        self::assertStringNotContainsString('role="option"', $html);
 
         // The navbar is outside `#wrap`, so the input has to override the inherited htmx attributes itself.
         self::assertStringContainsString('class="navbar-search"', $html);

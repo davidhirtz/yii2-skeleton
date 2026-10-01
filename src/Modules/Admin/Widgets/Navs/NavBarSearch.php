@@ -65,6 +65,11 @@ class NavBarSearch extends Widget
                 'hx-swap' => 'innerHTML',
                 'hx-target' => '#' . self::RESULTS_ID,
                 'hx-trigger' => 'input changed delay:250ms',
+                // A WAI-ARIA combobox, whose state `includes/search.ts` keeps current.
+                'role' => 'combobox',
+                'aria-autocomplete' => 'list',
+                'aria-controls' => self::RESULTS_ID,
+                'aria-expanded' => 'false',
             ]);
     }
 
@@ -92,6 +97,8 @@ class NavBarSearch extends Widget
             ->attribute('id', self::RESULTS_ID)
             ->class('navbar-search-results')
             ->attribute('data-search-results', '')
-            ->attribute('popover', 'manual');
+            ->attribute('popover', 'manual')
+            ->attribute('role', 'listbox')
+            ->attribute('aria-label', Yii::t('skeleton', 'SEARCH_LABEL'));
     }
 }

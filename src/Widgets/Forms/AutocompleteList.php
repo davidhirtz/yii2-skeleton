@@ -17,7 +17,8 @@ use Yii;
 /**
  * The options an autocomplete endpoint answers with, swapped into the popover of an {@see AutocompleteField}. The
  * list carries {@see AutocompleteField::OPTIONS_ID} because the field selects it out of the response: the body's
- * inherited `hx-select` would otherwise find nothing and swap nothing.
+ * inherited `hx-select` would otherwise find nothing and swap nothing. The field's popover is the listbox, so the list
+ * and its items step aside for the options; `includes/combobox.ts` gives these their ids.
  */
 class AutocompleteList extends Widget
 {
@@ -55,6 +56,7 @@ class AutocompleteList extends Widget
         return Ul::make()
             ->attributes($this->attributes)
             ->attribute('id', AutocompleteField::OPTIONS_ID)
+            ->attribute('role', 'none')
             ->addClass('dropdown-list')
             ->content(...$items);
     }
@@ -67,10 +69,13 @@ class AutocompleteList extends Widget
         $button = Button::make()
             ->class('dropdown-option')
             ->attribute('data-autocomplete-value', (string)$option['value'])
+            ->attribute('role', 'option')
+            ->attribute('tabindex', '-1')
             ->text($option['text']);
 
         return Li::make()
             ->class('dropdown-item')
+            ->attribute('role', 'none')
             ->content($button);
     }
 
@@ -78,6 +83,8 @@ class AutocompleteList extends Widget
     {
         return Li::make()
             ->class('dropdown-option disabled')
+            ->attribute('role', 'option')
+            ->attribute('aria-disabled', 'true')
             ->text($this->emptyText ?? Yii::t('skeleton', 'SEARCH_EMPTY'));
     }
 }

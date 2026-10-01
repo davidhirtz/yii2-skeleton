@@ -106,7 +106,8 @@
   padding: .625rem 1rem;
 
   &:hover,
-  &:focus {
+  &:focus,
+  &[aria-selected="true"] {
     --dropdown-option-bg: var(--dropdown-option-hover-bg);
     --dropdown-option-color: var(--dropdown-option-hover-color);
     outline: 0;

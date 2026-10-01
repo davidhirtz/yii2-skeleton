@@ -80,6 +80,7 @@ class SearchController extends Controller
 
         return (string)SearchResultList::make()
             ->attribute('id', self::LIST_ID)
+            ->listbox()
             ->query($q)
             ->results($this->getResults($q, $this->suggestLimit));
     }

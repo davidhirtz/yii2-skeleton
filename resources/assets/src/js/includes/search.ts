@@ -1,5 +1,6 @@
 import htmx from 'htmx.org';
 
+import combobox from "./combobox";
 import {openUnder} from "./popover";
 
 // The navbar is outside the swapped region, so this runs once and the element survives every boosted navigation.
@@ -20,10 +21,11 @@ export default ($container: HTMLElement) => {
 
     let teardown: (() => void) | null = null;
 
-    const items = () => [...$results.querySelectorAll('a')] as HTMLAnchorElement[];
+    const state = combobox($input, $results, 'a');
 
     const open = () => {
         teardown = openUnder($input, $results) ?? teardown;
+        state.setExpanded(true);
     };
 
     const close = () => {
@@ -33,6 +35,7 @@ export default ($container: HTMLElement) => {
 
         teardown?.();
         teardown = null;
+        state.setExpanded(false);
     };
 
     // Below the navbar's own breakpoint the open box covers the rest of the bar, the aside toggle included.
@@ -56,9 +59,17 @@ export default ($container: HTMLElement) => {
     });
 
     // A manual popover gets neither light dismiss nor the Escape key, so both are handled on the document — and
-    // the keystroke has to be caught there anyway once focus has left the box.
+    // the keystroke has to be caught there anyway once focus has left the box. As in the WAI-ARIA combobox, the
+    // first press only closes the results; the default would also clear the search input.
     document.addEventListener('keydown', (event: KeyboardEvent) => {
-        if (event.key === 'Escape' && $container.classList.contains('expanded')) {
+        if (event.key !== 'Escape') {
+            return;
+        }
+
+        if ($results.matches(':popover-open')) {
+            event.preventDefault();
+            close();
+        } else if ($container.classList.contains('expanded')) {
             $input.value = '';
             collapse();
         }
@@ -74,18 +85,17 @@ export default ($container: HTMLElement) => {
         }
     });
 
-    $container.addEventListener('keydown', (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-            return;
-        }
+    // The focus stays in the input, so a press on a result must not take it there; the click still follows the link.
+    $results.addEventListener('mousedown', (event: Event) => event.preventDefault());
 
+    $input.addEventListener('keydown', (event: KeyboardEvent) => {
         if (event.key === 'Enter') {
             event.preventDefault();
 
-            const $focused = document.activeElement;
+            const $active = $results.matches(':popover-open') ? state.getActive() : null;
 
-            if ($focused instanceof HTMLAnchorElement && $results.contains($focused)) {
-                $focused.click();
+            if ($active) {
+                $active.click();
             } else if ($input.value.trim()) {
                 // Target, select and swap come from the body like a boosted link's; the push URL from the container.
                 htmx.ajax('GET', `${$container.dataset.search}?q=${encodeURIComponent($input.value.trim())}`, {
@@ -100,18 +110,13 @@ export default ($container: HTMLElement) => {
             return;
         }
 
-        const $items = items();
-
-        if (!$items.length) {
+        if (!$results.childElementCount) {
             return;
         }
 
         event.preventDefault();
-
-        const index = $items.indexOf(document.activeElement as HTMLAnchorElement);
-        const next = index + (event.key === 'ArrowDown' ? 1 : -1);
-
-        next < 0 ? $input.focus() : $items[Math.min(next, $items.length - 1)].focus();
+        open();
+        state.move(event.key === 'ArrowDown' ? 1 : -1);
     });
 
     // A click outside closes the box but keeps the results it holds, so focus returning to the input has to reopen
@@ -147,6 +152,7 @@ export default ($container: HTMLElement) => {
             return;
         }
 
+        state.refresh();
         $results.childElementCount ? open() : close();
     });
 

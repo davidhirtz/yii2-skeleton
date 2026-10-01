@@ -42,4 +42,22 @@ class AutocompleteFieldTest extends TestCase
         self::assertMatchesRegularExpression('/hx-target="#(i\d+)"[^>]*>.*<div id="\1"[^>]*popover/s', $html);
         self::assertStringContainsString('data-autocomplete-results', $html);
     }
+
+    public function testTheInputIsAComboboxControllingItsListbox(): void
+    {
+        $html = AutocompleteField::make()
+            ->url('/autocomplete')
+            ->label('Place')
+            ->render();
+
+        self::assertMatchesRegularExpression('/<input[^>]*role="combobox"/', $html);
+        self::assertMatchesRegularExpression('/<input[^>]*aria-autocomplete="list"/', $html);
+        self::assertMatchesRegularExpression('/<input[^>]*aria-expanded="false"/', $html);
+        self::assertMatchesRegularExpression('/aria-controls="(i\d+)"[^>]*>.*<div id="\1"[^>]*role="listbox"[^>]*aria-label="Place"/s', $html);
+    }
+
+    public function testAPlainInputIsNoCombobox(): void
+    {
+        self::assertStringNotContainsString('combobox', AutocompleteField::make()->render());
+    }
 }
