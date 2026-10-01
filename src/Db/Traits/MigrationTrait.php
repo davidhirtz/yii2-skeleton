@@ -208,18 +208,7 @@ trait MigrationTrait
     }
 
     /**
-     * The way back, since there is no last position to name — only a last column.
-     */
-    protected function moveCustomAttributesColumnToEnd(string $table, string $column = 'custom_attributes'): void
-    {
-        $columns = $this->getTableSchema($table)->getColumnNames();
-        $columns = array_values(array_diff($columns, [$column]));
-
-        $this->moveCustomAttributesColumn($table, (string)end($columns), $column);
-    }
-
-    /**
-     * The three mirrors of the `…IfExists` guards below, and they exist for one reason: after the squash a
+     * The two mirrors of the `…IfExists` guards below, and they exist for one reason: after the squash a
      * migration runs against **two** starting schemas. An upgraded project brings the v2 shape, and a fresh
      * install brings a baseline that already holds the whole v3 schema — so every kept migration has to add
      * what is missing and skip what is there, on both paths.
@@ -241,16 +230,6 @@ trait MigrationTrait
     {
         if ($this->getDb()->getSchema()->getTableSchema($table, true) === null) {
             $this->createTable($table, $columns, $options ?? $this->getTableOptions());
-        }
-    }
-
-    /**
-     * @param list<string>|string $columns
-     */
-    protected function createIndexIfMissing(string $name, string $table, array|string $columns, bool $unique = false): void
-    {
-        if (!$this->hasIndex($table, $name)) {
-            $this->createIndex($name, $table, $columns, $unique);
         }
     }
 
