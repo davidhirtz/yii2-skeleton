@@ -23,7 +23,7 @@ class M260101000000SkeletonBaseline extends Migration
               `created_at` int(11) DEFAULT NULL,
               `updated_at` int(11) DEFAULT NULL,
               PRIMARY KEY (`name`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             SQL
         );
 
@@ -40,7 +40,7 @@ class M260101000000SkeletonBaseline extends Migration
               PRIMARY KEY (`name`),
               KEY `auth_item_rule_name_ibfk` (`rule_name`),
               KEY `type` (`type`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             SQL
         );
 
@@ -51,7 +51,7 @@ class M260101000000SkeletonBaseline extends Migration
               `child` varchar(64) NOT NULL,
               PRIMARY KEY (`parent`,`child`),
               KEY `auth_item_child_child_ibfk` (`child`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             SQL
         );
 
@@ -63,7 +63,7 @@ class M260101000000SkeletonBaseline extends Migration
               `created_at` int(11) DEFAULT NULL,
               PRIMARY KEY (`item_name`,`user_id`),
               KEY `auth_assignment_user_id_ibfk` (`user_id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             SQL
         );
 
@@ -95,7 +95,7 @@ class M260101000000SkeletonBaseline extends Migration
               UNIQUE KEY `name` (`name`),
               KEY `status` (`status`),
               KEY `user_created_by_user_id_ibfk` (`created_by_user_id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             SQL
         );
 
@@ -110,7 +110,7 @@ class M260101000000SkeletonBaseline extends Migration
               `type` tinyint(3) unsigned NOT NULL DEFAULT 1,
               PRIMARY KEY (`id`),
               KEY `user_id` (`user_id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             SQL
         );
 
@@ -126,7 +126,7 @@ class M260101000000SkeletonBaseline extends Migration
               PRIMARY KEY (`id`),
               UNIQUE KEY `token` (`token`),
               KEY `user_id` (`user_id`,`type`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             SQL
         );
 
@@ -141,7 +141,7 @@ class M260101000000SkeletonBaseline extends Migration
               PRIMARY KEY (`id`),
               KEY `user_id` (`user_id`),
               KEY `expire` (`expire`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             SQL
         );
 
@@ -175,7 +175,7 @@ class M260101000000SkeletonBaseline extends Migration
               PRIMARY KEY (`id`),
               KEY `user_id` (`user_id`),
               KEY `model_class` (`model_class`,`model_id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             SQL
         );
 
@@ -190,7 +190,7 @@ class M260101000000SkeletonBaseline extends Migration
               `value` text DEFAULT NULL,
               PRIMARY KEY (`id`),
               UNIQUE KEY `model_class` (`model_class`,`model_id`,`language`,`attribute`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             SQL
         );
 

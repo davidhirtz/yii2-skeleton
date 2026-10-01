@@ -22,7 +22,6 @@ return [
             'dsn' => $dsn,
             'username' => getenv('MYSQL_USER') ?: 'root',
             'password' => getenv('MYSQL_PASSWORD') ?: '',
-            'charset' => 'utf8',
         ],
     ],
 ];
