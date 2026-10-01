@@ -17,6 +17,7 @@ use Yii;
 use yii\base\Event;
 use yii\base\InvalidConfigException;
 use yii\caching\ArrayCache;
+use yii\caching\Dependency;
 use yii\db\Transaction;
 use yii\di\Container;
 use yii\log\Logger;
@@ -235,6 +236,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         Yii::$app->getErrorHandler()->unregister();
         Yii::$app->getCache()->flush();
         Yii::$app->getDb()->close();
+
+        // A reusable dependency (the page cache's tag) keeps its data in a static that outlives the flushed cache
+        Dependency::resetReusableData();
 
         FileHelper::removeDirectory($this->webroot);
 
