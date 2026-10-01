@@ -21,4 +21,17 @@ class StringHelperTest extends TestCase
 
         self::assertSame('DE und FR', StringHelper::enumerate(['DE', 'FR']));
     }
+
+    public function testAnEmailIsObfuscated(): void
+    {
+        self::assertSame('ma**@ex*****.com', StringHelper::obfuscateEmail('mail@example.com'));
+        self::assertSame('ma**@example.com', StringHelper::obfuscateEmail('mail@example.com', false));
+        self::assertSame('a@ex.co.uk', StringHelper::obfuscateEmail('a@ex.co.uk', true, 2, 0));
+    }
+
+    public function testObfuscationCountsCharactersNotBytes(): void
+    {
+        self::assertSame('Mü****@東京**.jp', StringHelper::obfuscateEmail('Müller@東京都庁.jp'));
+        self::assertSame('Å*', StringHelper::obfuscateText('Åą', 1));
+    }
 }

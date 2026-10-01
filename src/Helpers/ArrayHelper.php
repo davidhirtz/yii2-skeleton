@@ -28,7 +28,6 @@ class ArrayHelper extends BaseArrayHelper
 
     /**
      * @param array<array-key, mixed> $array
-     * @noinspection PhpUnused
      */
     public static function replaceValue(array &$array, string $value, mixed $replacement): void
     {
@@ -50,7 +49,6 @@ class ArrayHelper extends BaseArrayHelper
     /**
      * @param array<array-key, mixed> $array
      * @param array<array-key, mixed> $values
-     * @noinspection PhpUnused
      */
     public static function setDefaultValues(array &$array, array $values): void
     {

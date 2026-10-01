@@ -28,9 +28,6 @@ class StringHelper extends BaseStringHelper
         return static::mb_ucwords(str_replace(['.', '_', '-'], ' ', (pathinfo($filename, PATHINFO_FILENAME))));
     }
 
-    /**
-     * @noinspection PhpUnused
-     */
     public static function obfuscateEmail(
         string $email,
         bool $obfuscateDomain = true,
@@ -56,7 +53,9 @@ class StringHelper extends BaseStringHelper
         int $maxLength = 5,
         string $replacement = '*'
     ): string {
-        $length = min($length, strlen($text));
-        return substr($text, 0, $length) . str_repeat($replacement, min(strlen($text) - $length, $maxLength));
+        $textLength = mb_strlen($text);
+        $length = min($length, $textLength);
+
+        return mb_substr($text, 0, $length) . str_repeat($replacement, min($textLength - $length, $maxLength));
     }
 }
