@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
 use yii\web\ForbiddenHttpException;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -214,6 +215,23 @@ class RedirectControllerTest extends TestCase
         self::assertInstanceOf(Response::class, $response);
         self::assertNull(Redirect::findOne($redirect->id));
         self::assertNotEmpty($this->getWebSession()->getFlash('success'));
+    }
+
+    public function testDeleteRefusesAGetRequest(): void
+    {
+        $this->login();
+        $redirect = $this->createRedirect('old-page', 'new-page');
+
+        $this->expectException(MethodNotAllowedHttpException::class);
+        Yii::$app->runAction('admin/redirect/delete', ['id' => $redirect->id]);
+    }
+
+    public function testDeleteAllRefusesAGetRequest(): void
+    {
+        $this->login();
+
+        $this->expectException(MethodNotAllowedHttpException::class);
+        Yii::$app->runAction('admin/redirect/delete-all');
     }
 
     public function testDeleteAllRemovesTheSelectedRedirects(): void

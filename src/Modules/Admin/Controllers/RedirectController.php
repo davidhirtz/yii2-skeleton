@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -34,6 +35,13 @@ class RedirectController extends Controller
                         'actions' => ['create', 'delete', 'delete-all', 'index', 'update'],
                         'roles' => [Redirect::AUTH_REDIRECT],
                     ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['post'],
+                    'delete-all' => ['post'],
                 ],
             ],
         ];
