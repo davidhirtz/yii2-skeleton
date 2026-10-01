@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Db\Commands\BatchInsertQueryBuild;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
+use Hirtz\Skeleton\Upload\Upload;
 use Override;
 use Yii;
 use yii\helpers\Inflector;
@@ -320,6 +321,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
                     $definition->afterDelete($this, $name);
                 }
             }
+
+            Upload::getComponent()->deleteRecord($this);
         }
 
         parent::afterDelete();

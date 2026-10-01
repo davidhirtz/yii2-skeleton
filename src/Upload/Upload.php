@@ -193,6 +193,14 @@ class Upload extends Component
     }
 
     /**
+     * Removes every file the record holds, including those of attributes its current type no longer declares.
+     */
+    public function deleteRecord(ActiveRecord $owner): void
+    {
+        FileHelper::removeDirectory($this->getRecordPath($owner));
+    }
+
+    /**
      * @return string|null the token the field carries until the record is saved
      */
     public function createTempFile(UploadedFile $upload): ?string

@@ -149,6 +149,30 @@ class UploadCustomAttributeTest extends TestCase
         self::assertDirectoryDoesNotExist(dirname($paths[0], 2));
     }
 
+    public function testDeletingTheRecordRemovesTheFilesOfAPreviousType(): void
+    {
+        $record = $this->createRecord();
+        $record->track = $this->createToken('sub.vtt');
+        $record->save();
+
+        $path = $this->upload->getFilePath($record, 'track', 'sub.vtt');
+        self::assertFileExists($path);
+
+        $record = UploadRecord::findOne($record->id);
+        self::assertInstanceOf(UploadRecord::class, $record);
+
+        $record->type = UploadRecord::TYPE_RESTRICTED;
+        $record->save();
+
+        $record = UploadRecord::findOne($record->id);
+        self::assertInstanceOf(UploadRecord::class, $record);
+
+        $record->delete();
+
+        self::assertFileDoesNotExist($path);
+        self::assertDirectoryDoesNotExist(dirname($path, 2));
+    }
+
     /**
      * A translatable definition is one file per language, in a directory of its own.
      */
