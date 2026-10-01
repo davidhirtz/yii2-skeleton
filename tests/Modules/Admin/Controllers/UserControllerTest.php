@@ -85,6 +85,20 @@ class UserControllerTest extends TestCase
         $this->createUserController()->actionStatus($owner->id);
     }
 
+    public function testAFailedOwnershipTransferRedirectsWithTheError(): void
+    {
+        $owner = $this->getUserFromFixture('owner');
+        $this->assignPermission($owner->id, User::AUTH_USER);
+        $this->getWebUser()->setIdentity($owner);
+
+        $user = $this->getUserFromFixture('disabled');
+        $response = $this->createUserController()->actionOwnership($user->id);
+
+        self::assertSame(302, $response->getStatusCode());
+        self::assertSame([['name' => Yii::t('skeleton', 'OWNERSHIP_USER_CURRENTLY_DISABLED')]], $this->getWebSession()->getFlash('danger'));
+        self::assertFalse(User::findOne($user->id)->isOwner());
+    }
+
     private function login(): User
     {
         $user = $this->getUserFromFixture('admin');

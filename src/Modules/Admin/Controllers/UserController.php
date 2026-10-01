@@ -210,7 +210,7 @@ class UserController extends Controller
         return $this->updateStatus($this->findUser($id, User::AUTH_USER));
     }
 
-    public function actionOwnership(int $id): Response|string
+    public function actionOwnership(int $id): Response
     {
         if (!$this->webuser->getIdentity()->isOwner()) {
             throw new ForbiddenHttpException();
@@ -227,8 +227,8 @@ class UserController extends Controller
             return $this->goHome();
         }
 
-        return $this->render('ownership', [
-            'form' => $form,
-        ]);
+        $this->error($form);
+
+        return $this->redirect(['update', 'id' => $user->id]);
     }
 }
