@@ -47,7 +47,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
      * @see MigrateController::repairHistory()
      */
     public string $upgradeFile = '@root/upgrade/collapse.php';
-    public $templateFile = '@skeleton/views/migration.php';
+    public $templateFile = '@skeleton/../resources/views/migration.php';
 
     /**
      * @var array<string, mixed>|null

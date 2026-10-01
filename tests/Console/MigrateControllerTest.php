@@ -92,6 +92,17 @@ class MigrateControllerTest extends TestCase
         unlink($filename);
     }
 
+    public function testTheTemplateRendersAMigration(): void
+    {
+        $controller = $this->createMigrationController();
+        $content = $controller->renderFile(Yii::getAlias($controller->templateFile), [
+            'className' => 'M260101000000Test',
+            'namespace' => 'App\\Migrations',
+        ]);
+
+        self::assertStringContainsString('class M260101000000Test extends Migration', $content);
+    }
+
     public function testActionConfig(): void
     {
         $controller = $this->createMigrationController();
