@@ -385,9 +385,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * Saves values derived from other rows — a count, a list of ids — and stamps `updated_at` when one changed. No
-     * validation and no save hooks: a parent that no longer validates would refuse its own bookkeeping, and a save
-     * would write whatever else the instance holds dirty.
+     * Saves values derived from other rows — a count, a list of ids — and stamps `updated_at` when one changed, which
+     * {@see static::touchOwners()} passes on. No validation and no save hooks: a parent that no longer validates would
+     * refuse its own bookkeeping, and a save would write whatever else the instance holds dirty.
      *
      * @param array<string, mixed> $attributes
      * @return int the number of rows updated, `0` where no value changed
@@ -408,7 +408,35 @@ class ActiveRecord extends \yii\db\ActiveRecord
             $changed['updated_at'] = new DateTime();
         }
 
-        return $this->updateAttributes($changed);
+        $rows = $this->updateAttributes($changed);
+
+        $this->touchOwners();
+
+        return $rows;
+    }
+
+    /**
+     * Stamps `updated_at` for a change made through a record this one owns — an asset, a linked entry — without
+     * saving it, and passes the change on through {@see static::touchOwners()}.
+     */
+    public function touchUpdatedAt(): int
+    {
+        if ($this->isDeleted()) {
+            return 0;
+        }
+
+        $rows = $this->hasAttribute('updated_at') ? $this->updateAttributes(['updated_at' => new DateTime()]) : 0;
+        $this->touchOwners();
+
+        return $rows;
+    }
+
+    /**
+     * Runs whenever `updated_at` moved without a save. A record shown as part of another one (a section of its
+     * entry) touches that one here, so the owner's `updated_at` stays the time its page last changed.
+     */
+    protected function touchOwners(): void
+    {
     }
 
     /**
