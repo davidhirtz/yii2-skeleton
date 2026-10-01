@@ -79,6 +79,28 @@ class ChunkedUploadedFileTest extends TestCase
         self::assertSame('abcdefghi', file_get_contents($third->tempName));
     }
 
+    public function testARetriedChunkReplacesItsFirstAttempt(): void
+    {
+        $this->createUploadedFile($this->createSourceFile('abc', 'a'), range: 'bytes 0-2/9');
+        $this->createUploadedFile($this->createSourceFile('def', 'b'), range: 'bytes 3-5/9');
+        $this->createUploadedFile($this->createSourceFile('def', 'c'), range: 'bytes 3-5/9');
+
+        $last = $this->createUploadedFile($this->createSourceFile('ghi', 'd'), range: 'bytes 6-8/9');
+
+        self::assertTrue($last->isCompleted());
+        self::assertSame('abcdefghi', file_get_contents($last->tempName));
+    }
+
+    public function testAMissingChunkDiscardsTheUpload(): void
+    {
+        $this->createUploadedFile($this->createSourceFile('abc', 'a'), range: 'bytes 0-2/9');
+        $file = $this->createUploadedFile($this->createSourceFile('ghi', 'b'), range: 'bytes 6-8/9');
+
+        self::assertSame(UPLOAD_ERR_PARTIAL, $file->error);
+        self::assertFalse($file->isPartial());
+        self::assertSame([], glob("$this->path*.tmp"));
+    }
+
     /**
      * A first chunk means a new upload, so whatever a previous attempt left behind under the same name is dropped
      * instead of being prepended to it.

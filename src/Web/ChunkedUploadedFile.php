@@ -57,11 +57,27 @@ class ChunkedUploadedFile extends UploadedFile
             @unlink($tempName);
         }
 
+        clearstatcache(true, $tempName);
+        $written = is_file($tempName) ? (int)filesize($tempName) : 0;
+
+        if ($start > $written) {
+            Yii::debug("Chunk of '$tempName' starts at $start after $written bytes, a chunk is missing");
+            @unlink($tempName);
+            $this->error = UPLOAD_ERR_PARTIAL;
+            return;
+        }
+
+        // A retried chunk replaces what its first attempt wrote
+        if ($start < $written && !$this->truncate($tempName, $start)) {
+            $this->error = UPLOAD_ERR_CANT_WRITE;
+            return;
+        }
+
         // Suppressed, not unchecked: a warning reaches the error handler as an exception, which would make the
         // `UPLOAD_ERR_CANT_WRITE` below unreachable and answer a 500 for an unreadable chunk.
         $data = @fopen($this->tempName, 'r');
 
-        if ($data === false || @file_put_contents($tempName, $data, FILE_APPEND) === false) {
+        if ($data === false || @file_put_contents($tempName, $data, FILE_APPEND | LOCK_EX) === false) {
             $this->error = UPLOAD_ERR_CANT_WRITE;
             return;
         }
@@ -99,6 +115,20 @@ class ChunkedUploadedFile extends UploadedFile
         FileHelper::createDirectory($path);
 
         return $path;
+    }
+
+    private function truncate(string $filename, int $size): bool
+    {
+        $handle = @fopen($filename, 'r+');
+
+        if ($handle === false) {
+            return false;
+        }
+
+        $isTruncated = ftruncate($handle, max(0, $size));
+        fclose($handle);
+
+        return $isTruncated;
     }
 
     public function isCompleted(): bool
