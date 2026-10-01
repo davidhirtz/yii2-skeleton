@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Forms;
 
+use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Widgets\Alert;
@@ -119,9 +120,9 @@ class ErrorSummary extends Widget
     {
         return count($this->errors) === 1
             ? Div::make()
-                ->content(reset($this->errors))
+                ->text(reset($this->errors))
             : Ul::make()
-                ->items(...$this->errors);
+                ->items(...array_map(Html::encode(...), $this->errors));
     }
 
     protected function getHeader(): ?Stringable
