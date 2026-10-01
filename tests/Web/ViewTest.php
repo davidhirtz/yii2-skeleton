@@ -63,6 +63,17 @@ class ViewTest extends TestCase
         static::assertEquals("<meta name=\"og:description\" content=\"$description\">", $view->metaTags['og:description']);
     }
 
+    public function testMetaDescriptionIsEncodedOnce(): void
+    {
+        $view = new View();
+        $view->description("Müller & Söhne\n<p>");
+        $view->registerOpenGraphMetaTags();
+
+        self::assertSame('Müller & Söhne <p>', $view->getMetaDescription());
+        self::assertSame('<meta name="description" content="Müller &amp; Söhne &lt;p&gt;">', $view->metaTags['description']);
+        self::assertSame('<meta name="og:description" content="Müller &amp; Söhne &lt;p&gt;">', $view->metaTags['og:description']);
+    }
+
     public function testImageMetaTags(): void
     {
         $view = new View();

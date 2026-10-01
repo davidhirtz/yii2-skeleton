@@ -151,7 +151,7 @@ class View extends \yii\web\View
     public function description(string $description, bool $replace = true): static
     {
         if (empty($this->metaTags[static::DESCRIPTION_KEY]) || $replace) {
-            $this->description = preg_replace("/\n+/", ' ', Html::encode($description));
+            $this->description = trim((string)preg_replace('/\s+/u', ' ', $description));
             $this->registerMetaTag(['name' => 'description', 'content' => $this->description], static::DESCRIPTION_KEY);
         }
 

@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Fixed `Web\View::description()` encoding the meta description twice; `getMetaDescription()` answers plain text
 - Fixed the baseline migration collation to `utf8mb4`
 
 ## 3.10.0 (October 1, 2026)
