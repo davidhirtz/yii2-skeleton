@@ -152,19 +152,16 @@ class SearchBehaviorTest extends TestCase
         $record->name = 'Subclass';
         self::assertTrue($record->insert());
 
-        $rows = fn (): array => Search::find()
-            ->select('model_class')
-            ->where(['model_id' => $record->id])
-            ->column();
-
-        self::assertSame([SearchableActiveRecord::class], array_values(array_unique($rows())));
+        $inserted = $this->findDocumentClasses($record);
 
         $record->name = 'Renamed';
         $record->update();
-        self::assertSame([SearchableActiveRecord::class], array_values(array_unique($rows())));
+        $updated = $this->findDocumentClasses($record);
 
         $record->delete();
-        self::assertSame([], $rows());
+        $deleted = $this->findDocumentClasses($record);
+
+        self::assertSame([[SearchableActiveRecord::class], [SearchableActiveRecord::class], []], [$inserted, $updated, $deleted]);
     }
 
     private function createRecord(): SearchableActiveRecord
@@ -189,6 +186,21 @@ class SearchBehaviorTest extends TestCase
             ])
             ->orderBy(['language' => SORT_ASC])
             ->all());
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function findDocumentClasses(SearchableActiveRecord $record): array
+    {
+        /** @var list<string> $classes */
+        $classes = Search::find()
+            ->select('model_class')
+            ->distinct()
+            ->where(['model_id' => $record->id])
+            ->column();
+
+        return $classes;
     }
 
     private function getAdminModule(): Module
