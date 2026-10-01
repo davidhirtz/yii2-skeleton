@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Hirtz\Skeleton\Migrations;
+
+use Override;
+use yii\db\Migration;
+
+/**
+ * @noinspection PhpUnused
+ */
+class M261001130000UserIsOwnerNotNull extends Migration
+{
+    #[Override]
+    public function safeUp(): void
+    {
+        $this->update('{{%user}}', ['is_owner' => 0], ['is_owner' => null]);
+        $this->alterColumn('{{%user}}', 'is_owner', $this->tinyInteger(1)->unsigned()->notNull()->defaultValue(0));
+    }
+
+    #[Override]
+    public function safeDown(): void
+    {
+        $this->alterColumn('{{%user}}', 'is_owner', $this->tinyInteger(1)->unsigned()->defaultValue(0));
+    }
+}
