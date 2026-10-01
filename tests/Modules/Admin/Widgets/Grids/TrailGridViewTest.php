@@ -229,6 +229,20 @@ class TrailGridViewTest extends TestCase
         self::assertStringNotContainsString('trail-diff-values', $content);
     }
 
+    public function testTheModelColumnEscapesTheAdminName(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+        $user->updateAttributes(['name' => '<b hx-get="/x">p</b>']);
+
+        $trail = $this->createUserTrail((string)$user->id);
+        $trail->type = Trail::TYPE_UPDATE;
+
+        $html = implode('', array_map(strval(...), (array)TestTrailGridView::make()->modelContent($trail)));
+
+        self::assertStringNotContainsString('<b hx-get', $html);
+        self::assertStringContainsString('&lt;b hx-get=&quot;/x&quot;&gt;p&lt;/b&gt;', $html);
+    }
+
     public function testTheDeletedUserLinkIsParsedByTheTrailIndex(): void
     {
         $trail = Trail::create();
@@ -274,6 +288,14 @@ class TestTrailGridView extends TrailGridView
     public function userTrailRoute(Trail $trail): array
     {
         return $this->getUserTrailRoute($trail);
+    }
+
+    /**
+     * @return list<string|Stringable>|string
+     */
+    public function modelContent(Trail $trail): array|string
+    {
+        return $this->getModelColumnContent($trail);
     }
 
     public function dataContent(Trail $trail): string

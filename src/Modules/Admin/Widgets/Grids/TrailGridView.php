@@ -90,7 +90,7 @@ class TrailGridView extends GridView
 
             $content = [
                 A::make()
-                    ->content($trail->getModelName())
+                    ->text($trail->getModelName())
                     ->href($this->getTrailModelRoute($trail))
                     ->class($isModel ? 'strong' : 'italic'),
             ];
