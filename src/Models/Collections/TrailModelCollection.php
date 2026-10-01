@@ -8,6 +8,7 @@ use DateTime;
 use DateTimeZone;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Definitions\Definition;
+use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Widgets\Forms\Fields\SelectField;
 use Throwable;
@@ -57,6 +58,58 @@ class TrailModelCollection
                 ? self::getOrFindActiveRecord($instance, $modelId)
                 : $instance;
         });
+    }
+
+    /**
+     * Loads the records a page of trails points at with one query per class, rather than one per record.
+     *
+     * @param Trail[] $trails
+     */
+    public static function preload(array $trails): void
+    {
+        $ids = [];
+
+        foreach ($trails as $trail) {
+            if ($trail->model_class && is_scalar($trail->model_id)) {
+                $ids[$trail->model_class][] = $trail->model_id;
+            }
+        }
+
+        foreach ($ids as $modelClass => $modelIds) {
+            $modelClass = explode('::', $modelClass);
+            $language = $modelClass[1] ?? Yii::$app->language;
+
+            Yii::$app->getI18n()->callback($language, function () use ($modelClass, $modelIds): void {
+                try {
+                    /** @var class-string $class */
+                    $class = $modelClass[0];
+                    $instance = Yii::createObject($class);
+                } catch (Throwable) {
+                    return;
+                }
+
+                if (!$instance instanceof ActiveRecord || count($instance::primaryKey()) !== 1) {
+                    return;
+                }
+
+                $tableName = $instance::tableName();
+                $missing = array_values(array_filter(
+                    array_unique($modelIds),
+                    fn (int|string $id): bool => !isset(self::$models[$tableName][$id])
+                ));
+
+                if (!$missing) {
+                    return;
+                }
+
+                $key = $instance::primaryKey()[0];
+                $records = $instance::find()->where([$key => $missing])->indexBy($key)->all();
+
+                foreach ($missing as $id) {
+                    self::$models[$tableName][$id] = $records[$id] ?? new $instance([$key => $id]);
+                }
+            });
+        }
     }
 
     /**

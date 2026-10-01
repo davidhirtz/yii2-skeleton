@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Data;
 
+use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
@@ -68,6 +69,8 @@ class TrailActiveDataProvider extends ActiveDataProvider
                 $model->populateRelation('user', $this->user);
             }
         }
+
+        TrailModelCollection::preload($models);
 
         return array_values($models);
     }
