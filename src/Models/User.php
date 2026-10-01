@@ -53,7 +53,6 @@ use yii\web\IdentityInterface;
  * @property DateTime|null $last_login
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
- * @property array<string, mixed>|null $custom_attributes
  *
  * @property-read User|null $created {@see static::getCreated()}
  *
