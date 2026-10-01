@@ -1,6 +1,7 @@
 import htmx from "htmx.org"
 
 import {startBusy, stopBusy} from "../includes/busy";
+import {showNetworkError} from "../includes/networkError";
 
 // The upload was started from a button the user could see, so the target it refreshes almost always is on screen
 // too — scrolling it to the top then throws the page around for no reason and reads as a reload. `show:top` is
@@ -9,6 +10,12 @@ import {startBusy, stopBusy} from "../includes/busy";
 const isOnScreen = ($el: Element): boolean => {
     const {top, bottom} = $el.getBoundingClientRect();
     return bottom > 0 && top < window.innerHeight;
+};
+
+// HTTP/2 has no reason phrase, so the server sends its message in a header as well.
+const getErrorMessage = (response: Response): string => {
+    const message = response.headers.get('X-Upload-Error');
+    return (message ? decodeURIComponent(message) : response.statusText) || String(response.status);
 };
 
 window.customElements.get('file-upload') || window.customElements.define('file-upload', class extends HTMLElement {
@@ -49,6 +56,9 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                 await this.upload(files, $input, chunkSize, $progress);
             } finally {
                 stopBusy();
+
+                // Picking the same file again after a failure would otherwise fire no `change`.
+                $input.value = '';
             }
         });
 
@@ -86,35 +96,40 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
 
                 headers.set('X-CSRF-Token', Object.values(JSON.parse(document.querySelector('#wrap')!.getAttribute('hx-headers:inherited') as string) as Object).pop());
 
-                await fetch(this.dataset.url as string, {
-                    body: body,
-                    headers: headers,
-                    method: 'POST',
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            response.text().then(html => {
-                                const $target = this.getTarget();
+                let response: Response;
 
-                                void htmx.swap({
-                                    text: html,
-                                    target: $target,
-                                    swap: isOnScreen($target) ? 'outerHTML' : 'outerHTML show:top',
-                                    select: this.dataset.target || undefined,
-                                    // The swap is not an htmx request, so nothing inherits the body's
-                                    // `hx-select-oob` and the flashes have to be named here.
-                                    selectOOB: ['#flashes:beforeend', this.dataset.selectOob]
-                                        .filter(Boolean)
-                                        .join(','),
-                                });
-                            })
-                        } else if (!response.ok) {
-                            alert(response.statusText);
-                            chunkIndex = totalChunks;
-                        }
-
-                        $progress.value += (end - start);
+                try {
+                    response = await fetch(this.dataset.url as string, {
+                        body: body,
+                        headers: headers,
+                        method: 'POST',
                     });
+                } catch {
+                    showNetworkError();
+                    return;
+                }
+
+                if (response.status === 200) {
+                    const html = await response.text();
+                    const $target = this.getTarget();
+
+                    void htmx.swap({
+                        text: html,
+                        target: $target,
+                        swap: isOnScreen($target) ? 'outerHTML' : 'outerHTML show:top',
+                        select: this.dataset.target || undefined,
+                        // The swap is not an htmx request, so nothing inherits the body's
+                        // `hx-select-oob` and the flashes have to be named here.
+                        selectOOB: ['#flashes:beforeend', this.dataset.selectOob]
+                            .filter(Boolean)
+                            .join(','),
+                    });
+                } else if (!response.ok) {
+                    alert(getErrorMessage(response));
+                    break;
+                }
+
+                $progress.value += (end - start);
             }
         }
     }

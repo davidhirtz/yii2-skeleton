@@ -141,7 +141,7 @@ class UploadController extends Controller
         // last before the file is known, and a chunk at any other offset only lands on a file a counted one opened.
         if (ChunkedUploadedFile::isUploadStart()) {
             if ($upload->isUploadLimitReached()) {
-                $this->response->setStatusCode(429, Yii::t('skeleton', 'UPLOAD_LIMIT_ERROR'));
+                $this->refuseUpload(429, Yii::t('skeleton', 'UPLOAD_LIMIT_ERROR'));
                 return null;
             }
 
@@ -166,7 +166,7 @@ class UploadController extends Controller
                 FileHelper::unlink($file->tempName);
             }
 
-            $this->response->setStatusCode(400, $error);
+            $this->refuseUpload(400, $error);
 
             return null;
         }
@@ -174,7 +174,7 @@ class UploadController extends Controller
         $token = $upload->createTempFile($file);
 
         if ($token === null) {
-            $this->response->setStatusCode(400, Yii::t('skeleton', 'UPLOAD_FAILED_ERROR'));
+            $this->refuseUpload(400, Yii::t('skeleton', 'UPLOAD_FAILED_ERROR'));
 
             return null;
         }

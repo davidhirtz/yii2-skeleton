@@ -8,10 +8,12 @@
 export default (event: Event) => {
     const {ctx, error} = (event as CustomEvent).detail ?? {};
 
-    if (!ctx || ctx.response || !(error instanceof TypeError)) {
-        return;
+    if (ctx && !ctx.response && error instanceof TypeError) {
+        showNetworkError();
     }
+};
 
+export const showNetworkError = () => {
     const $template = document.getElementById('network-error-flash') as HTMLTemplateElement | null;
     const $flashes = document.getElementById('flashes');
 

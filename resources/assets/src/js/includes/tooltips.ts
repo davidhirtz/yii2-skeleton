@@ -35,8 +35,16 @@ const initHotspot = ($hotspot: HTMLElement) => {
         $hotspot.setAttribute($hotspot.textContent?.trim() ? 'aria-description' : 'aria-label', title);
     }
 
+    // A tooltip opened by hovering is dismissed from the keyboard too, wherever the focus is (WCAG 1.4.13).
+    const onKeydown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+            hide();
+        }
+    };
+
     const show = () => {
         $hotspot.after($tooltip);
+        document.addEventListener('keydown', onKeydown);
 
         computePosition($hotspot, $tooltip, {
             placement: 'top',
@@ -71,18 +79,15 @@ const initHotspot = ($hotspot: HTMLElement) => {
         });
     };
 
-    const hide = () => $tooltip.remove();
+    const hide = () => {
+        $tooltip.remove();
+        document.removeEventListener('keydown', onKeydown);
+    };
 
     $hotspot.addEventListener('mouseenter', show);
     $hotspot.addEventListener('mouseleave', hide);
     $hotspot.addEventListener('focus', show);
     $hotspot.addEventListener('blur', hide);
-
-    $hotspot.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-            hide();
-        }
-    });
 }
 
 export default initHotspot;

@@ -24,8 +24,6 @@ class Card extends Widget
     protected function renderContent(): string|Stringable
     {
         if (null !== $this->collapsed) {
-            $this->attribute('aria-expanded', $this->collapsed);
-
             if ($this->collapsed) {
                 $this->addClass('collapsed');
             }
@@ -42,14 +40,21 @@ class Card extends Widget
                 ->class('card-title');
 
             if (null !== $this->collapsed) {
+                // The state is on the buttons, which is what a screen reader announces; the script keeps it in sync.
+                $toggle = [
+                    'aria-controls' => $this->getId() . '-body',
+                    'aria-expanded' => $this->collapsed ? 'false' : 'true',
+                    'data-collapse' => '#' . $this->getId(),
+                ];
+
                 $title->addContent(Button::make()
                     ->link()
-                    ->attribute('data-collapse', '#' . $this->getId())
+                    ->addAttributes($toggle)
                     ->text($this->title));
 
                 $title->addContent(Button::make()
                     ->attribute('aria-label', Yii::t('skeleton', 'CARD_TOGGLE'))
-                    ->attribute('data-collapse', '#' . $this->getId())
+                    ->addAttributes($toggle)
                     ->class('btn-collapse btn-icon icon')
                     ->icon('chevron-down'));
             } else {
@@ -61,8 +66,14 @@ class Card extends Widget
                 ->content($title));
         }
 
-        return $card->addContent(Div::make()
+        $body = Div::make()
             ->class('card-body')
-            ->content(...$this->content));
+            ->content(...$this->content);
+
+        if (null !== $this->collapsed) {
+            $body->attribute('id', $this->getId() . '-body');
+        }
+
+        return $card->addContent($body);
     }
 }

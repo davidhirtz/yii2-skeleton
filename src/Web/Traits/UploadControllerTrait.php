@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web\Traits;
 
+use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Web\ChunkedUploadedFile;
 use Hirtz\Skeleton\Web\Controller;
 use yii\base\Model;
 use yii\base\Module;
+use yii\web\Response;
 
 /**
  * The half of an upload action every controller that takes one writes the same way: read the chunk, tell the
@@ -37,5 +39,18 @@ trait UploadControllerTrait
         Upload::getComponent()->collectGarbageOncePerSession();
 
         return $upload;
+    }
+
+    /**
+     * The uploader shows the message. HTTP/2 has no reason phrase, so it also travels URL-encoded in
+     * `X-Upload-Error` (a header is Latin-1), and encoded in the body for a client rendering the response.
+     */
+    protected function refuseUpload(int $statusCode, string $message): Response
+    {
+        $this->response->setStatusCode($statusCode, $message);
+        $this->response->getHeaders()->set('X-Upload-Error', rawurlencode($message));
+        $this->response->content = Html::encode($message);
+
+        return $this->response;
     }
 }

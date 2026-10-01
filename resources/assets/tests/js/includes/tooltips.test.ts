@@ -54,7 +54,17 @@ describe('tooltips', () => {
         expect(document.querySelector('.tooltip')).toBeNull();
 
         $button.dispatchEvent(new FocusEvent('focus'));
-        $button.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}));
+        $button.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+        expect(document.querySelector('.tooltip')).toBeNull();
+    });
+
+    it('hides a tooltip opened by hovering on Escape, wherever the focus is', () => {
+        const $button = render('<button data-tooltip title="Delete"></button>');
+
+        $button.dispatchEvent(new MouseEvent('mouseenter'));
+        expect(document.querySelector('.tooltip')).not.toBeNull();
+
+        document.body.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
         expect(document.querySelector('.tooltip')).toBeNull();
     });
 });
