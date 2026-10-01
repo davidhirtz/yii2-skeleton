@@ -1,4 +1,4 @@
-## Unreleased
+## 3.9.0 (October 1, 2026)
 
 - Added `UrlCustomAttribute::relative()`: the attribute also accepts a path, a query or a fragment (`/about`, `?page=2`, `#team`)
 - Added the nonce to every `<style>` `Web\View` renders and to a `style-src` or `style-src-elem` directive of
