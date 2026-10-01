@@ -65,6 +65,11 @@ class StreamUploadedFile extends AbstractUploadedFile
      */
     protected function openUrl(string $url)
     {
+        if (!ini_get('allow_url_fopen')) {
+            Yii::error('Uploading from a URL needs `allow_url_fopen`.', __METHOD__);
+            return null;
+        }
+
         $maxRedirects = Upload::getComponent()->maxStreamUploadRedirects;
 
         for ($hop = 0; $hop <= $maxRedirects; ++$hop) {
