@@ -31,6 +31,20 @@
 - Fixed the busy overlay staying on after a request failed, pager links nesting a second `#wrap`, fast keyboard
   reordering losing the last order, and a moved `tinymce-editor` stacking editors
 - Fixed collapsible cards announcing no state and hover tooltips not closing on Escape
+- Added `Db\ActiveRecord::touchUpdatedAt()` and the `touchOwners()` hook, also called by
+  `updateDenormalizedAttributes()`, so a record passes a change on to the record that shows it
+- Added `M261001130000UserIsOwnerNotNull`
+- Changed the console to default `params.email` to `hostmaster@<host>` of `params.hostInfo` (or a configured
+  `urlManager.hostInfo`)
+- Changed the admin to never time out its own requests: htmx's `defaultTimeout` is 0, so PHP's limits decide
+- Changed the autocomplete field and the navbar search to WAI-ARIA comboboxes: the focus stays in the input while the
+  arrow keys move an `aria-activedescendant` option
+- Changed a chunk that disagrees with its `Content-Range` to answer with `refuseUpload()`, which says why
+- Changed `php-cs-fixer` (in `yii2-dev`) to remove unused imports
+- Removed `Modules\Admin\Widgets\Navs\DashboardLogo`, `Widgets\Forms\DeleteActiveForm`,
+  `ApplicationTrait::extendComponent()`, `extendComponents()`, `extendModules()`, and
+  `MigrationTrait::createIndexIfMissing()` and `moveCustomAttributesColumnToEnd()`, which nothing used
+- Fixed `StringHelper::obfuscateText()` and `obfuscateEmail()` cutting a multibyte character in half
 
 ## 3.10.0 (October 1, 2026)
 
