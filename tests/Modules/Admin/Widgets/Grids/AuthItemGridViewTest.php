@@ -71,6 +71,25 @@ class AuthItemGridViewTest extends TestCase
         self::assertStringContainsString('/admin/user-auth/index?id=' . $user->id, $this->renderItems($item));
     }
 
+    public function testTheUserNameIsEscaped(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $user->updateAttributes(['name' => '<b hx-get=/x>p</b>']);
+        $this->assignAdminRole($user->id);
+
+        $item = AuthItem::find()
+            ->withUsers()
+            ->andWhere(['name' => User::AUTH_ROLE_ADMIN])
+            ->one();
+
+        self::assertInstanceOf(AuthItem::class, $item);
+
+        $html = $this->renderItems($item);
+
+        self::assertStringNotContainsString('<b hx-get', $html);
+        self::assertStringContainsString('&lt;b hx-get=/x&gt;p&lt;/b&gt;', $html);
+    }
+
     /**
      * The button is what the actor could act on, so it is left out of the row of an item they cannot pass on
      * themselves — {@see \Hirtz\Skeleton\Modules\Admin\Controllers\UserAuthController::getAuthItem()}

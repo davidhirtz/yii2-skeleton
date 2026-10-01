@@ -42,6 +42,6 @@ class Username extends Widget
                 ->text($text)
             : Span::make()
                 ->attributes($this->attributes)
-                ->content($text);
+                ->text($text);
     }
 }
