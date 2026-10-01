@@ -191,6 +191,18 @@ class UploadControllerTest extends TestCase
         self::assertSame(429, $this->getWebResponse()->getStatusCode());
     }
 
+    public function testAChunkDisagreeingWithItsRangeSaysWhy(): void
+    {
+        $this->login();
+
+        $this->setUpUpload('notes.txt', 'abcdef', 'bytes 0-2/6');
+        $this->post();
+
+        $response = $this->getWebResponse();
+        self::assertSame(400, $response->getStatusCode());
+        self::assertNotEmpty($response->getHeaders()->get('X-Upload-Error'));
+    }
+
     public function testAFirstChunkOverTheUploadLimitWritesNothing(): void
     {
         $this->login();

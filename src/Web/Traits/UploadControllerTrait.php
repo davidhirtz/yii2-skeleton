@@ -8,8 +8,10 @@ use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Web\ChunkedUploadedFile;
 use Hirtz\Skeleton\Web\Controller;
+use Yii;
 use yii\base\Model;
 use yii\base\Module;
+use yii\web\BadRequestHttpException;
 use yii\web\Response;
 
 /**
@@ -23,13 +25,18 @@ trait UploadControllerTrait
     /**
      * @param Model|null $model the model the file input is named after, or `null` for a bare `$_FILES` entry
      * @return ChunkedUploadedFile|null `null` when the request carried no file, or when the response already says
-     * what happened: `201` for a chunk that landed and wants the next one.
+     * what happened: `201` for a chunk that landed and wants the next one, `400` for one that disagrees with its range.
      */
     protected function receiveUpload(?Model $model = null, string $attribute = 'upload'): ?ChunkedUploadedFile
     {
-        $upload = $model
-            ? ChunkedUploadedFile::getInstance($model, $attribute)
-            : ChunkedUploadedFile::getInstanceByName($attribute);
+        try {
+            $upload = $model
+                ? ChunkedUploadedFile::getInstance($model, $attribute)
+                : ChunkedUploadedFile::getInstanceByName($attribute);
+        } catch (BadRequestHttpException) {
+            $this->refuseUpload(400, Yii::t('skeleton', 'UPLOAD_FAILED_ERROR'));
+            return null;
+        }
 
         if ($upload?->isPartial()) {
             $this->response->setStatusCode(201);
