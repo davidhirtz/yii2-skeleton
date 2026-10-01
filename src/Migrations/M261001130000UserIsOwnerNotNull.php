@@ -16,12 +16,12 @@ class M261001130000UserIsOwnerNotNull extends Migration
     public function safeUp(): void
     {
         $this->update('{{%user}}', ['is_owner' => 0], ['is_owner' => null]);
-        $this->alterColumn('{{%user}}', 'is_owner', $this->tinyInteger(1)->unsigned()->notNull()->defaultValue(0));
+        $this->alterColumn('{{%user}}', 'is_owner', 'tinyint(1) unsigned NOT NULL DEFAULT 0');
     }
 
     #[Override]
     public function safeDown(): void
     {
-        $this->alterColumn('{{%user}}', 'is_owner', $this->tinyInteger(1)->unsigned()->defaultValue(0));
+        $this->alterColumn('{{%user}}', 'is_owner', 'tinyint(1) unsigned DEFAULT 0');
     }
 }
