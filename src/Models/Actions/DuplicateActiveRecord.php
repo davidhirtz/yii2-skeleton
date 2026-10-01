@@ -8,7 +8,7 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Events\DuplicateActiveRecordEvent;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
-use Exception;
+use Throwable;
 use Yii;
 
 /**
@@ -49,7 +49,9 @@ class DuplicateActiveRecord
                 $transaction->commit();
                 return true;
             }
-        } catch (Exception $exception) {
+
+            $transaction->rollBack();
+        } catch (Throwable $exception) {
             $transaction->rollBack();
             throw $exception;
         }
