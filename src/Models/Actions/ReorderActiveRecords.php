@@ -35,7 +35,7 @@ class ReorderActiveRecords
      */
     public function run(): int|false
     {
-        return Yii::$app->getDb()->transaction(function (): int|false {
+        $result = Yii::$app->getDb()->transaction(function (): int|false {
             if (!$this->beforeReorder()) {
                 return false;
             }
@@ -48,6 +48,12 @@ class ReorderActiveRecords
 
             return $this->totalRowsUpdated;
         });
+
+        if ($result) {
+            $this->afterCommit();
+        }
+
+        return $result;
     }
 
     protected function reorderActiveRecords(): int
@@ -72,6 +78,13 @@ class ReorderActiveRecords
     }
 
     protected function afterReorder(): void
+    {
+    }
+
+    /**
+     * A cache cleared before the commit can be refilled with the old order by a request in between.
+     */
+    protected function afterCommit(): void
     {
     }
 

@@ -64,6 +64,26 @@ class ReorderActiveRecordsTest extends TestCase
         }
     }
 
+    public function testAfterCommitRunsOnceTheTransactionIsClosed(): void
+    {
+        $ids = $this->createRecords();
+        $level = Yii::$app->getDb()->getTransaction()?->getLevel();
+
+        $action = new class (ReorderRecord::find()->all(), array_flip(array_reverse($ids))) extends ReorderActiveRecords {
+            public ?int $commitLevel = null;
+
+            #[Override]
+            protected function afterCommit(): void
+            {
+                $this->commitLevel = Yii::$app->getDb()->getTransaction()?->getLevel();
+            }
+        };
+
+        $action->run();
+
+        self::assertSame($level, $action->commitLevel);
+    }
+
     /**
      * @return list<int>
      */
