@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Changed the baseline's RBAC timestamps (`auth_rule`, `auth_item`, `auth_assignment`) to `bigint` for fresh installations
 - Added `ext-fileinfo` to the requirements; without it an upload's MIME type was silently `null`
 - Added `Models\Actions\ReorderActiveRecords::afterCommit()`, which runs once the positions are committed
 - Fixed search splitting decomposed (NFD) umlauts; `search/rebuild` re-indexes existing records

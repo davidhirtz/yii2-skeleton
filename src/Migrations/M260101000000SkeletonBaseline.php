@@ -20,8 +20,8 @@ class M260101000000SkeletonBaseline extends Migration
             CREATE TABLE `auth_rule` (
               `name` varchar(64) NOT NULL,
               `data` blob DEFAULT NULL,
-              `created_at` int(11) DEFAULT NULL,
-              `updated_at` int(11) DEFAULT NULL,
+              `created_at` bigint(20) DEFAULT NULL,
+              `updated_at` bigint(20) DEFAULT NULL,
               PRIMARY KEY (`name`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             SQL
@@ -35,8 +35,8 @@ class M260101000000SkeletonBaseline extends Migration
               `description` text DEFAULT NULL,
               `rule_name` varchar(64) DEFAULT NULL,
               `data` blob DEFAULT NULL,
-              `updated_at` int(11) DEFAULT NULL,
-              `created_at` int(11) NOT NULL,
+              `updated_at` bigint(20) DEFAULT NULL,
+              `created_at` bigint(20) NOT NULL,
               PRIMARY KEY (`name`),
               KEY `auth_item_rule_name_ibfk` (`rule_name`),
               KEY `type` (`type`)
@@ -60,7 +60,7 @@ class M260101000000SkeletonBaseline extends Migration
             CREATE TABLE `auth_assignment` (
               `item_name` varchar(64) NOT NULL,
               `user_id` int(11) unsigned NOT NULL,
-              `created_at` int(11) DEFAULT NULL,
+              `created_at` bigint(20) DEFAULT NULL,
               PRIMARY KEY (`item_name`,`user_id`),
               KEY `auth_assignment_user_id_ibfk` (`user_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
