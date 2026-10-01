@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Added `--sleep` to `trail/clear` and `user-login/clear`
+- Fixed the garbage collection of `trail/clear` and `user-login/clear` never running its `OPTIMIZE TABLE`
 - Fixed `Db\Traits\MigrationTrait::moveColumnsToCustomAttributes()` refusing, and `restoreColumnsFromCustomAttributes()`
   writing `?`, for a value with a 4-byte character (an emoji) on MariaDB 10.5, whose `JSON_UNQUOTE()` answers in `utf8mb3`
 
