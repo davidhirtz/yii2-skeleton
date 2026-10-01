@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Rbac;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use yii\rbac\Assignment;
+use yii\rbac\Permission;
 use yii\caching\CacheInterface;
 
 class DbManager extends \yii\rbac\DbManager
@@ -41,6 +42,50 @@ class DbManager extends \yii\rbac\DbManager
         }
 
         return false;
+    }
+
+    /**
+     * Answered from the cached hierarchy when there is one: the parent's four queries a user become the one that
+     * reads the assignments, shared with {@see checkAccess()} — the user grids ask this for every row.
+     *
+     * @return array<string, Permission>
+     */
+    #[\Override]
+    public function getPermissionsByUser($userId): array
+    {
+        $this->loadFromCache();
+
+        if ($this->items === null || $this->parents === null || $this->isEmptyUserId($userId)) {
+            return parent::getPermissionsByUser($userId);
+        }
+
+        $children = [];
+
+        foreach ($this->parents as $child => $parents) {
+            foreach ($parents as $parent) {
+                $children[$parent][] = $child;
+            }
+        }
+
+        $assignments = $this->checkAccessAssignments[(string)$userId] ??= $this->getAssignments($userId);
+        $names = [];
+
+        foreach (array_keys($assignments) as $name) {
+            $names[$name] = true;
+            $this->getChildrenRecursive((string)$name, $children, $names);
+        }
+
+        $permissions = [];
+
+        foreach (array_keys($names) as $name) {
+            $item = $this->items[$name] ?? null;
+
+            if ($item instanceof Permission) {
+                $permissions[$name] = $item;
+            }
+        }
+
+        return $permissions;
     }
 
     /**

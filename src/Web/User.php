@@ -122,6 +122,13 @@ class User extends \yii\web\User
      */
     private array $permissionNames = [];
 
+    /**
+     * @var array<int|string, array<int|string, bool>> by actor, then target: what {@see canManageUser()} answered
+     */
+    private array $manageableUsers = [];
+
+    private ?int $permissionCount = null;
+
     #[Override]
     public function init(): void
     {
@@ -344,14 +351,20 @@ class User extends \yii\web\User
             return true;
         }
 
+        return $this->manageableUsers[$id][$user->id] ??= $this->isManageableUser($user, $id);
+    }
+
+    private function isManageableUser(\Hirtz\Skeleton\Models\User $user, int|string $id): bool
+    {
         if ($user->isOwner()) {
             return false;
         }
 
         $held = $this->getPermissionNames($id);
+        $this->permissionCount ??= count(Yii::$app->getAuthManager()->getPermissions());
 
         // Nobody holds more than everything, so the usual case — an administrator — costs no lookup at all
-        if (count($held) >= count(Yii::$app->getAuthManager()->getPermissions())) {
+        if (count($held) >= $this->permissionCount) {
             return true;
         }
 
