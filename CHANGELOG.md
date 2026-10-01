@@ -1,3 +1,8 @@
+## Unreleased
+
+- Fixed `Db\Traits\MigrationTrait::moveColumnsToCustomAttributes()` refusing, and `restoreColumnsFromCustomAttributes()`
+  writing `?`, for a value with a 4-byte character (an emoji) on MariaDB 10.5, whose `JSON_UNQUOTE()` answers in `utf8mb3`
+
 ## 3.9.0 (October 1, 2026)
 
 - Added `UrlCustomAttribute::relative()`: the attribute also accepts a path, a query or a fragment (`/about`, `?page=2`, `#team`)

@@ -317,22 +317,35 @@ trait MigrationTrait
     }
 
     /**
+     * Compared in PHP: MariaDB 10.5's `JSON_UNQUOTE()` answers in `utf8mb3`, so a value with an emoji reads back as
+     * `?` and would fail the comparison although the JSON holds it intact.
+     *
      * @param list<string> $columns
      */
     private function assertCustomAttributeColumns(string $table, array $columns, string $column): void
     {
-        $db = $this->getDb();
-        $owner = $this->getQuotedTableName($table);
-        $target = $db->quoteColumnName($column);
+        $failures = array_fill_keys($columns, 0);
 
-        foreach ($columns as $name) {
-            $path = $db->quoteValue('$."' . $name . '"');
+        if ($columns) {
+            $query = (new Query())
+                ->select([$column, ...$columns])
+                ->from($table);
 
-            $count = (int)$db->createCommand("
-                SELECT COUNT(*) FROM $owner
-                WHERE NOT (JSON_UNQUOTE(JSON_EXTRACT($target, $path)) <=> NULLIF([[$name]], ''))
-            ")->queryScalar();
+            foreach ($query->each(500, $this->getDb()) as $row) {
+                $values = $this->decodeCustomAttributes($row[$column]);
 
+                foreach ($columns as $name) {
+                    $expected = $row[$name] === null || $row[$name] === '' ? null : (string)$row[$name];
+                    $actual = isset($values[$name]) && is_scalar($values[$name]) ? (string)$values[$name] : null;
+
+                    if ($expected !== $actual) {
+                        $failures[$name]++;
+                    }
+                }
+            }
+        }
+
+        foreach ($failures as $name => $count) {
             if ($count !== 0) {
                 throw new RuntimeException("Column \"$name\" of $table did not reach $column in $count rows.");
             }
@@ -341,6 +354,15 @@ trait MigrationTrait
         if (!$this->compact) {
             echo '    > moved ' . count($columns) . " columns of $table\n";
         }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function decodeCustomAttributes(mixed $value): array
+    {
+        $values = is_string($value) && $value !== '' ? json_decode($value, true) : null;
+        return is_array($values) ? $values : [];
     }
 
     /**
@@ -383,7 +405,8 @@ trait MigrationTrait
 
     /**
      * The reverse: the source language goes back into its column, every other language back into a
-     * {@see Translation} row, and the keys are removed from the JSON.
+     * {@see Translation} row, and the keys are removed from the JSON. The values are read in PHP: MariaDB 10.5's
+     * `JSON_UNQUOTE()` answers in `utf8mb3` and would write an emoji back as `?`.
      *
      * @param array<string, string> $columns the column definition per attribute
      */
@@ -394,12 +417,8 @@ trait MigrationTrait
         string $column = 'custom_attributes'
     ): void {
         $db = $this->getDb();
-        $owner = $this->getQuotedTableName($table);
-        $translations = $this->getQuotedTableName(Translation::tableName());
-        $target = $db->quoteColumnName($column);
-        $class = $db->quoteValue($modelClass);
         $i18n = Yii::$app->getI18n();
-        $paths = [];
+        $names = [];
 
         foreach ($columns as $attribute => $type) {
             if (!$this->hasColumn($table, $attribute)) {
@@ -407,27 +426,55 @@ trait MigrationTrait
             }
 
             foreach ($i18n->getLanguages() as $language) {
-                $name = $i18n->getAttributeName($attribute, $language);
-                $path = $db->quoteValue('$."' . $name . '"');
-                $paths[] = $path;
+                $names[$i18n->getAttributeName($attribute, $language)] = [$attribute, $language];
+            }
+        }
 
-                if ($name === $attribute) {
-                    $this->execute("
-                        UPDATE $owner SET [[$attribute]] = JSON_UNQUOTE(JSON_EXTRACT($target, $path))
-                        WHERE JSON_EXTRACT($target, $path) IS NOT NULL
-                    ");
+        $query = (new Query())
+            ->select(['id', $column])
+            ->from($table)
+            ->where(['not', [$column => null]]);
 
+        $translations = [];
+
+        foreach ($query->each(500, $db) as $row) {
+            $values = $this->decodeCustomAttributes($row[$column]);
+            $attributes = [];
+
+            foreach ($names as $name => [$attribute, $language]) {
+                if (!isset($values[$name]) || !is_scalar($values[$name])) {
                     continue;
                 }
 
-                $this->execute("
-                    INSERT INTO $translations ([[model_class]], [[model_id]], [[language]], [[attribute]], [[value]])
-                    SELECT $class, [[id]], {$db->quoteValue($language)}, {$db->quoteValue($attribute)},
-                        JSON_UNQUOTE(JSON_EXTRACT($target, $path))
-                    FROM $owner WHERE JSON_EXTRACT($target, $path) IS NOT NULL
-                ");
+                if ($name === $attribute) {
+                    $attributes[$attribute] = (string)$values[$name];
+                    continue;
+                }
+
+                $translations[] = [$modelClass, $row['id'], $language, $attribute, (string)$values[$name]];
+            }
+
+            if ($attributes) {
+                $db->createCommand()
+                    ->update($table, $attributes, ['id' => $row['id']])
+                    ->execute();
             }
         }
+
+        if ($translations) {
+            $db->createCommand()
+                ->batchInsert(
+                    Translation::tableName(),
+                    ['model_class', 'model_id', 'language', 'attribute', 'value'],
+                    $translations
+                )
+                ->execute();
+        }
+
+        $paths = array_map(fn (string $name): string => $db->quoteValue('$."' . $name . '"'), array_keys($names));
+        $target = $db->quoteColumnName($column);
+
+        $owner = $this->getQuotedTableName($table);
 
         $this->execute("UPDATE $owner SET $target = JSON_REMOVE($target, " . implode(', ', $paths) . ')');
     }

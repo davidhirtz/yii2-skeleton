@@ -45,7 +45,7 @@ class MigrationTraitCustomAttributesTest extends TestCase
                 'name' => 'string(100) NULL',
                 'content' => 'text NULL',
                 'custom_attributes' => 'json NULL',
-            ])
+            ], 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE InnoDB')
             ->execute();
     }
 
@@ -134,6 +134,51 @@ class MigrationTraitCustomAttributesTest extends TestCase
         self::assertSame('de', $translation->language);
         self::assertSame('name', $translation->attribute);
         self::assertSame('Name DE', $translation->value);
+    }
+
+    /**
+     * MariaDB 10.5's `JSON_UNQUOTE()` answers in `utf8mb3`: an emoji read back through it is `?`, which failed the
+     * check after the move and would have been written back on the way down. The translation stays plain, since the
+     * baseline's `translation` table is `utf8mb3`.
+     */
+    public function testAFourByteCharacterSurvivesTheRoundTrip(): void
+    {
+        // the test connection is `utf8`, which cannot carry an emoji to the server at all
+        $db = Yii::$app->getDb();
+        $db->createCommand('SET NAMES utf8mb4')->execute();
+
+        try {
+            $this->assertFourByteCharacterRoundTrip();
+        } finally {
+            $db->createCommand('SET NAMES ' . $db->charset)->execute();
+        }
+    }
+
+    private function assertFourByteCharacterRoundTrip(): void
+    {
+        $id = $this->insertRow(['name' => 'Name 🌿', 'content' => '<p>👉 Book now</p>']);
+        $this->insertTranslation($id, 'de', 'content', '<p>Jetzt buchen</p>');
+
+        $migration = $this->createMigration();
+        $migration->moveColumnsToCustomAttributes(self::TABLE, ['name', 'content'], self::MODEL_CLASS);
+
+        self::assertSame([
+            'name' => 'Name 🌿',
+            'content' => '<p>👉 Book now</p>',
+            'content_de' => '<p>Jetzt buchen</p>',
+        ], $this->getCustomAttributes($id));
+
+        $migration->restoreColumnsFromCustomAttributes(self::TABLE, [
+            'name' => 'string(100) NULL',
+            'content' => 'text NULL',
+        ], self::MODEL_CLASS);
+
+        $row = (new Query())->from(self::TABLE)->where(['id' => $id])->one();
+
+        self::assertIsArray($row);
+        self::assertSame('Name 🌿', $row['name']);
+        self::assertSame('<p>👉 Book now</p>', $row['content']);
+        self::assertSame('<p>Jetzt buchen</p>', Translation::find()->where(['model_class' => self::MODEL_CLASS])->one()?->value);
     }
 
     /**
