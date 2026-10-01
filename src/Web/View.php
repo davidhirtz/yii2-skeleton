@@ -32,7 +32,7 @@ class View extends \yii\web\View
 
     /**
      * The nonce of the page's `Content-Security-Policy`, set by the controller sending the strict policy. Every
-     * script rendered here carries it; without one a page renders as before, so a cached one is unchanged.
+     * script and `<style>` rendered here carries it; without one a page renders as before, so a cached one is unchanged.
      */
     public ?string $nonce = null;
 
@@ -97,6 +97,21 @@ class View extends \yii\web\View
         }
 
         parent::registerJsFile($url, $options, $key);
+    }
+
+    /**
+     * @param string $css
+     * @param array<string, mixed> $options
+     * @param string|null $key
+     */
+    #[Override]
+    public function registerCss($css, $options = [], $key = null): void
+    {
+        if ($this->nonce !== null) {
+            $options['nonce'] ??= $this->nonce;
+        }
+
+        parent::registerCss($css, $options, $key);
     }
 
     /**

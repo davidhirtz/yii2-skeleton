@@ -13,13 +13,18 @@ use yii\base\BaseObject;
  * policy: `'strict-dynamic'` extends that trust to whatever a trusted script loads itself (TinyMCE's plugins, a map,
  * a script htmx swaps in), so their hosts need no listing in `script-src`, where a browser ignores them anyway.
  *
+ * Styles are unrestricted unless a project adds `style-src` (or `style-src-elem`): the nonce then joins it, which
+ * `Web\View` stamps on every `<style>` it renders. Not where the directive allows `'unsafe-inline'`, which a nonce
+ * would switch off, `style` attributes included. A `<style>` swapped in later carries its own response's nonce, not
+ * the page's, and is blocked: such a policy suits styles of full page loads.
+ *
  * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP
  */
 class ContentSecurityPolicy extends BaseObject
 {
     /**
-     * @var array<string, list<string>> the directives and their sources, the nonce is added to `script-src` when the
-     *     header is built
+     * @var array<string, list<string>> the directives and their sources, the nonce is added to `script-src` (and a
+     *     style directive) when the header is built
      */
     public array $directives = [
         'script-src' => ["'self'", "'strict-dynamic'"],
@@ -63,7 +68,7 @@ class ContentSecurityPolicy extends BaseObject
         $policy = [];
 
         foreach ($this->directives as $directive => $sources) {
-            if ($directive === 'script-src') {
+            if ($directive === 'script-src' || $this->isNoncedStyleDirective($directive, $sources)) {
                 $sources = [...$sources, "'nonce-{$this->getNonce()}'"];
             }
 
@@ -71,5 +76,14 @@ class ContentSecurityPolicy extends BaseObject
         }
 
         return implode('; ', $policy);
+    }
+
+    /**
+     * @param list<string> $sources
+     */
+    protected function isNoncedStyleDirective(string $directive, array $sources): bool
+    {
+        return in_array($directive, ['style-src', 'style-src-elem'], true)
+            && !in_array("'unsafe-inline'", $sources, true);
     }
 }

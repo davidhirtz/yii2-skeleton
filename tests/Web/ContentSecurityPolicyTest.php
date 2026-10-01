@@ -64,11 +64,37 @@ final class ContentSecurityPolicyTest extends TestCase
         }
     }
 
+    public function testAStyleDirectiveCarriesTheNonceUnlessItAllowsInlineStyles(): void
+    {
+        $policy = new ContentSecurityPolicy();
+        $nonce = $policy->getNonce();
+
+        $policy->setDirective('style-src', ["'self'"])
+            ->setDirective('style-src-elem', ["'self'", "'unsafe-inline'"]);
+
+        self::assertStringContainsString("style-src 'self' 'nonce-$nonce';", $policy->getPolicy());
+        self::assertStringContainsString("style-src-elem 'self' 'unsafe-inline'", $policy->getPolicy());
+        self::assertStringNotContainsString("'unsafe-inline' 'nonce-", $policy->getPolicy());
+    }
+
+    public function testEveryStyleOfTheViewCarriesTheNonce(): void
+    {
+        $view = new View();
+        $view->nonce = 'abc';
+
+        $view->registerCss('.a{color:red}', ['media' => 'print'], 'a');
+        $view->registerCss('.b{color:red}', ['nonce' => 'own']);
+
+        self::assertSame('<style media="print" nonce="abc">.a{color:red}</style>', $view->css['a'] ?? null);
+        self::assertSame('<style nonce="own">.b{color:red}</style>', array_values($view->css)[1] ?? null);
+    }
+
     public function testAViewWithoutANonceRendersAsBefore(): void
     {
         $view = new View();
         $view->registerJs('end();', View::POS_END);
         $view->registerJsFile('/file.js');
+        $view->registerCss('.a{color:red}');
 
         $html = $this->renderPage($view);
 

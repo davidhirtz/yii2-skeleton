@@ -1,6 +1,8 @@
 ## Unreleased
 
 - Added `UrlCustomAttribute::relative()`: the attribute also accepts a path, a query or a fragment (`/about`, `?page=2`, `#team`)
+- Added the nonce to every `<style>` `Web\View` renders and to a `style-src` or `style-src-elem` directive of
+  `ContentSecurityPolicy`, unless that directive allows `'unsafe-inline'`
 
 ## 3.8.0 (September 30, 2026)
 
