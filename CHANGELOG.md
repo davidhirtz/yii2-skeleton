@@ -1,4 +1,4 @@
-## Unreleased
+## 3.10.0 (October 1, 2026)
 
 - Added `--sleep` to `trail/clear` and `user-login/clear`
 - Fixed the garbage collection of `trail/clear` and `user-login/clear` never running its `OPTIMIZE TABLE`
