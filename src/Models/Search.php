@@ -19,7 +19,7 @@ use Yii;
  * @property string $language
  * @property int|null $tenant_id
  * @property int $status
- * @property float|string $weight
+ * @property string $weight
  * @property string $title
  * @property string|null $content
  * @property DateTime $updated_at
