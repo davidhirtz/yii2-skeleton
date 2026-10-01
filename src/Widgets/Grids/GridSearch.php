@@ -68,8 +68,8 @@ class GridSearch implements Configurable
     public function getValue(): string
     {
         if ($this->value === null) {
-            $this->value = Application::current()->getRequest()->get($this->paramName);
-            $this->value = trim($this->value ?? '');
+            $value = Application::current()->getRequest()->get($this->paramName);
+            $this->value = is_string($value) && mb_check_encoding($value, 'UTF-8') ? trim($value) : '';
         }
 
         return $this->value;
