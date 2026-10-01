@@ -80,7 +80,7 @@ class LogGridView extends GridView
     {
         return Div::make()
             ->class($this->getLevelCssClass($model->level))
-            ->content(ucfirst($model->level));
+            ->text(ucfirst($model->level));
     }
 
     protected function getMessageColumn(): Column

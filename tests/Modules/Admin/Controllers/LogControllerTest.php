@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Override;
 use Yii;
+use yii\helpers\VarDumper;
 use yii\web\ForbiddenHttpException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
@@ -118,6 +119,49 @@ class LogControllerTest extends TestCase
         self::assertIsString($html);
         self::assertStringContainsString('10:00:00', $html);
         self::assertStringContainsString('11:00:00', $html);
+    }
+
+    /**
+     * A dumped request value shaped like an entry neither opens an entry of its own nor reaches the page as markup.
+     */
+    public function testViewEscapesAForgedLevel(): void
+    {
+        $this->login();
+
+        $forged = '2026-01-01 00:00:00 [a][b][c][<b hx-post=/admin/x hx-trigger=load>][d]';
+        $post = VarDumper::export(['url' => "x $forged"]);
+
+        file_put_contents($this->logPath . 'app.log', <<<LOG
+            2026-09-13 10:00:00 [127.0.0.1][1][-][warning][application] Refused to fetch "x"
+            2026-09-13 10:00:00 [127.0.0.1][1][-][info][application] \$_POST = $post
+
+            LOG);
+
+        $provider = Yii::$container->get(LogDataProvider::class, config: ['file' => 'app.log']);
+
+        self::assertCount(1, $provider->allModels);
+        self::assertStringContainsString('[d]', $provider->allModels[0]->content);
+
+        $html = Yii::$app->runAction('admin/log/view', ['log' => 'app.log']);
+
+        self::assertIsString($html);
+        self::assertStringNotContainsString('<b hx-post', $html);
+    }
+
+    /**
+     * A logged value carrying a line break can still start a line, so the level is escaped too.
+     */
+    public function testViewEscapesTheLevel(): void
+    {
+        $this->login();
+
+        file_put_contents($this->logPath . 'app.log', "2026-01-01 00:00:00 [a][b][c][<b hx-post=/admin/x>][d] x\n");
+
+        $html = Yii::$app->runAction('admin/log/view', ['log' => 'app.log']);
+
+        self::assertIsString($html);
+        self::assertStringNotContainsString('<b hx-post', $html);
+        self::assertStringContainsString('&lt;b hx-post=/admin/x&gt;', $html);
     }
 
     public function testViewOfAnUnknownFileIsNotFound(): void
