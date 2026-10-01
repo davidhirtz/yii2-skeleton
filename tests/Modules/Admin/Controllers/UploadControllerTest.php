@@ -167,6 +167,43 @@ class UploadControllerTest extends TestCase
         self::assertCount(1, glob($this->upload->tempPath . '*') ?: []);
     }
 
+    /**
+     * The limit counts uploads, not requests: the chunks after the first belong to the upload it counted.
+     */
+    public function testAChunkedUploadIsCountedOnceOnItsFirstChunk(): void
+    {
+        $this->login();
+        $this->upload->uploadLimit = 1;
+
+        $this->setUpUpload('notes.txt', 'abc', 'bytes 0-2/6');
+        $this->post();
+        self::assertSame(201, $this->getWebResponse()->getStatusCode());
+
+        $this->getWebResponse()->clear();
+
+        $this->setUpUpload('notes.txt', 'def', 'bytes 3-5/6');
+        self::assertIsString($this->post());
+        self::assertSame(200, $this->getWebResponse()->getStatusCode());
+
+        $this->setUpUpload('second.txt', 'abc', 'bytes 0-2/6');
+        $this->post();
+
+        self::assertSame(429, $this->getWebResponse()->getStatusCode());
+    }
+
+    public function testAFirstChunkOverTheUploadLimitWritesNothing(): void
+    {
+        $this->login();
+        $this->upload->uploadLimit = 1;
+        $this->upload->addUpload();
+
+        $this->setUpUpload('notes.txt', 'abc', 'bytes 0-2/6');
+        $this->post();
+
+        self::assertSame(429, $this->getWebResponse()->getStatusCode());
+        self::assertSame([], glob($this->upload->tempPath . '*') ?: []);
+    }
+
     public function testASignatureOfAnotherAttributeIsRefused(): void
     {
         $this->login();
@@ -289,8 +326,15 @@ class UploadControllerTest extends TestCase
         return Yii::$app->runAction('admin/upload/create', $params);
     }
 
-    private function setUpUpload(string $name, string $content = 'content'): void
+    private function setUpUpload(string $name, string $content = 'content', ?string $range = null): void
     {
+        $headers = $this->getWebRequest()->getHeaders();
+        $headers->remove('content-range');
+
+        if ($range !== null) {
+            $headers->set('content-range', $range);
+        }
+
         $tempName = $this->path . 'source';
         file_put_contents($tempName, $content);
 

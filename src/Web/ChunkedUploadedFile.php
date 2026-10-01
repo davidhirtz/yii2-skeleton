@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Upload\Upload;
 use Override;
 use Yii;
 use yii\base\InvalidCallException;
+use yii\web\BadRequestHttpException;
 use yii\web\UploadedFile;
 
 class ChunkedUploadedFile extends UploadedFile
@@ -36,18 +37,33 @@ class ChunkedUploadedFile extends UploadedFile
             return;
         }
 
-        $range = (string)Application::current()->getRequest()->getHeaders()->get('content-range');
+        $range = self::getContentRange();
 
-        if (!preg_match('/^bytes (\d+)-(\d+)\/(\d+)$/', $range, $matches)) {
+        if ($range === null) {
             return;
         }
 
-        [, $start, $end, $this->size] = array_map(intval(...), $matches);
+        [$start, $end, $this->size] = $range;
 
+        if ($this->size < 1 || $start > $end || $end >= $this->size) {
+            throw new BadRequestHttpException();
+        }
 
         if ($this->maxSize > 0 && $this->size > $this->maxSize) {
             $this->error = UPLOAD_ERR_FORM_SIZE;
             return;
+        }
+
+        $length = @filesize($this->tempName);
+
+        if ($length === false) {
+            $this->error = UPLOAD_ERR_CANT_WRITE;
+            return;
+        }
+
+        // The chunk is appended whole, so a body longer than its range would grow the file past the declared total.
+        if ($length !== $end - $start + 1) {
+            throw new BadRequestHttpException();
         }
 
         $tempName = $this->getPartialUploadPath() . Application::current()->getSession()->getId() . "-$this->name.tmp";
@@ -83,7 +99,7 @@ class ChunkedUploadedFile extends UploadedFile
         }
 
         $isPartial = $end + 1 < $this->size;
-        $percentage = round((($start + $end) / $this->size) * 100);
+        $percentage = round(($end + 1) / $this->size * 100);
 
         $this->error = $isPartial ? UPLOAD_ERR_PARTIAL : UPLOAD_ERR_OK;
         $this->tempName = $tempName;
@@ -92,6 +108,29 @@ class ChunkedUploadedFile extends UploadedFile
         Yii::debug($isPartial
             ? "Uploaded $percentage% of \"$this->name\"."
             : "Upload of \"$this->name\" completed.");
+    }
+
+    /**
+     * Whether the request opens an upload rather than continuing one: a file sent whole or the first chunk of one.
+     * A chunk at any other offset only lands on a file such a request started.
+     */
+    public static function isUploadStart(): bool
+    {
+        return (self::getContentRange()[0] ?? 0) === 0;
+    }
+
+    /**
+     * @return array{int, int, int}|null the first byte, last byte and total size, `null` for a file sent whole
+     */
+    protected static function getContentRange(): ?array
+    {
+        $range = (string)Application::current()->getRequest()->getHeaders()->get('content-range');
+
+        if (!preg_match('/^bytes (\d+)-(\d+)\/(\d+)$/', $range, $matches)) {
+            return null;
+        }
+
+        return [(int)$matches[1], (int)$matches[2], (int)$matches[3]];
     }
 
     /**

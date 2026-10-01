@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Upload\Upload;
+use Hirtz\Skeleton\Web\ChunkedUploadedFile;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Web\Traits\UploadControllerTrait;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
@@ -136,6 +137,17 @@ class UploadController extends Controller
      */
     protected function upload(UploadCustomAttribute $definition, Upload $upload): ?string
     {
+        // Counted when an upload starts, before anything is written: a chunked upload answers every chunk but the
+        // last before the file is known, and a chunk at any other offset only lands on a file a counted one opened.
+        if (ChunkedUploadedFile::isUploadStart()) {
+            if ($upload->isUploadLimitReached()) {
+                $this->response->setStatusCode(429, Yii::t('skeleton', 'UPLOAD_LIMIT_ERROR'));
+                return null;
+            }
+
+            $upload->addUpload();
+        }
+
         $file = $this->receiveUpload();
 
         if ($file === null) {
@@ -143,11 +155,6 @@ class UploadController extends Controller
                 throw new NotFoundHttpException();
             }
 
-            return null;
-        }
-
-        if ($upload->isUploadLimitReached()) {
-            $this->response->setStatusCode(429, Yii::t('skeleton', 'UPLOAD_LIMIT_ERROR'));
             return null;
         }
 
@@ -171,8 +178,6 @@ class UploadController extends Controller
 
             return null;
         }
-
-        $upload->addUpload();
 
         return $token;
     }

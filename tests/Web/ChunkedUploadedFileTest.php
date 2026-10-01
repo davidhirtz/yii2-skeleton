@@ -10,8 +10,10 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Web\ChunkedUploadedFile;
 use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Yii;
 use yii\base\InvalidCallException;
+use yii\web\BadRequestHttpException;
 
 class ChunkedUploadedFileTest extends TestCase
 {
@@ -113,6 +115,40 @@ class ChunkedUploadedFileTest extends TestCase
 
         self::assertSame(UPLOAD_ERR_OK, $restarted->error);
         self::assertSame('xyz', file_get_contents($restarted->tempName));
+    }
+
+    /**
+     * @return array<string, array{string, string}>
+     */
+    public static function invalidRangeProvider(): array
+    {
+        return [
+            'zero total' => ['', 'bytes 0-0/0'],
+            'end past the total' => ['abcdef', 'bytes 0-5/3'],
+            'end before start' => ['a', 'bytes 3-1/9'],
+            'body longer than the range' => ['abcdef', 'bytes 0-2/9'],
+            'body shorter than the range' => ['a', 'bytes 0-2/9'],
+        ];
+    }
+
+    #[DataProvider('invalidRangeProvider')]
+    public function testAChunkDisagreeingWithItsRangeIsABadRequest(string $content, string $range): void
+    {
+        $this->expectException(BadRequestHttpException::class);
+        $this->createUploadedFile($this->createSourceFile($content), range: $range);
+    }
+
+    public function testOnlyAWholeFileOrAFirstChunkStartsAnUpload(): void
+    {
+        $headers = $this->getWebRequest()->getHeaders();
+
+        self::assertTrue(ChunkedUploadedFile::isUploadStart());
+
+        $headers->set('content-range', 'bytes 0-2/9');
+        self::assertTrue(ChunkedUploadedFile::isUploadStart());
+
+        $headers->set('content-range', 'bytes 3-5/9');
+        self::assertFalse(ChunkedUploadedFile::isUploadStart());
     }
 
     public function testAnUploadOverTheMaximumSizeIsRefused(): void
