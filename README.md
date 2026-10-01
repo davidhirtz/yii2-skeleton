@@ -4,8 +4,9 @@ The core of a Yii 2 based admin platform: two application classes, a database la
 `Db\ActiveQuery`, migrations with backups), users with roles, two-factor authentication and rate-limited login, an admin
 module with a navbar, aside, grids, forms and a fulltext search, an HTML and widget layer built on htmx 4, translated
 and custom attributes, redirects, a trail, a sitemap and a console. Every other `davidhirtz/yii2-*` bundle requires it.
-It depends on `yiisoft/yii2`, `symfony/mailer`, `sentry/sentry`, `robthree/twofactorauth` and
-`tinymce/tinymce`, and needs PHP 8.3 with `intl`, `openssl`, `simplexml` and `xmlwriter`. Image processing lives in
+It depends on `yiisoft/yii2`, `symfony/mailer`, `sentry/sentry` and `robthree/twofactorauth` (TinyMCE is bundled into
+the admin's compiled assets), and needs PHP 8.3 with `fileinfo`, `intl`, `json`, `openssl`, `pdo_mysql`, `simplexml`
+and `xmlwriter`. Image processing lives in
 `davidhirtz/yii2-media`.
 
 ## Installation
@@ -36,7 +37,8 @@ Then, from the project root:
 ./yii search/rebuild    # after adding a searchable model
 ```
 
-`Web\Application` serves `web/` (`@webroot`), routes to `App\Controllers`, and turns on the `debug` module under `YII_DEBUG`.
+`Web\Application` serves `web/` (`@webroot`), routes to `App\Controllers`, and turns on the `debug` module under `YII_DEBUG`
+when `yiisoft/yii2-debug` is installed (never in the test environment).
 `Console\Application` routes to `App\Commands`, drops the `user` and `session` components, and registers the commands
 below. Both throw from `current()` when reached under the wrong SAPI; `Web\User::current()` and `Web\Request::current()`
 answer `null` there instead.
@@ -64,7 +66,7 @@ answer `null` there instead.
 | `passwordPepper` | none | appended to every password before hashing; `./yii params/pepper` |
 | `secretKey` | `cookieValidationKey` | encrypts 2FA secrets and signs tokens |
 | `adminAlias` | `admin` | the URL prefix of the admin module |
-| `hostInfo` | none | the installation's canonical URL (`https://www.example.com`), pinned where `urlManager` configures none: absolute URLs never name the host a request claimed, and the console, which has no request, builds them and reports itself to the registry under it |
+| `hostInfo` | none | the installation's canonical URL (`https://www.example.com`), pinned where `urlManager` configures none: absolute URLs never name the host a request claimed, and the console, which has no request, builds them (its `baseUrl` defaults to the root) and reports itself to the registry under it |
 | `allowedHosts` | none | comma-separated host names a request may carry (`fnmatch()` patterns: `www.example.com, *.example.com`); any other gets a 400 before routing, local hosts always pass. Without it, or a pinned `hostInfo`, links built from the request (password resets) name whatever host it claimed, and the admin says so |
 | `email` | `hostmaster@<server name>` | the sender of every mail |
 | `mailerDsn` | `sendmail://default` | the Symfony mailer transport; any installed bridge's scheme (`resend+api://KEY@default` with `symfony/resend-mailer` and `symfony/http-client`); `native://default` where the host's `sendmail` has no `-bs` mode |
@@ -82,6 +84,7 @@ answer `null` there instead.
 | `languages` | `null` (the `i18n` languages) | the languages the admin is offered in; one language hides the picker |
 | `languageSessionKey` | `language` | session key of the picked admin language |
 | `asideCookieName`, `asideCookieSecure` | `_aside`, `null` | the collapsed-aside cookie |
+| `translationLayout` | `inline` | translated fields side by side (`inline`) or one language at a time (`tabs`) |
 | `trailLifetime`, `userLoginLifetime` | `false` | seconds `trail/clear` and `user-login/clear` keep rows for |
 
 `components.user` (`Web\User`): `enableLogin`, `enableSignup` (`false`), `enablePasswordReset`, `enableUnconfirmedEmailLogin`,
@@ -92,9 +95,11 @@ derives from the request), `disableRbacForGuests`, `disableRbacForOwner`. The id
 Other components the skeleton configures: `request` (`Web\Request`, `environments` maps host patterns to `local` and `stage`,
 `trustedHosts` must be set behind a proxy; behind a CDN, key each range by the headers it sets,
 `['173.245.48.0/20' => ['X-Forwarded-For', 'X-Forwarded-Proto']]`), `urlManager` (`Web\UrlManager`: `i18nUrl`, `defaultLanguage`, `draftSubdomain`,
-`redirectMap`), `i18n` (`I18n\I18N::$languages`), `db` (`Db\Connection`: `backupOnMigration`, `backupPath`, `maxBackups`),
-`session` (`Web\DbSession`), `search` (`Search\Search::$models`, `$driver`), `sitemap` (`Sitemap\Sitemap::$sitemaps`, `urls`,
-`views`, `useSitemapIndex`), `upload` (`Upload\Upload`: `path`, `maxSize`, `enableStreamUploads`, `uploadLimit`),
+`redirectMap`), `i18n` (`I18n\I18N::$languages`), `db` (`Db\Connection`: `backupOnMigration`, `backupPath`, `maxBackups`, `ignoredBackupTables`, `lockWaitTimeout`),
+`session` (`Web\DbSession`, its own `cookieSecure`), `search` (`Search\Search::$models`, `$driver`), `sitemap` (`Sitemap\Sitemap::$sitemaps`, `urls`,
+`views`, `useSitemapIndex`), `upload` (`Upload\Upload`: `path`, `baseUrl`, `maxSize`, `uploadLimit`, `uploadLimitDuration`, `tempPath`,
+`tempLifetime`, `enableGarbageCollection`, and for uploads from a URL `enableStreamUploads`, `streamUploadTimeout`,
+`maxStreamUploadSize`, `maxStreamUploadRedirects`, `allowPrivateStreamUploadHosts`),
 `view` (`Web\View::$titleTemplate`), `log` (targets `file` and `sentry`).
 
 ### Content Security Policy
@@ -104,7 +109,9 @@ The admin sends a strict policy, the `contentSecurityPolicy` component (`Web\Con
 `Web\View` renders carries the nonce (`registerJs()`, `registerJsFile()`, asset bundles, `registerJsModule()`); a script
 added by hand has to as well, `$this->renderScript($js)` or `nonce="<?= $this->nonce ?>"`. An inline event handler
 (`onclick`) or a `javascript:` URL is refused. `'strict-dynamic'` trusts whatever a trusted script loads itself, so a
-bundle or project widens only the other directives, from its `Bootstrap` or the component's configuration:
+bundle or project widens only the other directives, from its `Bootstrap` or the component's configuration. Styles are
+unrestricted until a project adds `style-src` (or `style-src-elem`): the nonce then joins it and `Web\View` stamps it on
+every `<style>` it renders, unless the directive allows `'unsafe-inline'`, which a nonce would cancel.
 
 ```php
 Hirtz\Skeleton\Web\Application::current()->getContentSecurityPolicy()
@@ -143,16 +150,17 @@ A model is configured through the container rather than subclassed; a type's nam
 
 | Command | Purpose |
 |---|---|
-| `migrate`, `migrate/create`, `migrate/config`, `migrate/backup`, `migrate/restore` | migrations with a backup first; `--skipBackup`, `--dbFile`, `--upgradeFile` |
+| `migrate`, `migrate/create`, `migrate/config`, `migrate/backup`, `migrate/restore` | migrations with a backup first; `--skipBackup` (the controller's `dbFile` and `upgradeFile` are set through `controllerMap`) |
 | `params`, `params/cookie`, `params/pepper`, `params/create`, `params/update`, `params/delete` | maintain `config/params.php` |
 | `user/create`, `user/password <email>` | create an account, set a password (`--password` or `YII_USER_PASSWORD`) |
 | `upgrade/passwords` | mail a reset link to every user without a password |
-| `search/rebuild`, `search/clear` | the fulltext index, optionally `--models=Entry,Category` |
-| `trail/clear`, `trail/optimize`, `trail/update-models` | trail retention and class renames |
-| `user-login/clear`, `user-token/clear`, `upload/clear` | login history, expired tokens, abandoned uploads |
+| `search/rebuild [models]`, `search/clear [models]` | the fulltext index, optionally limited to a comma-separated list (`search/rebuild Entry,Category`) |
+| `trail/clear`, `trail/optimize`, `trail/update-models` | trail retention and class renames; `clear` takes `--sleep` |
+| `user-login/clear`, `user-login/optimize`, `user-token/clear`, `user-token/optimize`, `upload/clear` | login history (`--sleep`), expired tokens, abandoned uploads |
 | `redirect/clean` | delete redirect loops and shorten chains; `--hosts`, `--dryRun` |
-| `maintenance/enable`, `maintenance/disable`, `maintenance` | the pre-rendered maintenance page (`runtime/maintenance.php`) |
+| `maintenance/enable`, `maintenance/disable`, `maintenance` | the pre-rendered maintenance page (`runtime/maintenance.php`); `enable` takes `--redirect`, `--retry`, `--refresh`, `--statusCode`, `--viewFile` |
 | `registry/push`, `registry/show` | report the installation to a version registry; `--url`, `--strict` |
+| `upgrade` | the v2 → v3 upgrade steps the bundle runs itself |
 | `asset/clear`, `email/test <address>`, `message` | published assets, the mailer, message extraction |
 
 ## The admin module

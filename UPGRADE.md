@@ -6,7 +6,8 @@ project (see *Data and schema*), and the bundle itself carries one baseline migr
 
 ## Requirements
 
-- PHP `^8.3` with `ext-intl` (new), `ext-json`, `ext-openssl`, `ext-simplexml` and `ext-xmlwriter`.
+- PHP `^8.3` with `ext-fileinfo` (new), `ext-intl` (new), `ext-json`, `ext-openssl`, `ext-pdo_mysql`, `ext-simplexml` and
+  `ext-xmlwriter`.
 - MySQL or MariaDB with InnoDB fulltext support; the `search` table carries two `FULLTEXT` indexes.
 - Every sibling bundle at `^3.0`. All bundles renamed their namespace at once, so a project upgrades them together.
 - `davidhirtz/yii2-upgrade` as a `require-dev` dependency for the length of the upgrade.
@@ -119,7 +120,7 @@ project (see *Data and schema*), and the bundle itself carries one baseline migr
 | `UrlManager::$languages` (`array\|false\|null`) | `?array`, read through `getLanguages()` |
 | `UrlManager::$defaultLanguage` (`string\|false\|null`, defaulted to `sourceLanguage`) | `?string`; `null` lets `Accept-Language` decide |
 | `Sitemap::$models` | `Sitemap\Sitemap::$sitemaps` |
-| `Widgets\Forms\ActiveForm::$rows` | `$fieldsets` (`list<Fieldset>\|null`), declared through `getDefaultRows()` |
+| `Widgets\Forms\ActiveForm::$rows` | `rows()` (normalized to `list<Fieldset>`), or `getDefaultRows()` in a subclass |
 | `UserFormTrait::$repeatPassword`, `$upload` | removed |
 | `LoginForm::$enableFacebookLogin`, `SignupForm::$enableFacebookSignup` | removed |
 | `ChunkedUploadedFile::$partialUploadPath`, `$tempFileLifetime`, `$gcProbability`; `StreamUploadedFile::$temporaryUploadPath` | `Upload\Upload::$tempPath`, `$tempLifetime`, `$enableGarbageCollection` |
@@ -179,7 +180,7 @@ from the old English text; grep the new file for the wording. Shapes: `{DOMAIN}_
 | v2 | v3 |
 |---|---|
 | `trail/update-models --filter='\models\'` | default filter is `'\Models\'` |
-| — | `migrate` options `--dbFile`, `--upgradeFile`, `--skipBackup` |
+| — | `migrate` option `--skipBackup`; `MigrateController::$dbFile` and `$upgradeFile` through `controllerMap` |
 | — | `params/pepper`, `redirect/clean`, `registry/push`, `registry/show`, `search/rebuild`, `search/clear`, `upgrade/passwords`, `upload/clear`, `user/password <email>`, `user-login/clear`, `user-token/clear` |
 | `user/create` (prompts) | also `--name`, `--email`, `--password` or the `YII_USER_PASSWORD` environment variable |
 
@@ -260,8 +261,8 @@ return [
 ```
 
 The login rate limit and the upload limit count in `components.cache`; a multi-node deployment wants a shared cache. A
-console command that builds absolute URLs (`upgrade/passwords`, the sitemap) needs `components.urlManager.hostInfo` and
-`baseUrl` in the console configuration.
+console command that builds absolute URLs (`upgrade/passwords`, the sitemap) needs `params.hostInfo` (or
+`components.urlManager.hostInfo` and `baseUrl` in the console configuration).
 
 ## Code changes
 
@@ -432,7 +433,8 @@ package), plus `upgrade/collapse.php`, which rewrites the `migration` history so
    definition colliding with a still-existing column throws.
 5. Map the project's own `user_login.type` strings in `params['userLoginTypes'] = ['shibboleth' => 7]`; anything unmapped
    becomes `TYPE_OTHER`.
-6. Set `components.urlManager.hostInfo` and `baseUrl` for the console, or `upgrade/passwords` refuses to build links.
+6. Set `params.hostInfo` (or `components.urlManager.hostInfo` and `baseUrl` for the console), or `upgrade/passwords`
+   refuses to build links.
 7. Export `auth_client` if the linked account ids matter; remove `facebookClientId` / `facebookClientSecret` from the params.
 
 ### What the migrations do, in order
@@ -468,7 +470,7 @@ package), plus `upgrade/collapse.php`, which rewrites the `migration` history so
 - Add `./yii user-token/clear`, `user-login/clear` and `trail/clear` to cron.
 - Everyone logs in again: the cookies are renamed and the remember-me keys rotated.
 - Write a project migration for the project's own translated models (`moveI18nColumnsToTranslations()`), icon columns and
-  any column that becomes a custom attribute (`moveColumnsToCustomAttributes()`); `yii2-upgrade generate-columns` drafts it.
+  any column that becomes a custom attribute (`moveColumnsToCustomAttributes()`); `upgrade-generate-columns` drafts it.
 
 ### What is lost
 
