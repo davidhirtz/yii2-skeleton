@@ -26,9 +26,10 @@ class LinkPager extends \yii\widgets\LinkPager
      */
     public $options = [
         'class' => 'pagination',
-        // `:inherited`: these sit on the pagination list, its links are what issue the request.
+        // `:inherited`: these sit on the pagination list, its links are what issue the request. A swap without a
+        // style falls back to `innerHTML`, which nests the response's `#wrap` inside the page's.
         'hx-boost:inherited' => 'true',
-        'hx-swap:inherited' => 'scroll:top',
+        'hx-swap:inherited' => 'outerHTML scroll:top',
     ];
 
     #[\Override]
