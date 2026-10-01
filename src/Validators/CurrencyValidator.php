@@ -11,6 +11,8 @@ use yii\web\JsExpression;
 
 class CurrencyValidator extends NumberValidator
 {
+    private const string NO_BREAK_SPACES = "\u{00A0}\u{202F}";
+
     public ?string $currencyPattern = null;
     public ?string $decimalSeparator = null;
     public ?string $thousandSeparator = null;
@@ -25,9 +27,16 @@ class CurrencyValidator extends NumberValidator
                 $this->decimalSeparator = $matches[4];
                 $this->thousandSeparator = $matches[3];
 
-                // Remove UTF-8 whitespaces and quote for regular expression.
-                $matches = array_map(fn ($v): string => preg_quote((string) preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u', '', (string)$v)), $matches);
-                $this->currencyPattern = "/^($matches[1])?\s*(-?(?:\d{1,3}(?:$matches[3]\d{3})+|(?!$matches[3])\d*(?!$matches[3]))(?:$matches[4][0-9]+)?)\s*($matches[5])?$/iu";
+                [, $prefix, , $thousands, $decimal, $suffix] = array_map(
+                    fn (string $value): string => preg_quote((string)preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u', '', $value)),
+                    $matches
+                );
+
+                // `fr` and `pt-PT` group by a (narrow) no-break space, which nobody types: any space stands in for it
+                $space = '[\s' . self::NO_BREAK_SPACES . ']';
+                $thousands = $thousands === '' ? $space : $thousands;
+
+                $this->currencyPattern = "/^($prefix)?$space*(-?(?:\d{1,3}(?:$thousands\d{3})+|(?!$thousands)\d*(?!$thousands\d))(?:$decimal\d+)?)$space*($suffix)?$/iu";
             } else {
                 throw new InvalidConfigException("Currency format \"$format\" could not be parsed.");
             }
@@ -44,7 +53,8 @@ class CurrencyValidator extends NumberValidator
         $value = $model->$attribute;
 
         if (preg_match($this->currencyPattern, (string)$value, $matches)) {
-            $value = str_replace([$this->thousandSeparator, $this->decimalSeparator], ['', '.'], $matches[2]);
+            $value = preg_replace('/[\s' . self::NO_BREAK_SPACES . ']/u', '', $matches[2]);
+            $value = str_replace([$this->thousandSeparator, $this->decimalSeparator], ['', '.'], (string)$value);
             $model->$attribute = floatval($value);
         }
 
