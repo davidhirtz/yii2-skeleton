@@ -48,7 +48,7 @@ use yii\web\IdentityInterface;
  * @property string|null $two_factor_secret the encrypted secret, reached through
  *     {@see static::getTwoFactorAuthenticationSecret()}
  * @property bool|int $is_owner
- * @property int $created_by_user_id
+ * @property int|null $created_by_user_id
  * @property int $login_count
  * @property DateTime|null $last_login
  * @property DateTime|null $updated_at

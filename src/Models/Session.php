@@ -9,10 +9,10 @@ use Override;
 
 /**
  * @property string $id
- * @property int $user_id
- * @property string $ip_address
- * @property int $expire
- * @property string $data
+ * @property int|null $user_id
+ * @property string|null $ip_address
+ * @property int|null $expire
+ * @property string|null $data
  */
 class Session extends ActiveRecord
 {
