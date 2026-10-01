@@ -70,10 +70,30 @@ class Application extends \yii\console\Application
     {
         $this->setWebrootAliases();
         $this->setDefaultUrlManagerRules();
+        $this->setDefaultEmail();
 
         $this->setControllerPath(Yii::getAlias('@app/Commands'));
 
         parent::bootstrap();
+    }
+
+    /**
+     * Without a request, the host comes from the pinned `params.hostInfo` or a configured `urlManager.hostInfo`; the
+     * URL manager is not built for it, as a bundle's may read the database a fresh installation does not have yet.
+     */
+    protected function setDefaultEmail(): void
+    {
+        if (isset($this->params['email'])) {
+            return;
+        }
+
+        $urlManager = $this->getComponents()['urlManager'] ?? null;
+        $hostInfo = $this->params['hostInfo'] ?? (is_array($urlManager) ? $urlManager['hostInfo'] ?? null : null);
+        $host = is_string($hostInfo) ? parse_url($hostInfo, PHP_URL_HOST) : null;
+
+        if (is_string($host) && $host !== '') {
+            $this->params['email'] = "hostmaster@$host";
+        }
     }
 
     /**
