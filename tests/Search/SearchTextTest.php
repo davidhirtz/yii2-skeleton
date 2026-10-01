@@ -28,6 +28,13 @@ class SearchTextTest extends TestCase
         self::assertSame([], SearchText::tokenize(null));
     }
 
+    public function testDecomposedTextIsComposed(): void
+    {
+        self::assertSame(['Müller'], SearchText::tokenize("Mu\u{308}ller"));
+        self::assertSame('Müller', SearchText::normalize("Mu\u{308}ller"));
+        self::assertSame('Mueller', SearchText::getIndexTokens("Mu\u{308}ller"));
+    }
+
     public function testIsIndexedFollowsInnoDb(): void
     {
         self::assertTrue(SearchText::isIndexed('firma'));

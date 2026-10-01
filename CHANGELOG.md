@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Fixed search splitting decomposed (NFD) umlauts; `search/rebuild` re-indexes existing records
 - Fixed `Web\View::description()` encoding the meta description twice; `getMetaDescription()` answers plain text
 - Fixed the baseline migration collation to `utf8mb4`
 

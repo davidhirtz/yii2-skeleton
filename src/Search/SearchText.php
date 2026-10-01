@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Search;
 
+use Normalizer;
+
 final class SearchText
 {
     /**
@@ -50,7 +52,7 @@ final class SearchText
         $text = str_replace('<', ' <', (string)$text);
         $text = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
-        return trim((string)preg_replace('/\s+/u', ' ', $text));
+        return trim((string)preg_replace('/\s+/u', ' ', self::compose($text)));
     }
 
     /**
@@ -159,6 +161,15 @@ final class SearchText
      */
     private static function split(string $text): array
     {
-        return preg_split('/[^\p{L}\p{N}_]+/u', $text, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        return preg_split('/[^\p{L}\p{N}_]+/u', self::compose($text), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+    }
+
+    /**
+     * Text from macOS (file names, PDFs) arrives decomposed, and a combining mark is no letter: `Mu\u{308}ller`
+     * would split in two.
+     */
+    private static function compose(string $text): string
+    {
+        return Normalizer::normalize($text, Normalizer::FORM_C) ?: $text;
     }
 }
