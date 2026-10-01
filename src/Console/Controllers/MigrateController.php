@@ -242,7 +242,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
             $this->skipBackup = true;
         }
 
-        return parent::migrateUp($class);
+        return $this->invalidateRbacCache(parent::migrateUp($class));
     }
 
     #[Override]
@@ -253,7 +253,19 @@ class MigrateController extends \yii\console\controllers\MigrateController
             $this->skipBackup = true;
         }
 
-        return parent::migrateDown($class);
+        return $this->invalidateRbacCache(parent::migrateDown($class));
+    }
+
+    /**
+     * A migration may write `auth_item` with plain SQL, which the RBAC cache, kept without expiry, never notices.
+     */
+    protected function invalidateRbacCache(bool $result): bool
+    {
+        if ($result) {
+            Yii::$app->getAuthManager()->invalidateCache();
+        }
+
+        return $result;
     }
 
     /**

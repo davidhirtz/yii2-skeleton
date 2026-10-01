@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Override;
 use Yii;
+use yii\db\Migration;
 
 class MigrateControllerTest extends TestCase
 {
@@ -38,6 +39,19 @@ class MigrateControllerTest extends TestCase
         $controller->runAction('up');
 
         self::assertStringContainsString('No new migrations found. Your system is up-to-date.', $controller->flushStdOutBuffer());
+    }
+
+    public function testAMigrationInvalidatesTheRbacCache(): void
+    {
+        $auth = Yii::$app->getAuthManager();
+        $auth->loadFromCache();
+        self::assertNotFalse(Yii::$app->getCache()->get($auth->cacheKey));
+
+        $controller = $this->createMigrationController();
+        $controller->skipBackup = true;
+        self::assertTrue($controller->applyMigration(RbacCacheTestMigration::class));
+
+        self::assertFalse(Yii::$app->getCache()->get($auth->cacheKey));
     }
 
     public function testAnUnresolvableMigrationNamespaceIsDropped(): void
@@ -139,6 +153,12 @@ class MigrateControllerMock extends MigrateController
 {
     use StdOutBufferControllerTrait;
 
+    public function applyMigration(string $class): bool
+    {
+        $this->db = Yii::$app->getDb();
+        return $this->migrateUp($class);
+    }
+
     public bool $confirmCreateDbCredentialsPrompt = false;
 
     private ?string $dbHost = null;
@@ -200,5 +220,14 @@ class MigrateControllerMock extends MigrateController
     public function hiddenPasswordPrompt(): string
     {
         return $this->dbPassword;
+    }
+}
+
+class RbacCacheTestMigration extends Migration
+{
+    #[Override]
+    public function safeUp(): bool
+    {
+        return true;
     }
 }
