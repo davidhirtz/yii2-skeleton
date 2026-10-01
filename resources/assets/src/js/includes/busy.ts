@@ -39,7 +39,19 @@ export const stopBusy = () => {
     }
 }
 
+// A failed fetch (offline, the abort of a timeout) never reaches `htmx:after:request`, but every request ends in
+// `htmx:finally:request` — also one that never started, such as a declined confirm, hence the set.
+const requests = new WeakSet<object>();
+
 export default ($el: HTMLElement) => {
-    $el.addEventListener('htmx:before:request', () => startBusy());
-    $el.addEventListener('htmx:after:request', () => stopBusy());
+    $el.addEventListener('htmx:before:request', (event) => {
+        requests.add((event as CustomEvent).detail?.ctx ?? event);
+        startBusy();
+    });
+
+    $el.addEventListener('htmx:finally:request', (event) => {
+        if (requests.delete((event as CustomEvent).detail?.ctx ?? event)) {
+            stopBusy();
+        }
+    });
 }
