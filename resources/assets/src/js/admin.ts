@@ -25,6 +25,7 @@ import {rememberFocus, restoreFocus} from './includes/focus';
 import {confirmLeaving, hasUnsavedChanges, trackUnsavedForm} from './includes/unsaved';
 import translationLayout, {initTranslationTabs} from './includes/translationLayout';
 import staleSave from './includes/staleSave';
+import configureHtmx from './includes/htmxConfig';
 import characterCounter from './includes/characterCounter';
 
 import './includes/FlashAlert';
@@ -164,4 +165,4 @@ htmx.on('htmx:before:swap', (event: Event) => {
         : (incoming > current ? 'down' : 'up');
 });
 
-htmx.config.transitions = true;
+configureHtmx(htmx.config);
