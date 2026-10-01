@@ -76,8 +76,9 @@ trait GarbageCollectionTrait
         $success = false;
 
         try {
-            $db->createCommand('OPTIMIZE TABLE ' . $tableName);
-            $success = true;
+            // MySQL reports a failure as a result row rather than an error
+            $rows = $db->createCommand('OPTIMIZE TABLE ' . $db->quoteTableName($tableName))->queryAll();
+            $success = !array_filter($rows, fn (array $row): bool => strtolower((string)($row['Msg_type'] ?? '')) === 'error');
         } catch (Exception $exception) {
             Yii::error($exception->getMessage());
         }

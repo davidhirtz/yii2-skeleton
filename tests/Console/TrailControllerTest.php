@@ -81,10 +81,27 @@ class TrailControllerTest extends TestCase
 
     public function testActionOptimize(): void
     {
+        $count = $this->getOptimizeStatementCount();
+
         $controller = $this->createTrailController();
         $controller->actionOptimize();
 
         self::assertStringStartsWith('Optimizing trail table ...  done', $controller->flushStdOutBuffer());
+        self::assertSame($count + 1, $this->getOptimizeStatementCount());
+    }
+
+    public function testSleepIsAnOptionOfClear(): void
+    {
+        $controller = $this->createTrailController();
+
+        self::assertContains('sleep', $controller->options('clear'));
+        self::assertNotContains('sleep', $controller->options('optimize'));
+    }
+
+    private function getOptimizeStatementCount(): int
+    {
+        $row = Yii::$app->getDb()->createCommand("SHOW SESSION STATUS LIKE 'Com_optimize'")->queryOne();
+        return (int)($row['Value'] ?? self::fail('Com_optimize is not reported'));
     }
 
     protected function createTrailController(): TrailControllerMock

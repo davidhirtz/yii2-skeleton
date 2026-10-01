@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Console\Controllers\Traits\ControllerTrait;
 use Hirtz\Skeleton\Console\Controllers\Traits\GarbageCollectionTrait;
 use Hirtz\Skeleton\Models\UserLogin;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Override;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\console\Controller;
@@ -20,6 +21,13 @@ class UserLoginController extends Controller
 {
     use ControllerTrait;
     use GarbageCollectionTrait;
+
+    #[Override]
+    public function options($actionID): array
+    {
+        $options = parent::options($actionID);
+        return $actionID === 'clear' ? [...$options, 'sleep'] : $options;
+    }
 
     /**
      * Removes login records older than the configured or given lifetime.
