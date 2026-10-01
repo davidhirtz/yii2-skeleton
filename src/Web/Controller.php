@@ -8,7 +8,6 @@ use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Modules\Admin\Module as AdminModule;
 use Override;
 use Stringable;
-use Yii;
 use yii\base\Event;
 use yii\base\Model;
 use yii\base\Module;

@@ -14,8 +14,6 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 use Yii;
-use Hirtz\Skeleton\Widgets\Grids\GridView;
-use yii\base\Model;
 
 class GridSummary extends Widget
 {

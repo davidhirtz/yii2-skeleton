@@ -12,7 +12,6 @@ use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Html\Th;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\User;
-use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Traits\GridTrait;
 use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;

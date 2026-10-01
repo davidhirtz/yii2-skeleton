@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Html;
 use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
-use Hirtz\Skeleton\Html\Traits\TagTextareaTrait;
 use Override;
 use Stringable;
 

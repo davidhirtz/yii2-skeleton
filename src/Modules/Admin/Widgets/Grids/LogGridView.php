@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Pre;
-use Hirtz\Skeleton\Html\Th;
 use Hirtz\Skeleton\Log\FileTarget;
 use Hirtz\Skeleton\Models\Log;
 use Hirtz\Skeleton\Modules\Admin\Data\LogDataProvider;

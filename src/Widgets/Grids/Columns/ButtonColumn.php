@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Columns;
 
-use Closure;
-use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Widgets\Buttons\ButtonGroup;
 use Iterator;
 use Override;

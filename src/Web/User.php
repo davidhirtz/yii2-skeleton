@@ -10,7 +10,6 @@ use Hirtz\Skeleton\Models\UserLogin;
 use Override;
 use Yii;
 use yii\web\Cookie;
-use yii\web\IdentityInterface;
 use yii\web\MultiFieldSession;
 use yii\web\Response;
 

@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Tests\Web;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
-use Yii;
 
 /**
  * The user and login grids ask for every row whether the actor may manage its user.

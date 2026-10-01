@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\Widgets\Navs;
 
 use Hirtz\Skeleton\Widgets\Link;
 use Override;
-use Stringable;
 
 class DropdownOptionLink extends Link
 {

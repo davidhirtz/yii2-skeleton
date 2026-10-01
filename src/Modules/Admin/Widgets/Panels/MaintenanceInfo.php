@@ -14,7 +14,6 @@ use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Panels\InfoList;
 use Override;
-use Stringable;
 use Yii;
 
 class MaintenanceInfo extends InfoList

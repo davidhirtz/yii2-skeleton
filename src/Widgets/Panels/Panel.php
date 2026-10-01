@@ -12,8 +12,6 @@ use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 use Yii;
-use Hirtz\Skeleton\Widgets\Grids\GridView;
-use yii\base\Model;
 
 class Panel extends Widget
 {

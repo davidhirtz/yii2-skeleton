@@ -13,7 +13,6 @@ use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\UserGridView;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\UserHeader;
 use Hirtz\Skeleton\Web\View;
-use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 
 echo UserHeader::make()

@@ -12,7 +12,6 @@ use Hirtz\Skeleton\Html\Traits\TagLinkTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Traits\AjaxAttributesTrait;
 use Hirtz\Skeleton\Widgets\Modal;
 use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
-use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\TooltipAttributeTrait;
 use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;

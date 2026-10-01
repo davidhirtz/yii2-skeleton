@@ -9,7 +9,6 @@ use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
 use Hirtz\Skeleton\Web\Request;
 use Override;
-use Yii;
 
 class Form extends Tag
 {

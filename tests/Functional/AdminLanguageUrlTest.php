@@ -10,7 +10,6 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Override;
-use Yii;
 
 /**
  * `UrlManager::$i18nUrl` is the language of the frontend URL, the admin keeps its own.

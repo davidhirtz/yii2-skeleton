@@ -24,7 +24,6 @@ use yii\log\Logger;
 use yii\test\FixtureTrait;
 use yii\web\Session;
 use yii\web\UploadedFile;
-use yii\web\View;
 
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
