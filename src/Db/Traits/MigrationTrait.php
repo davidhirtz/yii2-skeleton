@@ -208,7 +208,7 @@ trait MigrationTrait
     }
 
     /**
-     * The two mirrors of the `…IfExists` guards below, and they exist for one reason: after the squash a
+     * The mirror of the `…IfExists` guards below, and it exists for one reason: after the squash a
      * migration runs against **two** starting schemas. An upgraded project brings the v2 shape, and a fresh
      * install brings a baseline that already holds the whole v3 schema — so every kept migration has to add
      * what is missing and skip what is there, on both paths.
@@ -220,16 +220,6 @@ trait MigrationTrait
     {
         if (!$this->hasColumn($table, $column)) {
             $this->addColumn($table, $column, $type);
-        }
-    }
-
-    /**
-     * @param array<string, string> $columns
-     */
-    protected function createTableIfMissing(string $table, array $columns, ?string $options = null): void
-    {
-        if ($this->getDb()->getSchema()->getTableSchema($table, true) === null) {
-            $this->createTable($table, $columns, $options ?? $this->getTableOptions());
         }
     }
 

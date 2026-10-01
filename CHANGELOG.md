@@ -43,7 +43,8 @@
 - Changed `php-cs-fixer` (in `yii2-dev`) to remove unused imports
 - Removed `Modules\Admin\Widgets\Navs\DashboardLogo`, `Widgets\Forms\DeleteActiveForm`,
   `ApplicationTrait::extendComponent()`, `extendComponents()`, `extendModules()`, and
-  `MigrationTrait::createIndexIfMissing()` and `moveCustomAttributesColumnToEnd()`, which nothing used
+  `MigrationTrait::createIndexIfMissing()`, `createTableIfMissing()` and `moveCustomAttributesColumnToEnd()`, which
+  nothing used
 - Fixed `StringHelper::obfuscateText()` and `obfuscateEmail()` cutting a multibyte character in half
 
 ## 3.10.0 (October 1, 2026)
