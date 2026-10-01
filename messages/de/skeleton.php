@@ -145,8 +145,6 @@ return [
     'DASHBOARD_HEADER_LAST_LOGIN' => 'Letzte Anmeldung {timestamp}',
     'DASHBOARD_HEADER_WELCOME' => 'Willkommen {user}, schön Sie kennenzulernen!',
     'DASHBOARD_NAV_ITEM_LABEL' => 'Dashboard',
-    'DELETE_ACTIVE_DELETE' => 'Löschen',
-    'DELETE_ACTIVE_WARNING_DELETED' => 'Warnung: Die Löschung kann nicht wieder rückgängig gemacht werden. Alle dazugehörigen Daten werden ebenfalls unwiderruflich gelöscht!',
     'DIRECTORY_ALERT_MESSAGE' => '{count,plural,one{Dieses Verzeichnis ist} other{Diese Verzeichnisse sind}} nicht beschreibbar: {directories}',
     'DUPLICATE_DUPLICATE' => 'Duplizieren',
     'ENVIRONMENT_ALERT_MESSAGE' => 'Diese Installation läuft auf {host} und ist damit die {environment}-Umgebung – Änderungen wirken sich nicht auf die Live-Website aus.',

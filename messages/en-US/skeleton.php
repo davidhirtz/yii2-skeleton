@@ -145,8 +145,6 @@ return [
     'DASHBOARD_HEADER_LAST_LOGIN' => 'Last login {timestamp}',
     'DASHBOARD_HEADER_WELCOME' => 'Welcome {user}, nice to meet you!',
     'DASHBOARD_NAV_ITEM_LABEL' => 'Dashboard',
-    'DELETE_ACTIVE_DELETE' => 'Delete',
-    'DELETE_ACTIVE_WARNING_DELETED' => 'Warning: Deleting this record cannot be undone. All related files will also be unrecoverably deleted. Please be certain!',
     'DIRECTORY_ALERT_MESSAGE' => '{count,plural,one{This directory is} other{These directories are}} not writable: {directories}',
     'DUPLICATE_DUPLICATE' => 'Duplicate',
     'ENVIRONMENT_ALERT_MESSAGE' => 'This installation runs on {host} and is the {environment} environment – changes here do not affect the live website.',

@@ -145,8 +145,6 @@ return [
     'DASHBOARD_HEADER_LAST_LOGIN' => 'Último início de sessão {timestamp}',
     'DASHBOARD_HEADER_WELCOME' => 'Bem-vindo {user}, é um prazer conhecê-lo!',
     'DASHBOARD_NAV_ITEM_LABEL' => 'Painel',
-    'DELETE_ACTIVE_DELETE' => 'Eliminar',
-    'DELETE_ACTIVE_WARNING_DELETED' => 'Aviso: eliminar este registo não pode ser anulado. Todos os ficheiros associados serão também eliminados de forma irrecuperável. Tenha a certeza!',
     'DIRECTORY_ALERT_MESSAGE' => '{count,plural,one{Este diretório não tem} other{Estes diretórios não têm}} permissão de escrita: {directories}',
     'DUPLICATE_DUPLICATE' => 'Duplicar',
     'ENVIRONMENT_ALERT_MESSAGE' => 'Esta instalação corre em {host} e é o ambiente {environment} – as alterações não afetam o site em produção.',

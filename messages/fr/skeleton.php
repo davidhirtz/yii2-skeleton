@@ -145,8 +145,6 @@ return [
     'DASHBOARD_HEADER_LAST_LOGIN' => 'Dernière connexion {timestamp}',
     'DASHBOARD_HEADER_WELCOME' => 'Bienvenue {user}, ravi de vous rencontrer !',
     'DASHBOARD_NAV_ITEM_LABEL' => 'Tableau de bord',
-    'DELETE_ACTIVE_DELETE' => 'Supprimer',
-    'DELETE_ACTIVE_WARNING_DELETED' => 'Attention : la suppression de cet enregistrement est irréversible. Tous les fichiers associés seront également supprimés définitivement. Veuillez confirmer !',
     'DIRECTORY_ALERT_MESSAGE' => '{count,plural,one{Ce répertoire n’est pas accessible} other{Ces répertoires ne sont pas accessibles}} en écriture : {directories}',
     'DUPLICATE_DUPLICATE' => 'Dupliquer',
     'ENVIRONMENT_ALERT_MESSAGE' => 'Cette installation fonctionne sur {host} et correspond à l’environnement {environment} – les modifications n’affectent pas le site en ligne.',
