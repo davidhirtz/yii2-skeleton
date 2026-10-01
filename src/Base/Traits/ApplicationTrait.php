@@ -365,40 +365,12 @@ trait ApplicationTrait
     }
 
     /**
-     * @param array<string, mixed> $definition
-     */
-    public function extendComponent(string $id, array $definition): void
-    {
-        $this->set($id, ArrayHelper::merge($definition, $this->getComponents()[$id] ?? []));
-    }
-
-    /**
-     * @param array<string, array<string, mixed>> $components
-     */
-    public function extendComponents(array $components): void
-    {
-        foreach ($components as $id => $definition) {
-            $this->extendComponent($id, $definition);
-        }
-    }
-
-    /**
      * @param array<string, mixed> $module
      */
     public function extendModule(string $id, array $module): void
     {
         if ($module) {
             $this->setModule($id, ArrayHelper::merge($module, $this->getModules()[$id] ?? []));
-        }
-    }
-
-    /**
-     * @param array<string, array<string, mixed>> $modules
-     */
-    public function extendModules(array $modules): void
-    {
-        foreach ($modules as $id => $config) {
-            $this->extendModule($id, $config);
         }
     }
 

@@ -10,8 +10,9 @@ use Yii;
 use yii\base\Component;
 
 /**
- * The `search` application component. Searchable classes are registered from each bundle's `Bootstrap` via
- * `extendComponent()`, never discovered by scanning: a model nobody configured would be missed either way.
+ * The `search` application component. Searchable classes are registered by each bundle's
+ * `Bootstrap::getDefaultConfig()` (`search.models`), never discovered by scanning: a model nobody configured would be
+ * missed either way.
  */
 class Search extends Component
 {

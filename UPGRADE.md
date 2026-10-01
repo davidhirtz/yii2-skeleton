@@ -62,7 +62,7 @@ project (see *Data and schema*), and the bundle itself carries one baseline migr
 | `widgets\bootstrap\ButtonDropdown` | `Widgets\Navs\Dropdown`, `Widgets\Navs\ActionDropdown` |
 | `widgets\bootstrap\ListGroup` | removed |
 | `widgets\fontawesome\Icon`, `Nav`, `Submenu` | `Widgets\Icon`, `Widgets\Navs\Nav`, `Widgets\Navs\Submenu` |
-| `widgets\forms\DeleteActiveForm` | `Widgets\Forms\DeleteActiveForm` |
+| `widgets\forms\DeleteActiveForm` | removed: `Widgets\Buttons\DeleteButton` posts the delete form |
 | `widgets\forms\DynamicRangeDropdown` | `Widgets\Forms\Fields\SelectField` |
 | `widgets\forms\FileUpload` | `Widgets\Buttons\FileUploadButton`, `Html\Custom\FileUpload` |
 | `widgets\forms\HexColorInputWidget`, `TimezoneDropdown`, `TinyMceEditor` | `Widgets\Forms\Fields\HexColorField`, `TimezoneSelectField`, `TinyMceField` |
