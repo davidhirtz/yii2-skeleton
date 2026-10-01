@@ -3,12 +3,34 @@
 - Added `Search\Search::getRegisteredClass()`; `SearchBehavior` and `getSearchDocuments()` store a container subclass
   or a per-type class under the registered class `search/rebuild` uses; `search/clear` followed by `search/rebuild`
   drops the rows an installation holds under a subclass
-- Changed the baseline's RBAC timestamps (`auth_rule`, `auth_item`, `auth_assignment`) to `bigint` for fresh installations
+- Changed the baseline's RBAC timestamps (`auth_rule`, `auth_item`, `auth_assignment`) to `bigint` for fresh
+  installations
 - Added `ext-fileinfo` to the requirements; without it an upload's MIME type was silently `null`
 - Added `Models\Actions\ReorderActiveRecords::afterCommit()`, which runs once the positions are committed
 - Fixed search splitting decomposed (NFD) umlauts; `search/rebuild` re-indexes existing records
 - Fixed `Web\View::description()` encoding the meta description twice; `getMetaDescription()` answers plain text
 - Fixed the baseline migration collation to `utf8mb4`
+- Added `ext-pdo_mysql` to the requirements
+- Added `M261001120000RedirectUrlIndex`, an index on `redirect.url`
+- Added `Upload\Upload::deleteRecord()`; deleting a record removes every upload it holds, including those of a former
+  type
+- Added `UploadControllerTrait::refuseUpload()`, which also sends the error in `X-Upload-Error` and the body (HTTP/2 has
+  no reason phrase)
+- Added `ChunkedUploadedFile::isUploadStart()`; a chunked upload counts against the upload limit on its first chunk, and
+  a chunk that disagrees with its `Content-Range` is refused
+- Added `Models\Collections\TrailModelCollection::preload()`; the trail grid loads its records with one query per class
+- Changed `migrate` to invalidate the RBAC cache after each migration
+- Changed the console's `urlManager.baseUrl` to default to the root when `params.hostInfo` pins the host
+- Changed `redirect/delete` and `redirect/delete-all` to accept POST only
+- Changed stream uploads to refuse every non-global address
+- Changed `Web\User::canManageUser()` to memoise per request and `Rbac\DbManager::getPermissionsByUser()` to answer from
+  the cached hierarchy
+- Changed `Test\TestCase` to reset reusable cache dependencies between tests
+- Fixed the trail grid, the log viewer, `ErrorSummary`, `Username` and the auth item grid rendering names, levels or
+  messages unescaped
+- Fixed the busy overlay staying on after a request failed, pager links nesting a second `#wrap`, fast keyboard
+  reordering losing the last order, and a moved `tinymce-editor` stacking editors
+- Fixed collapsible cards announcing no state and hover tooltips not closing on Escape
 
 ## 3.10.0 (October 1, 2026)
 
