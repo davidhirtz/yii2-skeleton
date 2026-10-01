@@ -140,10 +140,15 @@ class Connection extends \yii\db\Connection
 
     private function executeShellCommand(string $command): bool
     {
+        if (!function_exists('proc_open') && !function_exists('exec')) {
+            Yii::error('Neither proc_open() nor exec() is available to run a shell command.', __METHOD__);
+            return false;
+        }
+
         $cmd = new Command();
         $cmd->setCommand($command);
 
-        if (!function_exists('proc_open') && function_exists('exec')) {
+        if (!function_exists('proc_open')) {
             $cmd->useExec = true;
         }
 
