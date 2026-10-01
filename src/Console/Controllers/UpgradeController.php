@@ -61,8 +61,8 @@ class UpgradeController extends Controller
             } catch (InvalidConfigException $exception) {
                 // A console application has no request to take the host from, and Yii refuses to guess one
                 $this->stdout($exception->getMessage() . PHP_EOL, Console::FG_RED);
-                $this->stdout('Configure `components.urlManager.hostInfo` (and `baseUrl`) for the console'
-                    . ' application, so the emailed link knows where it points.' . PHP_EOL, Console::FG_YELLOW);
+                $this->stdout('Set `params.hostInfo` (or `components.urlManager.hostInfo` and `baseUrl` for the'
+                    . ' console application), so the emailed link knows where it points.' . PHP_EOL, Console::FG_YELLOW);
 
                 return;
             }

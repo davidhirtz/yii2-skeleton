@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
+use Hirtz\Skeleton\Console\Application as ConsoleApplication;
 use Hirtz\Skeleton\Helpers\ArrayHelper;
 use InvalidArgumentException;
 use Override;
@@ -53,6 +54,7 @@ class UrlManager extends \yii\web\UrlManager
     public $showScriptName = false;
 
     private ?string $configuredHostInfo = null;
+    private bool $isBaseUrlConfigured = false;
     private bool $isHostInfoFromRequest = false;
     private bool $isInitialized = false;
 
@@ -61,6 +63,11 @@ class UrlManager extends \yii\web\UrlManager
     {
         if ($this->configuredHostInfo === null && ($hostInfo = Yii::$app->params['hostInfo'] ?? null)) {
             $this->setHostInfo($hostInfo);
+
+            // Yii refuses to guess the console's base URL; the pinned host is the installation's root
+            if (!$this->isBaseUrlConfigured && Yii::$app instanceof ConsoleApplication) {
+                $this->setBaseUrl('');
+            }
         }
 
         $this->isInitialized = true;
@@ -136,6 +143,19 @@ class UrlManager extends \yii\web\UrlManager
      *
      * @param string|null $value
      */
+    /**
+     * @param string|null $value
+     */
+    #[Override]
+    public function setBaseUrl($value): void
+    {
+        parent::setBaseUrl($value);
+
+        if (!$this->isInitialized) {
+            $this->isBaseUrlConfigured = true;
+        }
+    }
+
     #[Override]
     public function setHostInfo($value): void
     {
