@@ -20,6 +20,7 @@ class DateTimeField extends Field
     use TagInputTrait;
 
     private string|DateTimeZone $timeZone;
+    private ?DateTimeInterface $date = null;
 
     public function timeZone(string|DateTimeZone $timeZone): static
     {
@@ -40,8 +41,8 @@ class DateTimeField extends Field
         $this->attributes['value'] ??= $this->model?->{$this->property};
 
         if ($this->attributes['value'] instanceof DateTimeInterface) {
-            $value = DateTimeImmutable::createFromInterface($this->attributes['value'])->setTimezone($this->timeZone);
-            $this->attributes['value'] = $value->format('Y-m-d\TH:i');
+            $this->date = DateTimeImmutable::createFromInterface($this->attributes['value'])->setTimezone($this->timeZone);
+            $this->attributes['value'] = $this->date->format('Y-m-d\TH:i');
         }
 
         parent::configure();
@@ -61,7 +62,7 @@ class DateTimeField extends Field
     protected function getTimeZone(): ?string
     {
         $timeZone = is_string($this->timeZone) ? new DateTimeZone($this->timeZone) : $this->timeZone;
-        $offset = $timeZone->getOffset(new DateTime());
+        $offset = $timeZone->getOffset($this->date ?? new DateTime());
         $abs = abs($offset);
         $hours = intdiv($abs, 3600);
         $minutes = intdiv($abs % 3600, 60);

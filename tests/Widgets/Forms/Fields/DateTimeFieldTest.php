@@ -27,4 +27,20 @@ class DateTimeFieldTest extends TestCase
         $html = '<div class="form-group form-row" data-id="i2"><div class="form-content"><div class="input-group"><input type="datetime-local" id="i2" class="input" value="2024-06-15T13:30"><div class="input-group-append">GMT+00:00</div></div></div></div>';
         self::assertEquals($html, $content);
     }
+
+    public function testTheOffsetIsTheOneAtTheValue(): void
+    {
+        $winter = DateTimeField::make()
+            ->timeZone('Europe/Berlin')
+            ->value(new DateTime('2026-12-01T09:00:00+00:00'))
+            ->render();
+
+        $summer = DateTimeField::make()
+            ->timeZone('Europe/Berlin')
+            ->value(new DateTime('2026-07-01T09:00:00+00:00'))
+            ->render();
+
+        self::assertStringContainsString('value="2026-12-01T10:00"><div class="input-group-append">GMT+01:00</div>', $winter);
+        self::assertStringContainsString('value="2026-07-01T11:00"><div class="input-group-append">GMT+02:00</div>', $summer);
+    }
 }
