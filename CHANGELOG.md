@@ -1,4 +1,4 @@
-## Unreleased
+## 3.11.0 (October 2, 2026)
 
 - Added device cookies (`Web\User::$enableDeviceCookies`, `_device`): a browser an account logged in from counts its
   failed logins on its own, so strangers can no longer lock the account's owner out
