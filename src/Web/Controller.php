@@ -151,10 +151,7 @@ class Controller extends \yii\web\Controller
      */
     protected function isDraftLoginRequired(): bool
     {
-        $manager = Yii::$app->getUrlManager();
-
-        return $manager instanceof UrlManager
-            && $manager->draftRequiresLogin
+        return Yii::$app->getUrlManager()->draftRequiresLogin
             && $this->request->getIsDraft()
             && $this->webuser->getIsGuest()
             && !$this->isInAdminModule();
