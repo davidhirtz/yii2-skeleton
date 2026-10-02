@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `Web\UrlManager::$draftRequiresLogin` (off by default): the draft subdomain then serves logged-in users only
 - Added the `mutex` component (`MysqlMutex`) and `Caching\CacheCounter`: login and upload attempts are counted
   under a lock, so concurrent requests no longer lose each other's increments
 - Added `bacon/bacon-qr-code`: the two-factor QR code is an SVG rendered locally instead of an image from

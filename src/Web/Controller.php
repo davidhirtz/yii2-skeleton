@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Modules\Admin\Module as AdminModule;
 use Override;
 use Stringable;
+use Yii;
 use yii\base\Event;
 use yii\base\Model;
 use yii\base\Module;
@@ -87,6 +88,14 @@ class Controller extends \yii\web\Controller
     #[Override]
     public function beforeAction($action): bool
     {
+        if ($this->isDraftLoginRequired()) {
+            // Outside the admin no login URL is set, which would answer 403 instead of the login
+            $this->webuser->loginUrl ??= ['/admin/account/login'];
+            $this->webuser->loginRequired();
+
+            return false;
+        }
+
         if ($this->strictContentSecurityPolicy ?? $this->isInAdminModule()) {
             $policy = Application::current()->getContentSecurityPolicy();
             $this->getView()->nonce = $policy->getNonce();
@@ -135,6 +144,20 @@ class Controller extends \yii\web\Controller
         return !$this->webuser->getIsGuest() && $this->isInAdminModule()
             ? $this->redirect(['/admin/dashboard/index'])
             : parent::goHome();
+    }
+
+    /**
+     * The admin, the login among it, stays reachable on the draft host: the redirect would otherwise never end.
+     */
+    protected function isDraftLoginRequired(): bool
+    {
+        $manager = Yii::$app->getUrlManager();
+
+        return $manager instanceof UrlManager
+            && $manager->draftRequiresLogin
+            && $this->request->getIsDraft()
+            && $this->webuser->getIsGuest()
+            && !$this->isInAdminModule();
     }
 
     protected function isInAdminModule(): bool

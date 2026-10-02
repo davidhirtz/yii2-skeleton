@@ -24,6 +24,12 @@ class UrlManager extends \yii\web\UrlManager
     public string|false $draftSubdomain = 'draft';
 
     /**
+     * @var bool whether the draft subdomain serves logged-in users only. Off by default: the draft content is then
+     * protected by nothing but its host name, unless the web server guards it.
+     */
+    public bool $draftRequiresLogin = false;
+
+    /**
      * @var bool whether the language should be added to the URL via `languageParam`.
      */
     public bool $i18nUrl = false;
