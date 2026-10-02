@@ -81,9 +81,9 @@ class TrailController extends Controller
     /**
      * Optimizes the trail table.
      */
-    public function actionOptimize(): void
+    public function actionOptimize(): int
     {
-        $this->optimizeTable(Trail::tableName());
+        return $this->optimizeTable(Trail::tableName());
     }
 
     protected function getTrailLifeTime(): int|false

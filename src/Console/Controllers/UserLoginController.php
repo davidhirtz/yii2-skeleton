@@ -58,9 +58,9 @@ class UserLoginController extends Controller
     /**
      * Optimizes the login table.
      */
-    public function actionOptimize(): void
+    public function actionOptimize(): int
     {
-        $this->optimizeTable(UserLogin::tableName());
+        return $this->optimizeTable(UserLogin::tableName());
     }
 
     protected function getUserLoginLifetime(): int|false

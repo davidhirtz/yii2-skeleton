@@ -42,8 +42,8 @@ class UserTokenController extends Controller
     /**
      * Optimizes the user token table.
      */
-    public function actionOptimize(): void
+    public function actionOptimize(): int
     {
-        $this->optimizeTable(UserToken::tableName());
+        return $this->optimizeTable(UserToken::tableName());
     }
 }

@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Console\Controllers\EmailController;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Yii;
+use yii\console\ExitCode;
 
 class EmailControllerTest extends TestCase
 {
@@ -16,8 +17,8 @@ class EmailControllerTest extends TestCase
         $email = 'test@test.com';
 
         $controller = $this->createEmailController();
-        $controller->actionTest($email);
 
+        self::assertSame(ExitCode::OK, $controller->actionTest($email));
         self::assertStringStartsWith('Testing email functionality ... done', $controller->flushStdOutBuffer());
 
         $message = $this->mailer->getLastMessage();
@@ -32,7 +33,7 @@ class EmailControllerTest extends TestCase
         $this->mailer->isFailing = true;
 
         $controller = $this->createEmailController();
-        $controller->actionTest('test@test.com');
+        self::assertSame(ExitCode::UNAVAILABLE, $controller->actionTest('test@test.com'));
 
         $output = $controller->flushStdOutBuffer();
 
@@ -45,9 +46,18 @@ class EmailControllerTest extends TestCase
         $this->mailer->setTransport('postmark+api://KEY@default');
 
         $controller = $this->createEmailController();
-        $controller->actionTest('test@test.com');
+        self::assertSame(ExitCode::CONFIG, $controller->actionTest('test@test.com'));
 
         self::assertStringContainsString('composer require symfony/postmark-mailer', $controller->flushStdOutBuffer());
+        self::assertFalse($this->mailer->hasMessages());
+    }
+
+    public function testAnInvalidRecipientIsRefusedBeforeSending(): void
+    {
+        $controller = $this->createEmailController();
+
+        self::assertSame(ExitCode::USAGE, $controller->actionTest('not-an-address'));
+        self::assertStringContainsString('is not a valid email address', $controller->flushStdOutBuffer());
         self::assertFalse($this->mailer->hasMessages());
     }
 

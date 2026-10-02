@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Console\Controllers\Traits;
 use Exception;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Yii;
+use yii\console\ExitCode;
 
 trait GarbageCollectionTrait
 {
@@ -67,7 +68,7 @@ trait GarbageCollectionTrait
         return $totalCount;
     }
 
-    protected function optimizeTable(string $tableName): void
+    protected function optimizeTable(string $tableName): int
     {
         $db = Yii::$app->getDb();
         $name = $db->getSchema()->getRawTableName($tableName);
@@ -84,5 +85,12 @@ trait GarbageCollectionTrait
         }
 
         $this->interactiveDoneStdout($success);
+
+        if (!$success) {
+            $this->stderr("Optimizing the $name table failed." . PHP_EOL);
+            return ExitCode::UNSPECIFIED_ERROR;
+        }
+
+        return ExitCode::OK;
     }
 }

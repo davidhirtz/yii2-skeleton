@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\Forms\MaintenanceConfigForm;
 use Yii;
 use yii\console\Controller;
+use yii\console\ExitCode;
 use yii\helpers\Console;
 
 /**
@@ -78,33 +79,29 @@ class MaintenanceController extends Controller
     /**
      * Toggles maintenance mode with current configuration.
      */
-    public function actionIndex(): void
+    public function actionIndex(): int
     {
         if ($this->isMaintenanceMode()) {
-            $this->disableMaintenanceMode();
-        } else {
-            $this->enableMaintenanceMode();
+            return $this->disableMaintenanceMode();
         }
+
+        return $this->enableMaintenanceMode();
     }
 
     /**
      * Enables maintenance mode with the given configuration.
      */
-    public function actionEnable(): void
+    public function actionEnable(): int
     {
-        if (!$this->isMaintenanceMode()) {
-            $this->enableMaintenanceMode(true);
-        }
+        return $this->isMaintenanceMode() ? ExitCode::OK : $this->enableMaintenanceMode(true);
     }
 
     /**
      * Disables maintenance mode.
      */
-    public function actionDisable(): void
+    public function actionDisable(): int
     {
-        if ($this->isMaintenanceMode()) {
-            $this->disableMaintenanceMode();
-        }
+        return $this->isMaintenanceMode() ? $this->disableMaintenanceMode() : ExitCode::OK;
     }
 
     /**
@@ -116,8 +113,10 @@ class MaintenanceController extends Controller
      * @uses $refresh
      * @uses $statusCode
      * @uses $viewFile
+     *
+     * A deployment chains its next step on the exit code (`maintenance/enable && migrate`), so a failure is one.
      */
-    protected function enableMaintenanceMode(bool $withConfig = false): void
+    protected function enableMaintenanceMode(bool $withConfig = false): int
     {
         $form = MaintenanceConfigForm::create();
 
@@ -126,29 +125,39 @@ class MaintenanceController extends Controller
                 $form->$property = $this->$property;
             }
 
-            if (!$form->save()) {
-                $this->stdout(Console::errorSummary($form) . PHP_EOL);
-                return;
+            if ($form->save() === false) {
+                $this->stderr(($form->hasErrors()
+                    ? Console::errorSummary($form)
+                    : 'Could not write ' . Yii::getAlias($form::MAINTENANCE_CONFIG) . '.') . PHP_EOL, Console::FG_RED);
+
+                return ExitCode::UNSPECIFIED_ERROR;
             }
         }
 
         $file = Yii::getAlias(self::MAINTENANCE_FILE);
         FileHelper::createDirectory(dirname($file));
 
-        if (copy(Yii::getAlias($this->maintenanceStubFile), $file)) {
-            $this->stdout('Maintenance mode enabled.' . PHP_EOL, Console::FG_GREEN);
-        } else {
+        if (!copy(Yii::getAlias($this->maintenanceStubFile), $file)) {
             $this->stderr("Could not write $file." . PHP_EOL, Console::FG_RED);
+            return ExitCode::UNSPECIFIED_ERROR;
         }
+
+        $this->stdout('Maintenance mode enabled.' . PHP_EOL, Console::FG_GREEN);
+        return ExitCode::OK;
     }
 
     /**
      * Disables maintenance mode by removing the maintenance mode template from the runtime. Keeping the config.
      */
-    protected function disableMaintenanceMode(): void
+    protected function disableMaintenanceMode(): int
     {
-        FileHelper::unlink(Yii::getAlias(self::MAINTENANCE_FILE));
+        if (!FileHelper::unlink(Yii::getAlias(self::MAINTENANCE_FILE))) {
+            $this->stderr('Could not disable maintenance mode.' . PHP_EOL, Console::FG_RED);
+            return ExitCode::UNSPECIFIED_ERROR;
+        }
+
         $this->stdout('Maintenance mode disabled.' . PHP_EOL, Console::FG_GREEN);
+        return ExitCode::OK;
     }
 
     protected function isMaintenanceMode(): bool
