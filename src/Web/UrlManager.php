@@ -274,12 +274,13 @@ class UrlManager extends \yii\web\UrlManager
         }
     }
 
+    /**
+     * The request's host tells a draft request, not the manager's: a configured host is always the live one.
+     */
     protected function setDraftStatus(Request $request): void
     {
-        $hostInfo = $this->getHostInfo();
-
-        if (str_contains($hostInfo, "//$this->draftSubdomain.")) {
-            $this->setHostInfo(str_replace("//$this->draftSubdomain.", '//', $hostInfo));
+        if (str_contains((string)$request->getHostInfo(), "//$this->draftSubdomain.")) {
+            $this->setHostInfo(str_replace("//$this->draftSubdomain.", '//', $this->getHostInfo()));
             $request->setIsDraft(true);
         }
     }

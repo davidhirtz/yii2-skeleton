@@ -305,6 +305,22 @@ class UrlManagerTest extends TestCase
         self::assertFalse($manager->isHostInfoFromRequest());
     }
 
+    public function testTheDraftSubdomainIsDetectedWithAConfiguredHost(): void
+    {
+        Yii::$app->params['hostInfo'] = 'https://www.example.com';
+        $manager = $this->getUrlManager();
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://draft.example.com',
+            'url' => '/',
+        ]);
+
+        $manager->parseRequest($request);
+
+        self::assertTrue($request->getIsDraft());
+        self::assertEquals('https://www.example.com', $manager->getHostInfo());
+    }
+
     public function testConfiguredHostInfoWinsOverTheParam(): void
     {
         Yii::$app->params['hostInfo'] = 'https://www.example.com';
