@@ -11,7 +11,7 @@
 - Fixed `Web\View::description()` encoding the meta description twice; `getMetaDescription()` answers plain text
 - Fixed the baseline migration collation to `utf8mb4`
 - Added `ext-pdo_mysql` to the requirements
-- Added `M261001120000RedirectUrlIndex`, an index on `redirect.url`
+- Added `M261001120000SchemaFixes`: an index on `redirect.url`, and `user.is_owner` `NOT NULL`
 - Added `Upload\Upload::deleteRecord()`; deleting a record removes every upload it holds, including those of a former
   type
 - Added `UploadControllerTrait::refuseUpload()`, which also sends the error in `X-Upload-Error` and the body (HTTP/2 has
@@ -33,7 +33,6 @@
 - Fixed collapsible cards announcing no state and hover tooltips not closing on Escape
 - Added `Db\ActiveRecord::touchUpdatedAt()` and the `touchOwners()` hook, also called by
   `updateDenormalizedAttributes()`, so a record passes a change on to the record that shows it
-- Added `M261001130000UserIsOwnerNotNull`
 - Changed the console to default `params.email` to `hostmaster@<host>` of `params.hostInfo` (or a configured
   `urlManager.hostInfo`)
 - Changed the admin to never time out its own requests: htmx's `defaultTimeout` is 0, so PHP's limits decide
