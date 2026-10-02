@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Added device cookies (`Web\User::$enableDeviceCookies`, `_device`): a browser an account logged in from counts its
+  failed logins on its own, so strangers can no longer lock the account's owner out
+- Changed "log out other sessions" to rotate the auth key, which ends the other browsers' auto login
+- Changed the Sentry target to report errors only; warnings stay in the file log
 - Changed `redirect.request_uri` and `url` to `varchar(512)`, so a permalink's URI qualified by its host fits
 - Added `Web\UrlManager::$draftRequiresLogin` (off by default): the draft subdomain then serves logged-in users only
 - Added the `mutex` component (`MysqlMutex`) and `Caching\CacheCounter`: login and upload attempts are counted

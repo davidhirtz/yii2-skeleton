@@ -89,8 +89,10 @@ answer `null` there instead.
 
 `components.user` (`Web\User`): `enableLogin`, `enableSignup` (`false`), `enablePasswordReset`, `enableUnconfirmedEmailLogin`,
 `enableTwoFactorAuthentication`, `enableUserEnumerationProtection` (all `true` unless noted), `loginAttemptLimit` (10, `0` off)
-and `loginAttemptDuration` (900 s) counted per email and IP in the cache, `cookieLifetime` (30 days), `cookieSecure` (`null`
-derives from the request), `disableRbacForGuests`, `disableRbacForOwner`. The identity cookie is `_auth`, the session cookie `_session`.
+and `loginAttemptDuration` (900 s) counted per email and IP in the cache, `enableDeviceCookies` (a browser an account logged
+in from is counted on its own, so strangers cannot lock its owner out), `deviceCookieLifetime` (a year), `cookieLifetime`
+(30 days), `cookieSecure` (`null` derives from the request), `disableRbacForGuests`, `disableRbacForOwner`. The identity
+cookie is `_auth`, the device cookie `_device`, the session cookie `_session`.
 
 Other components the skeleton configures: `request` (`Web\Request`, `environments` maps host patterns to `local` and `stage`,
 `trustedHosts` must be set behind a proxy; behind a CDN, key each range by the headers it sets,

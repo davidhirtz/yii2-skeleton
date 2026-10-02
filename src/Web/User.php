@@ -94,6 +94,23 @@ class User extends \yii\web\User
     public int $loginAttemptDuration = 900;
 
     /**
+     * @var bool whether a browser an account logged in from keeps an attempt count of its own (OWASP's device
+     * cookies): strangers guessing the password lock the account for everyone but its owner's known browsers, and a
+     * known browser locks only itself.
+     */
+    public bool $enableDeviceCookies = true;
+
+    /**
+     * @var array<string, mixed> `secure` follows the auto login cookie's
+     */
+    public array $deviceCookie = ['name' => '_device', 'httpOnly' => true, 'sameSite' => Cookie::SAME_SITE_LAX];
+
+    /**
+     * @var int the device cookie lifetime in seconds, renewed by every login
+     */
+    public int $deviceCookieLifetime = 31_536_000;
+
+    /**
      * @var int the type written to `user_login`, one of the {@see UserLogin} constants. A flow that logs a user in
      * without naming one is recorded as {@see UserLogin::TYPE_OTHER}.
      */
@@ -129,6 +146,11 @@ class User extends \yii\web\User
 
     private ?int $permissionCount = null;
 
+    /**
+     * @var array<string, string|null> by normalised address and cookie value: the nonce, if the cookie is that account's
+     */
+    private array $loginDevices = [];
+
     #[Override]
     public function init(): void
     {
@@ -141,6 +163,7 @@ class User extends \yii\web\User
 
         $this->ipAddress ??= $request->getUserIP();
         $this->identityCookie['secure'] ??= $this->cookieSecure ?? $request->getIsSecureConnection();
+        $this->deviceCookie['secure'] ??= $this->identityCookie['secure'];
 
         parent::init();
     }
@@ -269,6 +292,8 @@ class User extends \yii\web\User
         $this->insertLogin($identity);
         $identity->update(false);
 
+        $this->sendDeviceCookie($identity);
+
         parent::afterLogin($identity, $cookieBased, $duration);
     }
 
@@ -303,12 +328,17 @@ class User extends \yii\web\User
     }
 
     /**
-     * A password change rotates the auth key every auto login cookie carries, so the acting user's is written again:
-     * "remember me" must survive the user's own change.
+     * A password change rotates the auth key every auto login and device cookie carries, so the acting user's are
+     * written again: "remember me" and the browser's own attempt count must survive the user's own change.
      */
     public function resendIdentityCookie(): void
     {
         $identity = $this->getIdentity(false);
+
+        if ($identity) {
+            $this->sendDeviceCookie($identity);
+        }
+
         $value = Application::current()->getRequest()->getCookies()->getValue($this->identityCookie['name']);
 
         if (!$this->enableAutoLogin || !$identity || !is_string($value)) {
@@ -320,6 +350,28 @@ class User extends \yii\web\User
         if (is_array($data) && count($data) === 3 && is_int($data[2]) && $data[2] > 0) {
             $this->sendIdentityCookie($identity, $data[2]);
         }
+    }
+
+    /**
+     * Binds this browser to the account with a fresh nonce. The signature is keyed by the auth key, so rotating it
+     * — a password change, "log out other sessions" — invalidates every device cookie the account handed out.
+     */
+    public function sendDeviceCookie(\Hirtz\Skeleton\Models\User $identity): void
+    {
+        if (!$this->enableDeviceCookies || !$identity->auth_key) {
+            return;
+        }
+
+        $nonce = Yii::$app->getSecurity()->generateRandomString();
+
+        $cookie = Yii::$container->get(Cookie::class, [], [
+            ...$this->deviceCookie,
+            'value' => json_encode([$identity->id, $nonce, $this->getDeviceSignature($identity, $nonce)]),
+            'expire' => time() + $this->deviceCookieLifetime,
+        ]);
+
+        Application::current()->getResponse()->getCookies()->add($cookie);
+        $this->loginDevices = [];
     }
 
     private function insertLogin(\Hirtz\Skeleton\Models\User $user, ?int $type = null, ?DateTime $createdAt = null): void
@@ -425,6 +477,10 @@ class User extends \yii\web\User
         return false;
     }
 
+    /**
+     * A known browser's failures count against that browser alone, so strangers cannot use up its owner's attempts —
+     * and a stolen device cookie is worth no more guesses than the account allows.
+     */
     public function addFailedLoginAttempt(?string $email = null): void
     {
         if ($this->loginAttemptLimit < 1) {
@@ -442,14 +498,16 @@ class User extends \yii\web\User
      */
     public function resetFailedLoginAttempts(?string $email = null): void
     {
-        if ($key = $this->getEmailLoginAttemptCacheKey($email)) {
-            Yii::$app->getCache()->delete($key);
+        foreach ([$this->getEmailLoginAttemptCacheKey($email), $this->getDeviceLoginAttemptCacheKey($email)] as $key) {
+            if ($key) {
+                Yii::$app->getCache()->delete($key);
+            }
         }
     }
 
     /**
      * Both the account and the origin are counted: the first stops a password being guessed, the second stops one
-     * password being tried against every account.
+     * password being tried against every account. A known browser is counted in place of the account.
      *
      * @return list<array{string, string, string, string}>
      */
@@ -457,7 +515,7 @@ class User extends \yii\web\User
     {
         $keys = [];
 
-        if ($key = $this->getEmailLoginAttemptCacheKey($email)) {
+        if ($key = $this->getDeviceLoginAttemptCacheKey($email) ?? $this->getEmailLoginAttemptCacheKey($email)) {
             $keys[] = $key;
         }
 
@@ -487,6 +545,66 @@ class User extends \yii\web\User
     {
         $email = mb_strtolower(trim((string)$email));
         return $email !== '' ? [self::class, 'login-attempts', 'email', $email] : null;
+    }
+
+    /**
+     * @return array{string, string, string, string}|null
+     */
+    private function getDeviceLoginAttemptCacheKey(?string $email): ?array
+    {
+        $nonce = $this->getLoginDevice($email);
+        return $nonce !== null ? [self::class, 'login-attempts', 'device', $nonce] : null;
+    }
+
+    /**
+     * The account is only looked up when the browser carries a device cookie at all.
+     *
+     * @return string|null the nonce of the request's device cookie, if it was issued to the account of `$email`
+     */
+    private function getLoginDevice(?string $email): ?string
+    {
+        $email = mb_strtolower(trim((string)$email));
+
+        if (!$this->enableDeviceCookies || $email === '') {
+            return null;
+        }
+
+        $value = Application::current()->getRequest()->getCookies()->getValue($this->deviceCookie['name']);
+
+        if (!is_string($value)) {
+            return null;
+        }
+
+        $memo = "$email\n$value";
+
+        if (array_key_exists($memo, $this->loginDevices)) {
+            return $this->loginDevices[$memo];
+        }
+
+        $data = json_decode($value, true);
+
+        if (!is_array($data) || count($data) !== 3 || !is_string($data[1] ?? null) || !is_string($data[2] ?? null)) {
+            return $this->loginDevices[$memo] = null;
+        }
+
+        [$id, $nonce, $signature] = $data;
+
+        $user = \Hirtz\Skeleton\Models\User::find()
+            ->andWhereEmail($email)
+            ->limit(1)
+            ->one();
+
+        $isValid = $user?->auth_key
+            && is_scalar($id)
+            && (string)$user->id === (string)$id
+            && hash_equals($this->getDeviceSignature($user, $nonce), $signature);
+
+        return $this->loginDevices[$memo] = $isValid ? $nonce : null;
+    }
+
+    private function getDeviceSignature(\Hirtz\Skeleton\Models\User $user, string $nonce): string
+    {
+        return hash_hmac('sha256', "device|$user->id|$nonce", (string)$user->auth_key);
     }
 
     /**

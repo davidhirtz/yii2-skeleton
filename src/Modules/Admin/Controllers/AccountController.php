@@ -175,7 +175,15 @@ class AccountController extends Controller
 
     public function actionLogoutOtherSessions(): Response|string
     {
+        // The other browsers' auto login and device cookies carry the auth key: without a new one, the first would
+        // log them straight back in.
+        if ($identity = $this->webuser->getIdentity()) {
+            $identity->generateAuthKey();
+            $identity->updateAttributes(['auth_key' => $identity->auth_key]);
+        }
+
         $count = $this->webuser->destroyOtherSessions();
+        $this->webuser->resendIdentityCookie();
 
         $this->success($count
             ? Yii::t('skeleton', 'ACCOUNT_SUCCESS_OTHER_SESSIONS_ENDED', ['count' => $count])

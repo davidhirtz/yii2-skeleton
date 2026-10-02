@@ -130,7 +130,9 @@ trait ApplicationTrait
                     'targets' => [
                         'file' => [
                             'class' => FileTarget::class,
-                            'levels' => ['error', 'warning'],
+                            // A warning is the file log's: a report is something to act on, and a project raising the level
+            // configures `targets.sentry.levels` itself.
+            'levels' => ['error'],
                             'fileMode' => 0770,
                             'logVars' => [
                                 '_GET',
@@ -262,7 +264,9 @@ trait ApplicationTrait
         $config['components']['log']['targets']['sentry'] = ArrayHelper::merge([
             'class' => SentryTarget::class,
             'dsn' => $dsn,
-            'levels' => ['error', 'warning'],
+            // A warning is the file log's: a report is something to act on, and a project raising the level
+            // configures `targets.sentry.levels` itself.
+            'levels' => ['error'],
             'except' => [
                 'yii\\web\\HttpException:4*',
             ],

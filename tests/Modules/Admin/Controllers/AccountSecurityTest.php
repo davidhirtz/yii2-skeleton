@@ -117,12 +117,17 @@ class AccountSecurityTest extends TestCase
 
     public function testLogoutOtherSessionsReportsWhatItEnded(): void
     {
-        $this->login('owner');
+        $user = $this->login('owner');
+        $authKey = $user->auth_key;
 
         $response = $this->post('admin/account/logout-other-sessions');
 
         self::assertInstanceOf(Response::class, $response);
         self::assertNotEmpty($this->getWebSession()->getFlash('success'));
+
+        // A new auth key, or the other browsers' auto login cookies would log them straight back in
+        self::assertNotSame($authKey, User::findOne($user->id)?->auth_key);
+        self::assertNotNull($this->getWebResponse()->getCookies()->get($this->getWebUser()->deviceCookie['name']));
     }
 
     public function testTheTimezoneIsSaved(): void

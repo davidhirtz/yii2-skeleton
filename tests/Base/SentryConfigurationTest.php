@@ -45,13 +45,26 @@ class SentryConfigurationTest extends TestCase
         self::assertSame('https://public@sentry.localhost/1', $target->dsn);
         self::assertSame(['yii\web\HttpException:4*'], $target->except);
 
-        // A page nobody asked for is not an error worth a report; the 5xx above it is.
+        // A page nobody asked for is not an error worth a report, nor is a warning; the 5xx above them is.
         $target->collect([
             ['Not found', Logger::LEVEL_ERROR, 'yii\web\HttpException:404', 0.0, [], 0],
             ['Server error', Logger::LEVEL_ERROR, 'yii\web\HttpException:500', 0.0, [], 0],
+            ['Deprecated call', Logger::LEVEL_WARNING, 'application', 0.0, [], 0],
             ['Just so you know', Logger::LEVEL_INFO, 'application', 0.0, [], 0],
         ], false);
 
         self::assertSame(['Server error'], array_column($target->messages, 0));
+    }
+
+    public function testAProjectCanStillReportWarnings(): void
+    {
+        $this->config['params']['sentryDsn'] = 'https://public@sentry.localhost/1';
+        $this->config['components']['log']['targets']['sentry']['levels'] = ['error', 'warning'];
+        $this->reloadApplication();
+
+        $target = Yii::$app->getLog()->targets['sentry'];
+        $target->collect([['Deprecated call', Logger::LEVEL_WARNING, 'application', 0.0, [], 0]], false);
+
+        self::assertSame(['Deprecated call'], array_column($target->messages, 0));
     }
 }
