@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Changed `redirect.request_uri` and `url` to `varchar(512)`, so a permalink's URI qualified by its host fits
 - Added `Web\UrlManager::$draftRequiresLogin` (off by default): the draft subdomain then serves logged-in users only
 - Added the `mutex` component (`MysqlMutex`) and `Caching\CacheCounter`: login and upload attempts are counted
   under a lock, so concurrent requests no longer lose each other's increments

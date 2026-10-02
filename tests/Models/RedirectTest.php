@@ -77,6 +77,16 @@ class RedirectTest extends TestCase
         return $redirect;
     }
 
+    /**
+     * A permalink's URI qualified by a long host is longer than the 250 characters the column used to hold.
+     */
+    public function testAHostQualifiedPermalinkFits(): void
+    {
+        $redirect = $this->createRedirect(str_repeat('h', 200) . '.example.com/' . str_repeat('p', 255), 'new');
+
+        self::assertTrue($redirect->insert(), print_r($redirect->getErrors(), true));
+    }
+
     private function createRedirect(string $requestUri, string $url): Redirect
     {
         $redirect = Redirect::create();

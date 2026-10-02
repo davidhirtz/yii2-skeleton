@@ -67,7 +67,8 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
             [
                 ['request_uri', 'url'],
                 'string',
-                'max' => 250,
+                // A URI qualified by its host: up to 253 characters of host and the 255 of a permalink
+                'max' => 512,
             ],
             [
                 ['request_uri'],
