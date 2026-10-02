@@ -93,9 +93,12 @@ class PasswordRecoverForm extends Model
         return !$this->hasErrors();
     }
 
+    /**
+     * In the recipient's language: an administrator or the console may be the one sending it.
+     */
     public function sendPasswordResetEmail(): bool
     {
-        return Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/recover', [
+        $send = fn (): bool => Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/recover', [
             'user' => $this->user,
             'url' => $this->user->createPasswordResetUrl(),
         ])
@@ -103,6 +106,8 @@ class PasswordRecoverForm extends Model
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->user->email)
             ->send();
+
+        return Yii::$app->getI18n()->callback($this->user->language, $send) === true;
     }
 
     public function isAlreadySent(): bool

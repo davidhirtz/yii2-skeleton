@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
+use yii\console\ExitCode;
 
 class UpgradePasswordsTest extends TestCase
 {
@@ -33,6 +34,62 @@ class UpgradePasswordsTest extends TestCase
 
         self::assertEquals($user->email, $this->mailer->getLastMessageTo());
         self::assertStringContainsString('/admin/account/reset', $this->mailer->getLastMessageBody());
+    }
+
+    /**
+     * A failed send is reported and exits with an error; the next run picks the user up again, and skips the ones
+     * whose link went out.
+     */
+    public function testAFailedSendIsReportedAndRetriedByTheNextRun(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $user->updateAttributes(['password_hash' => null]);
+
+        $this->mailer->isFailing = true;
+
+        $controller = new UpgradeControllerMock('upgrade', Yii::$app);
+        $controller->interactive = false;
+
+        self::assertSame(ExitCode::UNSPECIFIED_ERROR, $controller->actionPasswords());
+        self::assertStringContainsString("Failed to send to $user->email", $controller->flushStdOutBuffer());
+        self::assertNull($user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
+
+        $this->mailer->isFailing = false;
+
+        self::assertSame(ExitCode::OK, $controller->actionPasswords());
+        self::assertStringContainsString('Sent 1 password reset link', $controller->flushStdOutBuffer());
+
+        self::assertSame(ExitCode::OK, $controller->actionPasswords());
+        self::assertStringContainsString('Sent 0 password reset link', $controller->flushStdOutBuffer());
+    }
+
+    public function testADisabledUserIsNotMailed(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $user->updateAttributes(['password_hash' => null, 'status' => User::STATUS_DISABLED]);
+
+        $controller = new UpgradeControllerMock('upgrade', Yii::$app);
+        $controller->interactive = false;
+        $controller->actionPasswords();
+
+        self::assertFalse($this->mailer->hasMessages());
+    }
+
+    public function testTheLinkIsSentInTheUsersLanguage(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $user->updateAttributes(['password_hash' => null, 'language' => 'de']);
+
+        $controller = new UpgradeControllerMock('upgrade', Yii::$app);
+        $controller->interactive = false;
+        $controller->actionPasswords();
+
+        self::assertSame(
+            Yii::$app->getI18n()->callback('de', fn (): string => Yii::t('skeleton', 'PASSWORD_RECOVER_RESET_YOUR_PASSWORD')),
+            $this->mailer->getLastMessage()?->getSubject(),
+        );
+
+        self::assertSame('en-US', Yii::$app->language);
     }
 
     public function testPasswordsWithNothingToDo(): void

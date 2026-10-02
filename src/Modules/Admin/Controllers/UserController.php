@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Models\Forms\DeleteForm;
 use Hirtz\Skeleton\Models\Forms\OwnershipForm;
 use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Models\Forms\UserForm;
@@ -165,11 +166,17 @@ class UserController extends Controller
         $form->user = $user;
         $form->email = $user->email;
 
-        $form->sendPasswordResetEmail();
+        if ($form->sendPasswordResetEmail()) {
+            $this->success(Yii::t('skeleton', 'USER_SUCCESS_SENT_PASSWORD_RESET', [
+                'email' => $user->email,
+            ]));
+        } else {
+            $user->getLatestToken(UserToken::TYPE_PASSWORD_RESET)?->delete();
 
-        $this->success(Yii::t('skeleton', 'USER_SUCCESS_SENT_PASSWORD_RESET', [
-            'email' => $user->email,
-        ]));
+            $this->error(Yii::t('skeleton', 'COMMON_ERROR_EMAIL_NOT_SENT', [
+                'email' => $user->email,
+            ]));
+        }
 
         return $this->redirect(['update', 'id' => $user->id]);
     }

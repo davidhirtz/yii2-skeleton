@@ -7,9 +7,11 @@ namespace Hirtz\Skeleton\Console\Controllers;
 use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Models\UserToken;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\console\Controller;
+use yii\console\ExitCode;
 use yii\db\Query;
 use yii\helpers\Console;
 
@@ -28,50 +30,85 @@ class UpgradeController extends Controller
     }
 
     /**
-     * Mails a password reset link to every user without a password.
+     * Mails a password reset link to every enabled user without a password.
      *
      * After `M260913180000PasswordScheme` that is everyone who still had a v2 password. Kept out of the migration on
-     * purpose: a migration runs in CI and on staging, and must not send mail.
+     * purpose: a migration runs in CI and on staging, and must not send mail. A user whose link has not expired yet
+     * is skipped, so a run can be repeated for the ones a failing mail server left out.
      */
-    public function actionPasswords(): void
+    public function actionPasswords(): int
     {
         $users = User::find()
             ->where(['password_hash' => null])
+            ->andWhere(['!=', 'status', User::STATUS_DISABLED])
             ->all();
 
         if (!$users) {
             $this->stdout('No users without a password found.' . PHP_EOL, Console::FG_GREEN);
-            return;
+            return ExitCode::OK;
         }
 
         $count = count($users);
 
         if ($this->interactive && !$this->confirm("Send a password reset link to $count user(s)?", true)) {
-            return;
+            return ExitCode::OK;
         }
 
         $form = PasswordRecoverForm::create();
+        $sent = 0;
+        $failed = 0;
 
         foreach ($users as $user) {
+            if ($this->hasUnexpiredPasswordResetToken($user)) {
+                $this->stdout(" > Skipped $user->email, whose link has not expired" . PHP_EOL);
+                continue;
+            }
+
             $form->user = $user;
             $form->email = $user->email;
 
             try {
-                $form->sendPasswordResetEmail();
+                $isSent = $form->sendPasswordResetEmail();
             } catch (InvalidConfigException $exception) {
                 // A console application has no request to take the host from, and Yii refuses to guess one
-                $this->stdout($exception->getMessage() . PHP_EOL, Console::FG_RED);
-                $this->stdout('Set `params.hostInfo` (or `components.urlManager.hostInfo` and `baseUrl` for the'
+                $this->stderr($exception->getMessage() . PHP_EOL, Console::FG_RED);
+                $this->stderr('Set `params.hostInfo` (or `components.urlManager.hostInfo` and `baseUrl` for the'
                     . ' console application), so the emailed link knows where it points.' . PHP_EOL, Console::FG_YELLOW);
 
-                return;
+                return ExitCode::CONFIG;
+            }
+
+            if (!$isSent) {
+                // A link nobody received must not keep the user out of the next run
+                $user->getLatestToken(UserToken::TYPE_PASSWORD_RESET)?->delete();
+                $this->stderr(" > Failed to send to $user->email" . PHP_EOL, Console::FG_RED);
+                $failed++;
+
+                continue;
             }
 
             $this->stdout(" > Sent to $user->email" . PHP_EOL);
+            $sent++;
         }
 
-        $count = Yii::$app->getFormatter()->asInteger($count);
-        $this->stdout("Sent $count password reset link(s)." . PHP_EOL, Console::FG_GREEN);
+        $formatter = Yii::$app->getFormatter();
+        $this->stdout('Sent ' . $formatter->asInteger($sent) . ' password reset link(s).' . PHP_EOL, Console::FG_GREEN);
+
+        if ($failed) {
+            $this->stderr('Failed to send ' . $formatter->asInteger($failed) . ' link(s).' . PHP_EOL, Console::FG_RED);
+            return ExitCode::UNSPECIFIED_ERROR;
+        }
+
+        return ExitCode::OK;
+    }
+
+    private function hasUnexpiredPasswordResetToken(User $user): bool
+    {
+        return UserToken::find()
+            ->whereUser($user->id)
+            ->whereType(UserToken::TYPE_PASSWORD_RESET)
+            ->unexpired()
+            ->exists();
     }
 
     private function updateMigrationNamespaces(): void
