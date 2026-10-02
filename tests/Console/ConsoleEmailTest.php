@@ -12,15 +12,13 @@ class ConsoleEmailTest extends TestCase
 {
     protected string $applicationClass = Application::class;
 
-    protected array $config = [
-        'params' => [
-            'email' => null,
-            'hostInfo' => 'https://www.example.com',
-        ],
-    ];
-
     public function testTheSenderIsDerivedFromThePinnedHost(): void
     {
+        // Added to `$config` rather than declared: a declared one replaces `config/test.php`, the database included
+        $this->config['params']['email'] = null;
+        $this->config['params']['hostInfo'] = 'https://www.example.com';
+        $this->reloadApplication();
+
         self::assertSame('hostmaster@www.example.com', Yii::$app->params['email']);
     }
 }
