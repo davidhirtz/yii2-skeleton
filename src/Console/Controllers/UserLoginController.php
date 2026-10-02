@@ -26,7 +26,7 @@ class UserLoginController extends Controller
     public function options($actionID): array
     {
         $options = parent::options($actionID);
-        return $actionID === 'clear' ? [...$options, 'sleep'] : $options;
+        return $actionID === 'clear' ? [...$options, 'sleep', 'batchSize'] : $options;
     }
 
     /**

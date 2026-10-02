@@ -108,7 +108,7 @@ class ParamsController extends Controller
     }
 
     /**
-     * Adds or updates give parameter in config.
+     * Adds a parameter to the config, or updates it.
      */
     public function actionCreate(string $param, string $value): void
     {
@@ -126,7 +126,7 @@ class ParamsController extends Controller
     }
 
     /**
-     * Adds or updates give parameter in config.
+     * Updates a parameter in the config, or adds it.
      */
     public function actionUpdate(string $param, string $value): void
     {

@@ -139,8 +139,8 @@ class UserController extends Controller
         $this->email = null;
         $this->password = null;
 
-        // `confirm()` answers its default without a terminal, so the retry has to be asked for explicitly — a
-        // scripted run would otherwise recurse forever on the value it was given.
+        // `confirm()` answers `true` without a terminal, so the retry is only offered to one — a scripted run would
+        // otherwise recurse forever on the value it was given.
         return $this->interactive && $this->confirm('Do you want to retry?', true)
             ? $this->actionCreate()
             : ExitCode::DATAERR;

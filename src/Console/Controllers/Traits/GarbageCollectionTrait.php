@@ -18,6 +18,11 @@ trait GarbageCollectionTrait
     public int $sleep = 1;
 
     /**
+     * @var int The number of records deleted per batch.
+     */
+    public int $batchSize = 100;
+
+    /**
      * Orders by primary key and deletes in batches, so the table is never locked for long and no `WHERE` clause
      * grows unbounded. This means the id must be an auto-incrementing integer, with the oldest records having the
      * lowest ids.
@@ -25,8 +30,9 @@ trait GarbageCollectionTrait
      * @param class-string<ActiveRecord> $modelClass
      * @return int the number of records deleted
      */
-    protected function deleteExpiredRecords(string $modelClass, int $lifetime, int $limit = 100): int
+    protected function deleteExpiredRecords(string $modelClass, int $lifetime, ?int $limit = null): int
     {
+        $limit = max(1, $limit ?? $this->batchSize);
         $threshold = gmdate('Y-m-d H:i:s', time() - $lifetime);
         $totalCount = 0;
 
@@ -50,8 +56,11 @@ trait GarbageCollectionTrait
                 $deletedCount = $modelClass::deleteAll(['id' => $ids]);
                 $totalCount += $deletedCount;
 
-                $count = Yii::$app->getFormatter()->asInteger($totalCount);
-                $this->stdout("Deleting records ... ($count)\n");
+                // Progress only for a terminal: a cron job's mail would get a line per batch
+                if ($this->interactive) {
+                    $count = Yii::$app->getFormatter()->asInteger($totalCount);
+                    $this->stdout("Deleting records ... ($count)\n");
+                }
 
                 if ($deletedCount === count($rows)) {
                     if ($this->sleep && count($rows) === $limit) {

@@ -288,8 +288,14 @@ class MigrateController extends \yii\console\controllers\MigrateController
     /**
      * Creates database connection credentials.
      */
-    public function actionConfig(bool $replace = true): void
+    public function actionConfig(bool $replace = true): int
     {
+        // Without a terminal every prompt answers its default, which would write empty credentials over working ones
+        if (!$this->interactive) {
+            $this->stderr('The database credentials can only be entered interactively.' . PHP_EOL, Console::FG_RED);
+            return ExitCode::USAGE;
+        }
+
         $db = $this->getDbConfig();
         $found = !empty($db);
 
@@ -323,6 +329,8 @@ class MigrateController extends \yii\console\controllers\MigrateController
                 ]);
             }
         }
+
+        return ExitCode::OK;
     }
 
     protected function hiddenPasswordPrompt(): string

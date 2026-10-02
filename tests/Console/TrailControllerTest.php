@@ -36,6 +36,15 @@ class TrailControllerTest extends TestCase
         self::assertEquals('Updated 1 Hirtz\Skeleton\Models\Trail trail records' . PHP_EOL, $controller->flushStdOutBuffer());
     }
 
+    public function testADefinitionWithoutAClassIsSkipped(): void
+    {
+        Yii::$container->set('closure\Models\Model', fn (): Trail => Trail::create());
+        $controller = $this->createTrailController();
+        $controller->actionUpdateModels();
+
+        self::assertSame('', $controller->flushStdOutBuffer());
+    }
+
     public function testActionClearWithoutOffset(): void
     {
         $controller = $this->createTrailController();
@@ -72,9 +81,13 @@ class TrailControllerTest extends TestCase
 
         $controller = $this->createTrailController();
         $controller->sleep = 0;
+        $controller->batchSize = 40;
+        $controller->interactive = false;
 
         $controller->actionClear(1);
-        self::assertStringContainsString('Deleted 105 expired trail records', $controller->flushStdOutBuffer());
+
+        // No progress line per batch without a terminal, only the result
+        self::assertSame('Deleted 105 expired trail records' . PHP_EOL, $controller->flushStdOutBuffer());
 
         self::assertEmpty(Trail::find()->count());
     }
@@ -95,6 +108,7 @@ class TrailControllerTest extends TestCase
         $controller = $this->createTrailController();
 
         self::assertContains('sleep', $controller->options('clear'));
+        self::assertContains('batchSize', $controller->options('clear'));
         self::assertNotContains('sleep', $controller->options('optimize'));
     }
 

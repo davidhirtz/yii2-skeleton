@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Override;
 use Yii;
+use yii\console\ExitCode;
 use yii\db\Migration;
 
 class MigrateControllerTest extends TestCase
@@ -148,6 +149,20 @@ class MigrateControllerTest extends TestCase
         $controller->runAction('config');
 
         self::assertStringContainsString('Generate database connection credentials?', $controller->flushStdOutBuffer());
+    }
+
+    /**
+     * Without a terminal every prompt answers its default: the credentials would be written empty.
+     */
+    public function testActionConfigRefusesToRunUnattended(): void
+    {
+        $controller = $this->createMigrationController();
+        $controller->dbFile = "$this->configPath/db.php";
+        $controller->interactive = false;
+
+        self::assertSame(ExitCode::USAGE, $controller->actionConfig());
+        self::assertStringContainsString('only be entered interactively', $controller->flushStdOutBuffer());
+        self::assertFileDoesNotExist((string)Yii::getAlias("$this->configPath/db.php"));
     }
 
     public function testActionConfigWithCredentials(): void

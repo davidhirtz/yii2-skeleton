@@ -26,7 +26,7 @@ class TrailController extends Controller
     public function options($actionID): array
     {
         $options = parent::options($actionID);
-        return $actionID === 'clear' ? [...$options, 'sleep'] : $options;
+        return $actionID === 'clear' ? [...$options, 'sleep', 'batchSize'] : $options;
     }
 
     /**
@@ -37,6 +37,11 @@ class TrailController extends Controller
         $classNames = [];
 
         foreach (Yii::$container->getDefinitions() as $definition => $options) {
+            // A closure or an object names no class to rewrite the trail to
+            if (!is_array($options) || !is_string($options['class'] ?? null)) {
+                continue;
+            }
+
             if (!$filter || str_contains((string)$definition, $filter)) {
                 $classNames[$definition] = $options['class'];
             }

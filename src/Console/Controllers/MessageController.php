@@ -67,7 +67,7 @@ class MessageController extends \yii\console\controllers\MessageController
                 continue;
             }
 
-            $this->stdout('Saving messages to ' . Console::ansiFormat($file, [Console::FG_CYAN]) . "...\n");
+            $this->stdout('Saving messages to ' . $this->ansiFormat($file, Console::FG_CYAN) . "...\n");
             $this->saveMessagesCategoryToPHP($extracted, $file, $overwrite, $removeUnused, $sort, $category, $markUnused);
         }
     }
