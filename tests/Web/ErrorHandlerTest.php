@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Web;
 
 use Hirtz\Skeleton\Models\Redirect;
+use Hirtz\Skeleton\Test\Browser;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 
@@ -51,6 +52,30 @@ final class ErrorHandlerTest extends TestCase
         $this->open('/old-page');
 
         self::assertCurrentUrlEquals('/host-page');
+    }
+
+    public function testATrackedLinkFindsThePathAndKeepsItsQuery(): void
+    {
+        $this->createRedirect('old-page', 'new-page');
+
+        self::$client = new Browser(['HTTP_HOST' => 'www.test.localhost', 'HTTPS' => 'on']);
+        self::$client->followRedirects(false);
+        self::$client->request('GET', '/old-page?utm_source=newsletter');
+
+        self::assertSame(
+            'https://www.test.localhost/new-page?utm_source=newsletter',
+            self::$client->getInternalResponse()->getHeader('location'),
+        );
+    }
+
+    public function testARedirectNamingTheQueryWins(): void
+    {
+        $this->createRedirect('old-page', 'new-page');
+        $this->createRedirect('old-page?id=5', 'fifth-page');
+
+        $this->open('/old-page?id=5');
+
+        self::assertCurrentUrlEquals('/fifth-page');
     }
 
     protected function createRedirect(string $requestUri, string $url): void

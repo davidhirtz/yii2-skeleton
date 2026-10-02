@@ -37,6 +37,8 @@ class ErrorHandler extends \yii\web\ErrorHandler
     /**
      * A {@see Redirect} may name a host (`www.example.com/old`) or not (`old`); a host-qualified record wins. The
      * host is the URL manager's, not the request's, so a canonical host set by a URL manager subclass matches too.
+     * A record naming the query string wins over one naming the path alone, which is the one a tracked link
+     * (`old?utm_source=…`) finds, and which hands the query on to the target.
      */
     protected function redirectRequestUri(): bool
     {
@@ -48,13 +50,29 @@ class ErrorHandler extends \yii\web\ErrorHandler
 
         $host = parse_url((string)Yii::$app->getUrlManager()->getHostInfo(), PHP_URL_HOST);
         $redirect = $this->findRedirectByRequestUri($host ? ["$host/$url", $url] : [$url]);
+        $query = null;
+
+        if (!$redirect && str_contains($url, '?')) {
+            [$path, $query] = explode('?', $url, 2);
+            $path = trim($path, '/');
+
+            if ($path !== '') {
+                $redirect = $this->findRedirectByRequestUri($host ? ["$host/$path", $path] : [$path]);
+            }
+        }
 
         if (!$redirect) {
             return false;
         }
 
+        $target = $redirect->getBaseUrl() . $redirect->url;
+
+        if ($query) {
+            $target .= (str_contains($target, '?') ? '&' : '?') . $query;
+        }
+
         $response = Application::current()->getResponse();
-        $response->redirect($redirect->getBaseUrl() . $redirect->url, $redirect->type);
+        $response->redirect($target, $redirect->type);
         $response->send();
 
         return true;
