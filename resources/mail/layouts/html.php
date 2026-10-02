@@ -14,7 +14,7 @@ use yii\helpers\Html;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?= Html::encode(Yii::$app->language) ?>">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <title><?= Html::encode($this->title) ?></title>
@@ -22,7 +22,7 @@ use yii\helpers\Html;
 </head>
 <body>
 <?php $this->beginBody() ?>
-<style type="text/css">
+<style>
     * {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;

@@ -16,7 +16,12 @@ export const startBusy = (total = 0): HTMLProgressElement => {
     (document.querySelector('dialog[open]') as HTMLDialogElement | null)?.close();
 
     // Without a value the bar is indeterminate, which is all a request of unknown length can say.
-    total ? ($progress.max = total, $progress.value = 0) : $progress.removeAttribute('value');
+    if (total) {
+        $progress.max = total;
+        $progress.value = 0;
+    } else {
+        $progress.removeAttribute('value');
+    }
 
     if (!depth++) {
         document.body.inert = true;

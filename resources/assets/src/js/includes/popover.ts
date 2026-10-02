@@ -17,7 +17,7 @@ const position = ($anchor: HTMLElement, $popover: HTMLElement) => computePositio
 // and is also registered against the popover being removed from the DOM, which fires no `toggle` event of its own.
 export const openUnder = ($anchor: HTMLElement, $popover: HTMLElement, cleanup?: () => void) => {
     if ($popover.matches(':popover-open')) {
-        position($anchor, $popover);
+        void position($anchor, $popover);
         return null;
     }
 

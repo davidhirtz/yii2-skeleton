@@ -108,13 +108,13 @@ class MaintenanceController extends Controller
      * Enables maintenance mode with the given configuration by copying the maintenance mode template to the runtime.
      * The configuration is saved in a JSON file in the runtime directory.
      *
-     * @uses $redirect
-     * @uses $retry
-     * @uses $refresh
-     * @uses $statusCode
-     * @uses $viewFile
-     *
      * A deployment chains its next step on the exit code (`maintenance/enable && migrate`), so a failure is one.
+     *
+     * @see $redirect
+     * @see $retry
+     * @see $refresh
+     * @see $statusCode
+     * @see $viewFile
      */
     protected function enableMaintenanceMode(bool $withConfig = false): int
     {

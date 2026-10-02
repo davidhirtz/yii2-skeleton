@@ -14,12 +14,13 @@ use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Override;
 use yii\base\InvalidConfigException;
+use yii\base\Model;
 
 /**
  * Stores typed attribute definitions in one JSON column instead of a column each. Requires {@see I18nAttributesTrait}
- * for translatable definitions.
+ * for translatable definitions. Used by records and by {@see CustomAttributeGroupItem}, a plain model.
  *
- * @mixin ActiveRecord
+ * @mixin Model
  */
 trait CustomAttributesTrait
 {
@@ -231,7 +232,7 @@ trait CustomAttributesTrait
     }
 
     /**
-     * @uses GroupCustomAttribute::getValidationRules()
+     * @see GroupCustomAttribute::getValidationRules()
      */
     public function validateCustomAttributeGroup(string $attribute): void
     {
@@ -247,7 +248,7 @@ trait CustomAttributesTrait
     }
 
     /**
-     * @uses UploadCustomAttribute::getValidationRules()
+     * @see UploadCustomAttribute::getValidationRules()
      */
     public function validateCustomAttributeUpload(string $attribute): void
     {
@@ -311,13 +312,13 @@ trait CustomAttributesTrait
      */
     private function createCustomAttributeDefinitions(): array
     {
-        $columns = $this instanceof ActiveRecord ? array_keys(static::getTableSchema()->columns) : [];
+        $columns = $this instanceof ActiveRecord ? array_keys($this::getTableSchema()->columns) : [];
         $definitions = [];
         $customAttributes = $this->getCustomAttributes();
 
         // Without the column, a loaded record would keep its values in memory only and drop them on save.
         if ($customAttributes && $this instanceof ActiveRecord && !in_array($this->getCustomAttributesColumn(), $columns, true)) {
-            throw new InvalidConfigException(static::class . ' declares custom attributes but ' . static::tableName() . ' has no "' . $this->getCustomAttributesColumn() . '" column.');
+            throw new InvalidConfigException(static::class . ' declares custom attributes but ' . $this::tableName() . ' has no "' . $this->getCustomAttributesColumn() . '" column.');
         }
 
         // The custom part of `getI18nAttributes()` is primed empty above, so this is the model's own list.

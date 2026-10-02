@@ -138,7 +138,6 @@ class DuplicateActiveRecord
     /**
      * @param array<int|string, mixed> $params
      * @return T
-     * @noinspection PhpDocSignatureInspection
      */
     public static function create(array $params = []): ActiveRecord
     {

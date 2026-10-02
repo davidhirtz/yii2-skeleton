@@ -98,7 +98,7 @@ export default ($container: HTMLElement) => {
                 $active.click();
             } else if ($input.value.trim()) {
                 // Target, select and swap come from the body like a boosted link's; the push URL from the container.
-                htmx.ajax('GET', `${$container.dataset.search}?q=${encodeURIComponent($input.value.trim())}`, {
+                void htmx.ajax('GET', `${$container.dataset.search}?q=${encodeURIComponent($input.value.trim())}`, {
                     source: $container,
                 });
             }

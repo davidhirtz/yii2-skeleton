@@ -323,7 +323,6 @@ class AttributeTypecastBehavior extends Behavior
      */
     protected function detectAttributeTypes(): array
     {
-        /** @noinspection DuplicatedCode */
         $attributeTypes = [];
 
         foreach ($this->owner->getValidators() as $validator) {

@@ -61,7 +61,7 @@ class Mailer extends BaseMailer
             $html = $match[1];
         }
 
-        $html = (string)preg_replace('~<((style|script))[^>]*>(.*?)</\1>~is', '', $html);
+        $html = (string)preg_replace('~<(style|script)[^>]*>(.*?)</\1>~is', '', $html);
         $charset = Yii::$app->charset;
 
         $html = (string)preg_replace_callback('~<a\s[^>]*?href=(["\'])(.*?)\1[^>]*>(.*?)</a>~is', function (array $match) use ($charset): string {
