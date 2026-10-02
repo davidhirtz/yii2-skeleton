@@ -21,13 +21,16 @@ class ViewTest extends TestCase
         $view->breadcrumbs([
             new Breadcrumb('Home', '/'),
             new Breadcrumb('No link'),
+            new Breadcrumb('Shoes', '/shoes'),
+            new Breadcrumb('Current page'),
         ]);
 
         $html = BreadcrumbList::make()
             ->breadcrumbs($view->getBreadcrumbs())
             ->render();
 
-        static::assertEquals('<script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/www.test.localhost\/"}]}</script>', $html);
+        static::assertEquals('<script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/www.test.localhost\/"},{"@type":"ListItem","position":2,"name":"Shoes","item":"https:\/\/www.test.localhost\/shoes"},{"@type":"ListItem","position":3,"name":"Current page"}]}</script>', $html);
+        static::assertStringContainsString('"itemListElement":[]', BreadcrumbList::make()->render());
     }
 
     public function testHrefLangLinkTags(): void
@@ -59,8 +62,8 @@ class ViewTest extends TestCase
 
         $view->registerOpenGraphMetaTags();
 
-        static::assertEquals("<meta name=\"og:title\" content=\"$title\">", $view->metaTags['og:title']);
-        static::assertEquals("<meta name=\"og:description\" content=\"$description\">", $view->metaTags['og:description']);
+        static::assertEquals("<meta property=\"og:title\" content=\"$title\">", $view->metaTags['og:title']);
+        static::assertEquals("<meta property=\"og:description\" content=\"$description\">", $view->metaTags['og:description']);
     }
 
     public function testMetaDescriptionIsEncodedOnce(): void
@@ -71,7 +74,7 @@ class ViewTest extends TestCase
 
         self::assertSame('Müller & Söhne <p>', $view->getMetaDescription());
         self::assertSame('<meta name="description" content="Müller &amp; Söhne &lt;p&gt;">', $view->metaTags['description']);
-        self::assertSame('<meta name="og:description" content="Müller &amp; Söhne &lt;p&gt;">', $view->metaTags['og:description']);
+        self::assertSame('<meta property="og:description" content="Müller &amp; Söhne &lt;p&gt;">', $view->metaTags['og:description']);
     }
 
     public function testImageMetaTags(): void

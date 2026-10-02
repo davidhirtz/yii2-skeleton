@@ -56,6 +56,11 @@ class ModelSitemap extends AbstractSitemap
     {
         $query = $this->getQuery();
 
+        // Without an order the pages of `LIMIT … OFFSET` may overlap, listing one URL twice and another never
+        if (!$query->orderBy) {
+            $query->orderBy(array_fill_keys($this->getModel()::primaryKey(), SORT_ASC));
+        }
+
         if ($offset !== null) {
             $recordsPerPage = $this->getRecordsPerPage();
             $query->limit($recordsPerPage)->offset($offset * $recordsPerPage);

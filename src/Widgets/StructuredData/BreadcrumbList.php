@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\Widgets\StructuredData;
 
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Script;
-use Hirtz\Skeleton\Models\Breadcrumb;
 use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
@@ -33,25 +32,30 @@ class BreadcrumbList extends Widget
     }
 
     /**
+     * A crumb without a URL is left out, unless it is the last one: the current page, which schema.org lists
+     * without an `item`. Positions count the listed crumbs only.
+     *
      * @return list<array<string, mixed>>
      */
     protected function getItemListElement(): array
     {
-        return array_values(array_filter(array_map($this->getListItem(...), $this->breadcrumbs, array_keys($this->breadcrumbs))));
-    }
+        $breadcrumbs = array_values($this->getBreadcrumbs());
+        $last = array_key_last($breadcrumbs);
+        $items = [];
 
-    /**
-     * @return array<string, mixed>
-     */
-    protected function getListItem(Breadcrumb $breadcrumb, int $index): array
-    {
-        return $breadcrumb->url
-            ? [
+        foreach ($breadcrumbs as $index => $breadcrumb) {
+            if (!$breadcrumb->url && $index !== $last) {
+                continue;
+            }
+
+            $items[] = array_filter([
                 '@type' => 'ListItem',
-                'position' => $index + 1,
+                'position' => count($items) + 1,
                 'name' => $breadcrumb->label,
-                'item' => Url::to($breadcrumb->url, true),
-            ]
-            : [];
+                'item' => $breadcrumb->url ? Url::to($breadcrumb->url, true) : null,
+            ], fn (mixed $value): bool => $value !== null);
+        }
+
+        return $items;
     }
 }

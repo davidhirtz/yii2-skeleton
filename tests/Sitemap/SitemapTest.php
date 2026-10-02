@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Sitemap;
 
+use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Sitemap\ModelSitemap;
@@ -190,6 +191,20 @@ class SitemapTest extends TestCase
         self::assertCount(1, $sitemap->generateIndexUrls());
     }
 
+    /**
+     * `LIMIT … OFFSET` pages without an order may overlap, listing one URL twice and another never.
+     */
+    public function testAModelSitemapPagesInPrimaryKeyOrder(): void
+    {
+        $config = $this->getUserSitemapConfig();
+        unset($config['class']);
+
+        $sitemap = new OrderRecordingSitemap($config);
+        $sitemap->generateUrls(0);
+
+        self::assertSame(['id' => SORT_ASC], $sitemap->query?->orderBy);
+    }
+
     public function testTheUrlsKeyIsReserved(): void
     {
         $sitemap = $this->createSitemap(['sitemaps' => ['urls' => $this->getUserSitemapConfig()]]);
@@ -290,5 +305,22 @@ class SitemapTest extends TestCase
         Yii::$app->set('sitemap', [...$config, 'class' => Sitemap::class]);
 
         return Sitemap::getComponent();
+    }
+}
+
+/**
+ * @extends ModelSitemap<User>
+ */
+class OrderRecordingSitemap extends ModelSitemap
+{
+    /**
+     * @var ActiveQuery<User>|null
+     */
+    public ?ActiveQuery $query = null;
+
+    #[Override]
+    protected function getQuery(): ActiveQuery
+    {
+        return $this->query = parent::getQuery();
     }
 }

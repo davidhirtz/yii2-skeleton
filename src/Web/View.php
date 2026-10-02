@@ -255,14 +255,14 @@ class View extends \yii\web\View
         $title ??= $this->getDocumentTitle();
         $description ??= $this->getMetaDescription();
 
-        $this->registerMetaTag(['name' => 'og:title', 'content' => $title], 'og:title');
+        $this->registerMetaTag(['property' => 'og:title', 'content' => $title], 'og:title');
 
         if ($description) {
-            $this->registerMetaTag(['name' => 'og:description', 'content' => $description], 'og:description');
+            $this->registerMetaTag(['property' => 'og:description', 'content' => $description], 'og:description');
         }
 
         if ($type) {
-            $this->registerMetaTag(['name' => 'og:type', 'content' => $type], 'og:type');
+            $this->registerMetaTag(['property' => 'og:type', 'content' => $type], 'og:type');
         }
     }
 
