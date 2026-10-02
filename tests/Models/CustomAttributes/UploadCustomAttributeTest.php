@@ -90,7 +90,7 @@ class UploadCustomAttributeTest extends TestCase
         $token = $this->createToken('notes.txt');
         $record->attachment = $token;
 
-        self::assertTrue($record->save());
+        self::assertTrue($record->save(), print_r($record->getErrors(), true));
         self::assertNull($this->upload->getTempFile($token));
     }
 

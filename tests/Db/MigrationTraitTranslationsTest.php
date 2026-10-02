@@ -170,7 +170,7 @@ class MigrationTraitTranslationsTest extends TestCase
         $translation->attribute = 'name';
         $translation->value = 'Name FR';
 
-        self::assertTrue($translation->save());
+        self::assertTrue($translation->save(), print_r($translation->getErrors(), true));
 
         $migration->restoreI18nColumnsFromTranslations(TranslatedMigrationRecord::tableName(), TranslatedMigrationRecord::class);
 

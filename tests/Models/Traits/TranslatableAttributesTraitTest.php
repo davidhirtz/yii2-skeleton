@@ -87,7 +87,7 @@ class TranslatableAttributesTraitTest extends TestCase
         self::assertNotContains('name_de', $record->attributes());
 
         $record->name = 'Name';
-        self::assertTrue($record->insert());
+        self::assertTrue($record->insert(), print_r($record->getErrors(), true));
 
         self::assertSame('Name', TranslatableAttributeRecord::findOne($record->id)?->name);
     }

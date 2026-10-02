@@ -40,7 +40,7 @@ class UserSessionTest extends TestCase
         $form->newPassword = 'new-password';
         $form->repeatPassword = 'new-password';
 
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
         self::assertFalse($this->hasSession('other-device'));
     }
 

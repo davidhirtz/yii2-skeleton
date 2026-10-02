@@ -49,7 +49,7 @@ class SearchBehaviorTest extends TestCase
         Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
 
         $record = $this->createRecord();
-        self::assertTrue($record->insert());
+        self::assertTrue($record->insert(), print_r($record->getErrors(), true));
 
         $documents = $this->findDocuments($record);
 
@@ -150,7 +150,7 @@ class SearchBehaviorTest extends TestCase
 
         $record = SearchableSubclassActiveRecord::create();
         $record->name = 'Subclass';
-        self::assertTrue($record->insert());
+        self::assertTrue($record->insert(), print_r($record->getErrors(), true));
 
         $inserted = $this->findDocumentClasses($record);
 

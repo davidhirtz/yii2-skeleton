@@ -39,7 +39,7 @@ class AccountUpdateFormTest extends TestCase
 
         $form->user->name = ' administrator ';
 
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
         self::assertEquals('administrator', $form->user->name);
         self::assertEquals('ad', $form->user->getInitials());
 
@@ -62,7 +62,7 @@ class AccountUpdateFormTest extends TestCase
         self::assertFalse($form->save());
 
         $form->user->timezone = 'America/New_York';
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
 
         $dateTime = new DateTime('now', new DateTimeZone($form->user->timezone));
         self::assertEquals('GMT ' . $dateTime->format('P'), $form->user->getTimezoneOffset());
@@ -90,7 +90,7 @@ class AccountUpdateFormTest extends TestCase
             ],
         ]);
 
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
         self::assertFalse($form->user->showsHints());
         self::assertFalse(User::findOne(3)->showsHints());
     }
@@ -113,7 +113,7 @@ class AccountUpdateFormTest extends TestCase
 
         self::assertFalse($form->user->isOwner());
         self::assertFalse($form->user->isEnabled());
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
 
         $trail = $this->getLastTrailRecord();
 

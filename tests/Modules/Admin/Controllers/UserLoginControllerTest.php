@@ -141,7 +141,7 @@ class UserLoginControllerTest extends TestCase
         // the row is written raw by `Web\User::insertLogin()`, so nothing stamps it
         $login->created_at = new DateTime();
 
-        self::assertTrue($login->insert());
+        self::assertTrue($login->insert(), print_r($login->getErrors(), true));
 
         return $login;
     }

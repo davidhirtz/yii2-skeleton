@@ -27,19 +27,19 @@ class HexColorValidatorTest extends TestCase
         };
 
         $model->color = 'fff';
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         self::assertEquals('#fff', $model->color);
 
         $model->color = '#fff';
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         self::assertEquals('#fff', $model->color);
 
         $model->color = '000000';
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         self::assertEquals('#000000', $model->color);
 
         $model->color = '#000000';
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         self::assertEquals('#000000', $model->color);
 
         $model->color = 'invalid';

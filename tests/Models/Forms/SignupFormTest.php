@@ -68,7 +68,7 @@ class SignupFormTest extends TestCase
         $form->terms = true;
         $form->honeypot = null;
 
-        self::assertTrue($form->insert());
+        self::assertTrue($form->insert(), print_r($form->getErrors(), true));
         self::assertFalse($form->user->getIsNewRecord());
         self::assertFalse($this->getWebUser()->getIsGuest());
 
@@ -90,7 +90,7 @@ class SignupFormTest extends TestCase
         $form->terms = true;
         $form->honeypot = null;
 
-        self::assertTrue($form->insert());
+        self::assertTrue($form->insert(), print_r($form->getErrors(), true));
         self::assertFalse($form->user->getIsNewRecord());
         self::assertSame(
             ['The email to test-email@test.com could not be sent. Please try again later.'],
@@ -113,7 +113,7 @@ class SignupFormTest extends TestCase
         $form->terms = true;
         $form->honeypot = null;
 
-        self::assertTrue($form->insert());
+        self::assertTrue($form->insert(), print_r($form->getErrors(), true));
 
         $form->name = 'Testname-2';
         $form->email = 'test-email2@test.com';

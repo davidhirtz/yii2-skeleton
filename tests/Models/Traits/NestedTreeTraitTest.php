@@ -45,7 +45,7 @@ class NestedTreeTraitTest extends TestCase
         $root = TestNestedTreeActiveRecord::create();
         $root->name = 'Root';
 
-        self::assertTrue($root->save());
+        self::assertTrue($root->save(), print_r($root->getErrors(), true));
         self::assertEquals(1, $root->lft);
         self::assertEquals(2, $root->rgt);
         self::assertEquals(0, $root->depth);
@@ -55,7 +55,7 @@ class NestedTreeTraitTest extends TestCase
         $child->name = 'Child';
         $child->populateParentRelation($root);
 
-        self::assertTrue($child->save());
+        self::assertTrue($child->save(), print_r($child->getErrors(), true));
         self::assertEquals(2, $child->lft);
         self::assertEquals(3, $child->rgt);
         self::assertEquals(1, $child->depth);
@@ -181,7 +181,7 @@ class NestedTreeTraitTest extends TestCase
 
         $child->name = 'Renamed';
 
-        self::assertTrue($child->save());
+        self::assertTrue($child->save(), print_r($child->getErrors(), true));
         self::assertSame($root->id, $child->parent_id);
     }
 
@@ -278,7 +278,7 @@ class NestedTreeTraitTest extends TestCase
 
         $branch->populateParentRelation($second);
 
-        self::assertTrue($branch->save());
+        self::assertTrue($branch->save(), print_r($branch->getErrors(), true));
 
         $first->refresh();
         $second->refresh();
@@ -338,7 +338,7 @@ class NestedTreeTraitTest extends TestCase
         $record->name = $name;
         $record->populateParentRelation($parent);
 
-        self::assertTrue($record->save());
+        self::assertTrue($record->save(), print_r($record->getErrors(), true));
 
         return $record;
     }

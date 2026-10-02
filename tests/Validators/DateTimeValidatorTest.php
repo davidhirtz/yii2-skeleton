@@ -19,7 +19,7 @@ class DateTimeValidatorTest extends TestCase
         $model = new DateTimeValidatorModel();
         $model->load(['publishedAt' => '2024-06-15 14:30', 'day' => '2024-06-15 14:30'], '');
 
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         self::assertInstanceOf(DateTime::class, $model->publishedAt);
         self::assertSame('2024-06-15 14:30:00', (string)$model->publishedAt);
         self::assertInstanceOf(Date::class, $model->day);
@@ -40,7 +40,7 @@ class DateTimeValidatorTest extends TestCase
         $model = new DateTimeValidatorModel();
         $model->load(['publishedAt' => ''], '');
 
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
     }
 
     public function testAModelWithoutTheBehaviorNeverPasses(): void

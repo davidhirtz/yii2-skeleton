@@ -51,7 +51,7 @@ class AccountCredentialsFormTest extends TestCase
 
         $form->user->email = 'valid@domain.com';
 
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
         self::assertTrue($form->user->isUnconfirmed());
 
         // The link confirms the new address, so only the new inbox may receive it
@@ -96,7 +96,7 @@ class AccountCredentialsFormTest extends TestCase
         self::assertEquals($expected, $form->getFirstError('repeatPassword'));
 
         $form->repeatPassword = 'new_password';
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
 
         $trail = Trail::find()->orderBy(['id' => SORT_DESC])->one();
 
@@ -128,7 +128,7 @@ class AccountCredentialsFormTest extends TestCase
         $form->user->email = 'valid@domain.com';
         $form->oldPassword = 'password';
 
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
         self::assertTrue($form->user->isUnconfirmed());
         self::assertSame(
             ['The email to valid@domain.com could not be sent. Please try again later.'],

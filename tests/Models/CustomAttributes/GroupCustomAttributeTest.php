@@ -285,7 +285,7 @@ class GroupCustomAttributeTest extends TestCase
         $model = $this->createRecord();
         $model->links = [['label' => 'A', 'url' => 'https://a.example.com']];
 
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         $items = $model->getCustomAttributeItems('links');
 
         // Unchanged since validation, so the form gets the validated instances.
@@ -293,7 +293,7 @@ class GroupCustomAttributeTest extends TestCase
 
         $model->links = [['label' => 'B', 'url' => 'https://b.example.com']];
 
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         self::assertSame('B', $model->links[0]['label']);
         self::assertNotSame($items, $model->getCustomAttributeItems('links'));
 

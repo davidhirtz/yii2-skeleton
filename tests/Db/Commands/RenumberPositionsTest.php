@@ -22,6 +22,10 @@ class RenumberPositionsTest extends TestCase
             'parent_id' => 'integer unsigned NOT NULL',
             'position' => 'integer unsigned NOT NULL DEFAULT 0',
         ])->execute();
+
+        // Read through this index, rows of equal position arrive in descending id order: only the statement's own
+        // tie-breaker can keep them in the order of their ids
+        Yii::$app->getDb()->createCommand('CREATE INDEX [[position]] ON ' . self::TABLE . ' ([[parent_id]], [[position]], [[id]] DESC)')->execute();
     }
 
     #[Override]

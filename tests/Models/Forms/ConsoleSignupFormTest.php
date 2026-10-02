@@ -20,7 +20,7 @@ class ConsoleSignupFormTest extends TestCase
         $form->email = 'test@test.de';
         $form->password = 'password';
 
-        self::assertTrue($form->insert());
+        self::assertTrue($form->insert(), print_r($form->getErrors(), true));
         self::assertTrue($form->user->isOwner());
         self::assertEquals(Yii::$app->language, $form->user->language);
     }

@@ -172,7 +172,7 @@ class ActiveRecordTest extends TestCase
         self::assertNotNull($updatedAt);
 
         $model->updated_at = $updatedAt->modify('+1 microsecond');
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
 
         self::assertSame($updatedAt, $model->updated_at);
         self::assertSame([], $model->getDirtyAttributes());

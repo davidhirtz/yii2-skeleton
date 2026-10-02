@@ -110,7 +110,7 @@ class I18nAttributesTraitTest extends TestCase
         $model->name_de = 'Test Name DE';
         $model->slug_de = 'test-name-de';
 
-        self::assertTrue($model->save());
+        self::assertTrue($model->save(), print_r($model->getErrors(), true));
 
         $newModel = $this->createModel($model->getAttributes(except: ['id']));
 

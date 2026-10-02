@@ -66,7 +66,7 @@ class TrailBehaviorTest extends TestCase
     public function testAfterInsertEvent(): void
     {
         $model = $this->createTrailActiveRecord();
-        self::assertTrue($model->insert());
+        self::assertTrue($model->insert(), print_r($model->getErrors(), true));
 
         $trail = Trail::findOne([
             'model_class' => $model::class,
@@ -137,7 +137,7 @@ class TrailBehaviorTest extends TestCase
         };
 
         $model->name = 'test';
-        self::assertTrue($model->insert());
+        self::assertTrue($model->insert(), print_r($model->getErrors(), true));
     }
 
     public function testAdminName(): void
@@ -198,10 +198,10 @@ class TrailBehaviorTest extends TestCase
     public function testChildTrailResolvesDataModelRecord(): void
     {
         $model = $this->createTrailActiveRecord();
-        self::assertTrue($model->insert());
+        self::assertTrue($model->insert(), print_r($model->getErrors(), true));
 
         $parent = $this->createTrailActiveRecord();
-        self::assertTrue($parent->insert());
+        self::assertTrue($parent->insert(), print_r($parent->getErrors(), true));
 
         $trail = Trail::create();
         $trail->type = Trail::TYPE_UPDATE;
@@ -209,7 +209,7 @@ class TrailBehaviorTest extends TestCase
         $trail->model_id = (string)$model->id;
         $trail->parents = $parent;
 
-        self::assertTrue($trail->insert());
+        self::assertTrue($trail->insert(), print_r($trail->getErrors(), true));
 
         $child = Trail::find()
             ->where(['type' => Trail::TYPE_CHILD_UPDATE])

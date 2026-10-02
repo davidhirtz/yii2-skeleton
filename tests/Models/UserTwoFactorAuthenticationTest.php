@@ -141,7 +141,7 @@ class UserTwoFactorAuthenticationTest extends TestCase
         $auth = new \RobThree\Auth\TwoFactorAuth(new \RobThree\Auth\Providers\Qr\QRServerProvider());
         $form->code = $auth->getCode($form->getSecret());
 
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
         self::assertCount(User::RECOVERY_CODE_COUNT, $form->recoveryCodes);
 
         $user = User::findOne($user->id);

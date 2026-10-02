@@ -103,7 +103,7 @@ class AttributeTypecastBehaviorDateTest extends TestCase
 
         self::assertSame('2024-06-15 12:30:00', (string)$model->getOldAttribute('published_at'));
         self::assertTrue($model->isAttributeChanged('published_at'));
-        self::assertTrue($model->save());
+        self::assertTrue($model->save(), print_r($model->getErrors(), true));
 
         self::assertSame('2024-06-16 12:30:00', $this->queryColumn('published_at'));
     }
@@ -118,7 +118,7 @@ class AttributeTypecastBehaviorDateTest extends TestCase
         self::assertInstanceOf(Date::class, $model->day);
         self::assertSame('2024-06-15', (string)$model->day);
 
-        self::assertTrue($model->save());
+        self::assertTrue($model->save(), print_r($model->getErrors(), true));
         self::assertSame('2024-06-15 12:30:00', $this->queryColumn('published_at'));
         self::assertSame('2024-06-15', $this->queryColumn('day'));
     }
@@ -180,7 +180,7 @@ class AttributeTypecastBehaviorDateTest extends TestCase
 
         self::assertNull($model->published_at);
         self::assertNull($model->day);
-        self::assertTrue($model->save());
+        self::assertTrue($model->save(), print_r($model->getErrors(), true));
         self::assertNull($this->queryColumn('published_at'));
     }
 

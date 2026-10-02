@@ -53,7 +53,7 @@ class SaveTranslationsTest extends TestCase
         $model = new TranslatedActiveRecord();
         $model->name = 'Name';
 
-        self::assertTrue($model->insert());
+        self::assertTrue($model->insert(), print_r($model->getErrors(), true));
         self::assertNull($this->findTranslation($model));
 
         $model->name_de = 'Name DE';

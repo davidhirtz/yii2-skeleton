@@ -95,6 +95,19 @@ class AttributeTypecastBehaviorTest extends TestCase
         self::assertSame('abc', $model->ratio);
     }
 
+    /**
+     * A whole float beyond the integer range has no integer to become: casting it would wrap the value around.
+     */
+    public function testAFloatBeyondTheIntegerRangeIsLeftForTheValidator(): void
+    {
+        $model = new AttributeTypecastActiveRecord();
+        $model->setAttribute('amount', 1e19);
+
+        $model->getAttributeTypecastBehavior()->typecastAttributes();
+
+        self::assertSame(1e19, $model->amount);
+    }
+
     public function testTypecastOnlyLossless(): void
     {
         $model = new AttributeTypecastActiveRecord();
@@ -263,10 +276,10 @@ class AttributeTypecastBehaviorTest extends TestCase
         $model->is_active = true;
         $model->callback = '';
 
-        self::assertTrue($model->save());
+        self::assertTrue($model->save(), print_r($model->getErrors(), true));
 
         $model->setAttribute('amount', '1');
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
     }
 
     public function testBeforeSaveEvent(): void
@@ -304,7 +317,7 @@ class AttributeTypecastBehaviorTest extends TestCase
         $model->setAttribute('ratio', '12.3');
         $model->setAttribute('nullable', '');
 
-        self::assertTrue($model->save());
+        self::assertTrue($model->save(), print_r($model->getErrors(), true));
 
         $model = AttributeTypecastActiveRecord::findOne($model->id);
         self::assertNotNull($model);
@@ -320,7 +333,7 @@ class AttributeTypecastBehaviorTest extends TestCase
             'nullable' => '',
         ], '');
 
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         self::assertSame([], $model->getDirtyAttributes());
     }
 

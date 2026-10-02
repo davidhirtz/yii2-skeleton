@@ -250,7 +250,7 @@ class CustomAttributesTraitTest extends TestCase
         $model->name = 'Name';
 
         self::assertFalse($model->isAttributeRequired('note'));
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
 
         $model->featured = true;
 

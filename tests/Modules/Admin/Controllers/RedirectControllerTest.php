@@ -273,7 +273,7 @@ class RedirectControllerTest extends TestCase
         $redirect->request_uri = $requestUri;
         $redirect->url = $url;
 
-        self::assertTrue($redirect->insert());
+        self::assertTrue($redirect->insert(), print_r($redirect->getErrors(), true));
 
         return $redirect;
     }

@@ -18,15 +18,15 @@ class CurrencyValidatorTest extends TestCase
         $model = new CurrencyValidatorTestModel();
 
         $model->currency = 10;
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         self::assertEquals('10.00', $model->currency);
 
         $model->currency = 10.00;
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         self::assertEquals('10.00', $model->currency);
 
         $model->currency = '10.00';
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         self::assertEquals('10.00', $model->currency);
     }
 
@@ -36,7 +36,7 @@ class CurrencyValidatorTest extends TestCase
         $model = new CurrencyValidatorTestModel();
 
         $model->currency = '10,00';
-        self::assertTrue($model->validate());
+        self::assertTrue($model->validate(), print_r($model->getErrors(), true));
         self::assertEquals('10.00', $model->currency);
     }
 

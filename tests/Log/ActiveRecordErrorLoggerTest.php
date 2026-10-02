@@ -68,7 +68,7 @@ class ActiveRecordErrorLoggerTest extends TestCase
         $redirect->request_uri = 'old-page';
         $redirect->url = 'new-page';
 
-        self::assertTrue($redirect->insert());
+        self::assertTrue($redirect->insert(), print_r($redirect->getErrors(), true));
 
         return $redirect;
     }

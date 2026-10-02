@@ -77,7 +77,7 @@ class UserCanManageQueryCountTest extends TestCase
         $user->email = "target$count@example.com";
         $user->language = 'en-US';
 
-        self::assertTrue($user->insert(false));
+        self::assertTrue($user->insert(false), print_r($user->getErrors(), true));
 
         $this->assignRole($user->id, $role);
 

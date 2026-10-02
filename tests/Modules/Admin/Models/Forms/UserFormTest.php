@@ -42,7 +42,7 @@ class UserFormTest extends TestCase
         self::assertEquals($expected, $form->getFirstError('email'));
 
         $form->user->email = 'test-user@test.com';
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
 
         self::assertFalse($this->mailer->hasMessages());
     }
@@ -58,7 +58,7 @@ class UserFormTest extends TestCase
         $form->user->email = 'test-user@test.com';
         $form->sendEmail = true;
 
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
 
         $subject = Yii::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]);
 
@@ -77,7 +77,7 @@ class UserFormTest extends TestCase
         $form->user->email = 'test-user@test.com';
         $form->sendEmail = true;
 
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
         self::assertFalse($form->user->getIsNewRecord());
         self::assertSame(
             ['The email to test-user@test.com could not be sent. Please try again later.'],
@@ -93,7 +93,7 @@ class UserFormTest extends TestCase
         $form->user->email = 'test-user@test.com';
         $form->sendEmail = true;
 
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
 
         self::assertNull($form->user->password_hash);
         self::assertNotNull($form->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
@@ -113,7 +113,7 @@ class UserFormTest extends TestCase
         $form->repeatPassword = 'Str0ngPassphrase';
         $form->sendEmail = true;
 
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
         self::assertTrue($form->user->validatePassword('Str0ngPassphrase'));
 
         self::assertNotNull($form->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
@@ -147,7 +147,7 @@ class UserFormTest extends TestCase
         self::assertEquals($expected, $form->getFirstError('repeatPassword'));
 
         $form->repeatPassword = 'new_password';
-        self::assertTrue($form->save());
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
 
         $trail = $this->getLastTrailRecord();
 

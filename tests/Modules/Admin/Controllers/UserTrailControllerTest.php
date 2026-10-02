@@ -111,7 +111,7 @@ class UserTrailControllerTest extends TestCase
         $trail->model_id = (string)$user->id;
         $trail->message = $message;
 
-        self::assertTrue($trail->insert());
+        self::assertTrue($trail->insert(), print_r($trail->getErrors(), true));
 
         // `Trail::beforeSave()` stamps the acting identity, so the author is set afterwards
         $trail->updateAttributes(['user_id' => $user->id]);

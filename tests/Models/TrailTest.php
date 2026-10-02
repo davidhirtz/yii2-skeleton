@@ -24,7 +24,7 @@ class TrailTest extends TestCase
         $trail = Trail::create();
         $trail->message = 'TRAIL_MESSAGE_TEST';
 
-        self::assertTrue($trail->insert());
+        self::assertTrue($trail->insert(), print_r($trail->getErrors(), true));
         self::assertSame(Trail::TYPE_DEFAULT, $trail->type);
 
         self::assertSame(Trail::TYPE_DEFAULT, Trail::findOne($trail->id)?->type);

@@ -87,6 +87,17 @@ class SearchTextTest extends TestCase
         self::assertLessThan(mb_strlen($text), mb_strlen($snippet));
     }
 
+    /**
+     * A quarter of the window leads up to the match, and a match near the start needs no ellipsis before it.
+     */
+    public function testSnippetLeadsUpToTheMatch(): void
+    {
+        $text = str_repeat('a', 100) . ' needle ' . str_repeat('b', 100);
+
+        self::assertSame('… ' . str_repeat('a', 9) . ' needle ' . str_repeat('b', 23) . ' …', SearchText::snippet($text, ['needle'], 40));
+        self::assertSame('needle ' . str_repeat('b', 33) . ' …', SearchText::snippet('needle ' . str_repeat('b', 100), ['needle'], 40));
+    }
+
     public function testSnippetKeepsShortText(): void
     {
         self::assertSame('short', SearchText::snippet('short', ['short']));
