@@ -10,11 +10,12 @@ declare(strict_types=1);
  * @var string $url
  */
 
+use yii\helpers\Html;
 use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_TITLE');
 ?>
-<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_GREETING', ['name' => $user->getUsername()]); ?></p>
+<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_GREETING', ['name' => Html::encode($user->getUsername())]); ?></p>
 <p>
     <?= Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_TEXT'); ?>
     <?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_IGNORE'); ?>
@@ -22,6 +23,6 @@ $this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_TITLE');
 <p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_PASSWORD_RESET_TEXT'); ?></p>
 <p><?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_THANK_YOU'); ?></p>
 <div class="btn-wrap">
-    <a href="<?= $url; ?>"
+    <a href="<?= Html::encode($url); ?>"
        class="btn btn-primary"><?= Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_TITLE'); ?></a>
 </div>

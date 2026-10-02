@@ -10,19 +10,20 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Models\Forms\AccountCredentialsForm;
+use yii\helpers\Html;
 use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_EMAIL_TITLE');
 ?>
-<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_GREETING', ['name' => $form->user->getUsername()]); ?></p>
+<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_GREETING', ['name' => Html::encode($form->user->getUsername())]); ?></p>
 <p>
     <?= Yii::t('skeleton', 'MAIL_ACCOUNT_EMAIL_TEXT', [
-            'old' => $form->email,
-            'new' => $form->user->email
+            'old' => Html::encode($form->email),
+            'new' => Html::encode($form->user->email)
     ]); ?>
     <?= Yii::t('skeleton', 'MAIL_ACCOUNT_EMAIL_VERIFY_TEXT'); ?></p>
 <p><?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_THANK_YOU'); ?></p>
 <div class="btn-wrap">
-    <a href="<?= $url; ?>"
+    <a href="<?= Html::encode($url); ?>"
        class="btn btn-primary"><?= Yii::t('skeleton', 'MAIL_ACCOUNT_CONFIRM_EMAIL_BUTTON'); ?></a>
 </div>

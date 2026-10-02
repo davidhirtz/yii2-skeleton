@@ -93,6 +93,18 @@ class UpgradePasswordsTest extends TestCase
         self::assertSame('en-US', Yii::$app->language);
     }
 
+    public function testTheNameIsEncodedInTheMail(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $user->updateAttributes(['password_hash' => null, 'name' => '<b>Å&</b>']);
+
+        $controller = new UpgradeControllerMock('upgrade', Yii::$app);
+        $controller->interactive = false;
+        $controller->actionPasswords();
+
+        self::assertStringContainsString('&lt;b&gt;Å&amp;&lt;/b&gt;', $this->mailer->getLastMessageBody());
+    }
+
     public function testPasswordsWithNothingToDo(): void
     {
         $controller = new UpgradeControllerMock('upgrade', Yii::$app);
