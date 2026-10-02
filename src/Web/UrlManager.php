@@ -288,27 +288,32 @@ class UrlManager extends \yii\web\UrlManager
     {
         if ($this->i18nUrl) {
             $pathInfo = trim($request->getPathInfo(), '/');
+            $code = explode('/', $pathInfo, 2)[0];
 
-            $languages = $this->getLanguages();
+            // A whole first segment only: `de-stijl` is a slug, `DE` a URL nothing creates
+            $language = array_search($code, $this->getLanguages(), true);
 
-            if (preg_match('#^(' . implode('|', $languages) . ')\b(/?)#i', $pathInfo, $matches)) {
-                $request->setPathInfo(mb_substr($pathInfo, mb_strlen($matches[0], Yii::$app->charset), null, Yii::$app->charset));
-                $language = array_search($matches[1], $languages, true);
+            if ($language !== false) {
+                $request->setPathInfo(ltrim(mb_substr($pathInfo, mb_strlen($code)), '/'));
 
-                if ($language) {
-                    if ($language === $this->defaultLanguage) {
-                        $url = preg_replace('#(/' . preg_quote($matches[1]) . ')(/|$)#', '$2', $request->getAbsoluteUrl());
-                        throw new UrlNormalizerRedirectException($url, 301);
-                    }
-
-                    Yii::$app->language = $language;
+                if ($language === $this->defaultLanguage) {
+                    throw new UrlNormalizerRedirectException($this->getUrlWithoutLanguage($request, $code), 301);
                 }
 
+                Yii::$app->language = $language;
                 return;
             }
         }
 
         Yii::$app->language = $this->defaultLanguage ?: $request->getPreferredLanguage(array_keys($this->getLanguages()));
+    }
+
+    private function getUrlWithoutLanguage(Request $request, string $code): string
+    {
+        $baseUrl = $request->getBaseUrl();
+        $url = substr($request->getUrl(), strlen($baseUrl) + strlen($code) + 1);
+
+        return $request->getHostInfo() . $baseUrl . (str_starts_with($url, '/') ? '' : '/') . $url;
     }
 
     protected function getBeforeParseEvent(Request $request): ?UrlManagerEvent

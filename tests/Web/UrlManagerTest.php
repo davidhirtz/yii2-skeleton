@@ -144,6 +144,46 @@ class UrlManagerTest extends TestCase
         self::assertTrue($request->getIsDraft());
     }
 
+    /**
+     * The prefix is a whole first segment: a slug beginning with a language code and a hyphen is no prefix, nor is
+     * a code in another case, and only the leading one is dropped on the way to the default language.
+     */
+    public function testI18nUrlPrefixIsAWholeSegment(): void
+    {
+        $manager = $this->getUrlManager([
+            'i18nUrl' => true,
+            'defaultLanguage' => 'en-US',
+            'languages' => [
+                'en-US' => 'en',
+                'de' => 'de',
+            ],
+        ]);
+
+        foreach (['/de-stijl' => 'de-stijl', '/en-gb' => 'en-gb', '/DE/about' => 'DE/about'] as $url => $pathInfo) {
+            $request = $this->getRequest([
+                'hostInfo' => 'https://www.test.localhost',
+                'url' => $url,
+            ]);
+
+            $manager->parseRequest($request);
+
+            self::assertSame($pathInfo, $request->getPathInfo(), $url);
+            self::assertSame('en-US', Yii::$app->language, $url);
+        }
+
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.test.localhost',
+            'url' => '/en/blog/en?next=/en/x',
+        ]);
+
+        try {
+            $manager->parseRequest($request);
+            self::fail('UrlNormalizerRedirectException not thrown');
+        } catch (UrlNormalizerRedirectException $e) {
+            self::assertSame('https://www.test.localhost/blog/en?next=/en/x', $e->url);
+        }
+    }
+
     public function testRedirectMap(): void
     {
         $manager = $this->getUrlManager([
