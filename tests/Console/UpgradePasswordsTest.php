@@ -34,6 +34,7 @@ class UpgradePasswordsTest extends TestCase
 
         self::assertEquals($user->email, $this->mailer->getLastMessageTo());
         self::assertStringContainsString('/admin/account/reset', $this->mailer->getLastMessageBody());
+        self::assertStringContainsString('/admin/account/reset', (string)$message?->email->getTextBody());
     }
 
     /**

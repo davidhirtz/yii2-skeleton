@@ -28,6 +28,63 @@ class Mailer extends BaseMailer
     private ?TransportExceptionInterface $lastTransportException = null;
 
     /**
+     * A message composed from an HTML view alone gets its text part derived here rather than by Yii, which strips
+     * every tag and with it the target of every link: the text part of a mail whose point is its button would carry
+     * no URL at all.
+     *
+     * @param array<string, mixed> $params
+     */
+    #[Override]
+    public function compose($view = null, array $params = []): Message
+    {
+        /** @var Message $message */
+        $message = parent::compose($view, $params);
+
+        if ($view !== null && (!is_array($view) || !isset($view['text']))) {
+            $html = $message->email->getHtmlBody();
+
+            if (is_string($html)) {
+                $message->setTextBody(static::createTextBody($html));
+            }
+        }
+
+        return $message;
+    }
+
+    /**
+     * Yii's derivation of a text part, with every link's target kept beside its label.
+     */
+    public static function createTextBody(string $html): string
+    {
+        if (preg_match('~<body[^>]*>(.*?)</body>~is', $html, $match)) {
+            $html = $match[1];
+        }
+
+        $html = (string)preg_replace('~<((style|script))[^>]*>(.*?)</\1>~is', '', $html);
+        $charset = Yii::$app->charset;
+
+        $html = (string)preg_replace_callback('~<a\s[^>]*?href=(["\'])(.*?)\1[^>]*>(.*?)</a>~is', function (array $match) use ($charset): string {
+            $url = html_entity_decode($match[2], ENT_QUOTES | ENT_HTML5, $charset);
+            $label = trim(html_entity_decode(strip_tags($match[3]), ENT_QUOTES | ENT_HTML5, $charset));
+
+            if ($label === '') {
+                return htmlspecialchars($url, ENT_NOQUOTES, $charset);
+            }
+
+            if (str_starts_with($url, 'mailto:') || str_starts_with($url, '#') || str_contains($label, $url)) {
+                return $match[3];
+            }
+
+            return $match[3] . ': ' . htmlspecialchars($url, ENT_NOQUOTES, $charset);
+        }, $html);
+
+        $text = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, $charset);
+        $text = (string)preg_replace("~^[ \t]+~m", '', trim($text));
+
+        return (string)preg_replace('~\R\R+~mu', "\n\n", $text);
+    }
+
+    /**
      * @param TransportInterface|array{dsn: string}|string $transport a transport, or its DSN
      */
     public function setTransport(TransportInterface|array|string $transport): void

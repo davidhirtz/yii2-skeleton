@@ -69,6 +69,20 @@ class MailerTest extends TestCase
         (new Mailer())->getTransport();
     }
 
+    /**
+     * The text part of a mail whose point is its button must still carry the link.
+     */
+    public function testTheTextPartKeepsTheTargetOfEveryLink(): void
+    {
+        $text = Mailer::createTextBody("<html><head><style>p {}</style></head><body>\n"
+            . "<p>Hi &amp; welcome,</p>\n\n"
+            . "<p><a href=\"https://www.example.com/reset?code=a&amp;b=1\" class=\"btn\">Reset your password</a></p>\n\n"
+            . "<p><a href=\"https://www.example.com/\">https://www.example.com/</a> <a href=\"mailto:x@example.com\">x@example.com</a></p>\n"
+            . '</body></html>');
+
+        self::assertSame("Hi & welcome,\n\nReset your password: https://www.example.com/reset?code=a&b=1\n\nhttps://www.example.com/ x@example.com", $text);
+    }
+
     public function testAComposedMessageIsSent(): void
     {
         $mailer = new Mailer(['transport' => 'null://null']);
