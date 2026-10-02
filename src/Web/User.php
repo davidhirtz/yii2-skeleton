@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
+use Hirtz\Skeleton\Caching\CacheCounter;
 use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Helpers\CookieHelper;
 use Hirtz\Skeleton\Models\UserLogin;
@@ -415,10 +416,8 @@ class User extends \yii\web\User
             return false;
         }
 
-        $cache = Yii::$app->getCache();
-
         foreach ($this->getLoginAttemptCacheKeys($email) as $key) {
-            if ((int)$cache->get($key) >= $this->loginAttemptLimit) {
+            if (CacheCounter::get($key) >= $this->loginAttemptLimit) {
                 return true;
             }
         }
@@ -432,10 +431,8 @@ class User extends \yii\web\User
             return;
         }
 
-        $cache = Yii::$app->getCache();
-
         foreach ($this->getLoginAttemptCacheKeys($email) as $key) {
-            $cache->set($key, (int)$cache->get($key) + 1, $this->loginAttemptDuration);
+            CacheCounter::increment($key, $this->loginAttemptDuration);
         }
     }
 

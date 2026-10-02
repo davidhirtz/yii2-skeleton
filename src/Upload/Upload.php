@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Upload;
 
+use Hirtz\Skeleton\Caching\CacheCounter;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Helpers\SecretKey;
 use Hirtz\Skeleton\Web\User as WebUser;
@@ -329,16 +330,13 @@ class Upload extends Component
     public function isUploadLimitReached(): bool
     {
         return $this->uploadLimit > 0
-            && (int)Yii::$app->getCache()->get($this->getUploadLimitCacheKey()) >= $this->uploadLimit;
+            && CacheCounter::get($this->getUploadLimitCacheKey()) >= $this->uploadLimit;
     }
 
     public function addUpload(): void
     {
         if ($this->uploadLimit > 0) {
-            $cache = Yii::$app->getCache();
-            $key = $this->getUploadLimitCacheKey();
-
-            $cache->set($key, (int)$cache->get($key) + 1, $this->uploadLimitDuration);
+            CacheCounter::increment($this->getUploadLimitCacheKey(), $this->uploadLimitDuration);
         }
     }
 

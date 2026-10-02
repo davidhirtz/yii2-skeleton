@@ -31,6 +31,7 @@ use Hirtz\Skeleton\Web\UrlManager;
 use Hirtz\Skeleton\Web\View;
 use Yii;
 use yii\caching\FileCache;
+use yii\mutex\MysqlMutex;
 use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;
 use yii\validators\TrimValidator;
@@ -109,6 +110,10 @@ trait ApplicationTrait
                     'class' => Connection::class,
                     'enableSchemaCache' => true,
                     'charset' => 'utf8mb4',
+                ],
+                // Shared by every server of an installation, as the cache counters it guards may be
+                'mutex' => [
+                    'class' => MysqlMutex::class,
                 ],
                 'i18n' => [
                     'class' => I18N::class,

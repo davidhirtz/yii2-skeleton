@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Added the `mutex` component (`MysqlMutex`) and `Caching\CacheCounter`: login and upload attempts are counted
+  under a lock, so concurrent requests no longer lose each other's increments
 - Added `bacon/bacon-qr-code`: the two-factor QR code is an SVG rendered locally instead of an image from
   api.qrserver.com, which received the shared secret
 - Added `Web\Controller::$referrerPolicy` (`strict-origin-when-cross-origin`) and `$noSniff`, sent with every
