@@ -50,7 +50,7 @@ return [
     'CF' => 'République centrafricaine',
     'CG' => 'République du Congo',
     'CH' => 'Suisse',
-    'CI' => 'Côte d\'Ivoire',
+    'CI' => 'Côte d’Ivoire',
     'CL' => 'Chili',
     'CM' => 'Cameroun',
     'CN' => 'Chine',
