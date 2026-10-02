@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Console\Controllers\Traits;
 
 use Yii;
+use yii\console\ExitCode;
 use yii\helpers\Console;
 
 trait BackupTrait
@@ -14,22 +15,31 @@ trait BackupTrait
     /**
      * Backs up the database.
      */
-    public function actionBackup(): void
+    public function actionBackup(): int
     {
         $this->interactiveStartStdout('Backing up database ...');
-        $this->interactiveDoneStdout(Yii::$app->getDb()->backup() !== false);
+
+        $isBackedUp = Yii::$app->getDb()->backup() !== false;
+        $this->interactiveDoneStdout($isBackedUp);
+
+        if (!$isBackedUp) {
+            $this->stderr('The database backup failed.' . PHP_EOL, Console::FG_RED);
+            return ExitCode::UNSPECIFIED_ERROR;
+        }
+
+        return ExitCode::OK;
     }
 
     /**
      * Restores the database from a backup.
      */
-    public function actionRestore(): void
+    public function actionRestore(): int
     {
         $backups = Yii::$app->getDb()->getBackups();
 
         if (!$backups) {
-            $this->stdout('No database backups found.' . PHP_EOL, Console::FG_YELLOW);
-            return;
+            $this->stderr('No database backups found.' . PHP_EOL, Console::FG_YELLOW);
+            return ExitCode::UNSPECIFIED_ERROR;
         }
 
         $this->stdout('Available backups:' . PHP_EOL);
@@ -47,13 +57,22 @@ trait BackupTrait
         $index = (int)$index - 1;
 
         if (!isset($backups[$index])) {
-            $this->stdout('Invalid selection.' . PHP_EOL, Console::FG_RED);
-            return;
+            $this->stderr('Invalid selection.' . PHP_EOL, Console::FG_RED);
+            return ExitCode::UNSPECIFIED_ERROR;
         }
 
         $filename = $backups[$index];
 
         $this->interactiveStartStdout('Restoring database from backup ...');
-        $this->interactiveDoneStdout(Yii::$app->getDb()->restore($filename) !== false);
+
+        $isRestored = Yii::$app->getDb()->restore($filename) !== false;
+        $this->interactiveDoneStdout($isRestored);
+
+        if (!$isRestored) {
+            $this->stderr('The database restore failed.' . PHP_EOL, Console::FG_RED);
+            return ExitCode::UNSPECIFIED_ERROR;
+        }
+
+        return ExitCode::OK;
     }
 }

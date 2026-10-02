@@ -189,9 +189,8 @@ class MigrateController extends \yii\console\controllers\MigrateController
 
         // Before the repair, not after: the backup otherwise captures a database the script has already
         // rewritten, and `migrateUp()` would take it too late to be worth anything.
-        if (!$this->skipBackup) {
-            $this->actionBackup();
-            $this->skipBackup = true;
+        if (!$this->backUpOnce()) {
+            return false;
         }
 
         $this->stdout(Yii::t('skeleton', 'MIGRATE_UPGRADE_MESSAGE', ['file' => $file]) . PHP_EOL);
@@ -237,9 +236,8 @@ class MigrateController extends \yii\console\controllers\MigrateController
     #[Override]
     protected function migrateUp($class): bool
     {
-        if (!$this->skipBackup) {
-            $this->actionBackup();
-            $this->skipBackup = true;
+        if (!$this->backUpOnce()) {
+            return false;
         }
 
         return $this->invalidateRbacCache(parent::migrateUp($class));
@@ -248,12 +246,31 @@ class MigrateController extends \yii\console\controllers\MigrateController
     #[Override]
     protected function migrateDown($class): bool
     {
-        if (!$this->skipBackup) {
-            $this->actionBackup();
-            $this->skipBackup = true;
+        if (!$this->backUpOnce()) {
+            return false;
         }
 
         return $this->invalidateRbacCache(parent::migrateDown($class));
+    }
+
+    /**
+     * The backup is taken before the first migration of the run. One that fails stops the run: a deployment would
+     * otherwise apply the migrations without the backup it was configured to take.
+     */
+    private function backUpOnce(): bool
+    {
+        if ($this->skipBackup) {
+            return true;
+        }
+
+        $this->skipBackup = true;
+
+        if ($this->actionBackup() !== ExitCode::OK) {
+            $this->stderr('Pass --skipBackup to migrate without a backup.' . PHP_EOL, Console::FG_RED);
+            return false;
+        }
+
+        return true;
     }
 
     /**

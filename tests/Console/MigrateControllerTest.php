@@ -54,6 +54,30 @@ class MigrateControllerTest extends TestCase
         self::assertFalse(Yii::$app->getCache()->get($auth->cacheKey));
     }
 
+    /**
+     * A deployment migrates unattended: a backup that failed must stop it rather than pass unnoticed.
+     */
+    public function testAFailedBackupStopsTheMigration(): void
+    {
+        $db = Application::current()->getDb();
+        $username = $db->username;
+        $db->username = 'zz-no-such-user';
+
+        try {
+            $controller = $this->createMigrationController();
+            $controller->interactive = false;
+            $controller->skipBackup = false;
+
+            $backups = $db->getBackups();
+
+            self::assertFalse($controller->applyMigration(RbacCacheTestMigration::class));
+            self::assertStringContainsString('The database backup failed.', $controller->flushStdOutBuffer());
+            self::assertSame($backups, $db->getBackups());
+        } finally {
+            $db->username = $username;
+        }
+    }
+
     public function testAnUnresolvableMigrationNamespaceIsDropped(): void
     {
         Application::current()->setMigrationNamespace('Nowhere\\Migrations');

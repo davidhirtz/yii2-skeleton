@@ -56,6 +56,9 @@ class Connection extends \yii\db\Connection
             return $file;
         }
 
+        // A failed dump leaves its empty file, which would be offered for a restore and rotate a good backup out
+        FileHelper::unlink($file);
+
         return false;
     }
 
