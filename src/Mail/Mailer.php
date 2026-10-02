@@ -32,6 +32,7 @@ class Mailer extends BaseMailer
      * every tag and with it the target of every link: the text part of a mail whose point is its button would carry
      * no URL at all.
      *
+     * @param array<string, string>|string|null $view
      * @param array<string, mixed> $params
      */
     #[Override]
