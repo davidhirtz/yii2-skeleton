@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Added `bacon/bacon-qr-code`: the two-factor QR code is an SVG rendered locally instead of an image from
+  api.qrserver.com, which received the shared secret
 - Added `Web\Controller::$referrerPolicy` (`strict-origin-when-cross-origin`) and `$noSniff`, sent with every
   response; the account confirmation and password reset pages send `no-referrer`
 - Added `Search\Search::getRegisteredClass()`; `SearchBehavior` and `getSearchDocuments()` store a container subclass

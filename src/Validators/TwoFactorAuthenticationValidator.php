@@ -6,7 +6,7 @@ namespace Hirtz\Skeleton\Validators;
 
 use Hirtz\Skeleton\Db\DateTime;
 use Override;
-use RobThree\Auth\Providers\Qr\QRServerProvider;
+use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 use yii\base\NotSupportedException;
@@ -65,7 +65,7 @@ class TwoFactorAuthenticationValidator extends StringValidator
         parent::validateAttribute($model, $attribute);
 
         if (!$model->hasErrors($attribute)) {
-            $auth = new TwoFactorAuth(new QRServerProvider(), digits: $this->length, period: $this->period);
+            $auth = new TwoFactorAuth(new BaconQrCodeProvider(), digits: $this->length, period: $this->period);
             $timestamp = $this->datetime ? (int)floor($this->datetime->getTimestamp() / $this->period) : 0;
 
             if (!$auth->verifyCode($this->secret, $model->$attribute, $this->discrepancy, $this->currentTime, $timeslice) || ($timeslice <= $timestamp)) {

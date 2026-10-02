@@ -10,7 +10,7 @@ use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
 use Override;
-use RobThree\Auth\Providers\Qr\QRServerProvider;
+use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
@@ -85,7 +85,7 @@ class LoginTest extends TestCase
         self::assertAnyValidationErrorSame('Code is invalid.');
 
         $validator = Yii::createObject(TwoFactorAuthenticationValidator::class);
-        $auth = new TwoFactorAuth(new QRServerProvider(), digits: $validator->length, period: $validator->period);
+        $auth = new TwoFactorAuth(new BaconQrCodeProvider(), digits: $validator->length, period: $validator->period);
 
         $this->submitLoginForm(code: $auth->getCode($user->getTwoFactorAuthenticationSecret()));
         self::assertResponseStatusCodeSame(200);

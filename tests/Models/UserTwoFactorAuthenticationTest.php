@@ -138,7 +138,7 @@ class UserTwoFactorAuthenticationTest extends TestCase
         $user = $this->getUserFromFixture('owner');
         $form = TwoFactorAuthenticatorForm::create(['user' => $user]);
 
-        $auth = new \RobThree\Auth\TwoFactorAuth(new \RobThree\Auth\Providers\Qr\QRServerProvider());
+        $auth = new \RobThree\Auth\TwoFactorAuth(new \RobThree\Auth\Providers\Qr\BaconQrCodeProvider());
         $form->code = $auth->getCode($form->getSecret());
 
         self::assertTrue($form->save(), print_r($form->getErrors(), true));
@@ -165,7 +165,7 @@ class UserTwoFactorAuthenticationTest extends TestCase
             self::assertFalse($form->delete());
         }
 
-        $auth = new \RobThree\Auth\TwoFactorAuth(new \RobThree\Auth\Providers\Qr\QRServerProvider());
+        $auth = new \RobThree\Auth\TwoFactorAuth(new \RobThree\Auth\Providers\Qr\BaconQrCodeProvider());
 
         $form = TwoFactorAuthenticatorForm::create(['user' => $user]);
         $form->code = $auth->getCode((string)$user->getTwoFactorAuthenticationSecret());
@@ -173,5 +173,17 @@ class UserTwoFactorAuthenticationTest extends TestCase
         self::assertFalse($form->delete());
         self::assertSame(Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS'), $form->getFirstError('code'));
         self::assertTrue(User::findOne($user->id)->hasTwoFactorAuthentication());
+    }
+
+    /**
+     * The code carries the shared secret, so it is rendered here and never requested from a QR service.
+     */
+    public function testTheQrCodeIsRenderedLocally(): void
+    {
+        $form = TwoFactorAuthenticatorForm::create(['user' => $this->getUserFromFixture('owner')]);
+        $url = $form->getQrImageUrl(150);
+
+        self::assertStringStartsWith('data:image/svg+xml;base64,', $url);
+        self::assertStringContainsString('<svg', (string)base64_decode(substr($url, strlen('data:image/svg+xml;base64,'))));
     }
 }

@@ -9,7 +9,7 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
 use Hirtz\Skeleton\Web\Application;
 use Override;
-use RobThree\Auth\Providers\Qr\QRServerProvider;
+use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 use yii\base\Model;
@@ -125,15 +125,18 @@ class TwoFactorAuthenticatorForm extends Model
         return $this->secret;
     }
 
+    /**
+     * A data URI of an SVG rendered here: the code carries the shared secret, which no third-party QR service may
+     * ever see.
+     */
     public function getQrImageUrl(int $size): string
     {
         $issuer = str_replace(':', '-', $this->getTwoFactorAuthenticationIssuer());
         $label = "$issuer:{$this->user->email}";
 
-        $provider = new QRServerProvider();
-        $auth = new TwoFactorAuth($provider, $issuer);
+        $auth = new TwoFactorAuth(new BaconQrCodeProvider(format: 'svg'), $issuer);
 
-        return $provider->getUrl($auth->getQRText($label, $this->getSecret()), $size);
+        return $auth->getQRCodeImageAsDataUri($label, $this->getSecret(), $size);
     }
 
     /**
@@ -141,7 +144,7 @@ class TwoFactorAuthenticatorForm extends Model
      */
     protected function generateSecret(): void
     {
-        $this->secret = (new TwoFactorAuth(new QRServerProvider()))->createSecret();
+        $this->secret = (new TwoFactorAuth(new BaconQrCodeProvider()))->createSecret();
 
         Application::current()->getSession()->set(static::SESSION_SECRET_NAME, $this->secret);
         Yii::debug('New authenticator secret generated');

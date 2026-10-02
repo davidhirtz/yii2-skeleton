@@ -19,6 +19,7 @@
     "ext-pdo_mysql": "*",
     "ext-simplexml": "*",
     "ext-xmlwriter": "*",
+    "bacon/bacon-qr-code": "^3.0",
     "guzzlehttp/guzzle": "^7.9",
     "jfcherng/php-diff": "^6.9",
     "mikehaertl/php-shellcommand": "^1.7",

@@ -10,7 +10,7 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
-use RobThree\Auth\Providers\Qr\QRServerProvider;
+use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use RobThree\Auth\TwoFactorAuth;
 use Yii;
 use yii\web\BadRequestHttpException;
@@ -197,7 +197,7 @@ class AccountSecurityTest extends TestCase
     private function getCode(string $secret): string
     {
         $validator = Yii::createObject(TwoFactorAuthenticationValidator::class);
-        $auth = new TwoFactorAuth(new QRServerProvider(), digits: $validator->length, period: $validator->period);
+        $auth = new TwoFactorAuth(new BaconQrCodeProvider(), digits: $validator->length, period: $validator->period);
 
         return $auth->getCode($secret);
     }
