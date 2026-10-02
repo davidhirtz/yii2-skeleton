@@ -54,6 +54,36 @@ class UserTokenTest extends TestCase
         self::assertFalse($this->findByToken(UserToken::TYPE_PASSWORD_RESET, $token));
     }
 
+    /**
+     * A link sent to the old address proves nothing about the new one, and a reset link must not outlive the
+     * password or the address it was sent for.
+     */
+    public function testAnEmailChangeDropsTheTokensSentBefore(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+        $verification = $user->createVerificationToken();
+        $reset = $user->createPasswordResetToken();
+
+        $user->email = 'zz-new-address@example.com';
+        self::assertTrue($user->save(), print_r($user->getErrors(), true));
+
+        self::assertFalse($this->findByToken(UserToken::TYPE_VERIFICATION, $verification));
+        self::assertFalse($this->findByToken(UserToken::TYPE_PASSWORD_RESET, $reset));
+    }
+
+    public function testAPasswordChangeDropsTheResetTokens(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+        $verification = $user->createVerificationToken();
+        $reset = $user->createPasswordResetToken();
+
+        $user->generatePasswordHash('a-new-password-zz');
+        self::assertTrue($user->save(), print_r($user->getErrors(), true));
+
+        self::assertTrue($this->findByToken(UserToken::TYPE_VERIFICATION, $verification));
+        self::assertFalse($this->findByToken(UserToken::TYPE_PASSWORD_RESET, $reset));
+    }
+
     public function testDeletingAUserDeletesItsTokens(): void
     {
         $user = $this->getUserFromFixture('admin');

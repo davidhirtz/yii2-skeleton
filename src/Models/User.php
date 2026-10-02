@@ -276,6 +276,28 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return parent::beforeSave($insert);
     }
 
+    /**
+     * A token was sent to the address the account had and proves nothing about a new one, and a reset link must
+     * not outlive the password it was meant to replace.
+     *
+     * @param array<string, mixed> $changedAttributes
+     */
+    #[Override]
+    public function afterSave($insert, $changedAttributes): void
+    {
+        if (!$insert) {
+            if (array_key_exists('email', $changedAttributes)) {
+                $this->clearVerificationTokens();
+            }
+
+            if (array_key_exists('email', $changedAttributes) || array_key_exists('password_hash', $changedAttributes)) {
+                $this->clearPasswordResetTokens();
+            }
+        }
+
+        parent::afterSave($insert, $changedAttributes);
+    }
+
     #[Override]
     public function delete(): false|int
     {
