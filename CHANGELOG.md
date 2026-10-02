@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Added `Web\Controller::$referrerPolicy` (`strict-origin-when-cross-origin`) and `$noSniff`, sent with every
+  response; the account confirmation and password reset pages send `no-referrer`
 - Added `Search\Search::getRegisteredClass()`; `SearchBehavior` and `getSearchDocuments()` store a container subclass
   or a per-type class under the registered class `search/rebuild` uses; `search/clear` followed by `search/rebuild`
   drops the rows an installation holds under a subclass

@@ -123,6 +123,36 @@ class SignupFormTest extends TestCase
         self::assertContains('You have just created a new user account. Please wait a few minutes!', $form->getFirstErrors());
     }
 
+    /**
+     * The signups of an origin are counted by the rows the login writes, so a signup that does not log the user in
+     * has to write one too.
+     */
+    public function testTheIpSpamProtectionHoldsWithoutTheLogin(): void
+    {
+        $webuser = $this->getWebUser();
+        $webuser->enableSignup = true;
+        $webuser->enableUnconfirmedEmailLogin = false;
+        $webuser->ipAddress = '1.244.25.236';
+
+        $form = TestSignupForm::create();
+
+        $form->name = 'Testname';
+        $form->email = 'test-email@test.com';
+        $form->password = 'password';
+        $form->token = $form->getSessionToken();
+        $form->terms = true;
+        $form->honeypot = null;
+
+        self::assertTrue($form->insert(), print_r($form->getErrors(), true));
+        self::assertTrue($webuser->getIsGuest());
+
+        $form->name = 'Testname-2';
+        $form->email = 'test-email2@test.com';
+        $form->token = $form->getSessionToken();
+
+        self::assertFalse($form->insert());
+    }
+
     public function testSignupWithInvalidToken(): void
     {
         $this->getWebUser()->enableSignup = true;

@@ -196,7 +196,10 @@ class SignupForm extends AbstractSignupForm
         if ($webuser->isUnconfirmedEmailLoginEnabled() && !$webuser->isTwoFactorAuthenticationRequired($this->user)) {
             $webuser->loginType = UserLogin::TYPE_SIGNUP;
             $webuser->login($this->user);
+            return;
         }
+
+        $webuser->insertSignup($this->user);
     }
 
     /**

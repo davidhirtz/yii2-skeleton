@@ -126,6 +126,7 @@ class AccountCredentialsForm extends Model
         if ($this->newPassword) {
             $this->user->afterPasswordChange();
             Application::current()->getUser()->destroyOtherSessions($this->user);
+            Application::current()->getUser()->resendIdentityCookie();
         }
     }
 

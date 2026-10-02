@@ -292,7 +292,36 @@ class User extends \yii\web\User
         parent::afterLogout($identity);
     }
 
-    private function insertLogin(\Hirtz\Skeleton\Models\User $user): void
+    /**
+     * A signup that does not log the user in is recorded all the same: the signup form counts an origin's signups
+     * by these rows.
+     */
+    public function insertSignup(\Hirtz\Skeleton\Models\User $user): void
+    {
+        $this->insertLogin($user, UserLogin::TYPE_SIGNUP, new DateTime());
+    }
+
+    /**
+     * A password change rotates the auth key every auto login cookie carries, so the acting user's is written again:
+     * "remember me" must survive the user's own change.
+     */
+    public function resendIdentityCookie(): void
+    {
+        $identity = $this->getIdentity(false);
+        $value = Application::current()->getRequest()->getCookies()->getValue($this->identityCookie['name']);
+
+        if (!$this->enableAutoLogin || !$identity || !is_string($value)) {
+            return;
+        }
+
+        $data = json_decode($value, true);
+
+        if (is_array($data) && count($data) === 3 && is_int($data[2]) && $data[2] > 0) {
+            $this->sendIdentityCookie($identity, $data[2]);
+        }
+    }
+
+    private function insertLogin(\Hirtz\Skeleton\Models\User $user, ?int $type = null, ?DateTime $createdAt = null): void
     {
         $browser = Application::current()->getRequest()->getUserAgent();
 
@@ -305,10 +334,10 @@ class User extends \yii\web\User
 
         $columns = [
             'user_id' => $user->id,
-            'type' => $this->loginType,
+            'type' => $type ?? $this->loginType,
             'browser' => $browser,
             'ip_address' => $ipAddress,
-            'created_at' => $user->last_login,
+            'created_at' => $createdAt ?? $user->last_login,
         ];
 
         UserLogin::getDb()->createCommand()->insert(UserLogin::tableName(), $columns)->execute();
@@ -436,10 +465,22 @@ class User extends \yii\web\User
         }
 
         if ($this->ipAddress) {
-            $keys[] = [self::class, 'login-attempts', 'ip', $this->ipAddress];
+            $keys[] = [self::class, 'login-attempts', 'ip', $this->getLoginAttemptOrigin($this->ipAddress)];
         }
 
         return $keys;
+    }
+
+    /**
+     * An IPv6 address is counted by its /64: a single host is given the whole network and can rotate through it.
+     */
+    private function getLoginAttemptOrigin(string $ipAddress): string
+    {
+        $packed = @inet_pton($ipAddress);
+
+        return is_string($packed) && strlen($packed) === 16
+            ? bin2hex(substr($packed, 0, 8)) . '/64'
+            : $ipAddress;
     }
 
     /**

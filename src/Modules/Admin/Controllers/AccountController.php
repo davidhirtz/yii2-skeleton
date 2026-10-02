@@ -186,6 +186,8 @@ class AccountController extends Controller
 
     public function actionConfirm(string $code): Response|string
     {
+        $this->sendNoReferrer();
+
         $form = Yii::$container->get(AccountConfirmForm::class, [], [
             'code' => $code,
         ]);
@@ -259,6 +261,8 @@ class AccountController extends Controller
 
     public function actionReset(string $code): Response|string
     {
+        $this->sendNoReferrer();
+
         if (!$this->webuser->isPasswordResetEnabled()) {
             throw new ForbiddenHttpException();
         }
@@ -381,7 +385,11 @@ class AccountController extends Controller
         ]);
 
         if ($form->load($this->request->post())) {
-            $form->save();
+            // A session someone else opened with the password alone must not outlive the second factor
+            if ($form->save()) {
+                $this->webuser->destroyOtherSessions($form->user);
+            }
+
             $this->setRecoveryCodesFlash($form);
             $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_ENABLED'));
         }

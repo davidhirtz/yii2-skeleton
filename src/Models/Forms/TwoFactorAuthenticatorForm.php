@@ -51,6 +51,31 @@ class TwoFactorAuthenticatorForm extends Model
         ];
     }
 
+    /**
+     * The code is guessed against the login's attempt limit: a hijacked session must not try every code until the
+     * second factor is off.
+     */
+    #[Override]
+    public function beforeValidate(): bool
+    {
+        if (Application::current()->getUser()->isLoginAttemptLimitReached($this->user->email)) {
+            $this->addError('code', Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS'));
+            return false;
+        }
+
+        return parent::beforeValidate();
+    }
+
+    #[Override]
+    public function afterValidate(): void
+    {
+        if ($this->hasErrors('code') && (string)$this->code !== '') {
+            Application::current()->getUser()->addFailedLoginAttempt($this->user->email);
+        }
+
+        parent::afterValidate();
+    }
+
     public function save(): bool
     {
         if (!$this->validate()) {

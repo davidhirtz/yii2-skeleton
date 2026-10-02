@@ -149,4 +149,29 @@ class UserTwoFactorAuthenticationTest extends TestCase
         self::assertTrue($user->hasTwoFactorAuthentication());
         self::assertEquals(User::RECOVERY_CODE_COUNT, $user->getTwoFactorAuthenticationRecoveryCodeCount());
     }
+
+    /**
+     * The code that turns the second factor off is guessed against the login's attempt limit, so a hijacked session
+     * cannot try every code.
+     */
+    public function testDisablingCountsAgainstTheAttemptLimit(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->getWebUser()->loginAttemptLimit = 2;
+
+        foreach (['000000', '000000'] as $code) {
+            $form = TwoFactorAuthenticatorForm::create(['user' => $user]);
+            $form->code = $code;
+            self::assertFalse($form->delete());
+        }
+
+        $auth = new \RobThree\Auth\TwoFactorAuth(new \RobThree\Auth\Providers\Qr\QRServerProvider());
+
+        $form = TwoFactorAuthenticatorForm::create(['user' => $user]);
+        $form->code = $auth->getCode((string)$user->getTwoFactorAuthenticationSecret());
+
+        self::assertFalse($form->delete());
+        self::assertSame(Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS'), $form->getFirstError('code'));
+        self::assertTrue(User::findOne($user->id)->hasTwoFactorAuthentication());
+    }
 }

@@ -52,6 +52,18 @@ class Controller extends \yii\web\Controller
      */
     public string|false $strictTransportSecurity = false;
 
+    /**
+     * @var string|false the `Referrer-Policy` header: by default the full URL never leaves the site, so a token in it
+     * reaches no other host. A page carrying one sends `no-referrer`, see {@see static::sendNoReferrer()}.
+     */
+    public string|false $referrerPolicy = 'strict-origin-when-cross-origin';
+
+    /**
+     * @var bool whether `X-Content-Type-Options: nosniff` is sent, which keeps a browser from running a response as
+     * something other than its declared type.
+     */
+    public bool $noSniff = true;
+
     protected User $webuser;
 
     public function __construct($id, $module, $config = [])
@@ -87,7 +99,24 @@ class Controller extends \yii\web\Controller
             $this->response->getHeaders()->set('Strict-Transport-Security', $this->strictTransportSecurity);
         }
 
+        if ($this->referrerPolicy) {
+            $this->response->getHeaders()->set('Referrer-Policy', $this->referrerPolicy);
+        }
+
+        if ($this->noSniff) {
+            $this->response->getHeaders()->set('X-Content-Type-Options', 'nosniff');
+        }
+
         return parent::beforeAction($action);
+    }
+
+    /**
+     * For a page whose URL carries a secret: even the site's own requests for its scripts and images would write
+     * the URL into every access log as their `Referer`.
+     */
+    protected function sendNoReferrer(): void
+    {
+        $this->response->getHeaders()->set('Referrer-Policy', 'no-referrer');
     }
 
     #[Override]

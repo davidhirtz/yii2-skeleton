@@ -83,6 +83,24 @@ class LoginAttemptTest extends TestCase
         self::assertTrue($webuser->isLoginAttemptLimitReached($email));
     }
 
+    /**
+     * One host is handed a whole IPv6 /64, so the origin's counter must not be one per address of it.
+     */
+    public function testAnIpv6NetworkIsOneOrigin(): void
+    {
+        $webuser = $this->getWebUser();
+        $webuser->loginAttemptLimit = 1;
+        $webuser->ipAddress = '2001:db8:1:2::1';
+
+        self::assertFalse($this->createForm('first@example.com', 'guess')->login());
+
+        $webuser->ipAddress = '2001:db8:1:2:ffff::7';
+        self::assertTrue($webuser->isLoginAttemptLimitReached('second@example.com'));
+
+        $webuser->ipAddress = '2001:db8:1:3::1';
+        self::assertFalse($webuser->isLoginAttemptLimitReached('second@example.com'));
+    }
+
     public function testSuccessfulLoginClearsTheCounter(): void
     {
         $webuser = $this->getWebUser();

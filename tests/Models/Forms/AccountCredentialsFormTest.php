@@ -136,6 +136,36 @@ class AccountCredentialsFormTest extends TestCase
         );
     }
 
+    /**
+     * The new password rotates the auth key, which the auto login cookie carries: the acting user's is written again.
+     */
+    public function testAPasswordChangeKeepsTheUsersOwnAutoLoginCookie(): void
+    {
+        $form = $this->createForm();
+        $webuser = $this->getWebUser();
+        $name = $webuser->identityCookie['name'];
+
+        $request = $this->getWebRequest();
+        $request->enableCookieValidation = false;
+        $_COOKIE[$name] = json_encode([$form->user->id, $form->user->auth_key, 3600]);
+
+        try {
+            $webuser->login($form->user);
+
+            $form->oldPassword = 'password';
+            $form->newPassword = 'new_password';
+            $form->repeatPassword = 'new_password';
+
+            self::assertTrue($form->save(), print_r($form->getErrors(), true));
+        } finally {
+            unset($_COOKIE[$name]);
+        }
+
+        $value = $this->getWebResponse()->getCookies()->getValue($name);
+        self::assertIsString($value);
+        self::assertSame([$form->user->id, $form->user->auth_key, 3600], json_decode($value, true));
+    }
+
     protected function createForm(): AccountCredentialsForm
     {
         return AccountCredentialsForm::create([
