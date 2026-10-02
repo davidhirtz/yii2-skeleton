@@ -189,12 +189,15 @@ class LoginForm extends Model
             return $webuser->login($this->user, $this->rememberMe ? $webuser->cookieLifetime : 0);
         }
 
+        $isAwaitingCode = $this->isOnlyTheCodeMissing() && (string)$this->code === '';
+
         if ($this->isOnlyTheCodeMissing()) {
             $this->setPendingLogin();
         }
 
-        // A blank form is a mistake, not an attempt — only a submission that got as far as a credential counts.
-        if ($this->email && ($this->password || $this->isPending)) {
+        // A blank form is a mistake, not an attempt — only a submission that got as far as a credential counts. A
+        // correct password still awaiting its code is the first step of a login, not a failure.
+        if ($this->email && ($this->password || $this->isPending) && !$isAwaitingCode) {
             $webuser->addFailedLoginAttempt($this->email);
         }
 

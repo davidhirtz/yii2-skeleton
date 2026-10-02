@@ -48,6 +48,41 @@ class LoginAttemptTest extends TestCase
         self::assertTrue($webuser->isLoginAttemptLimitReached($email));
     }
 
+    /**
+     * Every user with two-factor authentication passes the password step without a code: counting it would lock out
+     * an office behind one address.
+     */
+    public function testThePasswordStepOfATwoFactorLoginIsNoFailure(): void
+    {
+        $webuser = $this->getWebUser();
+        $webuser->loginAttemptLimit = 1;
+        $webuser->ipAddress = '192.0.2.1';
+
+        $email = $this->getUserFixtureData('admin')['email'];
+
+        self::assertFalse($this->createForm($email, 'password')->login());
+
+        self::assertFalse($webuser->isLoginAttemptLimitReached($email));
+        self::assertFalse($webuser->isLoginAttemptLimitReached('another@example.com'));
+    }
+
+    /**
+     * The address is posted as typed, so the account's counter must not be one per spelling of it.
+     */
+    public function testTheAccountIsCountedWhateverTheSpellingOfItsAddress(): void
+    {
+        $webuser = $this->getWebUser();
+        $webuser->loginAttemptLimit = 3;
+
+        $email = $this->getUserFixtureData('owner')['email'];
+
+        foreach ([mb_strtoupper($email), " $email ", ucfirst($email)] as $spelling) {
+            self::assertFalse($this->createForm($spelling, 'wrong')->login());
+        }
+
+        self::assertTrue($webuser->isLoginAttemptLimitReached($email));
+    }
+
     public function testSuccessfulLoginClearsTheCounter(): void
     {
         $webuser = $this->getWebUser();
