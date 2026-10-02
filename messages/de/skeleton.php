@@ -156,7 +156,6 @@ return [
     'ERROR_SUMMARY_RECORD_COULD_UPDATED' => 'Der Datensatz konnte nicht aktualisiert werden:',
     'FILTER_DROPDOWN_FILTER' => 'Filter ...',
     'FILTER_DROPDOWN_SHOW_ALL' => 'Alle anzeigen',
-    'FOLDER_NAME_LABEL' => 'Name',
     'FORM_TRANSLATION_ALL_FIELDS' => 'Alle Felder',
     'FORM_TRANSLATION_LANGUAGES' => 'Sprachen',
     'GRID_MISSING_TRANSLATIONS' => 'Fehlende Übersetzungen in {languages}',
@@ -176,7 +175,6 @@ return [
     'HOST_ALERT_MESSAGE' => 'Links dieser Installation, auch die in E-Mails zum Zurücksetzen des Passworts, übernehmen den Host der Anfrage. Bitte allowedHosts in config/params.php setzen oder urlManager.hostInfo festlegen.',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Ihre E-Mail-Adresse wurde nicht gefunden.',
-    'LOCATION_TAGS' => 'Tags',
     'LOGIN_TOO_MANY_ATTEMPTS' => 'Zu viele fehlgeschlagene Anmeldeversuche. Bitte warten Sie einige Minuten, bevor Sie es erneut versuchen.',
     'LOGIN_TWO_FACTOR_EXPIRED' => 'Die Anmeldung ist abgelaufen. Bitte E-Mail-Adresse und Passwort erneut eingeben.',
     'LOG_DATE' => 'Datum',
@@ -405,6 +403,4 @@ return [
     'USER_USERNAME_MUST_ONLY' => 'Der Benutzername darf nur alphanumerische Zeichen enthalten.',
     'USER_USER_WEBSITE_OWNER' => 'Dieser Benutzer ist der Besitzer dieser Website. Bitte ernennen Sie einen anderen Benutzer zum Websitebesitzer, bevor Sie diesen Account löschen.',
     'USER_YOUR_ACCOUNT' => 'Ihr {name} Account',
-    'WEBHOOK_SUBSCRIPTION_UPDATED_AT_LABEL' => 'Letzte Änderung',
-    'WEBHOOK_UPDATED_AT_LABEL' => 'Letzte Änderung',
 ];

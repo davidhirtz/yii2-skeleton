@@ -156,7 +156,6 @@ return [
     'ERROR_SUMMARY_RECORD_COULD_UPDATED' => 'L’enregistrement n’a pas pu être mis à jour :',
     'FILTER_DROPDOWN_FILTER' => 'Filtrer ...',
     'FILTER_DROPDOWN_SHOW_ALL' => 'Tout afficher',
-    'FOLDER_NAME_LABEL' => 'Nom',
     'FORM_TRANSLATION_ALL_FIELDS' => 'Tous les champs',
     'FORM_TRANSLATION_LANGUAGES' => 'Langues',
     'GRID_MISSING_TRANSLATIONS' => 'Traductions manquantes en {languages}',
@@ -176,7 +175,6 @@ return [
     'HOST_ALERT_MESSAGE' => 'Les liens de cette installation, y compris ceux des e-mails de réinitialisation du mot de passe, reprennent l’hôte de la requête. Veuillez définir allowedHosts dans config/params.php ou fixer urlManager.hostInfo.',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Votre adresse e-mail est introuvable.',
-    'LOCATION_TAGS' => 'Étiquettes',
     'LOGIN_TOO_MANY_ATTEMPTS' => 'Trop de tentatives de connexion échouées. Veuillez patienter quelques minutes avant de réessayer.',
     'LOGIN_TWO_FACTOR_EXPIRED' => 'La connexion a expiré. Veuillez saisir à nouveau votre adresse e-mail et votre mot de passe.',
     'LOG_DATE' => 'Date',
@@ -405,6 +403,4 @@ return [
     'USER_USERNAME_MUST_ONLY' => 'Le nom d’utilisateur ne doit contenir que des caractères alphanumériques.',
     'USER_USER_WEBSITE_OWNER' => 'Cet utilisateur est le propriétaire du site. Transférez la propriété à un autre utilisateur avant de le supprimer.',
     'USER_YOUR_ACCOUNT' => 'Votre compte {name}',
-    'WEBHOOK_SUBSCRIPTION_UPDATED_AT_LABEL' => 'Dernière mise à jour',
-    'WEBHOOK_UPDATED_AT_LABEL' => 'Dernière mise à jour',
 ];

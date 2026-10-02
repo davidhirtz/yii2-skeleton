@@ -156,7 +156,6 @@ return [
     'ERROR_SUMMARY_RECORD_COULD_UPDATED' => 'Não foi possível atualizar o registo:',
     'FILTER_DROPDOWN_FILTER' => 'Filtrar ...',
     'FILTER_DROPDOWN_SHOW_ALL' => 'Mostrar tudo',
-    'FOLDER_NAME_LABEL' => 'Nome',
     'FORM_TRANSLATION_ALL_FIELDS' => 'Todos os campos',
     'FORM_TRANSLATION_LANGUAGES' => 'Idiomas',
     'GRID_MISSING_TRANSLATIONS' => 'Traduções em falta em {languages}',
@@ -176,7 +175,6 @@ return [
     'HOST_ALERT_MESSAGE' => 'As ligações desta instalação, incluindo as dos e-mails de reposição da palavra-passe, usam o anfitrião do pedido. Defina allowedHosts em config/params.php ou fixe urlManager.hostInfo.',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'O seu e-mail não foi encontrado.',
-    'LOCATION_TAGS' => 'Etiquetas',
     'LOGIN_TOO_MANY_ATTEMPTS' => 'Demasiadas tentativas de início de sessão falhadas. Aguarde alguns minutos antes de tentar novamente.',
     'LOGIN_TWO_FACTOR_EXPIRED' => 'O início de sessão expirou. Introduza novamente o seu e-mail e a sua palavra-passe.',
     'LOG_DATE' => 'Data',
@@ -405,6 +403,4 @@ return [
     'USER_USERNAME_MUST_ONLY' => 'O nome de utilizador só pode conter caracteres alfanuméricos.',
     'USER_USER_WEBSITE_OWNER' => 'Este utilizador é o proprietário do site. Transfira a propriedade para outro utilizador antes de o eliminar.',
     'USER_YOUR_ACCOUNT' => 'A sua conta {name}',
-    'WEBHOOK_SUBSCRIPTION_UPDATED_AT_LABEL' => 'Última atualização',
-    'WEBHOOK_UPDATED_AT_LABEL' => 'Última atualização',
 ];
