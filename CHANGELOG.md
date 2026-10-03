@@ -1,4 +1,4 @@
-## Unreleased
+## 3.12.0 (October 3, 2026)
 
 - Added fluent setters for the widget options that had none (`GridView::layout()`, `tableAttributes()`, `orderRoute()`,
   `ActiveForm::buttons()`, `Column::headerAttributes()`, …), so the container can configure them
