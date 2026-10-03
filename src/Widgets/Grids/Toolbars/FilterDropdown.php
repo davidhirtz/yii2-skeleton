@@ -42,6 +42,27 @@ class FilterDropdown extends Widget
     protected array $items = [];
 
     /**
+     * @param array<string, mixed> $params
+     */
+    public function params(array $params): static
+    {
+        $this->params = $params;
+        return $this;
+    }
+
+    public function showFilterThreshold(int|false $showFilterThreshold): static
+    {
+        $this->showFilterThreshold = $showFilterThreshold;
+        return $this;
+    }
+
+    public function value(int|string|null $value): static
+    {
+        $this->value = $value;
+        return $this;
+    }
+
+    /**
      * @param array<int|string, mixed> $items
      */
     public function items(array $items): static

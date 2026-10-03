@@ -24,6 +24,12 @@ class CreatedAtFooterItem implements Stringable
     protected string $attributeName = 'created_at';
     protected DateTimeInterface|int|string|null $value = null;
 
+    public function attributeName(string $attributeName): static
+    {
+        $this->attributeName = $attributeName;
+        return $this;
+    }
+
     public function value(DateTimeInterface|int|string|null $value): static
     {
         $this->value = $value;

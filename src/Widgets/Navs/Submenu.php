@@ -33,6 +33,15 @@ class Submenu extends Widget
      */
     protected array|string|false|null $backUrl = null;
 
+    /**
+     * @param array<string, mixed> $navAttributes
+     */
+    public function navAttributes(array $navAttributes): static
+    {
+        $this->navAttributes = $navAttributes;
+        return $this;
+    }
+
     public function title(): void
     {
 

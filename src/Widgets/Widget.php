@@ -54,6 +54,12 @@ abstract class Widget implements Configurable, Stringable, ViewContextInterface
         }
     }
 
+    public function viewPath(?string $viewPath): static
+    {
+        $this->viewPath = $viewPath;
+        return $this;
+    }
+
     public function getViewPath(): ?string
     {
         return $this->viewPath ??= '@views/' . Yii::$app->controller->id . '/';

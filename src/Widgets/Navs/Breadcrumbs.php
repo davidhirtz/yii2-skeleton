@@ -26,6 +26,24 @@ class Breadcrumbs extends Widget
     protected bool $showAdminBreadcrumb = true;
     protected Breadcrumb|null|false $homeBreadcrumb = null;
 
+    public function alwaysShowHomeLink(bool $alwaysShowHomeLink = true): static
+    {
+        $this->alwaysShowHomeLink = $alwaysShowHomeLink;
+        return $this;
+    }
+
+    public function homeBreadcrumb(Breadcrumb|null|false $homeBreadcrumb): static
+    {
+        $this->homeBreadcrumb = $homeBreadcrumb;
+        return $this;
+    }
+
+    public function showAdminBreadcrumb(bool $showAdminBreadcrumb = true): static
+    {
+        $this->showAdminBreadcrumb = $showAdminBreadcrumb;
+        return $this;
+    }
+
     #[Override]
     protected function configure(): void
     {

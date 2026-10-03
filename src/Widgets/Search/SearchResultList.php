@@ -33,6 +33,12 @@ class SearchResultList extends Widget
     protected int $snippetLength = 160;
     protected bool $listbox = false;
 
+    public function snippetLength(int $snippetLength): static
+    {
+        $this->snippetLength = $snippetLength;
+        return $this;
+    }
+
     /**
      * @param list<SearchResult> $results
      */

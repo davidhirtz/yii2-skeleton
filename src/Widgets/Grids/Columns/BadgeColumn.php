@@ -30,6 +30,12 @@ class BadgeColumn extends LinkColumn
         parent::__construct($config);
     }
 
+    public function showEmpty(bool $showEmpty = true): static
+    {
+        $this->showEmpty = $showEmpty;
+        return $this;
+    }
+
     #[Override]
     protected function formatValue(mixed $value): string
     {

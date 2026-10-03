@@ -65,6 +65,30 @@ class Column implements Configurable
     }
 
     /**
+     * @param array<string, mixed> $bodyAttributes
+     */
+    public function bodyAttributes(array $bodyAttributes): static
+    {
+        $this->bodyAttributes = $bodyAttributes;
+        return $this;
+    }
+
+    public function emptyCell(string $emptyCell): static
+    {
+        $this->emptyCell = $emptyCell;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $headerAttributes
+     */
+    public function headerAttributes(array $headerAttributes): static
+    {
+        $this->headerAttributes = $headerAttributes;
+        return $this;
+    }
+
+    /**
      * @param Closure(Td):Td $closure
      * @return $this
      */

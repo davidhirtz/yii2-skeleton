@@ -32,6 +32,15 @@ class GridSummary extends Widget
      */
     protected array $params = [];
 
+    /**
+     * @param array<string, mixed> $params
+     */
+    public function params(array $params): static
+    {
+        $this->params = $params;
+        return $this;
+    }
+
     public function message(string $message): static
     {
         $this->message = $message;

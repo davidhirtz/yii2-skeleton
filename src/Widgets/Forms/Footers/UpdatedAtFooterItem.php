@@ -32,6 +32,12 @@ class UpdatedAtFooterItem implements Stringable
     protected string $attributeName = 'updated_at';
     protected DateTimeInterface|int|string|null $value = null;
 
+    public function attributeName(string $attributeName): static
+    {
+        $this->attributeName = $attributeName;
+        return $this;
+    }
+
     public function value(DateTimeInterface|int|string|null $value): static
     {
         $this->value = $value;

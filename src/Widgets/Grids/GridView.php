@@ -137,6 +137,99 @@ class GridView extends Widget
         parent::__construct($config);
     }
 
+    /**
+     * @param list<string|Stringable>|GridFooter|null $footer
+     */
+    public function footer(array|GridFooter|null $footer): static
+    {
+        $this->footer = $footer;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $footerAttributes
+     */
+    public function footerAttributes(array $footerAttributes): static
+    {
+        $this->footerAttributes = $footerAttributes;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $headerAttributes
+     */
+    public function headerAttributes(array $headerAttributes): static
+    {
+        $this->headerAttributes = $headerAttributes;
+        return $this;
+    }
+
+    public function layout(string $layout): static
+    {
+        $this->layout = $layout;
+        return $this;
+    }
+
+    /**
+     * @param array<int|string, mixed>|null $orderRoute
+     */
+    public function orderRoute(?array $orderRoute): static
+    {
+        $this->orderRoute = $orderRoute;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $pagerOptions
+     */
+    public function pagerOptions(array $pagerOptions): static
+    {
+        $this->pagerOptions = $pagerOptions;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed>|Closure(T, int|string=, int=, static=): (array<string, mixed>|null)|null $rowAttributes
+     */
+    public function rowAttributes(array|Closure|null $rowAttributes): static
+    {
+        $this->rowAttributes = $rowAttributes;
+        return $this;
+    }
+
+    public function showOnEmpty(bool $showOnEmpty = true): static
+    {
+        $this->showOnEmpty = $showOnEmpty;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $tableAttributes
+     */
+    public function tableAttributes(array $tableAttributes): static
+    {
+        $this->tableAttributes = $tableAttributes;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $tableBodyAttributes
+     */
+    public function tableBodyAttributes(array $tableBodyAttributes): static
+    {
+        $this->tableBodyAttributes = $tableBodyAttributes;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $tableHeaderAttributes
+     */
+    public function tableHeaderAttributes(array $tableHeaderAttributes): static
+    {
+        $this->tableHeaderAttributes = $tableHeaderAttributes;
+        return $this;
+    }
+
     #[Override]
     protected function configure(): void
     {

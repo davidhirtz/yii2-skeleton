@@ -41,6 +41,21 @@ class FileUploadButton extends Widget
      */
     private ?array $buttonClosures = null;
 
+    public function maxChunkSize(?int $maxChunkSize): static
+    {
+        $this->maxChunkSize = $maxChunkSize;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $inputAttributes
+     */
+    public function inputAttributes(array $inputAttributes): static
+    {
+        $this->inputAttributes = $inputAttributes;
+        return $this;
+    }
+
     public function accept(?string $accept): static
     {
         $this->inputAttributes['accept'] = $accept;

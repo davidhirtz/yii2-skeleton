@@ -95,6 +95,45 @@ class ActiveForm extends Widget
     private string $translationTabs = '';
 
     /**
+     * @param Stringable[]|string[]|false|null $buttons
+     */
+    public function buttons(array|false|null $buttons): static
+    {
+        $this->buttons = $buttons;
+        return $this;
+    }
+
+    /**
+     * @param list<string> $excludedErrorProperties
+     */
+    public function excludedErrorProperties(array $excludedErrorProperties): static
+    {
+        $this->excludedErrorProperties = $excludedErrorProperties;
+        return $this;
+    }
+
+    /**
+     * @param Stringable[]|string[]|false|null $footer
+     */
+    public function footer(array|false|null $footer): static
+    {
+        $this->footer = $footer;
+        return $this;
+    }
+
+    public function layout(string $layout): static
+    {
+        $this->layout = $layout;
+        return $this;
+    }
+
+    public function submitButtonText(?string $submitButtonText): static
+    {
+        $this->submitButtonText = $submitButtonText;
+        return $this;
+    }
+
+    /**
      * @param array<int|string, mixed>|string|null $action
      */
     public function action(array|string|null $action): static

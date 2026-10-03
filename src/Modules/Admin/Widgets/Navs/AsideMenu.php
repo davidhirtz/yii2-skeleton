@@ -22,6 +22,18 @@ class AsideMenu extends Widget
     protected ?string $mainMenu = null;
     protected ?string $accountMenu = null;
 
+    public function mainMenu(?string $mainMenu): static
+    {
+        $this->mainMenu = $mainMenu;
+        return $this;
+    }
+
+    public function accountMenu(?string $accountMenu): static
+    {
+        $this->accountMenu = $accountMenu;
+        return $this;
+    }
+
     /**
      * The menus are rendered here rather than in {@see renderContent()}, because {@see isVisible()} answers from
      * what they came to — an aside holding nothing is left out of the document instead of being hidden by a CSS

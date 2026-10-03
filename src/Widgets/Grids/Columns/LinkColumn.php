@@ -43,6 +43,15 @@ class LinkColumn extends DataColumn
         parent::__construct($config);
     }
 
+    /**
+     * @param array<string, mixed> $linkAttributes
+     */
+    public function linkAttributes(array $linkAttributes): static
+    {
+        $this->linkAttributes = $linkAttributes;
+        return $this;
+    }
+
     public function blank(): static
     {
         $this->target('_blank');

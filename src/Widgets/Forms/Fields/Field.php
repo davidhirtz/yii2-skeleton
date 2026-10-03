@@ -61,6 +61,21 @@ abstract class Field extends Widget
         parent::__construct($config);
     }
 
+    /**
+     * @param array<string, mixed> $labelAttributes
+     */
+    public function labelAttributes(array $labelAttributes): static
+    {
+        $this->labelAttributes = $labelAttributes;
+        return $this;
+    }
+
+    public function layout(string $layout): static
+    {
+        $this->layout = $layout;
+        return $this;
+    }
+
     public function error(?string $error): static
     {
         $this->error = $error;

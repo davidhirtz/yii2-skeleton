@@ -1,3 +1,9 @@
+## Unreleased
+
+- Added fluent setters for the widget options that had none (`GridView::layout()`, `tableAttributes()`, `orderRoute()`,
+  `ActiveForm::buttons()`, `Column::headerAttributes()`, …), so the container can configure them
+- Removed the unused `GridSearch::$keywords`, `GridSearchForm::$value` and `GridSearchForm::$paramName`
+
 ## 3.11.0 (October 2, 2026)
 
 - Added device cookies (`Web\User::$enableDeviceCookies`, `_device`): a browser an account logged in from counts its

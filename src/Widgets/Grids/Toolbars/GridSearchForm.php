@@ -24,9 +24,6 @@ class GridSearchForm extends Widget
     use GridTrait;
     use IconTrait;
 
-    protected string $value;
-    protected string $paramName;
-
     /**
      * @var list<Closure>|null
      */

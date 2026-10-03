@@ -36,6 +36,15 @@ class SelectField extends Field
     protected array $itemAttributes = [];
 
     /**
+     * @param array<string, mixed> $promptAttributes
+     */
+    public function promptAttributes(array $promptAttributes): static
+    {
+        $this->promptAttributes = $promptAttributes;
+        return $this;
+    }
+
+    /**
      * @param array<int|string, array<string, mixed>> $itemAttributes
      */
     public function itemAttributes(array $itemAttributes): static

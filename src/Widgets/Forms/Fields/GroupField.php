@@ -45,6 +45,18 @@ class GroupField extends Field
     protected Fieldset|Field|null $firstControl = null;
     protected ?string $firstToggleId = null;
 
+    public function collapsible(bool $collapsible = true): static
+    {
+        $this->collapsible = $collapsible;
+        return $this;
+    }
+
+    public function single(bool $single = true): static
+    {
+        $this->single = $single;
+        return $this;
+    }
+
     public function group(GroupCustomAttribute $group): static
     {
         $this->group = $group;

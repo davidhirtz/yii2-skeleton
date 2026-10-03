@@ -36,6 +36,15 @@ class ErrorSummary extends Widget
      */
     protected array $models = [];
 
+    /**
+     * @param list<string> $excluded
+     */
+    public function excluded(array $excluded): static
+    {
+        $this->excluded = $excluded;
+        return $this;
+    }
+
     public function icon(string|null $icon): static
     {
         $this->icon = $icon;

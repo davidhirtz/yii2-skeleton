@@ -20,11 +20,6 @@ class GridSearch implements Configurable
     protected ?string $value = null;
 
     /**
-     * @var list<string>
-     */
-    protected array $keywords = [];
-
-    /**
      * @param array<string, mixed> $config
      */
     public function __construct(array $config = [])
