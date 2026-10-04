@@ -22,14 +22,23 @@ use Hirtz\Skeleton\Console\Controllers\UserLoginController;
 use Hirtz\Skeleton\Console\Controllers\UploadController;
 use Hirtz\Skeleton\Console\Controllers\UserTokenController;
 use Override;
+use ReflectionMethod;
 use Yii;
+use yii\base\Action;
+use yii\base\InlineAction;
 use yii\base\InvalidCallException;
+use yii\console\Exception;
 
 class Application extends \yii\console\Application
 {
     use ApplicationTrait;
 
     public $controllerNamespace = 'App\\Commands';
+
+    /**
+     * @var list<mixed> the positional arguments of the action about to run, checked and cleared in {@see beforeAction()}
+     */
+    private array $arguments = [];
 
     /**
      * The mirror of `Web\Application::current()`, for code that only ever runs as a command. `Yii::$app` stays
@@ -121,6 +130,42 @@ class Application extends \yii\console\Application
             'user-token' => UserTokenController::class,
             'upgrade' => UpgradeController::class,
         ];
+    }
+
+    /**
+     * @param string $route
+     * @param array<array-key, mixed> $params
+     */
+    #[Override]
+    public function runAction($route, $params = [])
+    {
+        $this->arguments = array_values(array_filter($params, is_int(...), ARRAY_FILTER_USE_KEY));
+        return parent::runAction($route, $params);
+    }
+
+    /**
+     * Yii hands an argument the action does not take to the method anyway, where PHP drops it, so a mistyped option
+     * (`transformation/delete name jpg` for `--extension=jpg`) runs the command without it.
+     */
+    #[Override]
+    public function beforeAction($action): bool
+    {
+        $this->ensureNoUnexpectedArguments($action);
+        return parent::beforeAction($action);
+    }
+
+    protected function ensureNoUnexpectedArguments(Action $action): void
+    {
+        $method = $action instanceof InlineAction
+            ? new ReflectionMethod($action->controller, $action->actionMethod)
+            : new ReflectionMethod($action, 'run');
+
+        $unexpected = $method->isVariadic() ? [] : array_slice($this->arguments, $method->getNumberOfParameters());
+        $this->arguments = [];
+
+        if ($unexpected) {
+            throw new Exception('Unexpected arguments: ' . implode(', ', array_map(strval(...), $unexpected)));
+        }
     }
 
     protected function setWebrootAliases(): void

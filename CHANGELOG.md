@@ -1,3 +1,7 @@
+## Unreleased
+
+- Changed console commands to refuse arguments the action does not take, which Yii dropped silently
+
 ## 3.12.0 (October 3, 2026)
 
 - Added fluent setters for the widget options that had none (`GridView::layout()`, `tableAttributes()`, `orderRoute()`,
