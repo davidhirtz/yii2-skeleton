@@ -15,9 +15,6 @@ class Container extends Widget
     use TagAttributesTrait;
     use TagContentTrait;
 
-    /**
-     * One column below `lg`, two equal columns from `lg` up.
-     */
     public function columns(): static
     {
         return $this->addClass('container-columns');

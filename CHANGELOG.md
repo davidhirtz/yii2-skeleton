@@ -1,8 +1,6 @@
 ## Unreleased
 
-- Changed the Sentry target to skip `yii\console\UnknownCommandException`, a mistyped command
-- Added `Container::columns()`, one column below `lg` and two from `lg` up, and `container(false)` on every widget
-  with a container, which renders it without one
+- Added `Container::columns()` and `container(false)`
 - Changed console commands to refuse arguments the action does not take, which Yii dropped silently
 
 ## 3.12.0 (October 3, 2026)

@@ -264,10 +264,7 @@ trait ApplicationTrait
         $config['components']['log']['targets']['sentry'] = ArrayHelper::merge([
             'class' => SentryTarget::class,
             'dsn' => $dsn,
-            // A warning is the file log's: a report is something to act on, and a project raising the level
-            // configures `targets.sentry.levels` itself.
             'levels' => ['error'],
-            // A mistyped command is the caller's mistake, like a 404.
             'except' => [
                 'yii\\console\\UnknownCommandException',
                 'yii\\web\\HttpException:4*',
