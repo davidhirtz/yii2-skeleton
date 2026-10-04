@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Override;
 use Sentry\SentrySdk;
 use Yii;
+use yii\console\UnknownCommandException;
 use yii\log\FileTarget;
 use yii\log\Logger;
 
@@ -43,10 +44,9 @@ class SentryConfigurationTest extends TestCase
         self::assertInstanceOf(FileTarget::class, $targets['file']);
 
         self::assertSame('https://public@sentry.localhost/1', $target->dsn);
-        self::assertSame(['yii\web\HttpException:4*'], $target->except);
-
-        // A page nobody asked for is not an error worth a report, nor is a warning; the 5xx above them is.
+        // A page nobody asked for is not an error worth a report, nor is a mistyped command or a warning; the 5xx is.
         $target->collect([
+            ['Unknown command', Logger::LEVEL_ERROR, UnknownCommandException::class, 0.0, [], 0],
             ['Not found', Logger::LEVEL_ERROR, 'yii\web\HttpException:404', 0.0, [], 0],
             ['Server error', Logger::LEVEL_ERROR, 'yii\web\HttpException:500', 0.0, [], 0],
             ['Deprecated call', Logger::LEVEL_WARNING, 'application', 0.0, [], 0],
