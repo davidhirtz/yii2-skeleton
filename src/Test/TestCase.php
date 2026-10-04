@@ -13,11 +13,13 @@ use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Web\Response;
 use Hirtz\Skeleton\Web\User as WebUser;
 use Override;
+use ReflectionProperty;
 use Yii;
 use yii\base\Event;
 use yii\base\InvalidConfigException;
 use yii\caching\ArrayCache;
 use yii\caching\Dependency;
+use yii\data\BaseDataProvider;
 use yii\db\Transaction;
 use yii\di\Container;
 use yii\log\Logger;
@@ -165,6 +167,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         if ($token = getenv('TEST_TOKEN')) {
             $config['runtimePath'] = getcwd() . "/runtime/paratest/$token";
         }
+
+        // Yii names every data provider after the first of the process `dp-N`, which prefixes its query parameters
+        // (`dp-3-sort`): reset per application, as one request starts counting at zero
+        (new ReflectionProperty(BaseDataProvider::class, 'counter'))->setValue(null, 0);
 
         /** @var array{class: class-string<Application<User>>, ...} $config */
         $config = ArrayHelper::merge($config, $this->config);
