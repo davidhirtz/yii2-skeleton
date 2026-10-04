@@ -28,6 +28,15 @@
   }
 }
 
+.container-columns {
+  display: grid;
+  gap: 1rem;
+
+  @include media-breakpoint-up(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .container-centered {
   margin-inline: auto;
   display: flex;
