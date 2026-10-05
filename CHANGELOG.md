@@ -1,4 +1,4 @@
-## Unreleased
+## 3.13.0 (October 5, 2026)
 
 - Added `Container::columns()` and `container(false)`
 - Changed console commands to refuse arguments the action does not take, which Yii dropped silently
