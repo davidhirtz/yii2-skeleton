@@ -1,3 +1,8 @@
+## Unreleased
+
+- Added `ConfirmButton`, a button whose modal confirms a post; `DeleteButton`, the user and account buttons extend it
+  (`getButton()` returns a `Button`, the buttons' `getMessage()` is gone)
+
 ## 3.13.0 (October 5, 2026)
 
 - Added `Container::columns()` and `container(false)`

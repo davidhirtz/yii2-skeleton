@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\Widgets\Modal;
-use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Buttons\ConfirmButton;
 use Hirtz\Skeleton\Modules\Admin\Controllers\TrailController;
 use Hirtz\Skeleton\Models\Actions\RestoreTrail;
 use Hirtz\Skeleton\Db\ActiveRecord;
@@ -302,22 +301,15 @@ class TrailGridView extends GridView
             return null;
         }
 
-        $label = Yii::t('skeleton', 'TRAIL_BUTTON_RESTORE');
-
-        $modal = Modal::make()
-            ->title($label)
-            ->text(Yii::t('skeleton', 'TRAIL_CONFIRM_RESTORE', ['model' => $model->getAdminName()]))
-            ->footer(Button::make()
-                ->primary()
-                ->text($label)
-                ->icon('rotate-left')
-                ->post(['/admin/trail/restore', 'id' => $trail->id]));
-
-        return Button::make()
-            ->secondary()
+        return ConfirmButton::make()
+            ->style('secondary')
+            ->confirmStyle('primary')
             ->icon('rotate-left')
-            ->tooltip($label)
-            ->modal($modal);
+            ->iconOnly()
+            ->label(Yii::t('skeleton', 'TRAIL_BUTTON_RESTORE'))
+            ->text(Yii::t('skeleton', 'TRAIL_CONFIRM_RESTORE', ['model' => $model->getAdminName()]))
+            ->url(['/admin/trail/restore', 'id' => $trail->id])
+            ->pushHistory(false);
     }
 
     protected function getUpdatedAttributeContent(mixed $oldValue, mixed $newValue): string|Stringable

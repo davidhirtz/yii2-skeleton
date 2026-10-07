@@ -6,12 +6,12 @@ namespace Hirtz\Skeleton\Widgets\Grids\Traits;
 
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
+use Hirtz\Skeleton\Widgets\Buttons\ConfirmButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\CheckboxColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridToolbarItem;
-use Hirtz\Skeleton\Widgets\Modal;
 use Hirtz\Skeleton\Widgets\Navs\Dropdown;
 use Stringable;
 use Yii;
@@ -131,24 +131,15 @@ trait SelectionTrait
             return null;
         }
 
-        $label = $this->getDeleteSelectionLabel();
-
-        $modal = Modal::make()
-            ->title($label)
-            ->text($this->getDeleteSelectionMessage())
-            ->footer(Button::make()
-                ->danger()
-                ->text($label)
-                ->icon('trash')
-                ->post($route)
-                ->attribute('hx-include', '[data-check]:checked'));
-
         return GridToolbarItem::make()
-            ->content(Button::make()
+            ->content(ConfirmButton::make()
                 ->danger()
-                ->text($label)
                 ->icon('trash')
-                ->modal($modal));
+                ->label($this->getDeleteSelectionLabel())
+                ->text($this->getDeleteSelectionMessage())
+                ->url($route)
+                ->include('[data-check]:checked')
+                ->pushHistory(false));
     }
 
     protected function getDeleteSelectionMessage(): string

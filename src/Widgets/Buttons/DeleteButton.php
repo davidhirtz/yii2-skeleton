@@ -4,40 +4,29 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Buttons;
 
-use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Form;
 use Hirtz\Skeleton\Html\P;
 use Hirtz\Skeleton\Html\TextInput;
 use Hirtz\Skeleton\Web\Application;
-use Hirtz\Skeleton\Widgets\Modal;
-use Hirtz\Skeleton\Widgets\Traits\IconTextTrait;
-use Hirtz\Skeleton\Widgets\Traits\LabelTrait;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Traits\PropertyTrait;
-use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
-use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
-use Hirtz\Skeleton\Widgets\Widget;
 use Override;
-use Stringable;
 use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecordInterface;
 
 /**
+ * Asks for the value of `$property` before it deletes, when one is set.
+ *
  * @template TModel of Model
  */
-class DeleteButton extends Widget
+class DeleteButton extends ConfirmButton
 {
-    use IconTextTrait;
-    use LabelTrait;
-
     /**
      * @use ModelTrait<TModel>
      */
     use ModelTrait;
     use PropertyTrait;
-    use TitleTrait;
-    use UrlTrait;
 
     protected string|null|false $message = null;
 
@@ -59,6 +48,7 @@ class DeleteButton extends Widget
         }
 
         $this->icon ??= 'trash';
+        $this->style ??= 'danger';
 
         $this->label ??= Yii::t('yii', 'Delete');
         $this->title ??= Yii::t('yii', 'Are you sure you want to delete this item?');
@@ -69,57 +59,19 @@ class DeleteButton extends Widget
             ]);
         }
 
+        if ($this->message) {
+            $this->addContent(P::make()->content($this->message));
+        }
+
         parent::configure();
     }
 
     #[Override]
-    protected function renderContent(): string|Stringable
+    protected function getForm(): ?Form
     {
-        return $this->isVisible() ? $this->getButton() : '';
-    }
-
-    protected function getButton(): Stringable
-    {
-        return Button::make()
-            ->danger()
-            ->text($this->label)
-            ->icon($this->icon)
-            ->modal($this->getModal());
-    }
-
-    protected function getModal(): Modal
-    {
-        $button = Button::make()
-            ->danger()
-            ->text($this->label);
-
-        $modal = Modal::make()
-            ->title($this->title)
-            ->content(...$this->content)
-            ->footer($button);
-
-        if ($this->message) {
-            $modal->addContent(P::make()->content($this->message));
-        }
-
-        if (!$this->property) {
-            $button->post($this->url, true);
-            return $modal;
-        }
-
-        $form = $this->getForm();
-        $modal->addContent($form);
-        $button->attribute('form', $form->getId())->type('submit');
-
-        return $modal;
-    }
-
-    protected function getForm(): Form
-    {
-        return Form::make()
-            ->attribute('hx-post', Url::toRoute($this->url))
-            ->attribute('hx-swap', 'outerHTML show:top')
-            ->content($this->getInput());
+        return $this->property
+            ? Form::make()->content($this->getInput())
+            : parent::getForm();
     }
 
     protected function getInput(): TextInput
