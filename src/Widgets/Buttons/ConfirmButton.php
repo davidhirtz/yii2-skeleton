@@ -17,9 +17,6 @@ use Override;
 use Stringable;
 
 /**
- * A button opening a modal whose confirming button posts to the URL. The content is the modal's body; a form in it
- * is posted instead, its fields with it, by a confirming button outside it (`form=<id>`).
- *
  * @phpstan-type ButtonStyle 'accent'|'danger'|'link'|'primary'|'secondary'|'success'
  */
 class ConfirmButton extends Widget
@@ -47,9 +44,6 @@ class ConfirmButton extends Widget
     protected bool $iconOnly = false;
     protected bool $pushHistory = true;
 
-    /**
-     * The text of the confirming button, the label by default.
-     */
     public function confirmLabel(?string $confirmLabel): static
     {
         $this->confirmLabel = $confirmLabel;
@@ -57,7 +51,7 @@ class ConfirmButton extends Widget
     }
 
     /**
-     * @param ButtonStyle|null $style the trigger's, and the confirming button's unless that has its own
+     * @param ButtonStyle|null $style
      */
     public function style(?string $style): static
     {
@@ -85,28 +79,18 @@ class ConfirmButton extends Widget
         return $this;
     }
 
-    /**
-     * Elements posted along that live outside the modal, as a selector (`hx-include`), such as a grid's checked rows.
-     */
     public function include(?string $include): static
     {
         $this->include = $include;
         return $this;
     }
 
-    /**
-     * Shows the trigger as its icon alone, the label as its tooltip, as in a grid row.
-     */
     public function iconOnly(bool $iconOnly = true): static
     {
         $this->iconOnly = $iconOnly;
         return $this;
     }
 
-    /**
-     * Whether the response becomes a page of its own: on for an action redirecting elsewhere, off for one answering
-     * with the page it was posted from.
-     */
     public function pushHistory(bool $pushHistory): static
     {
         $this->pushHistory = $pushHistory;

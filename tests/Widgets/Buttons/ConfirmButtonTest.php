@@ -40,9 +40,6 @@ class ConfirmButtonTest extends TestCase
         self::assertSame('Reset password', $confirm->text());
     }
 
-    /**
-     * The trigger says what happens ("Make site owner"), the modal and its button what it costs.
-     */
     public function testTheConfirmingButtonHasItsOwnLabelAndStyle(): void
     {
         $crawler = $this->render(ConfirmButton::make()
@@ -85,9 +82,6 @@ class ConfirmButtonTest extends TestCase
         self::assertSame('<p>Restore &lt;b&gt;Müller&lt;/b&gt;?</p>', $crawler->filter('.modal-body')->html());
     }
 
-    /**
-     * The form is posted rather than the URL, by the confirming button outside it.
-     */
     public function testAFormIsPostedInsteadOfTheUrl(): void
     {
         $crawler = $this->render(ConfirmButton::make()
@@ -153,9 +147,6 @@ class ConfirmButtonTest extends TestCase
             ->render());
     }
 
-    /**
-     * The subclass keeps only its type-the-name form; the form is posted, with the history pushed like the button.
-     */
     public function testTheDeleteButtonAsksForTheValue(): void
     {
         $user = $this->getUserFromFixture('admin');

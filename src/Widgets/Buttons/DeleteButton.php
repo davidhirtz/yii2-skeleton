@@ -16,8 +16,6 @@ use yii\base\Model;
 use yii\db\ActiveRecordInterface;
 
 /**
- * Asks for the value of `$property` before it deletes, when one is set.
- *
  * @template TModel of Model
  */
 class DeleteButton extends ConfirmButton
