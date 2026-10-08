@@ -97,6 +97,16 @@ class PageCacheTest extends TestCase
         self::assertSame(['0', 'en-US', '2', ''], $filter->variations);
     }
 
+    public function testAnArrayParamIsNotCached(): void
+    {
+        $_GET['slug'] = ['1'];
+
+        $filter = $this->createPageCache(['params' => ['slug']]);
+
+        self::assertFalse($filter->enabled);
+        self::assertSame(['0', 'en-US', ''], $filter->variations);
+    }
+
     public function testTheConfiguredVariationsAreKept(): void
     {
         $filter = $this->createPageCache(['variations' => ['own']]);

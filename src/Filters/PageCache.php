@@ -80,7 +80,15 @@ class PageCache extends \yii\filters\PageCache
             $this->variations[] = Yii::$app->language;
 
             foreach ($this->params as $param) {
-                $this->variations[] = (string)$request->get($param, '');
+                $value = $request->get($param, '');
+
+                // An array (`?slug[]=1`) is a crafted request no page answers, so it is not worth a cache entry.
+                if (!is_scalar($value)) {
+                    $this->enabled = false;
+                    $value = '';
+                }
+
+                $this->variations[] = (string)$value;
             }
         } elseif ($this->params) {
             throw new InvalidConfigException('PageCache::$params cannot be set if "variations" is callable.');

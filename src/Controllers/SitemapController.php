@@ -48,8 +48,17 @@ class SitemapController extends Controller
             $variations = $sitemap->getVariations();
 
             if ($sitemap->useSitemapIndex) {
-                $variations[] = (string)$this->request->get('key');
-                $variations[] = (string)$this->request->get('offset');
+                $key = $this->request->get('key', '');
+                $offset = filter_var($this->request->get('offset', 0), FILTER_VALIDATE_INT);
+
+                // An array or a non-numeric offset is refused by the action's parameter binding, after the filter
+                if (!is_scalar($key) || $offset === false) {
+                    return $behaviors;
+                }
+
+                // The offset as the action reads it, so `+1` and `1` share an entry
+                $variations[] = (string)$key;
+                $variations[] = (string)$offset;
             }
 
             $behaviors[] = [

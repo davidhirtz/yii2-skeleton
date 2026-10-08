@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Controllers\SitemapController;
 use Hirtz\Skeleton\Test\TestCase;
 use SimpleXMLElement;
 use Yii;
+use yii\filters\PageCache;
 use yii\web\NotFoundHttpException;
 
 class SitemapControllerTest extends TestCase
@@ -82,6 +83,28 @@ class SitemapControllerTest extends TestCase
         self::assertCount(3, $xml->children());
     }
 
+    public function testAnArrayKeyIsNotCached(): void
+    {
+        $this->setUseSitemapIndex();
+        Yii::$app->sitemap->cache = 'cache';
+        $_GET['key'] = ['urls'];
+
+        self::assertNull($this->findPageCacheVariations());
+    }
+
+    public function testTheOffsetIsCachedAsTheActionReadsIt(): void
+    {
+        $this->setUseSitemapIndex();
+        Yii::$app->sitemap->cache = 'cache';
+        $_GET = ['key' => 'urls', 'offset' => '+1'];
+
+        self::assertSame(['urls', '1'], $this->findPageCacheVariations());
+
+        $_GET = ['key' => 'urls', 'offset' => 'one'];
+
+        self::assertNull($this->findPageCacheVariations());
+    }
+
     /**
      * An unknown set — and a page past the end of a known one — is a 404 rather than an empty but valid sitemap.
      */
@@ -152,6 +175,24 @@ class SitemapControllerTest extends TestCase
     {
         Yii::$app->controller = Yii::createObject(SitemapController::class, ['sitemap', Yii::$app]);
         return Yii::$app->controller->actionIndex($key, $offset);
+    }
+
+    /**
+     * @return list<string>|null
+     */
+    private function findPageCacheVariations(): ?array
+    {
+        $controller = Yii::createObject(SitemapController::class, ['sitemap', Yii::$app]);
+
+        foreach ($controller->behaviors() as $behavior) {
+            if (is_array($behavior) && $behavior['class'] === PageCache::class) {
+                /** @var list<string> $variations */
+                $variations = $behavior['variations'] ?? [];
+                return $variations;
+            }
+        }
+
+        return null;
     }
 
     private function setUseSitemapIndex(): void
