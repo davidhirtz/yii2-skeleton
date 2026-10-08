@@ -1,4 +1,4 @@
-## Unreleased
+## 3.14.0 (October 8, 2026)
 
 - Added `ConfirmButton`
 - Removed `DeleteButton::getMessage()` and `getButton()` now returns a `Button`
