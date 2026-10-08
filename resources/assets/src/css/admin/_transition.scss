@@ -34,7 +34,8 @@
   view-transition-name: breadcrumbs;
 }
 
-.tabs {
+// The submenu; a translated form's language tabs are `.tabs` too and would be a second element of the name.
+.tabs:not(.translation-tabs) {
   view-transition-name: tabs;
 }
 
