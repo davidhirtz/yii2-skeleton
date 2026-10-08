@@ -29,6 +29,9 @@ class FilterDropdown extends Widget
      */
     protected array $params = ['page' => null];
 
+    /**
+     * A subclass declares its default here, never in `configure()`: {@see getParamName()} is read before rendering.
+     */
     protected string $paramName;
     protected string|false|null $default = null;
     protected int|string|null $value = null;

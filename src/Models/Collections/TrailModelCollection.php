@@ -150,8 +150,9 @@ class TrailModelCollection
      */
     private static function formatRangeValue(Model $model, string $attribute, mixed $value): mixed
     {
-        // A `RangeValidator` with `allowArray` holds a list, which is no array offset and renders on its own.
-        if (!$value || !is_scalar($value)) {
+        // A `RangeValidator` with `allowArray` holds a list, which is no array offset and renders on its own. A `0`
+        // is a value like any other (a disabled status).
+        if ($value === null || $value === '' || !is_scalar($value)) {
             return $value;
         }
 

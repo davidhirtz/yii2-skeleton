@@ -8,6 +8,8 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\FilterDropdown;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\StatusFilterDropdown;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\TypeFilterDropdown;
 use Override;
 use Yii;
 use yii\base\Model;
@@ -66,6 +68,17 @@ class GridHeaderTest extends TestCase
     }
 
     /**
+     * The status and type dropdowns name their parameter themselves, and the grid asks before they render (#476).
+     */
+    public function testAFruitlessStatusOrTypeFilterKeepsTheToolbar(): void
+    {
+        foreach (['status', 'type'] as $param) {
+            $this->getWebRequest()->setQueryParams([$param => '0']);
+            self::assertStringContainsString('grid-header', $this->render([]), $param);
+        }
+    }
+
+    /**
      * @param list<Model> $models
      */
     private function render(array $models): string
@@ -90,6 +103,10 @@ class GridHeaderTestGridView extends GridView
                 ->label('Colour')
                 ->paramName('colour')
                 ->items(['green' => 'Green']),
+            StatusFilterDropdown::make()
+                ->items(['0' => 'Disabled']),
+            TypeFilterDropdown::make()
+                ->items(['0' => 'Plain']),
             $this->getSearchInput(),
         ];
 

@@ -18,11 +18,12 @@ class TypeFilterDropdown extends FilterDropdown
      */
     use ModelTrait;
 
+    protected string $paramName = 'type';
+
     #[Override]
     protected function configure(): void
     {
         $this->label ??= Yii::t('skeleton', 'COMMON_TYPE');
-        $this->paramName ??= 'type';
 
         if ($this->model instanceof TypeAttributeInterface) {
             $items = $this->items ?: $this->model::getTypeDefinitions();

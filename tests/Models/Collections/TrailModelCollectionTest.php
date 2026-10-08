@@ -6,10 +6,13 @@ namespace Hirtz\Skeleton\Tests\Models\Collections;
 
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Redirect;
+use Hirtz\Skeleton\Models\Statuses\Status;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
+use Override;
 use Yii;
+use yii\base\Model;
 
 class TrailModelCollectionTest extends TestCase
 {
@@ -40,6 +43,20 @@ class TrailModelCollectionTest extends TestCase
         self::assertSame('Aktualisiert', $value);
     }
 
+    /**
+     * A `0` was skipped as empty and shown as the number (#477).
+     */
+    public function testAStatusOfZeroIsFormattedWithItsDefinitionName(): void
+    {
+        $model = new TrailModelCollectionTestModel();
+
+        $value = TrailModelCollection::formatAttributeValue($model, 'status', 0);
+        self::assertSame('Draft', $value);
+
+        $value = TrailModelCollection::formatAttributeValue($model, 'status', '0');
+        self::assertSame('Draft', $value);
+    }
+
     public function testAnUnknownTypeFallsBackToItsValue(): void
     {
         $value = TrailModelCollection::formatAttributeValue(Redirect::create(), 'type', 418);
@@ -53,5 +70,29 @@ class TrailModelCollectionTest extends TestCase
     {
         $value = TrailModelCollection::formatAttributeValue(User::create(), 'language', 'en-US');
         self::assertSame('English', $value);
+    }
+}
+
+class TrailModelCollectionTestModel extends Model
+{
+    public int $status = 1;
+
+    #[Override]
+    public function rules(): array
+    {
+        return [
+            [['status'], 'in', 'range' => [0, 1]],
+        ];
+    }
+
+    /**
+     * @return array<int, Status>
+     */
+    public function getStatusDefinitions(): array
+    {
+        return [
+            1 => Status::make(1)->name('Enabled'),
+            0 => Status::make(0)->name('Draft'),
+        ];
     }
 }

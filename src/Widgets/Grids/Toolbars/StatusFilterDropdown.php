@@ -18,11 +18,12 @@ class StatusFilterDropdown extends FilterDropdown
      */
     use ModelTrait;
 
+    protected string $paramName = 'status';
+
     #[Override]
     protected function configure(): void
     {
         $this->label ??= Yii::t('skeleton', 'COMMON_STATUS');
-        $this->paramName ??= 'status';
 
         if ($this->model instanceof StatusAttributeInterface) {
             $this->items = array_map(
