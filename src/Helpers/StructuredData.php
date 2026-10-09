@@ -10,26 +10,15 @@ use Hirtz\Skeleton\Db\Date;
 use Yii;
 use yii\helpers\Json;
 
-/**
- * What a schema.org node is easy to get wrong in: ids, dates and the encoding of the script.
- */
 class StructuredData
 {
     final public const string CONTEXT = 'https://schema.org';
 
-    /**
-     * An `@id` is the URL of the page that describes the thing plus a fragment naming it, so nodes on one page can
-     * reference each other and two pages describing the same thing agree.
-     */
     public static function id(string $url, string $fragment): string
     {
         return explode('#', $url, 2)[0] . '#' . $fragment;
     }
 
-    /**
-     * A {@see Date} is a day and is written without a time; anything else is ISO 8601 with the offset of the
-     * application's time zone, which is what the page shows.
-     */
     public static function date(?DateTimeInterface $date): ?string
     {
         return match (true) {
@@ -42,7 +31,7 @@ class StructuredData
     }
 
     /**
-     * @return array<string, mixed>|null an `ImageObject`, `null` without a URL
+     * @return array<string, mixed>|null
      */
     public static function image(?string $url, ?int $width = null, ?int $height = null): ?array
     {
@@ -55,8 +44,7 @@ class StructuredData
     }
 
     /**
-     * Drops `null` and `''` at every level, so a node can name each property whether or not it has a value. An empty
-     * list stays: it can be a value (`itemListElement` of a page without crumbs).
+     * An empty list stays: it can be a value (`itemListElement`).
      *
      * @template TKey of array-key
      * @param array<TKey, mixed> $node
@@ -81,7 +69,6 @@ class StructuredData
 
     /**
      * @param list<array<string, mixed>> $nodes
-     * @return string one node on its own, several as a `@graph`, escaped for a `<script>`
      */
     public static function encode(array $nodes): string
     {

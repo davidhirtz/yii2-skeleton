@@ -18,10 +18,6 @@ use Override;
 use Yii;
 use yii\db\Query;
 
-/**
- * Both attributes follow the rules of a date column: a datetime is UTC in storage and the application's zone on the
- * record, a date is never shifted, and an equal date posted back is the old instance.
- */
 class DateCustomAttributeTest extends TestCase
 {
     #[Override]
@@ -171,9 +167,6 @@ class DateCustomAttributeTest extends TestCase
         });
     }
 
-    /**
-     * The trail stores the date as the array `json_encode()` makes of it.
-     */
     public function testTheTrailValueIsFormatted(): void
     {
         $record = DateRecord::create();

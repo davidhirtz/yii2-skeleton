@@ -17,10 +17,6 @@ use Override;
 use Yii;
 use yii\base\Model;
 
-/**
- * A calendar day, held as a {@see Date} at midnight in the application's time zone and stored as `Y-m-d`. Like a
- * `date` column, it is never shifted, which would move the day.
- */
 class DateCustomAttribute extends DateTimeCustomAttribute
 {
     #[Override]
@@ -51,9 +47,6 @@ class DateCustomAttribute extends DateTimeCustomAttribute
         return Yii::$app->getFormatter()->asDate($date, 'medium');
     }
 
-    /**
-     * A date and time is the day it falls on in the application's time zone.
-     */
     #[Override]
     protected function createDate(mixed $value): ?DateTimeInterface
     {

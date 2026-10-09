@@ -8,18 +8,6 @@ use Hirtz\Skeleton\Helpers\StructuredData;
 use Hirtz\Skeleton\Helpers\Url;
 use Override;
 
-/**
- * The organization behind the site, configured once through the container. Without a name it registers nothing, so
- * an installation that never configured it carries no empty node.
- *
- * ```php
- * 'container' => ['definitions' => [Organization::class => [
- *     'name' => 'Example GmbH',
- *     'logo' => '/images/logo.png',
- *     'sameAs' => ['https://www.instagram.com/example'],
- * ]]],
- * ```
- */
 class Organization extends Thing
 {
     final public const string FRAGMENT = 'organization';
@@ -53,7 +41,7 @@ class Organization extends Thing
     }
 
     /**
-     * @param list<string> $sameAs the organization's profiles elsewhere
+     * @param list<string> $sameAs
      */
     public function sameAs(array $sameAs): static
     {
@@ -61,9 +49,6 @@ class Organization extends Thing
         return $this;
     }
 
-    /**
-     * The `@id` every other node references the organization by.
-     */
     public static function getDefaultId(): string
     {
         return StructuredData::id(Url::home(true), self::FRAGMENT);

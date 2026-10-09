@@ -9,10 +9,6 @@ use Hirtz\Skeleton\Helpers\Url;
 use Override;
 use Yii;
 
-/**
- * The site itself, named after the application unless configured otherwise. The page node points to it with
- * `isPartOf`.
- */
 class WebSite extends Thing
 {
     final public const string FRAGMENT = 'website';
@@ -34,9 +30,6 @@ class WebSite extends Thing
         return $this;
     }
 
-    /**
-     * @param string|null $publisher the `@id` of the publishing organization, see {@see Organization::getDefaultId()}
-     */
     public function publisher(?string $publisher): static
     {
         $this->publisher = $publisher;

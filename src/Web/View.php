@@ -64,11 +64,7 @@ class View extends \yii\web\View
     }
 
     /**
-     * Adds a schema.org node to the page's graph, which the head renders as one script. A node is keyed by its
-     * `@id` unless a key is given, so registering one again replaces it; one without either is appended.
-     *
      * @param array<string, mixed> $node
-     * @see \Hirtz\Skeleton\Widgets\StructuredData\Thing::register()
      */
     public function registerStructuredData(array $node, ?string $key = null): void
     {
@@ -83,16 +79,13 @@ class View extends \yii\web\View
     }
 
     /**
-     * @return array<int|string, array<string, mixed>> the registered nodes by key, to read one back and replace it
+     * @return array<int|string, array<string, mixed>>
      */
     public function getStructuredData(): array
     {
         return $this->structuredData;
     }
 
-    /**
-     * `application/ld+json` is data, not a script a browser runs, so it needs no nonce.
-     */
     protected function renderStructuredData(): string
     {
         if (!$this->structuredData) {

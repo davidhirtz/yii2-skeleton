@@ -18,10 +18,8 @@ use yii\base\Model;
 use yii\db\BaseActiveRecord;
 
 /**
- * A date and time, held as a {@see DateTime} in the application's time zone and stored in UTC with its offset, so the
- * JSON reads the same whatever zone wrote it. {@see AttributeTypecastBehavior} only casts columns: the cast is a
- * filter of the attribute's own, ahead of the rule, and a date that writes what the record holds is the old instance,
- * so it does not read as changed.
+ * {@see AttributeTypecastBehavior} only casts columns, so the cast is a filter of its own and an equal date keeps the
+ * old instance.
  */
 class DateTimeCustomAttribute extends CustomAttribute
 {
@@ -53,9 +51,6 @@ class DateTimeCustomAttribute extends CustomAttribute
         return $rules;
     }
 
-    /**
-     * A value that cannot be read stays as it is, for the rule to refuse and the field to show.
-     */
     #[Override]
     public function normalize(mixed $value): mixed
     {
@@ -114,10 +109,6 @@ class DateTimeCustomAttribute extends CustomAttribute
         return Yii::$app->getFormatter()->asDatetime($date, 'medium');
     }
 
-    /**
-     * A string is read in the application's time zone, which is what an editor typed, unless it names an offset, as
-     * a stored value does. One PHP reads only by rolling it over, such as `2024-02-31`, is no date.
-     */
     protected function createDate(mixed $value): ?DateTimeInterface
     {
         $timeZone = new DateTimeZone(Yii::$app->getTimeZone());

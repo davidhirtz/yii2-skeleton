@@ -9,18 +9,6 @@ use Hirtz\Skeleton\Html\Script;
 use Hirtz\Skeleton\Widgets\Widget;
 use Stringable;
 
-/**
- * A schema.org node of any type. {@see static::register()} adds it to the page's graph, which the view renders as one
- * script in the head; rendering it prints a script of its own.
- *
- * ```php
- * Thing::make()
- *     ->type('Event')
- *     ->id(StructuredData::id($url, 'event'))
- *     ->properties(['name' => $entry->name, 'startDate' => StructuredData::date($entry->publish_date)])
- *     ->register();
- * ```
- */
 class Thing extends Widget
 {
     protected ?string $type = null;
@@ -78,9 +66,6 @@ class Thing extends Widget
         ]);
     }
 
-    /**
-     * Adds the node to the page's graph, replacing one with the same `@id`.
-     */
     public function register(): void
     {
         $node = $this->build();
@@ -91,7 +76,7 @@ class Thing extends Widget
     }
 
     /**
-     * @return array<string, mixed>|null the configured node, `null` when it is not visible
+     * @return array<string, mixed>|null
      */
     public function build(): ?array
     {
@@ -99,17 +84,12 @@ class Thing extends Widget
         return $this->isVisible() ? $this->getNode() : null;
     }
 
-    /**
-     * A node needs a type.
-     */
     public function isVisible(): bool
     {
         return $this->type !== null && parent::isVisible();
     }
 
     /**
-     * The properties a subclass derives, followed by the ones set, which win.
-     *
      * @return array<string, mixed>
      */
     protected function getProperties(): array

@@ -8,11 +8,6 @@ use DateTimeInterface;
 use Hirtz\Skeleton\Helpers\StructuredData;
 use Override;
 
-/**
- * An event. It is visible only with what Google requires besides the name: a start and a place, physical or
- * online, so an incomplete record never ships invalid data. Name, description, image and URL usually come from the
- * page the event is the main entity of.
- */
 class Event extends Thing
 {
     final public const string STATUS_SCHEDULED = 'EventScheduled';
@@ -50,9 +45,6 @@ class Event extends Thing
         return $this;
     }
 
-    /**
-     * @param string|null $eventStatus one of the `STATUS_*` constants, `null` for scheduled
-     */
     public function eventStatus(?string $eventStatus): static
     {
         $this->eventStatus = $eventStatus;
@@ -60,9 +52,7 @@ class Event extends Thing
     }
 
     /**
-     * @param Thing|array<string, mixed>|string|null $location a place's name, or a node of its own (a `Place` with a
-     * `PostalAddress`)
-     * @param string|null $address the address of a named place, as one line
+     * @param Thing|array<string, mixed>|string|null $location
      */
     public function location(Thing|array|string|null $location, ?string $address = null): static
     {
@@ -94,9 +84,6 @@ class Event extends Thing
         return $this;
     }
 
-    /**
-     * @param string|null $organizer the `@id` of the organizer, such as {@see Organization::getDefaultId()}
-     */
     public function organizer(?string $organizer): static
     {
         $this->organizer = $organizer;

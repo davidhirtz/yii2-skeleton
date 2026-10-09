@@ -198,8 +198,6 @@ class GroupCustomAttribute extends CustomAttribute
     }
 
     /**
-     * A row holds what the column stores, so each value is unserialized as a record's would be.
-     *
      * @param array<string, mixed> $values
      */
     public function createItem(Model $owner, string $index, array $values = []): CustomAttributeGroupItem
