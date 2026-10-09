@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Web;
 
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Helpers\StructuredData;
+use Hirtz\Skeleton\Html\Script;
 use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
 use Override;
 use Yii;
@@ -37,6 +39,11 @@ class View extends \yii\web\View
     public ?string $nonce = null;
 
     protected string|null $description = null;
+
+    /**
+     * @var array<int|string, array<string, mixed>>
+     */
+    protected array $structuredData = [];
     /**
      * @var non-empty-string
      */
@@ -46,7 +53,56 @@ class View extends \yii\web\View
     protected function renderHeadHtml(): string
     {
         $js = $this->renderPosition(self::POS_HEAD);
-        return $this->joinHtml(parent::renderHeadHtml(), $js);
+        return $this->joinHtml(parent::renderHeadHtml(), $this->renderStructuredData(), $js);
+    }
+
+    #[Override]
+    public function clear(): void
+    {
+        parent::clear();
+        $this->structuredData = [];
+    }
+
+    /**
+     * Adds a schema.org node to the page's graph, which the head renders as one script. A node is keyed by its
+     * `@id` unless a key is given, so registering one again replaces it; one without either is appended.
+     *
+     * @param array<string, mixed> $node
+     * @see \Hirtz\Skeleton\Widgets\StructuredData\Thing::register()
+     */
+    public function registerStructuredData(array $node, ?string $key = null): void
+    {
+        $key ??= is_string($node['@id'] ?? null) ? $node['@id'] : null;
+
+        if ($key === null) {
+            $this->structuredData[] = $node;
+            return;
+        }
+
+        $this->structuredData[$key] = $node;
+    }
+
+    /**
+     * @return array<int|string, array<string, mixed>> the registered nodes by key, to read one back and replace it
+     */
+    public function getStructuredData(): array
+    {
+        return $this->structuredData;
+    }
+
+    /**
+     * `application/ld+json` is data, not a script a browser runs, so it needs no nonce.
+     */
+    protected function renderStructuredData(): string
+    {
+        if (!$this->structuredData) {
+            return '';
+        }
+
+        return Script::make()
+            ->type('application/ld+json')
+            ->content(StructuredData::encode(array_values($this->structuredData)))
+            ->render();
     }
 
     #[Override]

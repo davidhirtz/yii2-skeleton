@@ -33,6 +33,29 @@ class ViewTest extends TestCase
         static::assertStringContainsString('"itemListElement":[]', BreadcrumbList::make()->render());
     }
 
+    public function testStructuredDataIsOneScriptInTheHead(): void
+    {
+        $view = new View();
+        $view->registerStructuredData(['@type' => 'WebSite', '@id' => 'https://www.test.localhost/#website']);
+        $view->registerStructuredData(['@type' => 'WebPage', 'name' => '</script> Å 🎉']);
+
+        $html = $this->renderPage($view);
+        $head = explode('<body>', $html)[0];
+
+        self::assertSame(1, substr_count($head, '<script type="application/ld+json">'));
+        self::assertStringContainsString(
+            '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebSite","@id":"https:\\/\\/www.test.localhost\\/#website"},{"@type":"WebPage","name":"\\u003C\\/script\\u003E Å 🎉"}]}',
+            $head,
+        );
+
+        self::assertSame([], $view->getStructuredData(), 'The page is cleared once rendered.');
+    }
+
+    public function testAPageWithoutStructuredDataHasNoScript(): void
+    {
+        self::assertStringNotContainsString('application/ld+json', $this->renderPage(new View()));
+    }
+
     public function testHrefLangLinkTags(): void
     {
         /** @var Controller<Module> $controller */
@@ -131,5 +154,20 @@ class ViewTest extends TestCase
         $view->registerJsModule('/test.js', ['param1', 'param2'], key: 'test');
         self::assertContains("import b from '/test.js';", $view->js[$view::POS_IMPORT]);
         self::assertContains('b("param1", "param2");', $view->js[$view::POS_MODULE]);
+    }
+
+    private function renderPage(View $view): string
+    {
+        ob_start();
+        $view->beginPage();
+        echo '<head>';
+        $view->head();
+        echo '</head><body>';
+        $view->beginBody();
+        $view->endBody();
+        echo '</body>';
+        $view->endPage();
+
+        return (string)ob_get_clean();
     }
 }
