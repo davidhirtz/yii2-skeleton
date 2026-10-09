@@ -198,6 +198,8 @@ class GroupCustomAttribute extends CustomAttribute
     }
 
     /**
+     * A row holds what the column stores, so each value is unserialized as a record's would be.
+     *
      * @param array<string, mixed> $values
      */
     public function createItem(Model $owner, string $index, array $values = []): CustomAttributeGroupItem
@@ -208,6 +210,12 @@ class GroupCustomAttribute extends CustomAttribute
 
         /** @var CustomAttributeGroupItem $item */
         $item = Yii::createObject($this->itemClass, [$this, $owner, $formName]);
+
+        foreach ($values as $name => $value) {
+            $definition = $item->getCustomAttribute((string)$name);
+            $values[$name] = $definition ? $definition->unserialize($value) : $value;
+        }
+
         $item->setAttributes($values, false);
 
         return $item;
