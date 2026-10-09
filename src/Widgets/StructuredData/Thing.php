@@ -83,11 +83,20 @@ class Thing extends Widget
      */
     public function register(): void
     {
-        $this->configure();
+        $node = $this->build();
 
-        if ($this->isVisible()) {
-            $this->view->registerStructuredData($this->getNode());
+        if ($node !== null) {
+            $this->view->registerStructuredData($node);
         }
+    }
+
+    /**
+     * @return array<string, mixed>|null the configured node, `null` when it is not visible
+     */
+    public function build(): ?array
+    {
+        $this->configure();
+        return $this->isVisible() ? $this->getNode() : null;
     }
 
     /**

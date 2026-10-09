@@ -3,6 +3,7 @@
 - Added `DateCustomAttribute` and `DateTimeCustomAttribute`
 - Added structured data as one graph per page: `View::registerStructuredData()`, the `Thing`, `Organization` and
   `WebSite` widgets and the `StructuredData` helper; `BreadcrumbList` extends `Thing`
+- Added the `Event` structured data widget
 
 ## 3.14.0 (October 8, 2026)
 
