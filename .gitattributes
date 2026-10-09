@@ -9,6 +9,7 @@
 /package.json export-ignore
 /phpstan.neon export-ignore
 /phpunit.xml export-ignore
+/resources/assets/CLAUDE.md export-ignore
 /resources/assets/src/ export-ignore
 /resources/assets/tests/ export-ignore
 /resources/tests/ export-ignore
