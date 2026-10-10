@@ -18,6 +18,7 @@ use Hirtz\Skeleton\Console\Controllers\SearchController;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UpgradeController;
 use Hirtz\Skeleton\Console\Controllers\UserController;
+use Hirtz\Skeleton\Console\Controllers\ConsentController;
 use Hirtz\Skeleton\Console\Controllers\UserLoginController;
 use Hirtz\Skeleton\Console\Controllers\UploadController;
 use Hirtz\Skeleton\Console\Controllers\UserTokenController;
@@ -114,6 +115,7 @@ class Application extends \yii\console\Application
         return [
             ...parent::coreCommands(),
             'asset' => AssetController::class,
+            'consent' => ConsentController::class,
             'email' => EmailController::class,
             'help' => HelpController::class,
             'maintenance' => MaintenanceController::class,

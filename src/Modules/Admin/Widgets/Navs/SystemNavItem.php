@@ -42,7 +42,22 @@ class SystemNavItem extends NavItem
             log: $this->getLogIndexItem(),
             trail: $this->getTrailIndexItem(),
             redirect: $this->getRedirectIndexItem(),
+            consent: $this->getConsentIndexItem(),
         );
+    }
+
+    protected function getConsentIndexItem(): ?NavItem
+    {
+        if (!Module::current()->enableConsentLog) {
+            return null;
+        }
+
+        return NavItem::make()
+            ->label(Yii::t('skeleton', 'COMMON_CONSENTS'))
+            ->url(['/admin/consent/index'])
+            ->order(80)
+            ->roles([Module::AUTH_SYSTEM])
+            ->routes(['admin/consent']);
     }
 
     protected function getLogIndexItem(): NavItem

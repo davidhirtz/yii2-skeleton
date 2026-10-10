@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Base\Traits;
 use Hirtz\Skeleton\Assets\EmptyAssetBundle;
 use Hirtz\Skeleton\Base\ConfigBootstrapInterface;
 use Hirtz\Skeleton\Base\RootPackage;
+use Hirtz\Skeleton\Controllers\ConsentController;
 use Hirtz\Skeleton\Controllers\HealthController;
 use Hirtz\Skeleton\Controllers\SitemapController;
 use Hirtz\Skeleton\Db\Connection;
@@ -207,6 +208,7 @@ trait ApplicationTrait
                 ],
             ],
             'controllerMap' => [
+                'consent' => ConsentController::class,
                 'health' => HealthController::class,
                 'sitemap' => SitemapController::class,
             ],
@@ -350,6 +352,7 @@ trait ApplicationTrait
         $alias = $this->getAdminAlias();
 
         $this->addUrlManagerRules([
+            'application-consent' => 'consent/create',
             'application-health' => 'health/index',
             'sitemap.xml' => 'sitemap/index',
             "$alias/<module>/<controller>/<view>" => 'admin/<module>/<controller>/<view>',

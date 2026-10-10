@@ -85,7 +85,13 @@ answer `null` there instead.
 | `languageSessionKey` | `language` | session key of the picked admin language |
 | `asideCookieName`, `asideCookieSecure` | `_aside`, `null` | the collapsed-aside cookie |
 | `translationLayout` | `inline` | translated fields side by side (`inline`) or one language at a time (`tabs`) |
-| `trailLifetime`, `userLoginLifetime` | `false` | seconds `trail/clear` and `user-login/clear` keep rows for |
+| `trailLifetime`, `userLoginLifetime`, `consentLifetime` | `false` | seconds `trail/clear`, `user-login/clear` and `consent/clear` keep rows for |
+| `enableConsentLog` | `true` | the cookie consent log: `POST application-consent` and its list under "System" |
+
+The consent log takes `id` (a UUID the banner keeps in its cookie), `version` and `categories` (comma-separated) from the
+frontend's banner and stores them with a timestamp, no IP address. It answers `204`, `400` for an invalid decision and
+`429` beyond `controllerMap.consent.limit` posts per IP and hour (30). Keep the rows as long as the consent itself plus
+the limitation period, e.g. four years (`'consentLifetime' => 4 * 365 * 86400`).
 
 `components.user` (`Web\User`): `enableLogin`, `enableSignup` (`false`), `enablePasswordReset`, `enableUnconfirmedEmailLogin`,
 `enableTwoFactorAuthentication`, `enableUserEnumerationProtection` (all `true` unless noted), `loginAttemptLimit` (10, `0` off)
@@ -159,6 +165,7 @@ A model is configured through the container rather than subclassed; a type's nam
 | `search/rebuild [models]`, `search/clear [models]` | the fulltext index, optionally limited to a comma-separated list (`search/rebuild Entry,Category`) |
 | `trail/clear`, `trail/optimize`, `trail/update-models` | trail retention and class renames; `clear` takes `--sleep` |
 | `user-login/clear`, `user-login/optimize`, `user-token/clear`, `user-token/optimize`, `upload/clear` | login history (`--sleep`), expired tokens, abandoned uploads |
+| `consent/clear`, `consent/optimize` | cookie consent log retention; `clear` takes `--sleep` |
 | `redirect/clean` | delete redirect loops and shorten chains; `--hosts`, `--dryRun` |
 | `maintenance/enable`, `maintenance/disable`, `maintenance` | the pre-rendered maintenance page (`runtime/maintenance.php`); `enable` takes `--redirect`, `--retry`, `--refresh`, `--statusCode`, `--viewFile` |
 | `registry/push`, `registry/show` | report the installation to a version registry; `--url`, `--strict` |

@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Added the cookie consent log: `POST application-consent`, `Models\Consent`, the "Cookie consents" page under "System",
+  `consent/clear`, `Admin\Module::$enableConsentLog` and `$consentLifetime`
 - Added `DateCustomAttribute` and `DateTimeCustomAttribute`
 - Added structured data: `View::registerStructuredData()`, `Thing`, `Event`, `Organization`, `WebSite`
 
