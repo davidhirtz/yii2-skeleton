@@ -224,6 +224,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
         if (
             $result === ExitCode::OK
             && $this->interactive
+            && User::getDb()->getTableSchema(User::tableName(), true) !== null
             && !User::find()->exists()
             && $this->confirm('Create owner user account?', true)
         ) {

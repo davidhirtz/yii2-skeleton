@@ -42,6 +42,22 @@ class MigrateControllerTest extends TestCase
         self::assertStringContainsString('No new migrations found. Your system is up-to-date.', $controller->flushStdOutBuffer());
     }
 
+    public function testActionUpWithoutUserTable(): void
+    {
+        $db = Application::current()->getDb();
+        $tablePrefix = $db->tablePrefix;
+        $db->tablePrefix = 'zz_';
+
+        try {
+            $controller = $this->createMigrationController();
+            $controller->migrationTable = $tablePrefix . 'migration';
+
+            self::assertSame(ExitCode::OK, $controller->runAction('up'));
+        } finally {
+            $db->tablePrefix = $tablePrefix;
+        }
+    }
+
     public function testAMigrationInvalidatesTheRbacCache(): void
     {
         $auth = Yii::$app->getAuthManager();
