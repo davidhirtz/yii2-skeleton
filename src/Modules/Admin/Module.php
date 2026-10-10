@@ -89,16 +89,8 @@ class Module extends \Hirtz\Skeleton\Base\Module
      */
     public int|false $userLoginLifetime = false;
 
-    /**
-     * @var bool whether the frontend's cookie consent decisions are logged through `application-consent` and listed
-     * under "System".
-     */
     public bool $enableConsentLog = true;
 
-    /**
-     * @var int|false how long a `consent` record is kept, in seconds. Set it and run `consent/clear` console command.
-     * {@see \Hirtz\Skeleton\Console\Controllers\ConsentController::actionClear()}
-     */
     public int|false $consentLifetime = false;
 
     public $defaultRoute = 'dashboard';

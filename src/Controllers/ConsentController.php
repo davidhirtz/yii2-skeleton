@@ -21,7 +21,7 @@ use yii\web\TooManyRequestsHttpException;
 class ConsentController extends Controller
 {
     /**
-     * @var int the number of decisions one IP address may log per {@see $limitDuration}, `0` for no limit.
+     * Posts per IP address and {@see $limitDuration}, `0` for no limit.
      */
     public int $limit = 30;
     public int $limitDuration = 3600;

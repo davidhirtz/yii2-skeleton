@@ -30,10 +30,7 @@ class ConsentController extends Controller
     }
 
     /**
-     * Removes consent records older than the configured or given lifetime.
-     *
-     * The threshold is defined in the module configuration; alternatively, the lifetime in seconds can be passed as an
-     * argument.
+     * Removes consent records older than the configured or given lifetime in seconds.
      */
     public function actionClear(?int $lifetime = null): void
     {

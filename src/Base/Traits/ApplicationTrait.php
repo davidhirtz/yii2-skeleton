@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Base\Traits;
 use Hirtz\Skeleton\Assets\EmptyAssetBundle;
 use Hirtz\Skeleton\Base\ConfigBootstrapInterface;
 use Hirtz\Skeleton\Base\RootPackage;
+use Hirtz\Skeleton\Consent\ConsentManager;
 use Hirtz\Skeleton\Controllers\ConsentController;
 use Hirtz\Skeleton\Controllers\HealthController;
 use Hirtz\Skeleton\Controllers\SitemapController;
@@ -106,6 +107,9 @@ trait ApplicationTrait
                 ],
                 'cache' => [
                     'class' => FileCache::class,
+                ],
+                'consent' => [
+                    'class' => ConsentManager::class,
                 ],
                 'db' => [
                     'class' => Connection::class,

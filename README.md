@@ -154,6 +154,40 @@ A model is configured through the container rather than subclassed; a type's nam
 ],
 ```
 
+### Cookie consent
+
+The `consent` component (`Consent\ConsentManager`) describes what a project's cookie banner asks for: categories
+(`Consent\Categories\RequiredCategory`, `AnalyticsCategory`, `MarketingCategory`, `ExternalCategory`) holding services
+(`Consent\Services\GoogleAnalytics`, `GoogleTagManager`, `GoogleAds`, `GoogleMaps`, `YouTube`, `Vimeo`, `ConsentCookie`)
+with their provider, purpose, privacy policy and cookies. The banner itself, its texts and its script are the project's;
+`getClientConfig()` is what the script needs.
+
+Without `categories`, the component offers the required cookie, analytics for `tagId` (`params.gtagId`, a `GTM-…`
+container or a `G-…` stream) and YouTube as external content. A category without a service is left out.
+
+```php
+'consent' => [
+    'categories' => fn (ConsentManager $consent): array => [
+        RequiredCategory::make(),
+        AnalyticsCategory::make()->services(...$consent->getTagServices()),
+        ExternalCategory::make()->services(
+            YouTube::make(),
+            Service::make()
+                ->name('Calendly')
+                ->provider('Calendly LLC')
+                ->purpose(Yii::t('app', 'CC_SERVICE_CALENDLY_PURPOSE'))
+                ->privacyUrl('https://calendly.com/privacy')
+                ->cookies(Cookie::make()->name('__cf_bm')->duration('PT30M')->thirdParty()),
+        ),
+    ],
+],
+```
+
+A default service is changed through the container (`YouTube::class => ['purpose' => …]`) or `make([...])`. The
+version a decision is stored and logged with is `version` plus a fingerprint of every category, provider and cookie:
+a changed service asks every visitor again on its own, a reworded text does not. Raise `version` for a change of
+wording that should.
+
 ## Console commands
 
 | Command | Purpose |
