@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Consent\Services\GoogleTagManager;
 use Hirtz\Skeleton\Consent\Services\YouTube;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Web\User;
 use Override;
 use Yii;
 use yii\base\Component;
@@ -33,6 +34,11 @@ class ConsentManager extends Component
 
     public string $privacyUrl = '/privacy';
     public string $imprintUrl = '/imprint';
+
+    /**
+     * Logged-in users get the script's warnings either way: they are the editors testing the live site.
+     */
+    public bool $debug = YII_DEBUG;
 
     /**
      * @var list<Category>|null
@@ -140,7 +146,7 @@ class ConsentManager extends Component
             'logUrl' => Module::current()->enableConsentLog ? Url::to(['/consent/create']) : null,
             'cookies' => $cookies,
             'declared' => $declared,
-            'debug' => YII_DEBUG,
+            'debug' => $this->debug || User::current()?->getIsGuest() === false,
         ];
     }
 }

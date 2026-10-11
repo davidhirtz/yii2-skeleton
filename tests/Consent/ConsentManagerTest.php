@@ -17,10 +17,13 @@ use Hirtz\Skeleton\Consent\Services\GoogleAnalytics;
 use Hirtz\Skeleton\Consent\Services\YouTube;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
 
 class ConsentManagerTest extends TestCase
 {
+    use UserFixtureTrait;
+
     public function testTheComponentIsRegistered(): void
     {
         self::assertInstanceOf(ConsentManager::class, ConsentManager::current());
@@ -119,6 +122,15 @@ class ConsentManagerTest extends TestCase
         $module->enableConsentLog = false;
 
         self::assertNull((new ConsentManager())->getClientConfig()['logUrl']);
+    }
+
+    public function testALoggedInUserGetsTheDebugWarnings(): void
+    {
+        $consent = new ConsentManager(['debug' => false]);
+        self::assertFalse($consent->getClientConfig()['debug']);
+
+        $this->getWebUser()->login($this->getUserFromFixture('admin'));
+        self::assertTrue($consent->getClientConfig()['debug']);
     }
 
     public function testCookieDurationLabels(): void

@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added `ConsentManager::$debug`; logged-in users get the debug warnings too
+
 ## 3.16.0 (October 11, 2026)
 
 - Added `Consent\Services\CsrfCookie`
