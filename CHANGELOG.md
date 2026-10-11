@@ -1,4 +1,4 @@
-## Unreleased
+## 3.16.0 (October 11, 2026)
 
 - Added `Consent\Services\CsrfCookie`
 
