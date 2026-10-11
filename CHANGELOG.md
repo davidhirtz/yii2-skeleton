@@ -1,4 +1,4 @@
-## Unreleased
+## 3.15.0 (October 11, 2026)
 
 - Added the cookie consent log (`application-consent`, `Models\Consent`, `admin/consent`, `consent/clear`)
 - Added the `consent` component with `Consent\Categories` and `Consent\Services`
