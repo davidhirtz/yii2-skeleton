@@ -158,12 +158,13 @@ A model is configured through the container rather than subclassed; a type's nam
 
 The `consent` component (`Consent\ConsentManager`) describes what a project's cookie banner asks for: categories
 (`Consent\Categories\RequiredCategory`, `AnalyticsCategory`, `MarketingCategory`, `ExternalCategory`) holding services
-(`Consent\Services\GoogleAnalytics`, `GoogleTagManager`, `GoogleAds`, `GoogleMaps`, `YouTube`, `Vimeo`, `ConsentCookie`)
+(`Consent\Services\GoogleAnalytics`, `GoogleTagManager`, `GoogleAds`, `GoogleMaps`, `YouTube`, `Vimeo`, `ConsentCookie`, `CsrfCookie`)
 with their provider, purpose, privacy policy and cookies. The banner itself, its texts and its script are the project's;
 `getClientConfig()` is what the script needs.
 
 Without `categories`, the component offers the required cookie, analytics for `tagId` (`params.gtagId`, a `GTM-…`
-container or a `G-…` stream) and YouTube as external content. A category without a service is left out.
+container or a `G-…` stream) and YouTube as external content. A category without a service is left out. A frontend
+form that sets the CSRF cookie adds `CsrfCookie` to the required category.
 
 ```php
 'consent' => [

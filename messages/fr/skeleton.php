@@ -148,6 +148,8 @@ return [
     'CONSENT_INDEX_HINT' => 'Chaque choix effectué dans la bannière de cookies du site est enregistré ici avec l’identifiant anonyme du cookie du visiteur, la version de la bannière et l’heure. Il prouve le consentement sans conserver de données personnelles comme l’adresse IP.',
     'CONSENT_SERVICE_CONSENT_NAME' => 'Paramètres des cookies',
     'CONSENT_SERVICE_CONSENT_PURPOSE' => 'Enregistre votre choix dans la bannière de cookies et un identifiant aléatoire qui nous permet de prouver votre consentement.',
+    'CONSENT_SERVICE_CSRF_NAME' => 'Protection des formulaires',
+    'CONSENT_SERVICE_CSRF_PURPOSE' => 'Protège nos formulaires contre les envois falsifiés par d’autres sites en votre nom.',
     'CONSENT_SERVICE_GOOGLE_ADS_PURPOSE' => 'Mesure si une visite issue d’une annonce a abouti à une demande ou à un achat. Les données sont également traitées aux États-Unis ; Google est certifié au titre du EU-US Data Privacy Framework.',
     'CONSENT_SERVICE_GOOGLE_ANALYTICS_PURPOSE' => 'Établit des statistiques sur l’utilisation du site à partir d’un identifiant aléatoire stocké dans un cookie. Les données sont également traitées aux États-Unis ; Google est certifié au titre du EU-US Data Privacy Framework.',
     'CONSENT_SERVICE_GOOGLE_MAPS_PURPOSE' => 'Affiche des cartes intégrées. Les données sont également traitées aux États-Unis ; Google est certifié au titre du EU-US Data Privacy Framework.',

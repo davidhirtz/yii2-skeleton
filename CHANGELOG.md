@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added `Consent\Services\CsrfCookie`
+
 ## 3.15.0 (October 11, 2026)
 
 - Added the cookie consent log (`application-consent`, `Models\Consent`, `admin/consent`, `consent/clear`)

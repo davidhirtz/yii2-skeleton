@@ -148,6 +148,8 @@ return [
     'CONSENT_INDEX_HINT' => 'Cada decisão tomada no banner de cookies do site é registada aqui com o ID anónimo do cookie do visitante, a versão do banner e a hora. Comprova o consentimento sem guardar dados pessoais como o endereço IP.',
     'CONSENT_SERVICE_CONSENT_NAME' => 'Definições de cookies',
     'CONSENT_SERVICE_CONSENT_PURPOSE' => 'Guarda a sua escolha no banner de cookies e um ID aleatório que nos permite comprovar o seu consentimento.',
+    'CONSENT_SERVICE_CSRF_NAME' => 'Proteção de formulários',
+    'CONSENT_SERVICE_CSRF_PURPOSE' => 'Protege os nossos formulários contra envios forjados por outros sites em seu nome.',
     'CONSENT_SERVICE_GOOGLE_ADS_PURPOSE' => 'Mede se uma visita vinda de um anúncio resultou num pedido ou numa compra. Os dados também são tratados nos EUA; a Google está certificada ao abrigo do EU-US Data Privacy Framework.',
     'CONSENT_SERVICE_GOOGLE_ANALYTICS_PURPOSE' => 'Elabora estatísticas sobre a utilização do site com base num identificador aleatório guardado num cookie. Os dados também são tratados nos EUA; a Google está certificada ao abrigo do EU-US Data Privacy Framework.',
     'CONSENT_SERVICE_GOOGLE_MAPS_PURPOSE' => 'Mostra mapas incorporados. Os dados também são tratados nos EUA; a Google está certificada ao abrigo do EU-US Data Privacy Framework.',

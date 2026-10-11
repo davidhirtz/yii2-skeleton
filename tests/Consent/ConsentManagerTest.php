@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Consent\Category;
 use Hirtz\Skeleton\Consent\ConsentManager;
 use Hirtz\Skeleton\Consent\Cookie;
 use Hirtz\Skeleton\Consent\Service;
+use Hirtz\Skeleton\Consent\Services\CsrfCookie;
 use Hirtz\Skeleton\Consent\Services\GoogleAnalytics;
 use Hirtz\Skeleton\Consent\Services\YouTube;
 use Hirtz\Skeleton\Modules\Admin\Module;
@@ -135,6 +136,14 @@ class ConsentManagerTest extends TestCase
         self::assertSame('Google Ireland Limited', $service->getProvider());
         self::assertSame('https://policies.google.com/privacy', $service->getPrivacyUrl());
         self::assertNotSame('', $service->getPurpose());
+    }
+
+    public function testTheCsrfCookieIsARequiredServiceOnRequest(): void
+    {
+        $category = RequiredCategory::make()->addService(CsrfCookie::make());
+
+        self::assertSame(['_cc', '_csrf'], $category->getFirstPartyCookieNames());
+        self::assertSame('End of session', $category->getServices()[1]->getCookies()[0]->getDurationLabel());
     }
 
     /**
