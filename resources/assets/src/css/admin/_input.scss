@@ -35,8 +35,13 @@
 
   &[multiple],
   &[size]:not([size="1"]) {
-    padding-right: 2.5rem;
     background-image: none;
+    padding: 0;
+
+    // Chrome ignores an option's `line-height`, so the padding alone brings it to an input's height.
+    option {
+      padding: 0.625rem 1rem;
+    }
   }
 
   &:is(div:not(.ts-wrapper)),
