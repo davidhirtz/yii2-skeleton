@@ -51,6 +51,18 @@ class AjaxRouteTraitTest extends TestCase
         self::assertStringContainsString('<script>alert("test");document.title="Test title"</script>', $content);
     }
 
+    public function testAjaxRouteRequestKeepsPipesAndEncodesTheTitle(): void
+    {
+        $this->setAjaxRouteMock();
+
+        Yii::$app->getView()->titleTemplate = "{title} | \"Site\"\n</script>";
+
+        $controller = new AjaxRouteControllerMock('test', Yii::$app);
+        $content = $controller->actionIndex();
+
+        self::assertStringContainsString('document.title="Test title | \\u0022Site\\u0022\\u003C\\/script\\u003E"', $content);
+    }
+
     protected function setAjaxRouteMock(): void
     {
         $this->getWebRequest()->getHeaders()->set('X-Requested-With', 'XMLHttpRequest');

@@ -142,6 +142,8 @@ return [
     'CONSENT_CATEGORY_REQUIRED_TEXT' => 'Diese Cookies sind für den Betrieb der Webseite erforderlich, zum Beispiel um Ihre Cookie-Einstellungen zu speichern. Sie lassen sich nicht deaktivieren.',
     'CONSENT_CATEGORY_REQUIRED_TITLE' => 'Notwendig',
     'CONSENT_DURATION_DAYS' => '{n, plural, =1{1 Tag} other{# Tage}}',
+    'CONSENT_DURATION_HOURS' => '{n, plural, =1{1 Stunde} other{# Stunden}}',
+    'CONSENT_DURATION_MINUTES' => '{n, plural, =1{1 Minute} other{# Minuten}}',
     'CONSENT_DURATION_MONTHS' => '{n, plural, =1{1 Monat} other{# Monate}}',
     'CONSENT_DURATION_SESSION' => 'Ende der Sitzung',
     'CONSENT_DURATION_YEARS' => '{n, plural, =1{1 Jahr} other{# Jahre}}',

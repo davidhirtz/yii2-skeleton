@@ -85,6 +85,14 @@ class Cookie implements Configurable
             return Yii::t('skeleton', 'CONSENT_DURATION_MONTHS', ['n' => $interval->m]);
         }
 
-        return Yii::t('skeleton', 'CONSENT_DURATION_DAYS', ['n' => $interval->d]);
+        if ($interval->d) {
+            return Yii::t('skeleton', 'CONSENT_DURATION_DAYS', ['n' => $interval->d]);
+        }
+
+        if ($interval->h) {
+            return Yii::t('skeleton', 'CONSENT_DURATION_HOURS', ['n' => $interval->h]);
+        }
+
+        return Yii::t('skeleton', 'CONSENT_DURATION_MINUTES', ['n' => $interval->i]);
     }
 }

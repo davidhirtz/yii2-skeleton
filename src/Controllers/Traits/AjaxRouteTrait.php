@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Controllers\Traits;
 
 use Hirtz\Skeleton\Web\View;
+use yii\helpers\Json;
 
 trait AjaxRouteTrait
 {
@@ -67,7 +68,7 @@ trait AjaxRouteTrait
     {
         $view = $this->getView();
 
-        $title = addslashes((string)preg_replace("/[\r|\n]/", '', $view->getDocumentTitle()));
-        $view->registerJs("document.title=\"$title\";", $view::POS_END);
+        $title = Json::htmlEncode((string)preg_replace("/[\r\n]/", '', $view->getDocumentTitle()));
+        $view->registerJs("document.title=$title;", $view::POS_END);
     }
 }

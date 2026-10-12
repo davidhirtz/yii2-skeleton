@@ -142,6 +142,8 @@ return [
     'CONSENT_CATEGORY_REQUIRED_TEXT' => 'These cookies are required for the website to work, for example to remember your cookie settings. They cannot be turned off.',
     'CONSENT_CATEGORY_REQUIRED_TITLE' => 'Necessary',
     'CONSENT_DURATION_DAYS' => '{n, plural, =1{1 day} other{# days}}',
+    'CONSENT_DURATION_HOURS' => '{n, plural, =1{1 hour} other{# hours}}',
+    'CONSENT_DURATION_MINUTES' => '{n, plural, =1{1 minute} other{# minutes}}',
     'CONSENT_DURATION_MONTHS' => '{n, plural, =1{1 month} other{# months}}',
     'CONSENT_DURATION_SESSION' => 'End of session',
     'CONSENT_DURATION_YEARS' => '{n, plural, =1{1 year} other{# years}}',

@@ -138,6 +138,8 @@ class ConsentManagerTest extends TestCase
         self::assertSame('2 years', Cookie::make()->duration('P2Y')->getDurationLabel());
         self::assertSame('1 month', Cookie::make()->duration('P1M')->getDurationLabel());
         self::assertSame('90 days', Cookie::make()->duration('P90D')->getDurationLabel());
+        self::assertSame('2 hours', Cookie::make()->duration('PT2H')->getDurationLabel());
+        self::assertSame('1 minute', Cookie::make()->duration('PT1M')->getDurationLabel());
         self::assertSame('End of session', Cookie::make()->getDurationLabel());
     }
 

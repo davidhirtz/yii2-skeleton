@@ -142,6 +142,8 @@ return [
     'CONSENT_CATEGORY_REQUIRED_TEXT' => 'Estes cookies são indispensáveis ao funcionamento do site, por exemplo para guardar as suas preferências de cookies. Não podem ser desativados.',
     'CONSENT_CATEGORY_REQUIRED_TITLE' => 'Necessários',
     'CONSENT_DURATION_DAYS' => '{n, plural, =1{1 dia} other{# dias}}',
+    'CONSENT_DURATION_HOURS' => '{n, plural, =1{1 hora} other{# horas}}',
+    'CONSENT_DURATION_MINUTES' => '{n, plural, =1{1 minuto} other{# minutos}}',
     'CONSENT_DURATION_MONTHS' => '{n, plural, =1{1 mês} other{# meses}}',
     'CONSENT_DURATION_SESSION' => 'Fim da sessão',
     'CONSENT_DURATION_YEARS' => '{n, plural, =1{1 ano} other{# anos}}',
