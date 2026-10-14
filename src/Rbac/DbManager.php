@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use yii\rbac\Assignment;
 use yii\rbac\Permission;
+use yii\rbac\Role;
 use yii\caching\CacheInterface;
 
 class DbManager extends \yii\rbac\DbManager
@@ -86,6 +87,34 @@ class DbManager extends \yii\rbac\DbManager
         }
 
         return $permissions;
+    }
+
+    /**
+     * Answered from the cached items and the assignments {@see getPermissionsByUser()} already read.
+     *
+     * @return array<string, Role>
+     */
+    #[\Override]
+    public function getRolesByUser($userId): array
+    {
+        $this->loadFromCache();
+
+        if ($this->items === null || $this->isEmptyUserId($userId)) {
+            return parent::getRolesByUser($userId);
+        }
+
+        $roles = $this->getDefaultRoleInstances();
+        $assignments = $this->checkAccessAssignments[(string)$userId] ??= $this->getAssignments($userId);
+
+        foreach (array_keys($assignments) as $name) {
+            $item = $this->items[$name] ?? null;
+
+            if ($item instanceof Role) {
+                $roles[$name] = $item;
+            }
+        }
+
+        return $roles;
     }
 
     /**
