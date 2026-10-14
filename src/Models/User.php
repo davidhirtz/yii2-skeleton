@@ -46,6 +46,7 @@ use yii\web\IdentityInterface;
  * @property string|null $auth_key
  * @property string|null $two_factor_secret the encrypted secret, reached through
  *     {@see static::getTwoFactorAuthenticationSecret()}
+ * @property int|null $two_factor_timeslice the TOTP timeslice the last accepted code matched
  * @property bool|int $is_owner
  * @property int|null $created_by_user_id
  * @property int $login_count
@@ -474,6 +475,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             ? null
             : static::encryptTwoFactorAuthenticationSecret($secret);
 
+        $this->two_factor_timeslice = null;
         $this->deleteTokens(UserToken::TYPE_RECOVERY_CODE);
     }
 
@@ -688,6 +690,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             'auth_key',
             'email_confirmed_at',
             'two_factor_secret',
+            'two_factor_timeslice',
             'login_count',
             'last_login',
             'created_by_user_id',

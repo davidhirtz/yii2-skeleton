@@ -153,10 +153,15 @@ class LoginForm extends Model
 
         $validator = Yii::$container->get(TwoFactorAuthenticationValidator::class, [], [
             'secret' => $this->user->getTwoFactorAuthenticationSecret(),
-            'datetime' => $this->user->last_login,
+            'timeslice' => $this->user->two_factor_timeslice,
         ]);
 
         $validator->validateAttribute($this, 'code');
+
+        // Consumed now, whether or not the login goes through
+        if (!$this->hasErrors('code')) {
+            $this->user->updateAttributes(['two_factor_timeslice' => $validator->timeslice]);
+        }
     }
 
     private function addInvalidCodeError(): void

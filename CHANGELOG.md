@@ -2,6 +2,7 @@
 
 - Added `UrlManager::isHostInfoConfigured()`
 - Added `Web\User::revokeOtherSessions()`, which enabling two-factor authentication calls too
+- Added `user.two_factor_timeslice` and `TwoFactorAuthenticationValidator::$timeslice`, the replay marker of a TOTP code
 
 ## 3.17.0 (October 14, 2026)
 

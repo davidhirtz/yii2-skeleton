@@ -6,8 +6,11 @@ namespace Hirtz\Skeleton\Tests\Models\Forms;
 
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Validators\TwoFactorAuthenticationValidator;
+use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
+use RobThree\Auth\TwoFactorAuth;
 use Yii;
 
 class LoginFormTest extends TestCase
@@ -83,5 +86,37 @@ class LoginFormTest extends TestCase
 
         static::assertTrue($form->validate(), 'Model should login user');
         static::assertEmpty($form->getErrors(), 'Error messages should not be set');
+    }
+
+    /**
+     * A code may match the slice after the current one, which a later login time does not reach yet.
+     */
+    public function testACodeOfTheNextTimesliceCannotBeReplayed(): void
+    {
+        $time = 1_609_455_600;
+        $user = User::findOne(['email' => 'f2a@domain.com']);
+        self::assertNotNull($user);
+
+        $auth = new TwoFactorAuth(new BaconQrCodeProvider());
+        $code = $auth->getCode((string)$user->getTwoFactorAuthenticationSecret(), $time + 30);
+
+        $results = [];
+
+        foreach ([$time, $time + 45, $time + 89] as $currentTime) {
+            Yii::$container->set(TwoFactorAuthenticationValidator::class, [
+                'currentTime' => $currentTime,
+            ]);
+
+            $form = Yii::$container->get(LoginForm::class, [], [
+                'email' => 'f2a@domain.com',
+                'password' => 'password',
+                'code' => $code,
+            ]);
+
+            $results[] = $form->validate();
+        }
+
+        self::assertSame([true, false, false], $results);
+        self::assertSame((int)floor(($time + 30) / 30), User::findOne($user->id)?->two_factor_timeslice);
     }
 }

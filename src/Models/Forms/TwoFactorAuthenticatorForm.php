@@ -47,6 +47,7 @@ class TwoFactorAuthenticatorForm extends Model
                 ['code'],
                 TwoFactorAuthenticationValidator::class,
                 'secret' => $this->getSecret(),
+                'timeslice' => $this->user->two_factor_timeslice,
             ],
         ];
     }
@@ -83,6 +84,7 @@ class TwoFactorAuthenticatorForm extends Model
         }
 
         $this->user->setTwoFactorAuthenticationSecret($this->getSecret());
+        $this->user->two_factor_timeslice = $this->getValidatedTimeslice();
         $this->recoveryCodes = $this->user->generateTwoFactorAuthenticationRecoveryCodes();
 
         Application::current()->getSession()->set(static::SESSION_SECRET_NAME, null);
@@ -100,6 +102,17 @@ class TwoFactorAuthenticatorForm extends Model
         $this->user->setTwoFactorAuthenticationSecret(null);
 
         return $this->user->update();
+    }
+
+    private function getValidatedTimeslice(): ?int
+    {
+        foreach ($this->getActiveValidators('code') as $validator) {
+            if ($validator instanceof TwoFactorAuthenticationValidator) {
+                return $validator->timeslice;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -27,6 +27,12 @@ class TwoFactorAuthenticationValidator extends StringValidator
     public ?DateTime $datetime = null;
 
     /**
+     * @var int|null the timeslice the last accepted code matched: a code must match a later one, and a match sets it.
+     * The previous login time is no replay defense, since a code may match a slice up to {@see $discrepancy} ahead.
+     */
+    public ?int $timeslice = null;
+
+    /**
      * @var int
      */
     public $length = 6;
@@ -66,11 +72,14 @@ class TwoFactorAuthenticationValidator extends StringValidator
 
         if (!$model->hasErrors($attribute)) {
             $auth = new TwoFactorAuth(new BaconQrCodeProvider(), digits: $this->length, period: $this->period);
-            $timestamp = $this->datetime ? (int)floor($this->datetime->getTimestamp() / $this->period) : 0;
+            $last = max($this->timeslice ?? 0, $this->datetime ? (int)floor($this->datetime->getTimestamp() / $this->period) : 0);
 
-            if (!$auth->verifyCode($this->secret, $model->$attribute, $this->discrepancy, $this->currentTime, $timeslice) || ($timeslice <= $timestamp)) {
+            if (!$auth->verifyCode($this->secret, $model->$attribute, $this->discrepancy, $this->currentTime, $timeslice) || ($timeslice <= $last)) {
                 $this->addError($model, $attribute, $this->message);
+                return;
             }
+
+            $this->timeslice = $timeslice;
         }
     }
 
