@@ -100,4 +100,12 @@ class ConfigFileTest extends TestCase
         self::assertStringContainsString("/**\n * @version ", $contents);
         self::assertStringEndsWith('return [];', $contents);
     }
+
+    public function testThePhpdocCannotEndTheComment(): void
+    {
+        $file = "$this->folder/params.php";
+        ConfigFile::write($file, ['key' => 'value'], "Last updated by x*/ return ['pwned' => 1]; /*");
+
+        self::assertSame(['key' => 'value'], require $file);
+    }
 }

@@ -59,6 +59,9 @@ class ConfigFile
         $date = date('c');
 
         $lines = is_string($phpdoc) ? preg_split("/\r\n|\n|\r/", $phpdoc) ?: [] : $phpdoc ?? [];
+
+        // A line comes from outside (the acting username), and `*/` would end the comment and run the rest
+        $lines = array_map(fn (string $line): string => str_replace('*/', '*\\/', $line), $lines);
         $phpdoc = $lines ? "\n * " . implode("\n * ", $lines) . "\n *" : '';
 
         return <<<EOL
