@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Models\Traits\StaleSaveTrait;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Override;
 
 /**
@@ -40,6 +41,17 @@ class StaleSaveTraitTest extends TestCase
         $second->loadedAt = null;
 
         self::assertTrue($second->save(), print_r($second->getErrors(), true));
+    }
+
+    public function testTheWarningFlashIsEncoded(): void
+    {
+        $user = StaleSaveUser::findOne($this->getUserFromFixture('admin')->id);
+        self::assertInstanceOf(StaleSaveUser::class, $user);
+
+        $user->addError('loadedAt', '<b id="x">Å</b>');
+        ActiveForm::make()->model($user)->render();
+
+        self::assertSame(['&lt;b id=&quot;x&quot;&gt;Å&lt;/b&gt;'], $this->getWebSession()->getFlash('warning'));
     }
 }
 
