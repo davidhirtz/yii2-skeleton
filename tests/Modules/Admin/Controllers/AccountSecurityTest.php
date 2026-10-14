@@ -43,6 +43,39 @@ class AccountSecurityTest extends TestCase
         self::assertCount(User::RECOVERY_CODE_COUNT, $codes);
     }
 
+    public function testEnablingTheAuthenticatorRotatesTheAuthKey(): void
+    {
+        $user = $this->login('owner');
+        $authKey = $user->auth_key;
+        $secret = TwoFactorAuthenticatorForm::create(['user' => $user])->getSecret();
+
+        $this->post('admin/account/enable-authenticator', [
+            'GoogleAuthenticator' => ['code' => $this->getCode($secret)],
+        ]);
+
+        // An auto login cookie from a password-only login carries the old key
+        $user = User::findOne($user->id);
+        self::assertNotNull($user);
+        self::assertNotSame($authKey, $user->auth_key);
+
+        // This browser stays logged in
+        $webuser = $this->getWebUser();
+        self::assertSame($user->auth_key, $this->getWebSession()->get($webuser->authKeyParam));
+        self::assertNotNull($this->getWebResponse()->getCookies()->get($webuser->deviceCookie['name']));
+    }
+
+    public function testDisablingAnotherUsersAuthenticatorRotatesTheirAuthKey(): void
+    {
+        $this->login('owner');
+        $admin = $this->getUserFromFixture('admin');
+        $authKey = $admin->auth_key;
+
+        $this->post('admin/user/disable-authenticator', [], ['id' => $admin->id]);
+
+        self::assertNotSame($authKey, User::findOne($admin->id)?->auth_key);
+        self::assertNotSame($authKey, $this->getWebSession()->get($this->getWebUser()->authKeyParam));
+    }
+
     public function testTheAuthenticatorIsNotEnabledWithAWrongCode(): void
     {
         $user = $this->login('owner');
@@ -126,7 +159,9 @@ class AccountSecurityTest extends TestCase
         self::assertNotEmpty($this->getWebSession()->getFlash('success'));
 
         // A new auth key, or the other browsers' auto login cookies would log them straight back in
-        self::assertNotSame($authKey, User::findOne($user->id)?->auth_key);
+        $newAuthKey = User::findOne($user->id)?->auth_key;
+        self::assertNotSame($authKey, $newAuthKey);
+        self::assertSame($newAuthKey, $this->getWebSession()->get($this->getWebUser()->authKeyParam));
         self::assertNotNull($this->getWebResponse()->getCookies()->get($this->getWebUser()->deviceCookie['name']));
     }
 

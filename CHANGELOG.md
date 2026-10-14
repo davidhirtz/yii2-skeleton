@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Added `UrlManager::isHostInfoConfigured()`
+- Added `Web\User::revokeOtherSessions()`, which enabling two-factor authentication calls too
 
 ## 3.17.0 (October 14, 2026)
 

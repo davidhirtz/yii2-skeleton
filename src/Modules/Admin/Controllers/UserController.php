@@ -145,7 +145,7 @@ class UserController extends Controller
 
         if ($user->update()) {
             // A session opened behind the second factor must not outlive it.
-            $this->webuser->destroyOtherSessions($user);
+            $this->webuser->revokeOtherSessions($user);
             $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED'));
         }
 

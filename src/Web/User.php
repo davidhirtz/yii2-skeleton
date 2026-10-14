@@ -337,6 +337,11 @@ class User extends \yii\web\User
 
         if ($identity) {
             $this->sendDeviceCookie($identity);
+
+            // The session holds the key it was opened with, which no longer validates on the next request.
+            if ($this->enableSession) {
+                Application::current()->getSession()->set($this->authKeyParam, $identity->getAuthKey());
+            }
         }
 
         $value = Application::current()->getRequest()->getCookies()->getValue($this->identityCookie['name']);
@@ -626,6 +631,34 @@ class User extends \yii\web\User
             $user->id,
             $session->getIsActive() ? $session->getId() : null
         );
+    }
+
+    /**
+     * Rotates the auth key, which ends the auto login and device cookies of every other browser, and destroys the
+     * user's other sessions.
+     *
+     * @return int the number of sessions destroyed
+     */
+    public function revokeOtherSessions(?\Hirtz\Skeleton\Models\User $user = null): int
+    {
+        $user ??= $this->getIdentity();
+
+        if (!$user) {
+            return 0;
+        }
+
+        $user->generateAuthKey();
+        $user->updateAttributes(['auth_key' => $user->auth_key]);
+
+        $count = $this->destroyOtherSessions($user);
+        $identity = $this->getIdentity(false);
+
+        if ($identity?->id === $user->id) {
+            $identity->auth_key = $user->auth_key;
+            $this->resendIdentityCookie();
+        }
+
+        return $count;
     }
 
     /**
