@@ -49,6 +49,7 @@
 
 .form-content {
   display: grid;
+  align-content: start;
   gap: .5rem;
 
   @include media-breakpoint-up(sm) {
