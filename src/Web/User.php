@@ -140,6 +140,11 @@ class User extends \yii\web\User
     private array $permissionNames = [];
 
     /**
+     * @var array<int|string, list<string>> the role names already looked up in this request
+     */
+    private array $roleNames = [];
+
+    /**
      * @var array<int|string, array<int|string, bool>> by actor, then target: what {@see canManageUser()} answered
      */
     private array $manageableUsers = [];
@@ -425,7 +430,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * Guards the site owner, and anyone whose permissions the acting user does not already hold: managing a user
+     * Guards the site owner, and anyone whose permissions or roles the acting user does not already hold: managing a user
      * means setting a password, generating a reset token and clearing a second factor, so without this it is a
      * takeover of every account it reaches — including the ones that can grant permissions.
      */
@@ -446,10 +451,18 @@ class User extends \yii\web\User
             return false;
         }
 
+        // A guard naming a role grants what no permission shows; an administrator passes every guard another role does
+        $roles = $this->getRoleNames($id);
+
+        if (!in_array(\Hirtz\Skeleton\Models\User::AUTH_ROLE_ADMIN, $roles, true)
+            && array_diff($this->getRoleNames($user->id), $roles)) {
+            return false;
+        }
+
         $held = $this->getPermissionNames($id);
         $this->permissionCount ??= count(Yii::$app->getAuthManager()->getPermissions());
 
-        // Nobody holds more than everything, so the usual case — an administrator — costs no lookup at all
+        // Nobody holds more than everything, so the usual case — an administrator — costs no permission lookup
         if (count($held) >= $this->permissionCount) {
             return true;
         }
@@ -465,6 +478,14 @@ class User extends \yii\web\User
         return $this->permissionNames[$userId] ??= array_keys(
             Yii::$app->getAuthManager()->getPermissionsByUser($userId)
         );
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getRoleNames(int|string $userId): array
+    {
+        return $this->roleNames[$userId] ??= array_keys(Yii::$app->getAuthManager()->getRolesByUser($userId));
     }
 
     public function isLoginAttemptLimitReached(?string $email = null): bool

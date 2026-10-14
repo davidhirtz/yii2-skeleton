@@ -77,6 +77,37 @@ class UserCanTest extends TestCase
         self::assertFalse($this->getWebUser()->can(User::AUTH_USER, ['user' => $other]));
     }
 
+    public function testTheManagerRolesPermissionsDoNotManageAManager(): void
+    {
+        $actor = $this->getUserFromFixture('disabled');
+        $manager = $this->getUserFromFixture('admin');
+
+        $auth = Yii::$app->getAuthManager();
+
+        foreach ($auth->getPermissionsByRole(User::AUTH_ROLE_MANAGER) as $permission) {
+            $auth->assign($permission, $actor->id);
+        }
+
+        $this->assignManagerRole($manager->id);
+        $this->loginAs($actor);
+
+        self::assertFalse($this->getWebUser()->can(User::AUTH_ROLE_MANAGER));
+        self::assertFalse($this->getWebUser()->canManageUser($manager));
+    }
+
+    public function testAnAdminCanManageAManager(): void
+    {
+        $admin = $this->getUserFromFixture('owner');
+        $manager = $this->getUserFromFixture('admin');
+
+        $admin->updateAttributes(['is_owner' => false]);
+        $this->assignAdminRole($admin->id);
+        $this->assignManagerRole($manager->id);
+        $this->loginAs($admin);
+
+        self::assertTrue($this->getWebUser()->canManageUser($manager));
+    }
+
     private function loginAs(User $user): void
     {
         $this->getWebUser()->disableRbacForOwner = false;
