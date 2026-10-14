@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added `Registry\Report::$hostname`
+
 ## 3.16.1 (October 11, 2026)
 
 - Added `ConsentManager::$debug`; logged-in users get the debug warnings too

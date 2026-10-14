@@ -85,6 +85,12 @@ class ReportTest extends TestCase
         self::assertSame('https://www.configured.com', Report::create()->toArray()['url']);
     }
 
+    public function testTheHostnameOptionReplacesTheMachinesName(): void
+    {
+        self::assertSame(gethostname() ?: null, Report::create()->toArray()['hostname']);
+        self::assertSame('strato', Report::create(['hostname' => 'strato'])->toArray()['hostname']);
+    }
+
     public function testTheMailerIsReportedWithoutItsCredentials(): void
     {
         self::assertSame('null://null', Report::create()->toArray()['mailer']);
