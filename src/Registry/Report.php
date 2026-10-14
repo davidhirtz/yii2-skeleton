@@ -26,8 +26,8 @@ class Report implements JsonSerializable
     public ?string $url = null;
 
     /**
-     * @var string|null the name reported instead of `gethostname()`, for a host whose shell sessions land on changing
-     * nodes of one shared file system
+     * @var string|null the name reported instead of `params.registryHostname` or `gethostname()`, for a host whose
+     * shell sessions land on changing nodes of one shared file system
      */
     public ?string $hostname = null;
 
@@ -57,7 +57,7 @@ class Report implements JsonSerializable
             'version' => VersionHelper::getApplicationVersion(),
             'reference' => VersionHelper::getApplicationReference(),
             'deployed_at' => VersionHelper::getApplicationUpdatedAt(),
-            'hostname' => $this->hostname ?? (gethostname() ?: null),
+            'hostname' => $this->getHostname(),
             'base_path' => Yii::$app->getBasePath(),
             'url' => $this->getUrl(),
             'php' => PHP_VERSION,
@@ -79,6 +79,16 @@ class Report implements JsonSerializable
         }
 
         return $report;
+    }
+
+    protected function getHostname(): ?string
+    {
+        if ($this->hostname !== null) {
+            return $this->hostname;
+        }
+
+        $hostname = Yii::$app->params['registryHostname'] ?? null;
+        return is_string($hostname) && $hostname !== '' ? $hostname : (gethostname() ?: null);
     }
 
     /**

@@ -85,10 +85,13 @@ class ReportTest extends TestCase
         self::assertSame('https://www.configured.com', Report::create()->toArray()['url']);
     }
 
-    public function testTheHostnameOptionReplacesTheMachinesName(): void
+    public function testTheHostnameOptionAndParamReplaceTheMachinesName(): void
     {
         self::assertSame(gethostname() ?: null, Report::create()->toArray()['hostname']);
-        self::assertSame('strato', Report::create(['hostname' => 'strato'])->toArray()['hostname']);
+
+        Yii::$app->params['registryHostname'] = 'strato';
+        self::assertSame('strato', Report::create()->toArray()['hostname']);
+        self::assertSame('option', Report::create(['hostname' => 'option'])->toArray()['hostname']);
     }
 
     public function testTheMailerIsReportedWithoutItsCredentials(): void

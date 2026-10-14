@@ -1,6 +1,6 @@
 ## Unreleased
 
-- Added `Registry\Report::$hostname`
+- Added `Registry\Report::$hostname` and `params.registryHostname`
 
 ## 3.16.1 (October 11, 2026)
 

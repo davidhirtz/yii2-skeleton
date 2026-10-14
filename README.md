@@ -75,6 +75,7 @@ answer `null` there instead.
 | `sentryDsn` | none | adds `Log\SentryTarget` under `components.log.targets.sentry` |
 | `twoFactorAuthenticationIssuer` | the application name | shown in the authenticator app |
 | `registryUrl`, `registryKey` | none | where `./yii registry/push` reports the installation |
+| `registryHostname` | `gethostname()` | the host name reported to the registry, pinned where shell sessions land on changing nodes of one shared file system |
 
 `modules.admin` (`Modules\Admin\Module`):
 
