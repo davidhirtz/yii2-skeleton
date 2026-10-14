@@ -90,11 +90,16 @@ class Request extends \yii\web\Request
 
     public function isAllowedHost(): bool
     {
+        $host = $this->getHostName();
+
+        // `parse_url()` keeps a backslash in the host, which a browser reads as the end of it (#487).
+        if ($host !== null && !$this->isValidHostName($host)) {
+            return false;
+        }
+
         if (!$this->allowedHosts || $this->getEnvironment() === self::ENVIRONMENT_LOCAL) {
             return true;
         }
-
-        $host = $this->getHostName();
 
         if ($host !== null) {
             foreach ($this->allowedHosts as $pattern) {
@@ -105,6 +110,12 @@ class Request extends \yii\web\Request
         }
 
         return false;
+    }
+
+    protected function isValidHostName(string $host): bool
+    {
+        return filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) !== false
+            || filter_var(trim($host, '[]'), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
     }
 
     /**

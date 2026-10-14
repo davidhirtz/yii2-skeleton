@@ -22,6 +22,31 @@ class AllowedHostsTest extends TestCase
         self::assertTrue($this->getRequest('https://www.attacker.com')->isAllowedHost());
     }
 
+    #[DataProvider('invalidHostDataProvider')]
+    public function testAMalformedHostIsRefusedWhateverTheList(string $hostInfo): void
+    {
+        self::assertFalse($this->getRequest($hostInfo)->isAllowedHost());
+        self::assertFalse($this->getRequest($hostInfo, ['*.example.org'])->isAllowedHost());
+    }
+
+    /**
+     * @return list<array{string}>
+     */
+    public static function invalidHostDataProvider(): array
+    {
+        return [
+            ['https://evil.com\\.localhost'],
+            ['https://evil.com\\.example.org'],
+            ['https://www.example.org%2f'],
+        ];
+    }
+
+    public function testAnIpAddressIsAValidHost(): void
+    {
+        self::assertTrue($this->getRequest('http://127.0.0.1')->isAllowedHost());
+        self::assertTrue($this->getRequest('http://[::1]:8080')->isAllowedHost());
+    }
+
     #[DataProvider('hostDataProvider')]
     public function testTheHostIsMatchedAgainstTheList(string $host, bool $allowed): void
     {
