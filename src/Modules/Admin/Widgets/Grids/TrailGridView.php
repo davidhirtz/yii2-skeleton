@@ -210,7 +210,7 @@ class TrailGridView extends GridView
 
         if (is_array($value)) {
             return array_is_list($value)
-                ? Ul::make()->items(...array_map(strval(...), $value))
+                ? Ul::make()->items(...array_map(fn (mixed $item): string => Html::encode(strval($item)), $value))
                 : $this->getTrailValuesTable($value);
         }
 

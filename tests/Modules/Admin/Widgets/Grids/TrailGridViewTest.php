@@ -187,6 +187,13 @@ class TrailGridViewTest extends TestCase
         self::assertStringContainsString('<li>One</li>', $content);
     }
 
+    public function testAListEscapesItsItems(): void
+    {
+        $content = (string)TestTrailGridView::make()->createdAttributeContent(['<b id="x">Å</b>']);
+
+        self::assertStringContainsString('<li>&lt;b id=&quot;x&quot;&gt;Å&lt;/b&gt;</li>', $content);
+    }
+
     public function testAStructuredValueIsUpdatedAsAttributeOldAndNewColumns(): void
     {
         $content = (string)TestTrailGridView::make()->updatedAttributeContent(
