@@ -383,6 +383,7 @@ class AccountController extends Controller
     {
         $form = TwoFactorAuthenticatorForm::create([
             'user' => $this->webuser->getIdentity(),
+            'config' => ['scenario' => TwoFactorAuthenticatorForm::SCENARIO_ENABLE],
         ]);
 
         if ($form->load($this->request->post())) {

@@ -28,7 +28,7 @@ class AccountSecurityTest extends TestCase
         $secret = TwoFactorAuthenticatorForm::create(['user' => $user])->getSecret();
 
         $this->post('admin/account/enable-authenticator', [
-            'GoogleAuthenticator' => ['code' => $this->getCode($secret)],
+            'GoogleAuthenticator' => ['code' => $this->getCode($secret), 'password' => 'password'],
         ]);
 
         $user = User::findOne($user->id);
@@ -50,7 +50,7 @@ class AccountSecurityTest extends TestCase
         $secret = TwoFactorAuthenticatorForm::create(['user' => $user])->getSecret();
 
         $this->post('admin/account/enable-authenticator', [
-            'GoogleAuthenticator' => ['code' => $this->getCode($secret)],
+            'GoogleAuthenticator' => ['code' => $this->getCode($secret), 'password' => 'password'],
         ]);
 
         // An auto login cookie from a password-only login carries the old key
@@ -74,6 +74,30 @@ class AccountSecurityTest extends TestCase
 
         self::assertNotSame($authKey, User::findOne($admin->id)?->auth_key);
         self::assertNotSame($authKey, $this->getWebSession()->get($this->getWebUser()->authKeyParam));
+    }
+
+    public function testTheAuthenticatorIsNotEnabledWithoutTheCurrentPassword(): void
+    {
+        $user = $this->login('owner');
+        $secret = TwoFactorAuthenticatorForm::create(['user' => $user])->getSecret();
+
+        foreach ([null, 'wrong'] as $password) {
+            $this->post('admin/account/enable-authenticator', [
+                'GoogleAuthenticator' => ['code' => $this->getCode($secret), 'password' => $password],
+            ]);
+
+            self::assertFalse(User::findOne($user->id)?->hasTwoFactorAuthentication());
+            self::assertNotEmpty($this->getWebSession()->getFlash('danger'));
+        }
+    }
+
+    public function testTheEnableFormAsksForTheCurrentPassword(): void
+    {
+        $this->login('owner');
+        $html = (string)Yii::$app->runAction('admin/account/security');
+
+        self::assertStringContainsString('name="GoogleAuthenticator[password]"', $html);
+        self::assertStringContainsString('type="password"', $html);
     }
 
     public function testTheAuthenticatorIsNotEnabledWithAWrongCode(): void

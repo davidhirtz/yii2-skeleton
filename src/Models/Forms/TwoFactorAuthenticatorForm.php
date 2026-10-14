@@ -19,8 +19,15 @@ class TwoFactorAuthenticatorForm extends Model
     use ModelTrait;
 
     final public const string SESSION_SECRET_NAME = 'two_factor_secret';
+    final public const string SCENARIO_ENABLE = 'enable';
 
     public ?string $code = null;
+
+    /**
+     * @var string|null the current password, asked for on enabling: a stolen session alone must not enrol its own
+     * authenticator and lock the owner out.
+     */
+    public ?string $password = null;
 
     /**
      * @var list<string> the recovery codes in the clear, populated by a successful {@see static::save()} and the
@@ -49,6 +56,18 @@ class TwoFactorAuthenticatorForm extends Model
                 'secret' => $this->getSecret(),
                 'timeslice' => $this->user->two_factor_timeslice,
             ],
+            [
+                ['password'],
+                'required',
+                'when' => fn (self $model): bool => $model->isPasswordRequired(),
+                'on' => self::SCENARIO_ENABLE,
+            ],
+            [
+                ['password'],
+                $this->validatePassword(...),
+                'when' => fn (self $model): bool => $model->isPasswordRequired(),
+                'on' => self::SCENARIO_ENABLE,
+            ],
         ];
     }
 
@@ -70,7 +89,7 @@ class TwoFactorAuthenticatorForm extends Model
     #[Override]
     public function afterValidate(): void
     {
-        if ($this->hasErrors('code') && (string)$this->code !== '') {
+        if (($this->hasErrors('code') && (string)$this->code !== '') || $this->hasErrors('password')) {
             Application::current()->getUser()->addFailedLoginAttempt($this->user->email);
         }
 
@@ -127,6 +146,18 @@ class TwoFactorAuthenticatorForm extends Model
             || $this->validate();
     }
 
+    public function isPasswordRequired(): bool
+    {
+        return (bool)$this->user->password_hash;
+    }
+
+    protected function validatePassword(): void
+    {
+        if (!$this->user->validatePassword((string)$this->password)) {
+            $this->addInvalidAttributeError('password');
+        }
+    }
+
     public function getSecret(): string
     {
         $this->secret ??= $this->user->getTwoFactorAuthenticationSecret() ?: Application::current()->getSession()->get(static::SESSION_SECRET_NAME);
@@ -179,6 +210,7 @@ class TwoFactorAuthenticatorForm extends Model
     {
         return [
             'code' => Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_CODE_LABEL'),
+            'password' => Yii::t('skeleton', 'ACCOUNT_UPDATE_OLDPASSWORD_LABEL'),
         ];
     }
 }

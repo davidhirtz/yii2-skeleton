@@ -31,11 +31,16 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     #[Override]
     protected function configure(): void
     {
+        $enabled = $this->model->hasTwoFactorAuthentication();
+
         $this->authenticator = TwoFactorAuthenticatorForm::create([
             'user' => $this->model,
+            'config' => [
+                'scenario' => $enabled
+                    ? TwoFactorAuthenticatorForm::SCENARIO_DEFAULT
+                    : TwoFactorAuthenticatorForm::SCENARIO_ENABLE,
+            ],
         ]);
-
-        $enabled = $this->model->hasTwoFactorAuthentication();
 
         $this->action ??= $enabled ? ['account/disable-authenticator'] : ['account/enable-authenticator'];
         $this->submitButtonText ??= $enabled ? Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_DISABLE') : Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ENABLE');
@@ -81,7 +86,20 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
             FormRow::make()
                 ->content($this->getQrCodeImage()),
             $this->getInputField(),
+            $this->getPasswordField(),
         ];
+    }
+
+    protected function getPasswordField(): string|Stringable
+    {
+        if (!$this->authenticator->isPasswordRequired()) {
+            return '';
+        }
+
+        return InputField::make()
+            ->model($this->authenticator)
+            ->property('password')
+            ->type('password');
     }
 
     protected function getInputField(): Stringable
