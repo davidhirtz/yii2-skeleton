@@ -74,7 +74,7 @@ class RedirectController extends Controller
 
         if ($redirect->load($this->request->post()) && $redirect->insert()) {
             $this->success(Yii::t('skeleton', 'REDIRECT_SUCCESS_CREATED'));
-            return $this->redirect([...$this->request->get(), 'index']);
+            return $this->redirect(['index', ...$this->request->get()]);
         }
 
         return $this->render('create', [
