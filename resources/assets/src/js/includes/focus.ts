@@ -4,16 +4,27 @@
  *
  * - after a save the form rejected, the first field it rejected;
  * - after a form reload (a type change), the control that caused it, found again by its id;
- * - after a navigation, which swaps `#wrap`, the page's heading.
+ * - after a save that redirected back to the page it was made on, the field that had the focus, or nothing;
+ * - after a navigation, which swaps `#wrap`, nothing.
  *
  * The swap replaced the target, so the page is asked rather than the element the request was issued from.
  */
 let focusedId: string | null = null;
+let focusedUrl: string | null = null;
+
+// The redirect of a save lists its query parameters in its own order.
+const normalizeUrl = (href: string): string => {
+    const url = new URL(href, document.baseURI);
+    url.searchParams.sort();
+
+    return url.pathname + url.search;
+};
 
 export const rememberFocus = (): void => {
     focusedId = document.activeElement instanceof HTMLElement && document.activeElement !== document.body
         ? document.activeElement.id || null
         : null;
+    focusedUrl = normalizeUrl(location.href);
 };
 
 export const focusFirstInvalid = (method?: string): boolean => {
@@ -44,14 +55,14 @@ export const restoreFocus = (ctx?: SwapContext): void => {
         return;
     }
 
+    // A save's redirect is a GET of its own (`HX-Location`), issued while the focus is still in the form, and htmx
+    // has pushed its URL by now: landing on the same URL is the page answering, not a navigation.
+    if (focusedUrl === normalizeUrl(location.href)) {
+        $previous?.focus({preventScroll: true});
+        return;
+    }
+
     if (ctx.target?.id === 'wrap' || ctx.target === document.body) {
-        const $heading = document.querySelector<HTMLElement>('#wrap h1');
-
-        if ($heading) {
-            $heading.tabIndex = -1;
-            $heading.focus({preventScroll: true});
-        }
-
         return;
     }
 

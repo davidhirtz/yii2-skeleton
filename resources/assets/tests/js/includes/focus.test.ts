@@ -6,6 +6,7 @@ const page = '<div id="wrap"><h1>Entries</h1><select id="entry-type"></select><i
 
 describe('focus', () => {
     beforeEach(() => {
+        history.replaceState(null, '', '/admin/entry/update?id=1&type=1');
         document.body.innerHTML = page.replace(' aria-invalid="true"', '');
     });
 
@@ -33,14 +34,37 @@ describe('focus', () => {
         expect(document.activeElement?.id).toBe('entry-type');
     });
 
-    it('focuses the heading after a navigation', () => {
+    it('returns to the field after a save redirected back to the page', () => {
         document.getElementById('name')!.focus();
+        rememberFocus();
+
+        history.pushState(null, '', '/admin/entry/update?type=1&id=1');
+        document.body.innerHTML = page.replace(' aria-invalid="true"', '');
+        restoreFocus({target: document.getElementById('wrap'), request: {method: 'GET', headers: {}}});
+
+        expect(document.activeElement?.id).toBe('name');
+    });
+
+    it('focuses nothing after a save redirected back to the page from a control without an id', () => {
+        document.getElementById('wrap')!.insertAdjacentHTML('beforeend', '<button>Save</button>');
+        document.querySelector('button')!.focus();
         rememberFocus();
 
         document.body.innerHTML = page.replace(' aria-invalid="true"', '');
         restoreFocus({target: document.getElementById('wrap'), request: {method: 'GET', headers: {}}});
 
-        expect(document.activeElement?.tagName).toBe('H1');
+        expect(document.activeElement).toBe(document.body);
+    });
+
+    it('focuses nothing after a navigation', () => {
+        document.getElementById('name')!.focus();
+        rememberFocus();
+
+        history.pushState(null, '', '/admin/entry/index');
+        document.body.innerHTML = page.replace(' aria-invalid="true"', '');
+        restoreFocus({target: document.getElementById('wrap'), request: {method: 'GET', headers: {}}});
+
+        expect(document.activeElement).toBe(document.body);
     });
 
     it('keeps the control after a narrower swap', () => {
