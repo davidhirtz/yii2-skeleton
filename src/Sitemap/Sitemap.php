@@ -100,10 +100,19 @@ class Sitemap extends Component
      */
     public function getVariations(): array
     {
-        return array_values(array_map(strval(...), array_filter(
+        $variations = array_values(array_map(strval(...), array_filter(
             (array)$this->variations,
             fn (mixed $variation): bool => $variation !== null && $variation !== '',
         )));
+
+        $manager = Yii::$app->getUrlManager();
+
+        // Built on a host the request claimed, every URL names that host.
+        if ($manager->isHostInfoFromRequest()) {
+            $variations[] = (string)$manager->getHostInfo();
+        }
+
+        return $variations;
     }
 
     /**

@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Filters;
 
 use Hirtz\Skeleton\Filters\PageCache;
+use Hirtz\Skeleton\Sitemap\Sitemap;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Hirtz\Skeleton\Web\Request;
+use Hirtz\Skeleton\Web\UrlManager;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\caching\TagDependency;
@@ -124,11 +127,53 @@ class PageCacheTest extends TestCase
         ]);
     }
 
+    public function testAHostTakenFromTheRequestVariesTheKeyAndTheSitemap(): void
+    {
+        // The tenant bundle points the container at its own subclass, which pins the host of the tenant it resolves.
+        Yii::$container->clear(UrlManager::class);
+        Yii::$app->set('urlManager', ['class' => UrlManager::class]);
+
+        $keys = [];
+        $variations = [];
+
+        foreach (['https://www.example.com', 'https://evil.localhost'] as $hostInfo) {
+            Yii::$app->set('request', ['class' => Request::class, 'hostInfo' => $hostInfo, 'url' => '/']);
+            Yii::$app->getUrlManager()->parseRequest($this->getWebRequest());
+
+            $keys[] = new TestPageCache()->getCacheKey();
+            $variations[] = new Sitemap()->getVariations();
+        }
+
+        self::assertContains('https://evil.localhost', $keys[1]);
+        self::assertNotSame($keys[0], $keys[1]);
+        self::assertSame([['https://www.example.com'], ['https://evil.localhost']], $variations);
+    }
+
+    public function testAConfiguredHostDoesNotVaryTheKey(): void
+    {
+        Yii::$container->clear(UrlManager::class);
+        Yii::$app->set('urlManager', ['class' => UrlManager::class, 'hostInfo' => 'https://www.example.com']);
+        Yii::$app->getUrlManager()->parseRequest($this->getWebRequest());
+
+        self::assertNotContains('https://www.example.com', new TestPageCache()->getCacheKey());
+    }
+
     /**
      * @param array<string, mixed> $config
      */
     private function createPageCache(array $config = []): PageCache
     {
         return new PageCache($config);
+    }
+}
+
+class TestPageCache extends PageCache
+{
+    /**
+     * @return array<array-key, mixed>
+     */
+    public function getCacheKey(): array
+    {
+        return $this->calculateCacheKey();
     }
 }

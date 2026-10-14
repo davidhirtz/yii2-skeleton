@@ -96,4 +96,22 @@ class PageCache extends \yii\filters\PageCache
 
         parent::init();
     }
+
+    /**
+     * A page built on a host the request claimed links that host, so it is cached for that host alone.
+     *
+     * @return array<array-key, mixed>
+     */
+    #[Override]
+    protected function calculateCacheKey(): array
+    {
+        $key = parent::calculateCacheKey();
+        $manager = Yii::$app->getUrlManager();
+
+        if ($manager->isHostInfoFromRequest()) {
+            $key[] = $manager->getHostInfo();
+        }
+
+        return $key;
+    }
 }

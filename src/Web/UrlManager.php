@@ -183,6 +183,11 @@ class UrlManager extends \yii\web\UrlManager
         return $this->isHostInfoFromRequest;
     }
 
+    public function isHostInfoConfigured(): bool
+    {
+        return $this->configuredHostInfo !== null;
+    }
+
     /**
      * @param array<int|string, mixed>|string $params
      */
