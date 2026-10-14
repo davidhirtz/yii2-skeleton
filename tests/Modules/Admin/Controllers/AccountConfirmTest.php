@@ -52,6 +52,20 @@ class AccountConfirmTest extends TestCase
         self::assertTrue($this->getWebUser()->getIsGuest());
     }
 
+    public function testNobodyIsLoggedInWhileLoginIsDisabled(): void
+    {
+        $this->getWebUser()->enableLogin = false;
+        $user = $this->getUserFromFixture('owner');
+        $user->updateAttributes(['email_confirmed_at' => null]);
+
+        Yii::$app->runAction('admin/account/confirm', [
+            'code' => $user->createVerificationToken(),
+        ]);
+
+        self::assertFalse(User::findOne($user->id)->isUnconfirmed());
+        self::assertTrue($this->getWebUser()->getIsGuest());
+    }
+
     public function testADisabledUserIsNotLoggedIn(): void
     {
         $user = $this->getUserFromFixture('disabled');

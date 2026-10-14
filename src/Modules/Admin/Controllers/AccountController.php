@@ -194,6 +194,7 @@ class AccountController extends Controller
 
         if ($form->confirm()) {
             $canLogin = $this->webuser->getIsGuest()
+                && $this->webuser->isLoginEnabled()
                 && !$form->user->isDisabled()
                 && !$this->webuser->isTwoFactorAuthenticationRequired($form->user);
 

@@ -103,6 +103,7 @@ class PasswordResetForm extends Model
         $webuser->destroyOtherSessions($this->user);
 
         $canLogin = $webuser->getIsGuest()
+            && $webuser->isLoginEnabled()
             && !$webuser->isTwoFactorAuthenticationRequired($this->user)
             && (!$this->user->isUnconfirmed() || $webuser->isUnconfirmedEmailLoginEnabled());
 

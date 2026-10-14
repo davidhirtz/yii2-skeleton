@@ -41,6 +41,16 @@ class PasswordResetFormTest extends TestCase
         self::assertTrue($user->validatePassword('new-password'));
     }
 
+    public function testResetDoesNotLogInWhileLoginIsDisabled(): void
+    {
+        $this->getWebUser()->enableLogin = false;
+        $user = $this->getUserFromFixture('owner');
+
+        self::assertNotFalse($this->createForm($user)->reset());
+        self::assertTrue($this->getWebUser()->getIsGuest());
+        self::assertTrue(User::findOne($user->id)?->validatePassword('new-password'));
+    }
+
     public function testResetWithExpiredToken(): void
     {
         $user = $this->getUserFromFixture('owner');
