@@ -1,4 +1,4 @@
-## Unreleased
+## 3.18.0 (October 15, 2026)
 
 - Added `CustomAttribute::field()`, a closure configuring the attribute's form field
 - Changed the public options of `TinyMceField`, `ActiveForm`, `GridView`, `Panel`, `AdminButton` and the other widgets to protected properties with fluent setters
