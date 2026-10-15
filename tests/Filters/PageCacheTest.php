@@ -140,8 +140,8 @@ class PageCacheTest extends TestCase
             Yii::$app->set('request', ['class' => Request::class, 'hostInfo' => $hostInfo, 'url' => '/']);
             Yii::$app->getUrlManager()->parseRequest($this->getWebRequest());
 
-            $keys[] = new TestPageCache()->getCacheKey();
-            $variations[] = new Sitemap()->getVariations();
+            $keys[] = (new TestPageCache())->getCacheKey();
+            $variations[] = (new Sitemap())->getVariations();
         }
 
         self::assertContains('https://evil.localhost', $keys[1]);
@@ -155,7 +155,7 @@ class PageCacheTest extends TestCase
         Yii::$app->set('urlManager', ['class' => UrlManager::class, 'hostInfo' => 'https://www.example.com']);
         Yii::$app->getUrlManager()->parseRequest($this->getWebRequest());
 
-        self::assertNotContains('https://www.example.com', new TestPageCache()->getCacheKey());
+        self::assertNotContains('https://www.example.com', (new TestPageCache())->getCacheKey());
     }
 
     /**
