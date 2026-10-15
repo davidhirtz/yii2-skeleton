@@ -164,10 +164,10 @@ class User extends \yii\web\User
             $this->enableAutoLogin = false;
         }
 
-        $request = Application::current()->getRequest();
+        $request = Request::current();
 
-        $this->ipAddress ??= $request->getUserIP();
-        $this->identityCookie['secure'] ??= $this->cookieSecure ?? $request->getIsSecureConnection();
+        $this->ipAddress ??= $request?->getUserIP();
+        $this->identityCookie['secure'] ??= $this->cookieSecure ?? $request?->getIsSecureConnection() ?? true;
         $this->deviceCookie['secure'] ??= $this->identityCookie['secure'];
 
         parent::init();

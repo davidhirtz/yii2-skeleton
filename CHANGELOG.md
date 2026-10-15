@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `Console\Controllers\Traits\UserIdentityTrait`: a command's changes are attributed to `--user`, the owner by default
 - Fixed `TinyMceField` to load the correct editor language based on `sourceLanguage`
 - Added the application's `sensitiveParams`, which each bundle appends its secret params to
 - Changed `TrailBehavior` to store `MASKED_VALUE` for an attribute a `SensitiveAttributeValidator` validates
