@@ -14,7 +14,7 @@ class AsideMenu extends Widget
     /**
      * @var array<string, mixed>
      */
-    public array $attributes = [
+    protected array $attributes = [
         'class' => 'aside',
         'id' => 'aside',
     ];

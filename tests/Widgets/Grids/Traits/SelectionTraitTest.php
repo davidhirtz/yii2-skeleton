@@ -30,7 +30,7 @@ class SelectionTraitTest extends TestCase
     public function testASelectionTurnedOffRendersNeither(): void
     {
         $grid = $this->createGrid();
-        $grid->showSelection = false;
+        $grid->showSelection(false);
 
         $html = (string)$grid;
 

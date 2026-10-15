@@ -88,10 +88,10 @@ class GridSummary extends Widget
             $alert->warning();
         }
 
-        if ($this->grid->search->getValue()) {
+        if ($this->grid->getSearch()->getValue()) {
             $alert->button(Button::make()
                 ->class('btn-icon icon')
-                ->get($this->grid->search->getUrl())
+                ->get($this->grid->getSearch()->getUrl())
                 ->tooltip(Yii::t('skeleton', 'GRID_SUMMARY_CLEAR_SEARCH'))
                 ->icon('xmark'));
         }
@@ -120,7 +120,7 @@ class GridSummary extends Widget
 
         // The summary is markup, and the search is whatever the URL says: `?q=<img onerror=…>` ran in the admin.
         $params = [
-            'search' => Html::encode($this->grid->search->getValue()),
+            'search' => Html::encode($this->grid->getSearch()->getValue()),
             'totalCount' => $this->grid->getProvider()->getTotalCount(),
         ];
 
@@ -139,12 +139,12 @@ class GridSummary extends Widget
             return Yii::$app->getI18n()->format($this->message, $params, Yii::$app->language);
         }
 
-        if ($this->emptyMessage && !$count && !$this->grid->search->getValue()) {
+        if ($this->emptyMessage && !$count && !$this->grid->getSearch()->getValue()) {
             return Yii::$app->getI18n()->format($this->emptyMessage, $params, Yii::$app->language)
                 . $this->getEmptyLink();
         }
 
-        if ($this->grid->search->getValue()) {
+        if ($this->grid->getSearch()->getValue()) {
             return match ($count) {
                 1 => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ONLY', $params),
                 0 => Yii::t('skeleton', 'GRID_SUMMARY_NO_RESULTS_SEARCH', $params),

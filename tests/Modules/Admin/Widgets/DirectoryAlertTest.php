@@ -21,8 +21,7 @@ class DirectoryAlertTest extends TestCase
 
     public function testAMissingDirectoryIsReportedByItsResolvedPath(): void
     {
-        $alert = DirectoryAlert::make();
-        $alert->directories = ['@runtime', '@runtime/does-not-exist'];
+        $alert = DirectoryAlert::make()->directories(['@runtime', '@runtime/does-not-exist']);
 
         $html = $alert->render();
 
@@ -34,8 +33,7 @@ class DirectoryAlertTest extends TestCase
 
     public function testAnUnresolvableAliasIsReportedAsItself(): void
     {
-        $alert = DirectoryAlert::make();
-        $alert->directories = ['@nothing-defines-this'];
+        $alert = DirectoryAlert::make()->directories(['@runtime'])->addDirectories('@nothing-defines-this');
         $alert->render();
 
         self::assertSame(['@nothing-defines-this'], $alert->getUnwritable());
@@ -58,8 +56,7 @@ class DirectoryAlertTest extends TestCase
         self::assertTrue(mkdir($path, 0o555, true));
 
         try {
-            $alert = DirectoryAlert::make();
-            $alert->directories = [$path];
+            $alert = DirectoryAlert::make()->directories([$path]);
 
             self::assertStringContainsString('not writable', $alert->render());
             self::assertSame([$path], $alert->getUnwritable());

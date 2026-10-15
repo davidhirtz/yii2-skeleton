@@ -20,7 +20,7 @@ class CheckboxColumn extends Column
     /**
      * @var array<string, mixed>
      */
-    public array $checkboxAttributes = ['class' => 'input checkbox'];
+    protected array $checkboxAttributes = ['class' => 'input checkbox'];
     protected bool $multiple = true;
     protected string $param = 'selection';
 
@@ -32,6 +32,15 @@ class CheckboxColumn extends Column
         $this->headerAttributes = ['class' => 'grid-col-icon'];
 
         parent::__construct($config);
+    }
+
+    /**
+     * @param array<string, mixed> $checkboxAttributes
+     */
+    public function checkboxAttributes(array $checkboxAttributes): static
+    {
+        $this->checkboxAttributes = $checkboxAttributes;
+        return $this;
     }
 
     public function multiple(bool $multiple = true): static

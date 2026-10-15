@@ -26,13 +26,13 @@ class SignupActiveForm extends ActiveForm
 {
     use LoginActiveFormTrait;
 
-    public bool $warnOnLeave = false;
+    protected bool $warnOnLeave = false;
 
     /**
      * @var array<string, mixed>
      */
     protected array $attributes = ['class' => 'form-plain'];
-    public bool $hasStickyButtons = false;
+    protected bool $hasStickyButtons = false;
     protected string $layout = "{errors}{rows}{buttons}";
     /**
      * @var list<string>

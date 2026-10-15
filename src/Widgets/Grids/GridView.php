@@ -112,12 +112,7 @@ class GridView extends Widget
      */
     protected array|string|null $emptyLinkUrl = null;
 
-    /**
-     * @var bool whether the status icon cycles the record's status on a click. Public so a project can switch it off
-     * for one grid through the container, where it is too risky to offer — `[TenantGridView::class =>
-     * ['enableStatusUpdate' => false]]`. A grid still answers for its own pickers and permissions.
-     */
-    public bool $enableStatusUpdate = true;
+    protected bool $enableStatusUpdate = true;
 
     protected string $layout = '{header}{summary}{items}{pager}{footer}';
 
@@ -126,7 +121,7 @@ class GridView extends Widget
      */
     protected ?array $orderRoute = ['order'];
 
-    public GridSearch $search;
+    protected GridSearch $search;
 
     /**
      * @param array<string, mixed> $config
@@ -135,6 +130,27 @@ class GridView extends Widget
     {
         $this->search ??= GridSearch::make();
         parent::__construct($config);
+    }
+
+    /**
+     * Whether the status icon cycles the record's status on a click; a grid still answers for its own pickers and
+     * permissions.
+     */
+    public function enableStatusUpdate(bool $enableStatusUpdate = true): static
+    {
+        $this->enableStatusUpdate = $enableStatusUpdate;
+        return $this;
+    }
+
+    public function search(GridSearch $search): static
+    {
+        $this->search = $search;
+        return $this;
+    }
+
+    public function getSearch(): GridSearch
+    {
+        return $this->search;
     }
 
     /**

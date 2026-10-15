@@ -89,7 +89,7 @@ class GridSearchForm extends Widget
 
     protected function getForm(): ?Stringable
     {
-        $parts = explode('?', (string)$this->grid->search->getUrl(), 2);
+        $parts = explode('?', (string)$this->grid->getSearch()->getUrl(), 2);
 
         $form = Form::make()
             ->attributes([
@@ -144,10 +144,10 @@ class GridSearchForm extends Widget
             ->class('input')
             ->type('search')
             ->placeholder(Yii::t('skeleton', 'GRID_SEARCH_SEARCH'))
-            ->name($this->grid->search->getParamName())
-            ->value($this->grid->search->getValue());
+            ->name($this->grid->getSearch()->getParamName())
+            ->value($this->grid->getSearch()->getValue());
 
-        if ($this->grid->search->getValue()) {
+        if ($this->grid->getSearch()->getValue()) {
             $input->attribute('data-caret-end', true);
         }
 

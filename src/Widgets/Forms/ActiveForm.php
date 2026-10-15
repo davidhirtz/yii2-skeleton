@@ -47,19 +47,10 @@ class ActiveForm extends Widget
      */
     protected array|string|null $action = null;
 
-    public bool $hasStickyButtons = true;
+    protected bool $hasStickyButtons = true;
 
-    /**
-     * @var bool whether the language tabs render inside the form; a container placing them beside it
-     * ({@see FormContainer}) turns it off and asks {@see getTranslationTabs()} after the form rendered
-     */
-    public bool $inlineTranslationTabs = true;
-
-    /**
-     * @var bool whether leaving the page with unsaved changes asks first (`includes/unsaved.ts`); a sign-in form,
-     * whose input nobody minds losing, turns it off
-     */
-    public bool $warnOnLeave = true;
+    protected bool $inlineTranslationTabs = true;
+    protected bool $warnOnLeave = true;
 
     protected string $layout = "{errors}{rows}{buttons}{footer}";
 
@@ -93,6 +84,31 @@ class ActiveForm extends Widget
     protected ?array $fieldsets = null;
 
     private string $translationTabs = '';
+
+    public function hasStickyButtons(bool $hasStickyButtons = true): static
+    {
+        $this->hasStickyButtons = $hasStickyButtons;
+        return $this;
+    }
+
+    /**
+     * A container placing the language tabs beside the form ({@see FormContainer}) turns it off and asks
+     * {@see getTranslationTabs()} after the form rendered.
+     */
+    public function inlineTranslationTabs(bool $inlineTranslationTabs = true): static
+    {
+        $this->inlineTranslationTabs = $inlineTranslationTabs;
+        return $this;
+    }
+
+    /**
+     * Whether leaving the page with unsaved changes asks first (`includes/unsaved.ts`).
+     */
+    public function warnOnLeave(bool $warnOnLeave = true): static
+    {
+        $this->warnOnLeave = $warnOnLeave;
+        return $this;
+    }
 
     /**
      * @param Stringable[]|string[]|false|null $buttons

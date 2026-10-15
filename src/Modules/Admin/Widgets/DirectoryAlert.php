@@ -20,10 +20,9 @@ class DirectoryAlert extends Widget
     use IconTrait;
 
     /**
-     * @var list<string> the path aliases whose directories have to be writable. A bundle adds its own upload path
-     * through `EVENT_CONFIGURE`.
+     * @var list<string>
      */
-    public array $directories = [
+    protected array $directories = [
         '@runtime',
         '@webroot/assets',
     ];
@@ -32,6 +31,21 @@ class DirectoryAlert extends Widget
      * @var list<string>|null
      */
     protected ?array $unwritable = null;
+
+    /**
+     * @param list<string> $directories
+     */
+    public function directories(array $directories): static
+    {
+        $this->directories = $directories;
+        return $this;
+    }
+
+    public function addDirectories(string ...$directories): static
+    {
+        $this->directories = [...$this->directories, ...array_values($directories)];
+        return $this;
+    }
 
     #[Override]
     protected function configure(): void

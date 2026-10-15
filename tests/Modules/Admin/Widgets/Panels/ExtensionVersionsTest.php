@@ -27,8 +27,7 @@ class ExtensionVersionsTest extends TestCase
 
     public function testAProjectCanBlockAnExtensionOfItsOwn(): void
     {
-        $widget = ExtensionVersions::make();
-        $widget->excluded = ['*/yii2-skeleton'];
+        $widget = ExtensionVersions::make()->excluded(['*/yii2-skeleton']);
         $widget->render();
 
         self::assertArrayNotHasKey('davidhirtz/yii2-skeleton', $widget->getExtensions());

@@ -22,11 +22,11 @@ class Panel extends Widget
     /**
      * @var array<string, mixed>
      */
-    public array $panelAttributes = ['class' => 'form-group form-row'];
+    protected array $panelAttributes = ['class' => 'form-group form-row'];
     /**
      * @var array<string, mixed>
      */
-    public array $contentOptions = ['class' => 'form-content'];
+    protected array $contentAttributes = ['class' => 'form-content'];
 
     /**
      * @var list<string|Stringable>
@@ -40,6 +40,24 @@ class Panel extends Widget
     {
         $this->title ??= Yii::t('skeleton', 'PANEL_OPERATIONS');
         parent::__construct($config);
+    }
+
+    /**
+     * @param array<string, mixed> $panelAttributes
+     */
+    public function panelAttributes(array $panelAttributes): static
+    {
+        $this->panelAttributes = $panelAttributes;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $contentAttributes
+     */
+    public function contentAttributes(array $contentAttributes): static
+    {
+        $this->contentAttributes = $contentAttributes;
+        return $this;
     }
 
     public function buttons(string|Stringable|null ...$buttons): static
@@ -61,7 +79,7 @@ class Panel extends Widget
     protected function getPanel(): Stringable
     {
         $content = Div::make()
-            ->attributes($this->contentOptions)
+            ->attributes($this->contentAttributes)
             ->content(...$this->content);
 
         if ($this->buttons) {

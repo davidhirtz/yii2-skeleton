@@ -15,7 +15,7 @@ class Img extends VoidTag
     /**
      * @var array<string, mixed>
      */
-    public array $attributes = [
+    protected array $attributes = [
         'alt' => '',
     ];
 

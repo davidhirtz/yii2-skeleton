@@ -29,7 +29,13 @@ use yii\db\ActiveQuery;
  */
 trait SelectionTrait
 {
-    public bool $showSelection = true;
+    protected bool $showSelection = true;
+
+    public function showSelection(bool $showSelection = true): static
+    {
+        $this->showSelection = $showSelection;
+        return $this;
+    }
 
     protected function configureSelection(): void
     {

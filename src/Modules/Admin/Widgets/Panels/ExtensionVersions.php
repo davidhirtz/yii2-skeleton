@@ -19,14 +19,25 @@ use Stringable;
 class ExtensionVersions extends Widget
 {
     /**
-     * @var list<string> the packages to leave out, matched against the full name with `fnmatch()`
+     * @var list<string>
      */
-    public array $excluded = VersionHelper::EXCLUDED_PACKAGES;
+    protected array $excluded = VersionHelper::EXCLUDED_PACKAGES;
 
     /**
      * @var array<string, string>|null
      */
     protected ?array $extensions = null;
+
+    /**
+     * Package names to leave out, matched with `fnmatch()`.
+     *
+     * @param list<string> $excluded
+     */
+    public function excluded(array $excluded): static
+    {
+        $this->excluded = $excluded;
+        return $this;
+    }
 
     #[Override]
     protected function configure(): void

@@ -36,7 +36,7 @@ class FormContainer extends Widget
     public function render(bool $refresh = false): string
     {
         if ($this->form instanceof ActiveForm) {
-            $this->form->inlineTranslationTabs = false;
+            $this->form->inlineTranslationTabs(false);
         }
 
         $this->formHtml = (string)$this->form;

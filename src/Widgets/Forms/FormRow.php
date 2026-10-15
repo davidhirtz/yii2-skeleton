@@ -18,13 +18,31 @@ class FormRow extends Widget
     /**
      * @var array<string, mixed>
      */
-    public array $headerAttributes = ['class' => 'form-label'];
+    protected array $headerAttributes = ['class' => 'form-label'];
     /**
      * @var array<string, mixed>
      */
-    public array $contentAttributes = ['class' => 'form-content'];
+    protected array $contentAttributes = ['class' => 'form-content'];
 
     protected string|Stringable|null $header = null;
+
+    /**
+     * @param array<string, mixed> $headerAttributes
+     */
+    public function headerAttributes(array $headerAttributes): static
+    {
+        $this->headerAttributes = $headerAttributes;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $contentAttributes
+     */
+    public function contentAttributes(array $contentAttributes): static
+    {
+        $this->contentAttributes = $contentAttributes;
+        return $this;
+    }
 
     public function header(string|Stringable|null $header): static
     {

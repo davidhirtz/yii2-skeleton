@@ -13,7 +13,13 @@ use Stringable;
 
 class HexColorField extends Field
 {
-    public string $defaultColor = '#000000';
+    protected string $defaultColor = '#000000';
+
+    public function defaultColor(string $defaultColor): static
+    {
+        $this->defaultColor = $defaultColor;
+        return $this;
+    }
 
     #[Override]
     protected function configure(): void

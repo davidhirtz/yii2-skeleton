@@ -27,7 +27,16 @@ class StackItem extends Widget
     /**
      * @var array<string, mixed>
      */
-    public array $linkAttributes = ['class' => 'stack-link'];
+    protected array $linkAttributes = ['class' => 'stack-link'];
+
+    /**
+     * @param array<string, mixed> $linkAttributes
+     */
+    public function linkAttributes(array $linkAttributes): static
+    {
+        $this->linkAttributes = $linkAttributes;
+        return $this;
+    }
 
     #[Override]
     protected function renderContent(): Stringable

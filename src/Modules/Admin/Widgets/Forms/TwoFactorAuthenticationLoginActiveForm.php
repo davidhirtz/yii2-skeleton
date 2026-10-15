@@ -17,7 +17,7 @@ use Yii;
  */
 class TwoFactorAuthenticationLoginActiveForm extends ActiveForm
 {
-    public bool $warnOnLeave = false;
+    protected bool $warnOnLeave = false;
     /**
      * @var array<string, mixed>
      */
@@ -26,7 +26,7 @@ class TwoFactorAuthenticationLoginActiveForm extends ActiveForm
      * @var list<string>
      */
     public array $excludedErrorProperties = ['code'];
-    public bool $hasStickyButtons = false;
+    protected bool $hasStickyButtons = false;
     protected string $layout = "{errors}{rows}{buttons}";
 
     #[Override]

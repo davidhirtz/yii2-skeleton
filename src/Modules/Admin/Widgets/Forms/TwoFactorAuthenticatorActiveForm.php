@@ -23,10 +23,16 @@ use Yii;
  */
 class TwoFactorAuthenticatorActiveForm extends ActiveForm
 {
-    public int $qrCodeSize = 150;
-    public bool $hasStickyButtons = false;
+    protected int $qrCodeSize = 150;
+    protected bool $hasStickyButtons = false;
 
     protected TwoFactorAuthenticatorForm $authenticator;
+
+    public function qrCodeSize(int $qrCodeSize): static
+    {
+        $this->qrCodeSize = $qrCodeSize;
+        return $this;
+    }
 
     #[Override]
     protected function configure(): void

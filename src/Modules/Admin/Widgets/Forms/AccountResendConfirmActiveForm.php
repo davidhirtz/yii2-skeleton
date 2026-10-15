@@ -19,7 +19,7 @@ class AccountResendConfirmActiveForm extends ActiveForm
 {
     use LoginActiveFormTrait;
 
-    public bool $warnOnLeave = false;
+    protected bool $warnOnLeave = false;
 
     /**
      * @var array<string, mixed>
@@ -29,7 +29,7 @@ class AccountResendConfirmActiveForm extends ActiveForm
      * @var list<string>
      */
     public array $excludedErrorProperties = ['email'];
-    public bool $hasStickyButtons = false;
+    protected bool $hasStickyButtons = false;
     protected string $layout = "{errors}{rows}{buttons}";
 
     #[Override]

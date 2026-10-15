@@ -18,7 +18,7 @@ use Yii;
  */
 class PasswordResetActiveForm extends ActiveForm
 {
-    public bool $warnOnLeave = false;
+    protected bool $warnOnLeave = false;
     /**
      * @var array<string, mixed>
      */
@@ -27,7 +27,7 @@ class PasswordResetActiveForm extends ActiveForm
      * @var list<string>
      */
     public array $excludedErrorProperties = ['newPassword', 'repeatPassword'];
-    public bool $hasStickyButtons = false;
+    protected bool $hasStickyButtons = false;
     protected string $layout = "{errors}{rows}{buttons}";
 
     #[Override]

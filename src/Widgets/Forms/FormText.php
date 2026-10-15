@@ -34,13 +34,31 @@ class FormText extends Widget
     /**
      * @var array<string, mixed>
      */
-    public array $contentAttributes = [];
+    protected array $contentAttributes = [];
     /**
      * @var array<string, mixed>
      */
-    public array $labelAttributes = [];
+    protected array $labelAttributes = [];
 
     protected string|int|float|bool|Stringable|null $content = null;
+
+    /**
+     * @param array<string, mixed> $contentAttributes
+     */
+    public function contentAttributes(array $contentAttributes): static
+    {
+        $this->contentAttributes = $contentAttributes;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $labelAttributes
+     */
+    public function labelAttributes(array $labelAttributes): static
+    {
+        $this->labelAttributes = $labelAttributes;
+        return $this;
+    }
 
     public function content(string|int|float|bool|Stringable|null $content): static
     {

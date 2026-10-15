@@ -18,24 +18,87 @@ use Hirtz\Skeleton\Web\View;
 
 class AdminButton extends Widget
 {
-    public string $buttonColor = '#000';
-    public string $buttonColorActive = '#FA7D7E';
-    public string $buttonPosition = 'right';
+    protected string $buttonColor = '#000';
+    protected string $buttonColorActive = '#FA7D7E';
+    protected string $buttonPosition = 'right';
 
-    public string|Stringable $icon = '';
-    public string $iconColor = '#fff';
-    public string $iconColorActive = '#000';
+    protected string|Stringable $icon = '';
+    protected string $iconColor = '#fff';
+    protected string $iconColorActive = '#000';
 
-    public string $adminLinkZIndex = '3';
-    public string $overlayBackgroundColor = '#f8afaf80';
+    protected string $adminLinkZIndex = '3';
+    protected string $overlayBackgroundColor = '#f8afaf80';
 
-    public string $badgeBackgroundColor = '#FA7D7E';
-    public string $badgeColor = '#FFF';
+    protected string $badgeBackgroundColor = '#FA7D7E';
+    protected string $badgeColor = '#FFF';
 
-    /**
-     * @var bool whether to toggle the button opacity on hover, if `false` the button will always be visible
-     */
-    public bool $toggleButtonOpacity = true;
+    protected bool $toggleButtonOpacity = true;
+
+    public function buttonColor(string $buttonColor): static
+    {
+        $this->buttonColor = $buttonColor;
+        return $this;
+    }
+
+    public function buttonColorActive(string $buttonColorActive): static
+    {
+        $this->buttonColorActive = $buttonColorActive;
+        return $this;
+    }
+
+    public function buttonPosition(string $buttonPosition): static
+    {
+        $this->buttonPosition = $buttonPosition;
+        return $this;
+    }
+
+    public function icon(string|Stringable $icon): static
+    {
+        $this->icon = $icon;
+        return $this;
+    }
+
+    public function iconColor(string $iconColor): static
+    {
+        $this->iconColor = $iconColor;
+        return $this;
+    }
+
+    public function iconColorActive(string $iconColorActive): static
+    {
+        $this->iconColorActive = $iconColorActive;
+        return $this;
+    }
+
+    public function adminLinkZIndex(string $adminLinkZIndex): static
+    {
+        $this->adminLinkZIndex = $adminLinkZIndex;
+        return $this;
+    }
+
+    public function overlayBackgroundColor(string $overlayBackgroundColor): static
+    {
+        $this->overlayBackgroundColor = $overlayBackgroundColor;
+        return $this;
+    }
+
+    public function badgeBackgroundColor(string $badgeBackgroundColor): static
+    {
+        $this->badgeBackgroundColor = $badgeBackgroundColor;
+        return $this;
+    }
+
+    public function badgeColor(string $badgeColor): static
+    {
+        $this->badgeColor = $badgeColor;
+        return $this;
+    }
+
+    public function toggleButtonOpacity(bool $toggleButtonOpacity = true): static
+    {
+        $this->toggleButtonOpacity = $toggleButtonOpacity;
+        return $this;
+    }
 
     #[Override]
     protected function configure(): void
