@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Added the application's `sensitiveParams`, which each bundle appends its secret params to
+- Changed `TrailBehavior` to store `MASKED_VALUE` for an attribute a `SensitiveAttributeValidator` validates
 - Added `UrlManager::isHostInfoConfigured()`
 - Added `Web\User::revokeOtherSessions()`, which enabling two-factor authentication calls too
 - Added `TwoFactorAuthenticatorForm::$password` and `SCENARIO_ENABLE`: enabling two-factor authentication asks for the current password

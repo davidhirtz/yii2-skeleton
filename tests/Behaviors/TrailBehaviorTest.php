@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Validators\DateTimeValidator;
+use Hirtz\Skeleton\Validators\SensitiveAttributeValidator;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
@@ -112,6 +113,39 @@ class TrailBehaviorTest extends TestCase
         self::assertEquals(Trail::TYPE_UPDATE, $trail->type);
         self::assertEquals(['test name', 'test name updated'], $trail->data['name']);
         self::assertNotContains('excluded', $trail->data);
+    }
+
+    public function testASensitiveValueIsMasked(): void
+    {
+        $model = new class () extends TrailActiveRecord {
+            #[Override]
+            public function rules(): array
+            {
+                return [
+                    ...parent::rules(),
+                    [
+                        ['name'],
+                        SensitiveAttributeValidator::class,
+                    ],
+                ];
+            }
+        };
+
+        $model->name = 'secret';
+        self::assertTrue($model->insert(), print_r($model->getErrors(), true));
+        self::assertSame(TrailBehavior::MASKED_VALUE, $this->findLatestTrailForActiveRecord($model)->data['name']);
+
+        $model->name = 'new secret';
+        self::assertSame(1, $model->update());
+
+        $data = $this->findLatestTrailForActiveRecord($model)->data;
+        self::assertSame([TrailBehavior::MASKED_VALUE, TrailBehavior::MASKED_VALUE], $data['name']);
+
+        $model->name = null;
+        self::assertSame(1, $model->update());
+
+        $data = $this->findLatestTrailForActiveRecord($model)->data;
+        self::assertSame([TrailBehavior::MASKED_VALUE, null], $data['name']);
     }
 
     public function testAfterDeleteEvent(): void

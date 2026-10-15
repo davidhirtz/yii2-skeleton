@@ -55,6 +55,12 @@ use yii\web\JqueryAsset;
 trait ApplicationTrait
 {
     /**
+     * @var list<string> the params holding secrets, each bundle appending its own through its default config: a form
+     * editing one masks it ({@see \Hirtz\Skeleton\Validators\SensitiveAttributeValidator}), and so does the trail.
+     */
+    public array $sensitiveParams = [];
+
+    /**
      * Collected under both SAPIs, so `Db\MigrationHistory` can report pending migrations from a web request;
      * `Console\Controllers\MigrateController` takes its namespaces from here.
      *
@@ -220,6 +226,14 @@ trait ApplicationTrait
                 'admin' => [
                     'class' => Module::class,
                 ],
+            ],
+            'sensitiveParams' => [
+                'cookieValidationKey',
+                'mailerDsn',
+                'passwordPepper',
+                'registryKey',
+                'secretKey',
+                'sentryDsn',
             ],
             'viewPath' => '@views',
         ];

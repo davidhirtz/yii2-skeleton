@@ -14,6 +14,15 @@ use yii\base\Component;
 
 class ConfigBootstrapTest extends TestCase
 {
+    public function testTheApplicationAppendsToTheSensitiveParams(): void
+    {
+        $this->config['sensitiveParams'] = ['appSecret'];
+        $this->reloadApplication();
+
+        self::assertContains('cookieValidationKey', Yii::$app->sensitiveParams);
+        self::assertContains('appSecret', Yii::$app->sensitiveParams);
+    }
+
     public function testTheComponentIsRegisteredByTheExtension(): void
     {
         $this->reloadWith();

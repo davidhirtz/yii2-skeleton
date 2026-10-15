@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Behaviors;
 
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Validators\SensitiveAttributeValidator;
 use Exception;
 use Override;
 use Yii;
@@ -22,6 +23,11 @@ use Closure;
  */
 class TrailBehavior extends Behavior
 {
+    /**
+     * Stored in place of a value a {@see SensitiveAttributeValidator} validates: the trail records who changed it.
+     */
+    final public const string MASKED_VALUE = '********';
+
     /**
      * @var class-string|null if not set, the default class of `owner` will be used
      */
@@ -81,10 +87,15 @@ class TrailBehavior extends Behavior
             : array_keys($changedAttributes);
 
         foreach ($attributeNames as $attributeName) {
+            $value = $this->owner->{$attributeName};
+
             if ($insert) {
-                $data[$attributeName] = $this->owner->{$attributeName};
-            } elseif ($changedAttributes[$attributeName] !== $this->owner->{$attributeName}) {
-                $data[$attributeName] = [$changedAttributes[$attributeName], $this->owner->{$attributeName}];
+                $data[$attributeName] = $this->maskValue($attributeName, $value);
+            } elseif ($changedAttributes[$attributeName] !== $value) {
+                $data[$attributeName] = [
+                    $this->maskValue($attributeName, $changedAttributes[$attributeName]),
+                    $this->maskValue($attributeName, $value),
+                ];
             }
         }
 
@@ -97,6 +108,21 @@ class TrailBehavior extends Behavior
             $trail->data = $data;
             $this->insertTrail($trail);
         }
+    }
+
+    protected function maskValue(string $attributeName, mixed $value): mixed
+    {
+        if ($value === null || $value === '') {
+            return $value;
+        }
+
+        foreach ($this->owner->getActiveValidators($attributeName) as $validator) {
+            if ($validator instanceof SensitiveAttributeValidator) {
+                return self::MASKED_VALUE;
+            }
+        }
+
+        return $value;
     }
 
     protected function onAfterDelete(): void
