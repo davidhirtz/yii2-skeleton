@@ -23,58 +23,41 @@ class TinyMceField extends Field
     use TagPlaceholderTrait;
 
     /**
-     * @var array<string, mixed> containing all TinyMCE options, only set directly to override default behavior.
+     * @var array<string, mixed>
      */
-    public array $clientOptions = [];
+    protected array $clientOptions = [];
 
     /**
-     * @var list<string>|string|null containing TinyMCE content CSS files, if empty, the skin's content CSS file will be used.
-     * @link https://www.tiny.cloud/docs/tinymce/6/add-css-options/#content_css
+     * @var list<string>|string|null
      */
-    public array|string|null $contentCss = null;
+    protected array|string|null $contentCss = null;
+
+    protected ?string $contentStyle = null;
 
     /**
-     * @var string|null containing additional content CSS styles.
-     * @link https://www.tiny.cloud/docs/tinymce/6/add-css-options/#content_style
+     * @var array<string, mixed>
      */
-    public ?string $contentStyle = null;
+    protected array $formats = [];
+
+    protected int $height = 400;
+    protected ?string $languageUrl = null;
 
     /**
-     * @var array<string, mixed> containing all TinyMCE formats, only set directly to override default behavior.
+     * @var list<string>
      */
-    public array $formats = [];
+    protected array $plugins = [];
+
+    protected string|null|false $skin = null;
 
     /**
-     * @var int the height of the editor in pixels.
+     * @var list<array<string, mixed>>
      */
-    public int $height = 400;
+    protected array $stylesFormats = [];
 
     /**
-     * @var string|null the language URL to use, if null, the skin asset URL will be used.
+     * @var list<string>
      */
-    public ?string $languageUrl = null;
-
-    /**
-     * @var list<string> containing all TinyMCE plugins, only set directly to override default behavior.
-     */
-    public array $plugins = [];
-
-    /**
-     * @var string|null|false the TinyMCE skin to use. If the string is a path, it will be resolved to the editor's
-     * `skin_url`. If false, no skin will be used.
-     * @link https://www.tiny.cloud/docs/tinymce/6/editor-skin/#skin
-     */
-    public string|null|false $skin = null;
-
-    /**
-     * @var list<array<string, mixed>> containing all TinyMCE style dropdown options, only set directly to override default behavior.
-     */
-    public array $stylesFormats = [];
-
-    /**
-     * @var list<string> containing all TinyMCE options, only set directly to override default behavior.
-     */
-    public array $toolbar = [];
+    protected array $toolbar = [];
 
     /**
      * @var array{class: class-string<HtmlValidator>}|class-string<HtmlValidator>|HtmlValidator|null containing the validator configuration. If set to false, no
@@ -98,6 +81,87 @@ class TinyMceField extends Field
     public function value(?string $value): static
     {
         $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $clientOptions
+     */
+    public function clientOptions(array $clientOptions): static
+    {
+        $this->clientOptions = $clientOptions;
+        return $this;
+    }
+
+    /**
+     * @param list<string>|string|null $contentCss
+     */
+    public function contentCss(array|string|null $contentCss): static
+    {
+        $this->contentCss = $contentCss;
+        return $this;
+    }
+
+    public function contentStyle(?string $contentStyle): static
+    {
+        $this->contentStyle = $contentStyle;
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $formats
+     */
+    public function formats(array $formats): static
+    {
+        $this->formats = $formats;
+        return $this;
+    }
+
+    public function height(int $height): static
+    {
+        $this->height = $height;
+        return $this;
+    }
+
+    public function languageUrl(?string $languageUrl): static
+    {
+        $this->languageUrl = $languageUrl;
+        return $this;
+    }
+
+    /**
+     * @param list<string> $plugins
+     */
+    public function plugins(array $plugins): static
+    {
+        $this->plugins = $plugins;
+        return $this;
+    }
+
+    /**
+     * A skin containing `/` is a URL (`skin_url`), `false` loads none.
+     */
+    public function skin(string|null|false $skin): static
+    {
+        $this->skin = $skin;
+        return $this;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $stylesFormats
+     */
+    public function stylesFormats(array $stylesFormats): static
+    {
+        $this->stylesFormats = $stylesFormats;
+        return $this;
+    }
+
+    /**
+     * @param list<string> $toolbar
+     */
+    public function toolbar(array $toolbar): static
+    {
+        $this->toolbar = $toolbar;
         return $this;
     }
 
