@@ -5,6 +5,7 @@
 - Added `UrlManager::isHostInfoConfigured()`
 - Added `Web\User::revokeOtherSessions()`, which enabling two-factor authentication calls too
 - Added `TwoFactorAuthenticatorForm::$password` and `SCENARIO_ENABLE`: enabling two-factor authentication asks for the current password
+- Added `GroupCustomAttribute::addButtonLabel()`, the label of the button an empty group shows in place of its first row
 - Added `user.two_factor_timeslice` and `TwoFactorAuthenticationValidator::$timeslice`, the replay marker of a TOTP code
 
 ## 3.17.0 (October 14, 2026)

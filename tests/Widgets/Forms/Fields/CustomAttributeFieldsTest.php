@@ -155,6 +155,41 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertStringContainsString('hidden', $this->findAddButton($content));
     }
 
+    /**
+     * See monorepo issue #505.
+     */
+    public function testAGroupWithoutRowsShowsALabelledAddButtonInstead(): void
+    {
+        $content = $this->renderGroup(FieldRecord::TYPE_LINKS);
+
+        self::assertStringNotContainsString('hidden', $this->findEmptyAddButton($content));
+        self::assertStringContainsString('Add entry', $this->findEmptyAddButton($content));
+        self::assertStringContainsString('hidden', $this->findAddButton($content));
+
+        $content = $this->renderGroup(FieldRecord::TYPE_NAMED_LINKS);
+        self::assertStringContainsString('Add Social media link', $this->findEmptyAddButton($content));
+
+        $content = $this->renderGroup(FieldRecord::TYPE_TRANSLATED_LINKS);
+        self::assertStringContainsString('Add a first link', $this->findEmptyAddButton($content));
+
+        $model = $this->createRecord();
+        $model->type = FieldRecord::TYPE_LINKS;
+        $model->links = [['label' => 'One', 'url' => 'https://one.example.com']];
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['links'])
+            ->render();
+
+        self::assertStringContainsString('hidden', $this->findEmptyAddButton($content));
+        self::assertStringNotContainsString('hidden', $this->findAddButton($content));
+
+        self::assertStringNotContainsString(
+            'data-group-add-empty',
+            $this->renderGroup(FieldRecord::TYPE_REQUIRED_LINKS)
+        );
+    }
+
     public function testMinCountRendersItsRowsUpFront(): void
     {
         $model = $this->createRecord();
@@ -450,9 +485,16 @@ class CustomAttributeFieldsTest extends TestCase
      */
     protected function findAddButton(string $content): string
     {
-        preg_match('/<button[^>]*data-group-add[^>]*>/', $content, $matches);
+        preg_match('/<button[^>]*data-group-add(?!-)[^>]*>/', $content, $matches);
 
         return $matches[0] ?? self::fail('The group renders no add button.');
+    }
+
+    protected function findEmptyAddButton(string $content): string
+    {
+        preg_match('/<button[^>]*data-group-add-empty[^>]*>.*?<\/button>/s', $content, $matches);
+
+        return $matches[0] ?? self::fail('The group renders no empty add button.');
     }
 
     protected function renderGroup(int $type): string
@@ -647,6 +689,7 @@ class FieldRecord extends ActiveRecord implements
                 ->customAttributes(fn (): array => [
                     GroupCustomAttribute::make('links')
                         ->multiple()
+                        ->addButtonLabel('Add a first link')
                         ->attributes([TextCustomAttribute::make('label')->translatable()]),
                 ]),
             Type::make(self::TYPE_NAMED_LINKS)

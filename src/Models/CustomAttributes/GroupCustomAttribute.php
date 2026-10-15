@@ -24,6 +24,7 @@ class GroupCustomAttribute extends CustomAttribute
     protected ?int $maxCount = null;
     protected bool $sortable = true;
     protected ?string $titleAttribute = null;
+    protected ?string $addButtonLabel = null;
 
     /**
      * @var class-string<CustomAttributeGroupItem>
@@ -74,6 +75,15 @@ class GroupCustomAttribute extends CustomAttribute
     }
 
     /**
+     * The label of the button an empty group shows, derived from the placeholder when not set.
+     */
+    public function addButtonLabel(?string $addButtonLabel): static
+    {
+        $this->addButtonLabel = $addButtonLabel;
+        return $this;
+    }
+
+    /**
      * @param class-string<CustomAttributeGroupItem> $itemClass
      */
     public function itemClass(string $itemClass): static
@@ -108,6 +118,11 @@ class GroupCustomAttribute extends CustomAttribute
     public function isSortable(): bool
     {
         return $this->sortable;
+    }
+
+    public function getAddButtonLabel(): ?string
+    {
+        return $this->addButtonLabel;
     }
 
     public function getTitleAttribute(): ?string

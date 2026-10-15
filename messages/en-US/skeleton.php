@@ -161,6 +161,8 @@ return [
     'CONSENT_UUID_LABEL' => 'Consent ID',
     'CONSENT_VERSION_LABEL' => 'Version',
     'CUSTOM_ATTRIBUTE_BUTTON_ADD' => 'Add',
+    'CUSTOM_ATTRIBUTE_BUTTON_ADD_EMPTY' => 'Add entry',
+    'CUSTOM_ATTRIBUTE_BUTTON_ADD_PLACEHOLDER' => 'Add {placeholder}',
     'CUSTOM_ATTRIBUTE_BUTTON_REMOVE' => 'Remove',
     'CUSTOM_ATTRIBUTE_ERROR_MAX_COUNT' => '{attribute} allows at most {max} entries.',
     'CUSTOM_ATTRIBUTE_ERROR_MIN_COUNT' => '{attribute} needs at least {min} entries.',

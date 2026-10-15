@@ -13,6 +13,7 @@ onLoad(($node) => {
         const $items = $group.querySelector<HTMLElement>('[data-group-items]');
         const $template = $group.querySelector<HTMLTemplateElement>('[data-group-template]');
         const $add = $group.querySelector<HTMLButtonElement>('[data-group-add]');
+        const $addEmpty = $group.querySelector<HTMLButtonElement>('[data-group-add-empty]');
 
         if (!$items) {
             return;
@@ -79,8 +80,13 @@ onLoad(($node) => {
         const update = () => {
             const count = $items.children.length;
 
+            // While there is no row, the labelled button stands in for it.
             if ($add) {
-                $add.hidden = count >= max;
+                $add.hidden = count >= max || (count === 0 && $addEmpty !== null);
+            }
+
+            if ($addEmpty) {
+                $addEmpty.hidden = count > 0;
             }
 
             // The server renders the rows a minimum count demands, so they cannot be removed either, and one
@@ -96,7 +102,7 @@ onLoad(($node) => {
             renumber();
         };
 
-        $add?.addEventListener('click', () => {
+        const add = () => {
             const index = String(Date.now());
             // The input names and the ids derived from them carry different placeholders.
             const html = ($template?.innerHTML ?? '')
@@ -114,7 +120,10 @@ onLoad(($node) => {
             }
 
             update();
-        });
+        };
+
+        $add?.addEventListener('click', add);
+        $addEmpty?.addEventListener('click', add);
 
         $group.addEventListener('click', (event) => {
             const $target = event.target as HTMLElement;

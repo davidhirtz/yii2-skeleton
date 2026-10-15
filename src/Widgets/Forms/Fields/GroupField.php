@@ -421,7 +421,33 @@ class GroupField extends Field
     {
         return Div::make()
             ->addClass('custom-attribute-group-footer')
-            ->content($this->getCountHint(), $this->getAddButton($count));
+            ->content($this->getEmptyAddButton($count), $this->getCountHint(), $this->getAddButton($count));
+    }
+
+    /**
+     * Stands in for the first row while there is none, left where the row's input would be; the icon-only button
+     * takes over once a row exists.
+     */
+    protected function getEmptyAddButton(int $count): ?Stringable
+    {
+        if ($this->group->getMinCount() > 0) {
+            return null;
+        }
+
+        $placeholder = $this->group->getPlaceholder();
+
+        $label = $this->group->getAddButtonLabel() ?? ($placeholder === null
+            ? Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_ADD_EMPTY')
+            : Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_ADD_PLACEHOLDER', ['placeholder' => $placeholder]));
+
+        $button = Button::make()
+            ->secondary()
+            ->icon('plus')
+            ->text($label)
+            ->type('button')
+            ->attribute('data-group-add-empty', true);
+
+        return $count > 0 ? $button->attribute('hidden', true) : $button;
     }
 
     protected function getCountHint(): ?Stringable
@@ -457,6 +483,8 @@ class GroupField extends Field
             ->attribute('data-group-add', true)
             ->attribute('aria-label', $label);
 
-        return $max !== null && $count >= $max ? $button->attribute('hidden', true) : $button;
+        $hidden = ($max !== null && $count >= $max) || ($count === 0 && $this->group->getMinCount() === 0);
+
+        return $hidden ? $button->attribute('hidden', true) : $button;
     }
 }

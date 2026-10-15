@@ -18,6 +18,11 @@
   gap: 1rem;
 }
 
+// An empty list would still be a grid row, and its gap would push the footer below the label.
+.custom-attribute-group-items:not(:has(> *)) {
+  display: none;
+}
+
 // Every row is an `.input-group` — which draws the box and answers for hover and focus, so nothing here repeats
 // that — plus whatever hangs below it: the field's error, or the fields a collapsed row folds away.
 .custom-attribute-group-item {
@@ -77,4 +82,9 @@
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+}
+
+// Where the first row's input would be, so it lines up with the label.
+.custom-attribute-group-footer [data-group-add-empty] {
+  margin-inline-end: auto;
 }

@@ -37,7 +37,7 @@
   letter-spacing: .0625em;
 
   @include media-breakpoint-up(sm) {
-    .form-row:not(.form-checkbox-row):has(.input, .upload) & {
+    .form-row:not(.form-checkbox-row):has(.input, .upload, .custom-attribute-group) & {
       padding: 1px 0;
     }
   }
@@ -140,9 +140,10 @@
 
   // The padding lines a column label up with the control beside it, so a label that labels a checkbox is
   // excluded — `.form-checkbox-row` for a single one, `.form-checkbox` for an item of a list. `.upload` is
-  // named beside `.input` because an upload field renders a button and a hidden input, neither of which is one.
+  // named beside `.input` because an upload field renders a button and a hidden input, neither of which is one, and
+  // `.custom-attribute-group` because an empty one holds its inputs only in a `<template>`.
   @include media-breakpoint-up(sm) {
-    .form-row:not(.form-checkbox-row):has(.input, .upload) &:not(.form-checkbox *) {
+    .form-row:not(.form-checkbox-row):has(.input, .upload, .custom-attribute-group) &:not(.form-checkbox *) {
       padding: 0.5rem 0;
     }
   }

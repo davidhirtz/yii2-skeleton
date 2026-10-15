@@ -161,6 +161,8 @@ return [
     'CONSENT_UUID_LABEL' => 'Einwilligungs-ID',
     'CONSENT_VERSION_LABEL' => 'Version',
     'CUSTOM_ATTRIBUTE_BUTTON_ADD' => 'Hinzufügen',
+    'CUSTOM_ATTRIBUTE_BUTTON_ADD_EMPTY' => 'Eintrag hinzufügen',
+    'CUSTOM_ATTRIBUTE_BUTTON_ADD_PLACEHOLDER' => '{placeholder} hinzufügen',
     'CUSTOM_ATTRIBUTE_BUTTON_REMOVE' => 'Entfernen',
     'CUSTOM_ATTRIBUTE_ERROR_MAX_COUNT' => '{attribute} erlaubt höchstens {max} Einträge.',
     'CUSTOM_ATTRIBUTE_ERROR_MIN_COUNT' => '{attribute} benötigt mindestens {min} Einträge.',
