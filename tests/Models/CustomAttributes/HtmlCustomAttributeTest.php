@@ -11,24 +11,28 @@ use yii\base\DynamicModel;
 
 class HtmlCustomAttributeTest extends TestCase
 {
-    public function testHeightSetsTheEditorHeight(): void
+    public function testFieldConfiguresTheEditor(): void
     {
         $field = HtmlCustomAttribute::make('text')
-            ->height(150)
+            ->field(fn (TinyMceField $field) => $field->height = 150)
             ->createField(new DynamicModel(['text']));
 
         self::assertInstanceOf(TinyMceField::class, $field);
+        $field->render();
+
         self::assertSame(150, $field->height);
     }
 
-    public function testNoHeightKeepsTheFieldDefault(): void
+    public function testNoFieldKeepsTheEditorDefault(): void
     {
         $field = HtmlCustomAttribute::make('text')
-            ->height(150)
-            ->height(null)
+            ->field(fn (TinyMceField $field) => $field->height = 150)
+            ->field(null)
             ->createField(new DynamicModel(['text']));
 
         self::assertInstanceOf(TinyMceField::class, $field);
+        $field->render();
+
         self::assertSame(TinyMceField::make()->height, $field->height);
     }
 }

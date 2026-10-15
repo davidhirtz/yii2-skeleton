@@ -27,6 +27,7 @@ abstract class CustomAttribute
     protected Closure|bool $visible = true;
     protected Closure|bool $disabled = false;
     protected mixed $default = null;
+    protected ?Closure $field = null;
 
     public function __construct(public readonly string $name)
     {
@@ -77,6 +78,12 @@ abstract class CustomAttribute
     public function default(mixed $default): static
     {
         $this->default = $default;
+        return $this;
+    }
+
+    public function field(?Closure $field): static
+    {
+        $this->field = $field;
         return $this;
     }
 
@@ -261,6 +268,10 @@ abstract class CustomAttribute
 
         if ($this->isDisabled($owner)) {
             $field->attribute('disabled', true);
+        }
+
+        if ($this->field !== null) {
+            $field->prepare($this->field);
         }
 
         return $field;
