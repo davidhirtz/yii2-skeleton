@@ -158,7 +158,8 @@ class TinyMceField extends Field
         $this->clientOptions['convert_urls'] ??= false;
         $this->clientOptions['license_key'] ??= 'gpl';
 
-        if ($this->language !== Yii::$app->sourceLanguage) {
+        // The editor's own language is English, whatever the application's source language is.
+        if (!str_starts_with($this->language, 'en')) {
             $this->clientOptions['language'] ??= match ($this->language) {
                 'fr' => 'fr_FR',
                 'pt' => 'pt_BR',

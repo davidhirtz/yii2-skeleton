@@ -23,6 +23,39 @@ class TinyMceFieldTest extends TestCase
         self::assertIsArray($bundles);
         self::assertArrayHasKey(TinyMceAssetBundle::class, $bundles);
     }
+
+    public function testTheEditorLoadsTheLanguageOfASourceLanguageOtherThanEnglish(): void
+    {
+        Yii::$app->sourceLanguage = 'de';
+        Yii::$app->language = 'de';
+
+        $config = $this->getEditorConfig();
+
+        self::assertSame('de', $config['language'] ?? null);
+        self::assertStringEndsWith('/de.js', $config['language_url'] ?? '');
+    }
+
+    public function testTheEditorKeepsItsOwnLanguageForEnglish(): void
+    {
+        Yii::$app->language = 'en-US';
+
+        self::assertArrayNotHasKey('language', $this->getEditorConfig());
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getEditorConfig(): array
+    {
+        $form = TestContentFieldActiveForm::make()->render();
+
+        preg_match("/data-config='([^']+)'/", $form, $matches);
+
+        $config = json_decode(html_entity_decode($matches[1] ?? ''), true);
+        self::assertIsArray($config);
+
+        return $config;
+    }
 }
 
 class TestContentFieldModel extends Model
