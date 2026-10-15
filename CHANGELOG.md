@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `HtmlCustomAttribute::height()`, the height of its editor in pixels
 - Added `Console\Controllers\Traits\UserIdentityTrait`: a command's changes are attributed to `--user`, the owner by default
 - Fixed `TinyMceField` to load the correct editor language based on `sourceLanguage`
 - Added the application's `sensitiveParams`, which each bundle appends its secret params to

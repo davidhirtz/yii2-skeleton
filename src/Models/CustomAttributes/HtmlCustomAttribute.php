@@ -18,6 +18,7 @@ class HtmlCustomAttribute extends CustomAttribute
      */
     protected array|string|null $validator = HtmlValidator::class;
     protected ?int $max = 65535;
+    protected ?int $height = null;
 
     private ?HtmlValidator $htmlValidator = null;
 
@@ -35,6 +36,12 @@ class HtmlCustomAttribute extends CustomAttribute
     public function max(?int $max): static
     {
         $this->max = $max;
+        return $this;
+    }
+
+    public function height(?int $height): static
+    {
+        $this->height = $height;
         return $this;
     }
 
@@ -75,7 +82,12 @@ class HtmlCustomAttribute extends CustomAttribute
     #[Override]
     public function createField(Model $owner): Field
     {
-        return $this->configureField(TinyMceField::make()->validator($this->validator), $owner);
-    }
+        $field = TinyMceField::make()->validator($this->validator);
 
+        if ($this->height !== null) {
+            $field->height = $this->height;
+        }
+
+        return $this->configureField($field, $owner);
+    }
 }
