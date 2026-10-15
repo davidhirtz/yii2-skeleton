@@ -1,6 +1,6 @@
 ## Unreleased
 
-- Changed `TinyMceField` to load the editor language for every language but English, not every one but `sourceLanguage`
+- Fixed `TinyMceField` to load the correct editor language based on `sourceLanguage`
 - Added the application's `sensitiveParams`, which each bundle appends its secret params to
 - Changed `TrailBehavior` to store `MASKED_VALUE` for an attribute a `SensitiveAttributeValidator` validates
 - Added `UrlManager::isHostInfoConfigured()`
