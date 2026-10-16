@@ -306,7 +306,9 @@ class TinyMceField extends Field
                 if ($this->stylesFormats) {
                     $headlineStyles[] = [
                         'title' => Yii::t('skeleton', 'TINY_MCE_HEADING', ['n' => $i + 1]),
-                        'format' => $tag,
+                        'block' => $tag,
+                        // The menu would render the heading at the content CSS's size.
+                        'preview' => false,
                     ];
                 } else {
                     $this->toolbar[] = $tag;

@@ -42,12 +42,24 @@ class TinyMceFieldTest extends TestCase
         self::assertArrayNotHasKey('language', $this->getEditorConfig());
     }
 
+    public function testTheStylesMenuDoesNotPreviewHeadings(): void
+    {
+        $formats = $this->getEditorConfig(TestStyledContentFieldActiveForm::class)['style_formats'] ?? [];
+        self::assertIsArray($formats);
+
+        $heading = $formats[0] ?? self::fail('No style formats.');
+        self::assertIsArray($heading);
+        self::assertSame('h2', $heading['block'] ?? null);
+        self::assertFalse($heading['preview'] ?? null);
+    }
+
     /**
+     * @param class-string<TestContentFieldActiveForm> $formClass
      * @return array<string, mixed>
      */
-    private function getEditorConfig(): array
+    private function getEditorConfig(string $formClass = TestContentFieldActiveForm::class): array
     {
-        $form = TestContentFieldActiveForm::make()->render();
+        $form = $formClass::make()->render();
 
         preg_match("/data-config='([^']+)'/", $form, $matches);
 
@@ -74,13 +86,29 @@ class TestContentFieldModel extends Model
     }
 }
 
+class TestStyledContentFieldModel extends TestContentFieldModel
+{
+    #[Override]
+    public function rules(): array
+    {
+        return [
+            [
+                ['content'],
+                HtmlValidator::class,
+                'allowedHtmlTags' => ['h2', 'p'],
+                'allowedClasses' => ['p' => ['lead']],
+            ],
+        ];
+    }
+}
+
 class TestContentFieldActiveForm extends ActiveForm
 {
     #[Override]
     public function configure(): void
     {
         $this->action = '/';
-        $this->model = new TestContentFieldModel();
+        $this->model ??= new TestContentFieldModel();
 
         parent::configure();
     }
@@ -89,5 +117,15 @@ class TestContentFieldActiveForm extends ActiveForm
     protected function getDefaultRows(): array
     {
         return ['content'];
+    }
+}
+
+class TestStyledContentFieldActiveForm extends TestContentFieldActiveForm
+{
+    #[Override]
+    public function configure(): void
+    {
+        $this->model = new TestStyledContentFieldModel();
+        parent::configure();
     }
 }
