@@ -104,6 +104,18 @@
     &::-webkit-color-swatch {
       border: none;
     }
+
+    &[data-unset] {
+      background: linear-gradient(to top right, transparent calc(50% - 1px), var(--input-color-unset-stroke) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) var(--input-color-unset-bg);
+
+      &::-webkit-color-swatch {
+        opacity: 0;
+      }
+
+      &::-moz-color-swatch {
+        opacity: 0;
+      }
+    }
   }
 
   &[type="file"] {

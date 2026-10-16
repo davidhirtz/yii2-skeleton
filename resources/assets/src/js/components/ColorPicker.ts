@@ -47,6 +47,7 @@ window.customElements.get('color-picker') || window.customElements.define('color
     // noinspection JSUnusedGlobalSymbols
     connectedCallback() {
         const $inputs = this.querySelectorAll('input');
+        const $color = this.querySelector('input[type="color"]');
         let changing = false;
 
         $inputs.forEach(($input) => {
@@ -57,7 +58,10 @@ window.customElements.get('color-picker') || window.customElements.define('color
 
                 changing = true;
 
-                $inputs.forEach(($other) => $other.value = normalizeHexValue($input.value, $input.required));
+                const value = normalizeHexValue($input.value, $input.required);
+
+                $inputs.forEach(($other) => $other.value = value || $other.value);
+                $color?.toggleAttribute('data-unset', !value);
                 setTimeout(() => changing = false, 100);
             });
         });

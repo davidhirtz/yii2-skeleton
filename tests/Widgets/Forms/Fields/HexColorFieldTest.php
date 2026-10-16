@@ -32,4 +32,13 @@ class HexColorFieldTest extends TestCase
         self::assertStringContainsString('<input type="color" id="i1-color" class="input" value="#ff0000" required>', $content);
         self::assertStringContainsString('value="#f00"', $content);
     }
+
+    public function testAnEmptyValueMarksTheColorInputAsUnset(): void
+    {
+        $content = HexColorField::make()
+            ->attribute('value', '')
+            ->render();
+
+        self::assertStringContainsString('<input type="color" id="i1-color" class="input" value="#000000" data-unset required>', $content);
+    }
 }

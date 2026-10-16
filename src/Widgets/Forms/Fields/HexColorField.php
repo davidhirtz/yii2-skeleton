@@ -51,6 +51,7 @@ class HexColorField extends Field
                     ->class('input')
                     ->type('color')
                     ->value($hexValue)
+                    ->attribute('data-unset', $this->attributes['value'] ? null : true)
                     ->required())
                 ->content(Input::make()
                     ->attributes($this->attributes)
