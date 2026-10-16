@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Assets\TinyMceAssetBundle;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\HtmlValidator;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
+use Hirtz\Skeleton\Widgets\Forms\Fields\TinyMceField;
 use Override;
 use Yii;
 use yii\base\Model;
@@ -51,6 +52,30 @@ class TinyMceFieldTest extends TestCase
         self::assertIsArray($heading);
         self::assertSame('h2', $heading['block'] ?? null);
         self::assertFalse($heading['preview'] ?? null);
+    }
+
+    public function testTheContentStyleRendersAnArrayAsCss(): void
+    {
+        Yii::$container->set(TinyMceField::class, [
+            'contentStyle' => [
+                '@import url("fonts.css");',
+                'body' => ['font-family' => '"Inter", sans-serif', 'font-size' => '1rem'],
+                'h1, h2' => 'font-weight: 700',
+            ],
+        ]);
+
+        try {
+            $config = $this->getEditorConfig();
+        } finally {
+            Yii::$container->clear(TinyMceField::class);
+        }
+
+        self::assertSame(
+            "@import url(\"fonts.css\");\n"
+            . "body { font-family: \"Inter\", sans-serif; font-size: 1rem }\n"
+            . 'h1, h2 { font-weight: 700 }',
+            $config['content_style'] ?? null,
+        );
     }
 
     /**

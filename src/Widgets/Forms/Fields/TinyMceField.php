@@ -32,7 +32,10 @@ class TinyMceField extends Field
      */
     protected array|string|null $contentCss = null;
 
-    protected ?string $contentStyle = null;
+    /**
+     * @var array<int|string, array<string, string>|string>|string|null
+     */
+    protected array|string|null $contentStyle = null;
 
     /**
      * @var array<string, mixed>
@@ -102,7 +105,13 @@ class TinyMceField extends Field
         return $this;
     }
 
-    public function contentStyle(?string $contentStyle): static
+    /**
+     * An array is keyed by selector, its value a declaration string or a `property => value` map; an integer key
+     * keeps a raw rule (`@import`, `@media`).
+     *
+     * @param array<int|string, array<string, string>|string>|string|null $contentStyle
+     */
+    public function contentStyle(array|string|null $contentStyle): static
     {
         $this->contentStyle = $contentStyle;
         return $this;
@@ -244,7 +253,9 @@ class TinyMceField extends Field
         }
 
         if ($this->contentStyle) {
-            $this->clientOptions['content_style'] ??= $this->contentStyle;
+            $this->clientOptions['content_style'] ??= is_array($this->contentStyle)
+                ? $this->renderContentStyle($this->contentStyle)
+                : $this->contentStyle;
         }
 
         if ($allowedElements = ($this->htmlValidator?->purifierOptions['HTML.Allowed'] ?? false)) {
@@ -269,6 +280,28 @@ class TinyMceField extends Field
 
             $this->clientOptions['valid_classes'] ??= $allowedClasses;
         }
+    }
+
+    /**
+     * @param array<int|string, array<string, string>|string> $rules
+     */
+    protected function renderContentStyle(array $rules): string
+    {
+        $css = [];
+
+        foreach ($rules as $selector => $declarations) {
+            if (is_array($declarations)) {
+                $declarations = implode('; ', array_map(
+                    fn (string $property, string $value): string => "$property: $value",
+                    array_keys($declarations),
+                    $declarations,
+                ));
+            }
+
+            $css[] = is_int($selector) ? $declarations : "$selector { $declarations }";
+        }
+
+        return implode("\n", $css);
     }
 
     protected function configureToolbar(): void
@@ -307,7 +340,6 @@ class TinyMceField extends Field
                     $headlineStyles[] = [
                         'title' => Yii::t('skeleton', 'TINY_MCE_HEADING', ['n' => $i + 1]),
                         'block' => $tag,
-                        // The menu would render the heading at the content CSS's size.
                         'preview' => false,
                     ];
                 } else {

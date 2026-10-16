@@ -1,3 +1,7 @@
+## Unreleased
+
+- Changed `TinyMceField::contentStyle()` to also take an array of CSS rules keyed by selector
+
 ## 3.18.0 (October 15, 2026)
 
 - Added `CustomAttribute::field()`, a closure configuring the attribute's form field
