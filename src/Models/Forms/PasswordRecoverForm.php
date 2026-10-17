@@ -94,18 +94,28 @@ class PasswordRecoverForm extends Model
     }
 
     /**
-     * In the recipient's language: an administrator or the console may be the one sending it.
+     * In the recipient's language, as an administrator or the console may send it; a user who never logged in gets
+     * the credentials email instead.
      */
     public function sendPasswordResetEmail(): bool
     {
-        $send = fn (): bool => Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/recover', [
-            'user' => $this->user,
-            'url' => $this->user->createPasswordResetUrl(),
-        ])
-            ->setSubject(Yii::t('skeleton', 'PASSWORD_RECOVER_RESET_YOUR_PASSWORD'))
-            ->setFrom(Yii::$app->params['email'])
-            ->setTo($this->user->email)
-            ->send();
+        $send = function (): bool {
+            $params = [
+                'user' => $this->user,
+                'url' => $this->user->createPasswordResetUrl(),
+            ];
+
+            $message = $this->user->login_count
+                ? Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/recover', $params)
+                    ->setSubject(Yii::t('skeleton', 'PASSWORD_RECOVER_RESET_YOUR_PASSWORD'))
+                : Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/credentials', $params)
+                    ->setSubject(Yii::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]));
+
+            return $message
+                ->setFrom(Yii::$app->params['email'])
+                ->setTo($this->user->email)
+                ->send();
+        };
 
         return Yii::$app->getI18n()->callback($this->user->language, $send) === true;
     }

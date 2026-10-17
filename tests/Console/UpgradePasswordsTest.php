@@ -79,7 +79,7 @@ class UpgradePasswordsTest extends TestCase
     public function testTheLinkIsSentInTheUsersLanguage(): void
     {
         $user = $this->getUserFromFixture('admin');
-        $user->updateAttributes(['password_hash' => null, 'language' => 'de']);
+        $user->updateAttributes(['password_hash' => null, 'language' => 'de', 'login_count' => 1]);
 
         $controller = new UpgradeControllerMock('upgrade', Yii::$app);
         $controller->interactive = false;

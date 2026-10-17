@@ -60,6 +60,35 @@ class UserPasswordResetTest extends TestCase
         self::assertNotNull($this->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
     }
 
+    public function testResetAsksAUserWhoLoggedInBeforeToResetTheirPassword(): void
+    {
+        $this->user->updateAttributes(['login_count' => 1]);
+
+        $this->postReset();
+
+        self::assertSame(
+            Yii::t('skeleton', 'PASSWORD_RECOVER_RESET_YOUR_PASSWORD'),
+            $this->mailer->getLastMessage()?->getSubject(),
+        );
+    }
+
+    public function testResetSendsAUserWhoNeverLoggedInTheCredentialsEmail(): void
+    {
+        $this->user->updateAttributes(['login_count' => 0]);
+
+        $this->postReset();
+
+        self::assertSame(
+            Yii::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]),
+            $this->mailer->getLastMessage()?->getSubject(),
+        );
+
+        self::assertStringContainsString(
+            Yii::t('skeleton', 'MAIL_ACCOUNT_CREDENTIALS_TEXT', ['name' => Yii::$app->name]),
+            $this->mailer->getLastMessageBody(),
+        );
+    }
+
     public function testResetIsRefusedWhenPasswordResetIsDisabled(): void
     {
         $this->getWebUser()->enablePasswordReset = false;
