@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `UrlCustomAttribute::schemes()`, by default `http`, `https`, `mailto` and `tel`
 - Changed the password reset email template
 - Changed `TinyMceField::contentStyle()` to also take an array of CSS rules keyed by selector
 

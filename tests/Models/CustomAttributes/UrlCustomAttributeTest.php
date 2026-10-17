@@ -54,6 +54,41 @@ class UrlCustomAttributeTest extends TestCase
         self::assertFalse($this->validate('not a url'));
     }
 
+    public function testAPhoneNumberIsAccepted(): void
+    {
+        self::assertTrue($this->validate('tel:+4930123456'));
+        self::assertTrue($this->validate('tel:+49 (30) 123-456'));
+        self::assertTrue($this->validate('TEL:030/123.456'));
+        self::assertTrue($this->validate('tel:+4930123456', RelativeUrlRecord::class));
+
+        self::assertFalse($this->validate('tel:'));
+        self::assertFalse($this->validate('tel:call me'));
+        self::assertFalse($this->validate('tel:+49 30 123 ✆'));
+    }
+
+    public function testAnEmailAddressIsAccepted(): void
+    {
+        self::assertTrue($this->validate('mailto:info@example.com'));
+        self::assertTrue($this->validate('mailto:müller@münchen.de?subject=Hallo%20Welt'));
+        self::assertTrue($this->validate('MAILTO:info@example.com'));
+
+        self::assertFalse($this->validate('mailto:'));
+        self::assertFalse($this->validate('mailto:info'));
+        self::assertFalse($this->validate('mailto:info @example.com'));
+    }
+
+    public function testOnlyTheConfiguredSchemesAreAccepted(): void
+    {
+        self::assertFalse($this->validate('sms:+4930123456'));
+        self::assertFalse($this->validate('ftp://example.com'));
+        self::assertFalse($this->validate('javascript:alert(1)'));
+
+        self::assertTrue($this->validate('sms:+4930123456?body=Hallo', SchemesUrlRecord::class));
+        self::assertTrue($this->validate('ftp://example.com/file.zip', SchemesUrlRecord::class));
+        self::assertFalse($this->validate('https://example.com', SchemesUrlRecord::class));
+        self::assertFalse($this->validate('tel:+4930123456', SchemesUrlRecord::class));
+    }
+
     public function testTheFieldIsAUrlInput(): void
     {
         $record = UrlRecord::create();
@@ -129,5 +164,14 @@ class RelativeUrlRecord extends UrlRecord
     public function getCustomAttributes(): array
     {
         return [UrlCustomAttribute::make('link')->relative()];
+    }
+}
+
+class SchemesUrlRecord extends UrlRecord
+{
+    #[Override]
+    public function getCustomAttributes(): array
+    {
+        return [UrlCustomAttribute::make('link')->schemes(['ftp', 'sms'])];
     }
 }

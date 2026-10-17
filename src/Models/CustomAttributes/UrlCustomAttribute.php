@@ -19,7 +19,30 @@ use yii\base\Model;
  */
 class UrlCustomAttribute extends TextCustomAttribute
 {
+    /**
+     * Schemes without a host, which Yii's `url` validator cannot check.
+     */
+    private const array OPAQUE_SCHEME_PATTERNS = [
+        'mailto' => '#^mailto:[^\s@?/]+@[^\s@?/]+\.[^\s@?/]+(\?\S*)?$#iu',
+        'sms' => '#^sms:\+?\d[\d ()./-]*(\?\S*)?$#i',
+        'tel' => '#^tel:\+?\d[\d ()./-]*$#i',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    protected array $schemes = ['http', 'https', 'mailto', 'tel'];
+
     protected bool $relative = false;
+
+    /**
+     * @param list<string> $schemes
+     */
+    public function schemes(array $schemes): static
+    {
+        $this->schemes = array_map(strtolower(...), $schemes);
+        return $this;
+    }
 
     public function relative(bool $relative = true): static
     {
@@ -30,20 +53,35 @@ class UrlCustomAttribute extends TextCustomAttribute
     #[Override]
     protected function getValidationRules(Model $owner): array
     {
-        $rules = parent::getValidationRules($owner);
-        $url = ['url', 'defaultScheme' => null, 'enableIDN' => true];
+        $opaque = array_intersect_key(self::OPAQUE_SCHEME_PATTERNS, array_flip($this->schemes));
+        $isOpaque = static fn (Model $model, string $attribute): bool
+            => isset($opaque[self::getScheme($model->$attribute)]);
+        $isRelative = fn (Model $model, string $attribute): bool => $this->relative
+            && self::isRelative($model->$attribute);
 
-        if (!$this->relative) {
-            return [...$rules, $url];
+        $rules = [
+            ...parent::getValidationRules($owner),
+            [
+                'url',
+                'defaultScheme' => null,
+                'enableIDN' => true,
+                'validSchemes' => array_values(array_diff($this->schemes, array_keys(self::OPAQUE_SCHEME_PATTERNS))),
+                'when' => static fn (Model $model, string $attribute): bool => !$isOpaque($model, $attribute)
+                    && !$isRelative($model, $attribute),
+            ],
+            ['match', 'pattern' => '/^\S+$/u', 'when' => $isRelative],
+        ];
+
+        foreach ($opaque as $scheme => $pattern) {
+            $rules[] = [
+                'match',
+                'pattern' => $pattern,
+                'when' => static fn (Model $model, string $attribute): bool
+                    => self::getScheme($model->$attribute) === $scheme,
+            ];
         }
 
-        $isRelative = static fn (Model $model, string $attribute): bool => self::isRelative($model->$attribute);
-
-        return [
-            ...$rules,
-            [...$url, 'when' => static fn (Model $model, string $attribute): bool => !$isRelative($model, $attribute)],
-            ['match', 'pattern' => '/^\\S+$/u', 'when' => $isRelative],
-        ];
+        return $rules;
     }
 
     #[Override]
@@ -51,6 +89,13 @@ class UrlCustomAttribute extends TextCustomAttribute
     {
         $field = InputField::make();
         return $this->configureField($this->relative ? $field : $field->type('url'), $owner);
+    }
+
+    private static function getScheme(mixed $value): string
+    {
+        return is_string($value) && preg_match('/^([a-z][a-z\d+.-]*):/i', $value, $matches)
+            ? strtolower($matches[1])
+            : '';
     }
 
     private static function isRelative(mixed $value): bool
