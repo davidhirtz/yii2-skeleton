@@ -1,6 +1,6 @@
 ## Unreleased
 
-- Changed the password reset email to the credentials email for a user who never logged in; the credentials view takes `user` and `url` instead of `form`
+- Changed the password reset email template
 - Changed `TinyMceField::contentStyle()` to also take an array of CSS rules keyed by selector
 
 ## 3.18.0 (October 15, 2026)
