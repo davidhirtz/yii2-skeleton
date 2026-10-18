@@ -36,6 +36,25 @@ class FileHelper extends BaseFileHelper
         return false;
     }
 
+    /**
+     * Unlike `move_uploaded_file()`, `rename()` keeps the `0600` of PHP's upload temp file, which a web server
+     * running as another user cannot read.
+     */
+    public static function moveUploadedFile(string $source, string $dest): bool
+    {
+        if (!static::rename($source, $dest)) {
+            return false;
+        }
+
+        $dest = (string)Yii::getAlias($dest);
+
+        if (stream_is_local($dest)) {
+            @chmod($dest, 0666 & ~umask());
+        }
+
+        return true;
+    }
+
     #[Override]
     public static function unlink($path): bool
     {

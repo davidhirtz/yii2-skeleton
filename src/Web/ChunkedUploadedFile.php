@@ -142,7 +142,7 @@ class ChunkedUploadedFile extends UploadedFile
     public function saveAs($file, $deleteTempFile = true): bool
     {
         if ($this->isCompleted()) {
-            return FileHelper::rename($this->tempName, $file);
+            return FileHelper::moveUploadedFile($this->tempName, $file);
         }
 
         return false;

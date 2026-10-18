@@ -84,7 +84,7 @@ abstract class AbstractUploadedFile extends UploadedFile
     {
         if (!$this->error) {
             $file = Yii::getAlias($file);
-            return $deleteTempFile ? FileHelper::rename($this->tempName, $file) : copy($this->tempName, $file);
+            return $deleteTempFile ? FileHelper::moveUploadedFile($this->tempName, $file) : copy($this->tempName, $file);
         }
 
         return false;

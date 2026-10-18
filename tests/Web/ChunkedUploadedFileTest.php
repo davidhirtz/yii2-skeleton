@@ -227,6 +227,25 @@ class ChunkedUploadedFileTest extends TestCase
         self::assertSame('abc', file_get_contents($target));
     }
 
+    public function testSaveAsAppliesTheUmaskToAFileSentWhole(): void
+    {
+        $source = $this->createSourceFile('abc');
+        chmod($source, 0600);
+
+        $file = $this->createUploadedFile($source, size: 3);
+        $target = $this->path . 'target.txt';
+        $umask = umask(0022);
+
+        try {
+            self::assertTrue($file->saveAs($target));
+        } finally {
+            umask($umask);
+        }
+
+        clearstatcache();
+        self::assertSame(0644, fileperms($target) & 0777);
+    }
+
     public function testSaveAsRefusesAnIncompleteUpload(): void
     {
         $file = $this->createUploadedFile($this->createSourceFile('abc'), range: 'bytes 0-2/9');
