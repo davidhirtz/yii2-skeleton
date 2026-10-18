@@ -139,6 +139,21 @@ class SaveTranslationsTest extends TestCase
         self::assertNull($this->findTranslation($model));
     }
 
+    public function testUntouchedTranslationStaysNull(): void
+    {
+        $model = new TranslatedActiveRecord();
+        $model->name = 'Name';
+        self::assertTrue($model->save(), implode(' ', $model->getErrorSummary(true)));
+
+        $loaded = TranslatedActiveRecord::findOne($model->id);
+        $loaded->name = 'Name Updated';
+
+        self::assertTrue($loaded->save(), implode(' ', $loaded->getErrorSummary(true)));
+        self::assertNull($loaded->name_de);
+        self::assertFalse($loaded->isAttributeChanged('name_de'));
+        self::assertArrayNotHasKey('name_de', $this->findLatestTrail($loaded)->data);
+    }
+
     public function testDeleteRemovesEveryRecord(): void
     {
         $model = $this->createRecord();
@@ -234,6 +249,10 @@ class TranslatedActiveRecord extends ActiveRecord implements TrailModelInterface
     public function rules(): array
     {
         return $this->getI18nRules([
+            [
+                ['name'],
+                'trim',
+            ],
             [
                 ['name'],
                 'string',

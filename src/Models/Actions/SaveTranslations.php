@@ -39,6 +39,11 @@ class SaveTranslations
             $previous = $record?->value;
             $value = $this->normalizeValue($this->model->getAttribute($name));
 
+            // A `trim` rule turns an untouched `null` into `""`, which is stored as no record: the model follows.
+            if ($value === null) {
+                $this->model->setAttribute($name, null);
+            }
+
             if ($value === $previous) {
                 continue;
             }
