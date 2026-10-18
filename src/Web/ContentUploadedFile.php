@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Hirtz\Skeleton\Web;
+
+use Hirtz\Skeleton\Upload\Upload;
+use Override;
+
+/**
+ * An upload whose bytes arrived inside a request, such as an MCP call's base64 argument: the name is the caller's,
+ * so only its basename is kept, and the size is held to {@see Upload::$maxStreamUploadSize} like a fetched URL's.
+ */
+class ContentUploadedFile extends AbstractUploadedFile
+{
+    public ?string $content = null;
+    public ?string $filename = null;
+
+    #[Override]
+    protected function saveTemporaryFile(): void
+    {
+        if ($this->content === null || $this->content === '') {
+            $this->error = UPLOAD_ERR_NO_FILE;
+            return;
+        }
+
+        $this->name = basename(str_replace('\\', '/', (string)$this->filename)) ?: 'upload';
+
+        $stream = fopen('php://memory', 'r+b');
+
+        if (!$stream) {
+            $this->error = UPLOAD_ERR_CANT_WRITE;
+            return;
+        }
+
+        fwrite($stream, $this->content);
+        rewind($stream);
+
+        $this->copyToTemporaryFile($stream, Upload::getComponent()->maxStreamUploadSize);
+        fclose($stream);
+    }
+}

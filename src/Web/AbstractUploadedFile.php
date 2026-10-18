@@ -12,8 +12,9 @@ use yii\web\UploadedFile;
 
 /**
  * An upload the server produces itself rather than one a browser posted: {@see StreamUploadedFile} fetches a URL,
- * {@see CopiedUploadedFile} copies a file the application names. Which of the two a caller reaches for is the
- * whole of the difference between a request-supplied target and a trusted one.
+ * {@see CopiedUploadedFile} copies a file the application names, {@see ContentUploadedFile} writes bytes a request
+ * carried. Which one a caller reaches for is the whole of the difference between a request-supplied target and a
+ * trusted one.
  */
 abstract class AbstractUploadedFile extends UploadedFile
 {
