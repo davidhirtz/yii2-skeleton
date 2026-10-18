@@ -70,8 +70,6 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     {
         return [
             FormRow::make()
-                ->content(Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_AUTHENTICATION')),
-            FormRow::make()
                 ->content(Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_RECOVERY_CODES', [
                     'count' => $this->model->getTwoFactorAuthenticationRecoveryCodeCount(),
                 ])),
@@ -85,10 +83,6 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     protected function getEnableAuthenticatorRows(): array
     {
         return [
-            FormRow::make()
-                ->content(
-                    Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ACTIVATE')
-                ),
             FormRow::make()
                 ->content($this->getQrCodeImage()),
             $this->getInputField(),

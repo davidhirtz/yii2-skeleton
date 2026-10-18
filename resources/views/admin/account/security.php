@@ -16,6 +16,7 @@ use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\TwoFactorAuthenticatorActiveForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\HintAlert;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountHeader;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountSubmenu;
 use Hirtz\Skeleton\Web\View;
@@ -40,6 +41,12 @@ if ($recoveryCodes) {
                 )),
             ));
 }
+
+// How it works, which a user who turned the hints off already knows
+echo HintAlert::make()
+    ->text($user->hasTwoFactorAuthentication()
+        ? Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_AUTHENTICATION')
+        : Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ACTIVATE'));
 
 echo FormContainer::make()
     ->form(TwoFactorAuthenticatorActiveForm::make()

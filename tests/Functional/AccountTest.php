@@ -90,8 +90,21 @@ class AccountTest extends TestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('#googleauthenticator-code');
+        self::assertAnySelectorTextContains('.alert', 'scan the QR code');
+        self::assertSelectorTextNotContains('form', 'scan the QR code');
 
         self::assertSubmenuLinks();
+    }
+
+    public function testSecurityExplainsNothingWithHintsOff(): void
+    {
+        $this->login('owner');
+        $this->getWebUser()->getIdentity()?->updateAttributes(['show_hints' => false]);
+
+        $this->open('admin/account/security');
+
+        self::assertSelectorExists('#googleauthenticator-code');
+        self::assertSelectorTextNotContains('body', 'scan the QR code');
     }
 
     public function testDisabledSecurity(): void
