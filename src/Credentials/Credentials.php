@@ -15,7 +15,8 @@ use yii\base\Component;
 class Credentials extends Component
 {
     /**
-     * @var list<Closure(): ?CredentialProvider> a closure answering `null` offers no provider
+     * @var list<Closure(): (CredentialProvider|list<CredentialProvider>|null)> a closure may answer several providers,
+     * or `null` for none
      */
     public array $providers = [];
 
@@ -40,7 +41,9 @@ class Credentials extends Component
             $this->resolvedProviders = [];
 
             foreach ($this->providers as $closure) {
-                if ($provider = $closure()) {
+                $providers = $closure();
+
+                foreach (is_array($providers) ? $providers : array_filter([$providers]) as $provider) {
                     $this->resolvedProviders[$provider->getName()] = $provider;
                 }
             }
