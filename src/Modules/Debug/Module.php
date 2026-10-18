@@ -60,6 +60,7 @@ class Module extends \yii\debug\Module
         'mcp',
         'oauth/token',
         '*/grant/create-token',
+        '*/credential/create',
     ];
 
     #[Override]

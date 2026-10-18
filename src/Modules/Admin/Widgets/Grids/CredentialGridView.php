@@ -1,0 +1,78 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
+
+use Hirtz\Skeleton\Credentials\Credentials;
+use Hirtz\Skeleton\Models\UserCredential;
+use Hirtz\Skeleton\Modules\Admin\Controllers\CredentialController;
+use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
+use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
+use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
+use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
+use Hirtz\Skeleton\Widgets\Grids\GridView;
+use Override;
+use Yii;
+
+/**
+ * @extends GridView<UserCredential>
+ */
+class CredentialGridView extends GridView
+{
+    #[Override]
+    protected function configure(): void
+    {
+        $this->columns ??= [
+            $this->getProviderColumn(),
+            $this->getHintColumn(),
+            $this->getLastUsedAtColumn(),
+            $this->getCreatedAtColumn(),
+            $this->getButtonColumn(),
+        ];
+
+        parent::configure();
+    }
+
+    protected function getProviderColumn(): ?Column
+    {
+        return DataColumn::make()
+            ->property('provider')
+            ->content(fn (UserCredential $credential): string => Credentials::getComponent()
+                ->getProvider($credential->provider)?->getLabel() ?? $credential->provider);
+    }
+
+    protected function getHintColumn(): ?Column
+    {
+        return DataColumn::make()
+            ->property('hint');
+    }
+
+    protected function getLastUsedAtColumn(): ?Column
+    {
+        return RelativeTimeColumn::make()
+            ->property('last_used_at');
+    }
+
+    protected function getCreatedAtColumn(): ?Column
+    {
+        return RelativeTimeColumn::make()
+            ->property('created_at')
+            ->hiddenForSmallDevices();
+    }
+
+    /**
+     * @see CredentialController::actionDelete()
+     */
+    protected function getButtonColumn(): ?Column
+    {
+        return ButtonColumn::make()
+            ->content(fn (UserCredential $credential): array => [
+                DeleteGridButton::make()
+                    ->label(Yii::t('skeleton', 'CREDENTIAL_BUTTON_DELETE'))
+                    ->title(Yii::t('skeleton', 'CREDENTIAL_CONFIRM_DELETE'))
+                    ->url(['/admin/credential/delete', 'id' => $credential->id]),
+            ]);
+    }
+}

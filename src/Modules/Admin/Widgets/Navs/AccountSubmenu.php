@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Credentials\Credentials;
 use Hirtz\Skeleton\Mcp\Mcp;
+use Hirtz\Skeleton\Modules\Admin\Controllers\CredentialController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\GrantController;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
@@ -22,6 +24,7 @@ class AccountSubmenu extends Submenu
             logins: $this->getLoginItem(),
             security: $this->getSecurityItem(),
             grants: $this->getGrantItem(),
+            credentials: $this->getCredentialItem(),
         );
 
         parent::configure();
@@ -59,6 +62,19 @@ class AccountSubmenu extends Submenu
                 ->label(Yii::t('skeleton', 'COMMON_SECURITY'))
                 ->url(['/admin/account/security'])
                 ->icon('shield-halved')
+            : null;
+    }
+
+    /**
+     * @see CredentialController::actionIndex()
+     */
+    protected function getCredentialItem(): ?NavItem
+    {
+        return Credentials::getComponent()->getProviders()
+            ? NavItem::make()
+                ->label(Yii::t('skeleton', 'CREDENTIALS_TITLE'))
+                ->url(['/admin/credential/index'])
+                ->icon('key')
             : null;
     }
 

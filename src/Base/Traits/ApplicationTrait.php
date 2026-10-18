@@ -16,6 +16,7 @@ use Hirtz\Skeleton\I18n\I18N;
 use Hirtz\Skeleton\Log\FileTarget;
 use Hirtz\Skeleton\Log\SentryTarget;
 use Hirtz\Skeleton\Mail\Mailer;
+use Hirtz\Skeleton\Credentials\Credentials;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Resource;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
@@ -43,6 +44,7 @@ use yii\validators\TrimValidator;
 use yii\web\JqueryAsset;
 
 /**
+ * @property Credentials $credentials
  * @property Mcp $mcp
  * @property Search $search
  * @property Sitemap $sitemap
@@ -167,6 +169,7 @@ trait ApplicationTrait
                                 '_POST.value',
                                 '_POST.code',
                                 '_POST.code_verifier',
+                                '_POST.credentialSecret',
                                 '_POST.refresh_token',
                                 '_POST.AccountCredentialsForm.newPassword',
                                 '_POST.AccountCredentialsForm.oldPassword',
@@ -195,6 +198,9 @@ trait ApplicationTrait
                     'class' => Mailer::class,
                     'htmlLayout' => '@skeleton/../resources/mail/layouts/html',
                     'useFileTransport' => YII_DEBUG,
+                ],
+                'credentials' => [
+                    'class' => Credentials::class,
                 ],
                 'mcp' => [
                     'class' => Mcp::class,

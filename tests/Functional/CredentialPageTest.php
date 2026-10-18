@@ -1,0 +1,109 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Hirtz\Skeleton\Tests\Functional;
+
+use Hirtz\Skeleton\Credentials\CredentialProvider;
+use Hirtz\Skeleton\Models\Forms\LoginForm;
+use Hirtz\Skeleton\Models\UserCredential;
+use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Override;
+
+class CredentialPageTest extends TestCase
+{
+    use FunctionalTestTrait;
+    use UserFixtureTrait;
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->config['components']['credentials']['providers'] = [
+            fn (): CredentialProvider => CredentialProvider::make('acme')
+                ->label('Äcme Bilder 🎨')
+                ->url('https://acme.example/keys')
+                ->verify(fn (string $secret): bool => $secret !== 'wrong'),
+        ];
+
+        $this->reloadApplication();
+    }
+
+    public function testAKeyIsSavedShownByItsHintAndRemoved(): void
+    {
+        $this->login();
+        $this->open('admin/credential/index');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorExists('.tabs a[href="/admin/credential/index"]');
+        self::assertSelectorExists('a[href="https://acme.example/keys"]');
+
+        $this->submit('form[action="/admin/credential/create"]', ['provider' => 'acme', 'credentialSecret' => 'sk-test-wxyz']);
+
+        self::assertAlertSame('The key was saved.', 'success');
+        self::assertAnySelectorTextContains('td', '…wxyz');
+        self::assertAnySelectorTextContains('td', 'Äcme Bilder 🎨');
+        self::assertSelectorTextNotContains('body', 'sk-test-wxyz');
+
+        $record = UserCredential::findOne(['user_id' => $this->getUserFromFixture('owner')->id]) ?? self::fail('No key');
+
+        $this->post("admin/credential/delete?id=$record->id");
+        self::assertAlertSame('The key was removed.', 'success');
+        self::assertNull(UserCredential::findOne($record->id));
+    }
+
+    public function testAKeyTheServiceRefusesIsNotSaved(): void
+    {
+        $this->login();
+        $this->open('admin/credential/index');
+        $this->submit('form[action="/admin/credential/create"]', ['provider' => 'acme', 'credentialSecret' => 'wrong']);
+
+        self::assertAlertSame('The service did not accept this key.', 'danger');
+        self::assertNull(UserCredential::findOne(['user_id' => $this->getUserFromFixture('owner')->id]));
+    }
+
+    public function testAnotherUsersKeyIsNotFound(): void
+    {
+        $record = UserCredential::store($this->getUserFromFixture('admin')->id, 'acme', 'not-yours');
+
+        $this->login();
+        $this->open('admin/credential/index');
+        $this->post("admin/credential/delete?id=$record->id");
+
+        self::assertResponseStatusCodeSame(404);
+        self::assertNotNull(UserCredential::findOne($record->id));
+    }
+
+    public function testWithoutProvidersThePageIsAbsent(): void
+    {
+        $this->config['components']['credentials']['providers'] = [];
+        $this->reloadApplication();
+
+        $this->login();
+        $this->open('admin/credential/index');
+
+        self::assertResponseStatusCodeSame(404);
+    }
+
+    private function post(string $url): void
+    {
+        $request = $this->getWebRequest();
+
+        self::$crawler = self::$client->request('POST', "https://www.test.localhost/$url", [
+            $request->csrfParam => $request->getCsrfToken(),
+        ]);
+    }
+
+    private function login(): void
+    {
+        $this->open('admin/account/login');
+
+        $this->submit(values: $this->prefixFormValues(LoginForm::instance()->formName(), [
+            'email' => $this->getUserFromFixture('owner')->email,
+            'password' => 'password',
+        ]));
+    }
+}

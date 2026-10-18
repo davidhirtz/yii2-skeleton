@@ -26,6 +26,25 @@ class SecretKey
     }
 
     /**
+     * Encrypted under the secret key and base64 encoded, so the result fits a text column.
+     */
+    public static function encrypt(string $data): string
+    {
+        return base64_encode(Yii::$app->getSecurity()->encryptByKey($data, static::get()));
+    }
+
+    /**
+     * `null` for data not written by {@see static::encrypt()} under the current key.
+     */
+    public static function decrypt(string $data): ?string
+    {
+        $data = base64_decode($data, true);
+        $decrypted = $data === false ? false : Yii::$app->getSecurity()->decryptByKey($data, static::get());
+
+        return is_string($decrypted) ? $decrypted : null;
+    }
+
+    /**
      * A random key of URL-safe characters, for anything that is handed out once and stored hashed.
      *
      * @param positive-int $length

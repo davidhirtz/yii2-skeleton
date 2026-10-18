@@ -190,6 +190,26 @@ version a decision is stored and logged with is `version` plus a fingerprint of 
 a changed service asks every visitor again on its own, a reworded text does not. Raise `version` for a change of
 wording that should.
 
+### API keys per user
+
+A bundle that calls a third-party service may let each user store a key of their own, declared on the `credentials`
+component:
+
+```php
+'credentials' => [
+    'providers' => [
+        fn (): CredentialProvider => CredentialProvider::make('acme')
+            ->label('Acme')
+            ->url('https://acme.example/keys')
+            ->verify(fn (string $key): bool => AcmeClient::isValidKey($key)),
+    ],
+],
+```
+
+With a provider declared, the account gets an *API keys* tab. A key is stored encrypted under `SecretKey` and shown
+only by its last four characters; nobody reads it again, a manager included. The code calling the service asks
+`UserCredential::findSecret($userId, 'acme')`. A password change keeps the keys.
+
 ### MCP server
 
 The `mcp` component (`Mcp\Mcp`) lets an agent read and write content through the model layer, as a user and under that
