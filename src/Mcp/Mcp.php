@@ -19,6 +19,8 @@ use Hirtz\Skeleton\Mcp\Tools\ToolCollection;
 use Hirtz\Skeleton\Mcp\Tools\ToolInterface;
 use Hirtz\Skeleton\Mcp\Tools\UpdateRecordTool;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Models\UserToken;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -38,6 +40,25 @@ class Mcp extends Component
      * @var list<Closure(self): ?ToolInterface> a closure answering `null` offers no tool
      */
     public array $tools = [];
+
+    /**
+     * @var bool whether `POST /mcp` answers, authenticated by the tokens `mcp/token` issues
+     */
+    public bool $enableHttp = false;
+
+    /**
+     * @var list<string> origins besides the request's own a browser may send, e.g. `https://claude.ai`
+     */
+    public array $allowedOrigins = [];
+
+    /**
+     * @var int failed authentications per IP address before the endpoint answers `429`
+     */
+    public int $authenticationAttemptLimit = 10;
+
+    public int $authenticationAttemptDuration = 900;
+
+    public int $tokenLength = 48;
 
     /**
      * @var array<string, Resource<covariant ActiveRecord&AdminModelInterface>>|null
@@ -106,6 +127,39 @@ class Mcp extends Component
         }
 
         return $tools;
+    }
+
+    /**
+     * @param int|null $lifetime seconds until the token expires, `null` for one that never does
+     * @return string the token, which only its HMAC is stored for
+     */
+    public function issueToken(User $user, bool $readOnly, ?int $lifetime = null): string
+    {
+        $token = Yii::$app->getSecurity()->generateRandomString($this->tokenLength);
+        UserToken::issue($user->id, $readOnly ? UserToken::TYPE_MCP_READ : UserToken::TYPE_MCP_WRITE, $token, $lifetime);
+
+        return $token;
+    }
+
+    /**
+     * A user who could not log in is not authenticated by a token either.
+     */
+    public function findToken(string $token): ?UserToken
+    {
+        $record = UserToken::find()
+            ->whereToken($token)
+            ->andWhere(['type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]])
+            ->unexpired()
+            ->with('user')
+            ->one();
+
+        $user = $record?->user;
+
+        if ($user === null || ($user->isDisabled() && !$user->isOwner())) {
+            return null;
+        }
+
+        return $record;
     }
 
     public function createServer(bool $readOnly = false): Server

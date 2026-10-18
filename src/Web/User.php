@@ -173,6 +173,26 @@ class User extends \yii\web\User
         parent::init();
     }
 
+    /**
+     * Sets a user without session or cookie as the `user` component, for a console command or a request
+     * authenticated by a bearer token.
+     */
+    public static function setSessionlessIdentity(?\Hirtz\Skeleton\Models\User $identity): self
+    {
+        /** @var self $webuser */
+        $webuser = Yii::createObject([
+            'class' => self::class,
+            'identityClass' => \Hirtz\Skeleton\Models\User::class,
+            'enableSession' => false,
+            'enableAutoLogin' => false,
+        ]);
+
+        $webuser->setIdentity($identity);
+        Yii::$app->set('user', $webuser);
+
+        return $webuser;
+    }
+
     #[Override]
     public function loginRequired($checkAjax = true, $checkAcceptHeader = true): ?Response
     {

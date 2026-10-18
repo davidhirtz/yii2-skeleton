@@ -32,6 +32,8 @@ class UserToken extends ActiveRecord
     public const string TYPE_VERIFICATION = 'verification';
     public const string TYPE_PASSWORD_RESET = 'password';
     public const string TYPE_RECOVERY_CODE = 'recovery';
+    public const string TYPE_MCP_READ = 'mcp-read';
+    public const string TYPE_MCP_WRITE = 'mcp-write';
 
     #[Override]
     public function rules(): array

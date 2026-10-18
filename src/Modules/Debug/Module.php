@@ -52,10 +52,11 @@ class Module extends \yii\debug\Module
 
     /**
      * @var list<string> wildcard patterns of request paths never recorded, such as the DevTools probe Chrome
-     *     sends on every page with the console open.
+     *     sends on every page with the console open, or the MCP endpoint, whose requests carry a bearer token.
      */
     public array $ignoredPaths = [
         '.well-known/appspecific/*',
+        'mcp',
     ];
 
     #[Override]

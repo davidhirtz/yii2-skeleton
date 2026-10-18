@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\Console\Controllers\Traits;
 
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Web\User as WebUser;
-use Yii;
 use yii\helpers\Console;
 
 /**
@@ -32,16 +31,7 @@ trait UserIdentityTrait
             return false;
         }
 
-        $webuser = Yii::createObject([
-            'class' => WebUser::class,
-            'identityClass' => User::class,
-            'enableSession' => false,
-            'enableAutoLogin' => false,
-        ]);
-
-        $webuser->setIdentity($identity);
-        Yii::$app->set('user', $webuser);
-
+        WebUser::setSessionlessIdentity($identity);
         return true;
     }
 }

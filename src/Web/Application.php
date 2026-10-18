@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Web;
 
 use Hirtz\Skeleton\Base\Traits\ApplicationTrait;
+use Hirtz\Skeleton\Controllers\McpController;
+use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Rbac\DbManager;
 use Override;
 use Yii;
@@ -95,6 +97,7 @@ class Application extends \yii\web\Application
     {
         $this->setDefaultCookieConfig();
         $this->setDefaultUrlManagerRules();
+        $this->setMcpEndpoint();
 
         // Not derived from the namespace above, which would need an alias mirroring it; the console application
         // pins its own the same way.
@@ -103,6 +106,19 @@ class Application extends \yii\web\Application
         parent::bootstrap();
 
         $this->setDefaultEmail();
+    }
+
+    /**
+     * Here rather than in the core config, where the console would take the route for its `mcp` command.
+     */
+    protected function setMcpEndpoint(): void
+    {
+        $mcp = $this->get('mcp');
+
+        if ($mcp instanceof Mcp && $mcp->enableHttp) {
+            $this->controllerMap['mcp'] ??= McpController::class;
+            $this->addUrlManagerRules(['mcp' => 'mcp/index'], true);
+        }
     }
 
     /**
