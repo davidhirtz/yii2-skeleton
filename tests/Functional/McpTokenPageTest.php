@@ -37,11 +37,15 @@ class McpTokenPageTest extends TestCase
         self::assertSelectorNotExists('#mcp-token');
         self::assertSelectorNotExists('form select');
         self::assertSelectorExists('.header a[href="/admin/mcp-token/create"]');
+        self::assertSelectorExists('a.nav-link.active[href="/admin/account/update"]');
+        self::assertSelectorNotExists('a.nav-link.active[href="/admin/user/index"]');
         self::assertAnySelectorTextContains('.alert', 'No access tokens yet.');
         self::assertSelectorExists('.alert a[href="/admin/mcp-token/create"]');
 
         $this->open('admin/mcp-token/create');
 
+        self::assertSelectorExists('a.nav-link.active[href="/admin/account/update"]');
+        self::assertSelectorNotExists('a.nav-link.active[href="/admin/user/index"]');
         self::assertSelectorExists('label[for="mcptokenform-expires"]');
         self::assertSelectorExists('select[name="McpTokenForm[expires]"] option[value="90"][selected]');
         self::assertSelectorExists('input[type="checkbox"][name="McpTokenForm[readOnly]"]');
@@ -117,6 +121,8 @@ class McpTokenPageTest extends TestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorExists("#user-token-$record->id");
         self::assertSelectorExists(".tabs a.active[href=\"/admin/mcp-token/view?user=$admin->id\"]");
+        self::assertSelectorExists('a.nav-link.active[href="/admin/user/index"]');
+        self::assertSelectorNotExists('a.nav-link.active[href="/admin/account/update"]');
         self::assertSelectorNotExists('a[href="/admin/mcp-token/create"]');
 
         self::$client->followRedirects(false);

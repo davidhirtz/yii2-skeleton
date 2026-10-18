@@ -41,8 +41,12 @@ class CredentialPageTest extends TestCase
         self::assertSelectorExists('.tabs a[href="/admin/credential/index"]');
         self::assertSelectorNotExists('form input[type="password"]');
         self::assertSelectorExists('.header a[href="/admin/credential/create"]');
+        self::assertSelectorExists('a.nav-link.active[href="/admin/account/update"]');
+        self::assertSelectorNotExists('a.nav-link.active[href="/admin/user/index"]');
 
         $this->open('admin/credential/create');
+        self::assertSelectorExists('a.nav-link.active[href="/admin/account/update"]');
+        self::assertSelectorNotExists('a.nav-link.active[href="/admin/user/index"]');
         // a single service is no choice
         self::assertSelectorExists('input[type="hidden"][name="UserCredentialForm[provider]"][value="acme"]');
         self::assertSelectorExists('label[for="usercredentialform-secret"]');
@@ -85,6 +89,8 @@ class CredentialPageTest extends TestCase
         self::assertSelectorTextNotContains('body', 'sk-users-key-wxyz');
         self::assertSelectorNotExists('a[href="/admin/credential/create"]');
         self::assertSelectorExists(".tabs a.active[href=\"/admin/credential/view?user=$admin->id\"]");
+        self::assertSelectorExists('a.nav-link.active[href="/admin/user/index"]');
+        self::assertSelectorNotExists('a.nav-link.active[href="/admin/account/update"]');
 
         self::$client->followRedirects(false);
         $this->post("admin/credential/delete?id=$record->id");

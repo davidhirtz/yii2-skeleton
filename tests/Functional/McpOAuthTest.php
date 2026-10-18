@@ -386,6 +386,8 @@ class McpOAuthTest extends TestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('.grid', 'Claude 🤖');
         self::assertSelectorExists('.tabs a[href="/admin/grant/index"]');
+        self::assertSelectorExists('a.nav-link.active[href="/admin/account/update"]');
+        self::assertSelectorNotExists('a.nav-link.active[href="/admin/user/index"]');
 
         $grant = OAuthGrant::findOne(['client_id' => self::CLIENT_ID]);
         self::assertNotNull($grant);
@@ -412,6 +414,8 @@ class McpOAuthTest extends TestCase
 
         $this->login();
         $this->open("admin/grant/view?user=$admin->id");
+        self::assertSelectorExists('a.nav-link.active[href="/admin/user/index"]');
+        self::assertSelectorNotExists('a.nav-link.active[href="/admin/account/update"]');
 
         self::assertResponseIsSuccessful();
         self::assertSelectorExists("#oauth-grant-$grant->id");

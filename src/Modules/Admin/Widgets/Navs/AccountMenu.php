@@ -59,7 +59,11 @@ class AccountMenu extends Widget
             ? NavItem::make()
                 ->label($this->webuser->getIdentity()->getUsername())
                 ->url(['/admin/account/update'])
-                ->routes(['admin/account/'])
+                ->routes([
+                    'admin/account/',
+                    // the account's tabs beyond its controller; their `view` is a manager's look at another user
+                    'admin/(grant|mcp-token|credential)/(?!view)',
+                ])
                 ->icon('user')
             : null;
     }

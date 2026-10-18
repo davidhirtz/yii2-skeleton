@@ -31,6 +31,9 @@ class UserNavItem extends NavItem
             'admin/user-auth/',
             'admin/user-trail/',
             'admin/user-login/view',
+            'admin/grant/view',
+            'admin/mcp-token/view',
+            'admin/credential/view',
         ]);
 
         parent::__construct($config);
