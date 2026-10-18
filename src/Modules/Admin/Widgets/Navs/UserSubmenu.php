@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Credentials\Credentials;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
@@ -29,6 +30,7 @@ class UserSubmenu extends Submenu
             logins: $this->getUserLoginItem(),
             grants: $this->getUserGrantItem(),
             tokens: $this->getUserMcpTokenItem(),
+            credentials: $this->getUserCredentialItem(),
             trail: $this->getUserTrailItem(),
         );
 
@@ -85,6 +87,17 @@ class UserSubmenu extends Submenu
                 ->icon('key')
                 ->url(['/admin/mcp-token/view', 'user' => $this->model->id])
                 ->routes(['admin/mcp-token/view'])
+            : null;
+    }
+
+    protected function getUserCredentialItem(): ?NavItem
+    {
+        return Credentials::getComponent()->getProviders() && $this->webuser->can(User::AUTH_USER, ['user' => $this->model])
+            ? NavItem::make()
+                ->label(Yii::t('skeleton', 'CREDENTIALS_TITLE'))
+                ->icon('lock')
+                ->url(['/admin/credential/view', 'user' => $this->model->id])
+                ->routes(['admin/credential/view'])
             : null;
     }
 

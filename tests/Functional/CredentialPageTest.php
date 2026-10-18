@@ -72,12 +72,38 @@ class CredentialPageTest extends TestCase
         self::assertNull(UserCredential::findOne(['user_id' => $this->getUserFromFixture('owner')->id]));
     }
 
-    public function testAnotherUsersKeyIsNotFound(): void
+    public function testAManagerSeesAndRemovesAUsersKey(): void
     {
-        $record = UserCredential::store($this->getUserFromFixture('admin')->id, 'acme', 'not-yours');
+        $admin = $this->getUserFromFixture('admin');
+        $record = UserCredential::store($admin->id, 'acme', 'sk-users-key-wxyz');
 
         $this->login();
+        $this->open("admin/credential/view?user=$admin->id");
+
+        self::assertResponseIsSuccessful();
+        self::assertAnySelectorTextContains('td', '…wxyz');
+        self::assertSelectorTextNotContains('body', 'sk-users-key-wxyz');
+        self::assertSelectorNotExists('a[href="/admin/credential/create"]');
+        self::assertSelectorExists(".tabs a.active[href=\"/admin/credential/view?user=$admin->id\"]");
+
+        self::$client->followRedirects(false);
+        $this->post("admin/credential/delete?id=$record->id");
+
+        self::assertResponseHeaderSame('location', "https://www.test.localhost/admin/credential/view?user=$admin->id");
+        self::assertNull(UserCredential::findOne($record->id));
+    }
+
+    public function testAKeyOfAUserOneCannotManageIsNotFound(): void
+    {
+        $record = UserCredential::store($this->getUserFromFixture('owner')->id, 'acme', 'not-yours');
+
+        // the fixture's admin has two-factor authentication, which a login form test does not go through
+        $this->getWebUser()->enableTwoFactorAuthentication = false;
+        $this->login('admin');
         $this->open('admin/credential/index');
+        self::assertResponseIsSuccessful();
+
+        self::$client->followRedirects(false);
         $this->post("admin/credential/delete?id=$record->id");
 
         self::assertResponseStatusCodeSame(404);
@@ -103,12 +129,12 @@ class CredentialPageTest extends TestCase
         ]);
     }
 
-    private function login(): void
+    private function login(string $fixtureKey = 'owner'): void
     {
         $this->open('admin/account/login');
 
         $this->submit(values: $this->prefixFormValues(LoginForm::instance()->formName(), [
-            'email' => $this->getUserFromFixture('owner')->email,
+            'email' => $this->getUserFromFixture($fixtureKey)->email,
             'password' => 'password',
         ]));
     }

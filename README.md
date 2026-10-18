@@ -207,7 +207,8 @@ component:
 ```
 
 With a provider declared, the account gets an *API keys* tab. A key is stored encrypted under `SecretKey` and shown
-only by its last four characters; nobody reads it again, a manager included. The code calling the service asks
+only by its last four characters; nobody reads it again. A manager of the user lists and removes the user's keys on the
+user's *API keys* tab. The code calling the service asks
 `UserCredential::findSecret($userId, 'acme')`. A password change keeps the keys.
 
 ### MCP server

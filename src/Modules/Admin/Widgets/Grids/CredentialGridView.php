@@ -22,6 +22,17 @@ use Yii;
  */
 class CredentialGridView extends GridView
 {
+    /**
+     * @var bool whether the keys are the acting user's own, which only they add
+     */
+    protected bool $isOwn = true;
+
+    public function isOwn(bool $isOwn): static
+    {
+        $this->isOwn = $isOwn;
+        return $this;
+    }
+
     #[Override]
     protected function configure(): void
     {
@@ -68,7 +79,7 @@ class CredentialGridView extends GridView
     {
         return parent::getSummary()
             ?->emptyMessage(Yii::t('skeleton', 'CREDENTIAL_GRID_EMPTY'))
-            ->emptyLink(Yii::t('skeleton', 'CREDENTIAL_GRID_EMPTY_LINK'), ['/admin/credential/create'])
+            ->emptyLink(Yii::t('skeleton', 'CREDENTIAL_GRID_EMPTY_LINK'), $this->isOwn ? ['/admin/credential/create'] : null)
             ->visible(fn (): bool => $this->provider->getCount() === 0);
     }
 
