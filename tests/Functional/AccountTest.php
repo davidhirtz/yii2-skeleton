@@ -116,6 +116,17 @@ class AccountTest extends TestCase
         self::assertResponseStatusCodeSame(403);
     }
 
+    public function testSigningOutEverywhereIsOnTheLoginTab(): void
+    {
+        $this->login('owner');
+
+        $this->open('admin/account/credentials');
+        self::assertSelectorExists('.header [hx-post="/admin/account/logout-other-sessions"], .header form[action="/admin/account/logout-other-sessions"], .header [data-url="/admin/account/logout-other-sessions"]');
+
+        $this->open('admin/account/update');
+        self::assertSelectorNotExists('[hx-post="/admin/account/logout-other-sessions"]');
+    }
+
     public function testDeleteButtonIsHiddenFromTheOwner(): void
     {
         $this->login('owner');
@@ -134,6 +145,10 @@ class AccountTest extends TestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorExists(self::DELETE_FORM_SELECTOR . ' input[name="value"][type="password"]');
+
+        // in the page header rather than in a dropdown, and a button there
+        $modal = self::$crawler->filter(self::DELETE_FORM_SELECTOR)->closest('dialog');
+        self::assertSelectorExists('.header button.btn[data-modal="#' . $modal?->attr('id') . '"]');
 
         // The password is verified, never compared, so it must not reach the markup as the input's `pattern`
         self::assertSelectorNotExists(self::DELETE_FORM_SELECTOR . ' input[pattern]');

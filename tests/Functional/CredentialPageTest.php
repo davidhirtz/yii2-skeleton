@@ -40,6 +40,7 @@ class CredentialPageTest extends TestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('.tabs a[href="/admin/credential/index"]');
         self::assertSelectorNotExists('form input[type="password"]');
+        self::assertSelectorExists('.header a[href="/admin/credential/create"]');
 
         $this->open('admin/credential/create');
         // a single service is no choice

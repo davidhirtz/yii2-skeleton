@@ -11,11 +11,9 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
-use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Hirtz\Skeleton\Widgets\Grids\GridSummary;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Override;
-use Stringable;
 use Yii;
 
 /**
@@ -37,8 +35,6 @@ class McpTokenGridView extends GridView
     #[Override]
     protected function configure(): void
     {
-        $this->header ??= $this->isOwn ? [$this->getCreateButton()] : null;
-
         $this->columns ??= [
             $this->getScopeColumn(),
             $this->getExpiresAtColumn(),
@@ -83,16 +79,6 @@ class McpTokenGridView extends GridView
             ->property('created_at')
             ->title(Yii::t('skeleton', 'MCP_TOKEN_CREATED_AT_LABEL'))
             ->hiddenForSmallDevices();
-    }
-
-    /**
-     * @see McpTokenController::actionCreate()
-     */
-    protected function getCreateButton(): Stringable
-    {
-        return CreateButton::make()
-            ->label(Yii::t('skeleton', 'MCP_TOKEN_BUTTON_NEW'))
-            ->url(['/admin/mcp-token/create']);
     }
 
     #[Override]

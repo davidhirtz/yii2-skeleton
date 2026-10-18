@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\AccountDeleteButton;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountHeader;
@@ -23,7 +24,9 @@ use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 $this->title(Yii::t('skeleton', 'COMMON_SETTINGS'));
 
 echo AccountHeader::make()
-    ->model($form->user);
+    ->model($form->user)
+    ->addContent(AccountDeleteButton::make()
+        ->model($form->user));
 
 echo AccountSubmenu::make();
 

@@ -13,12 +13,15 @@ use Hirtz\Skeleton\Models\Forms\AccountCredentialsForm;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountCredentialsActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountHeader;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountLogoutOtherSessionsButton;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountSubmenu;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 
 echo AccountHeader::make()
-    ->model($form->user);
+    ->model($form->user)
+    ->addContent(AccountLogoutOtherSessionsButton::make()
+        ->model($form->user));
 
 echo AccountSubmenu::make();
 

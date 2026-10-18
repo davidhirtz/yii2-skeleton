@@ -8,7 +8,6 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Override;
-use Stringable;
 
 class AccountHeader extends Header
 {
@@ -23,14 +22,6 @@ class AccountHeader extends Header
         $this->title ??= $this->model->getUsername();
         $this->url ??= ['/admin/account/update'];
 
-        $this->addContent($this->getAccountActionDropdown());
-
         parent::configure();
-    }
-
-    protected function getAccountActionDropdown(): ?Stringable
-    {
-        return AccountActionDropdown::make()
-            ->model($this->model);
     }
 }

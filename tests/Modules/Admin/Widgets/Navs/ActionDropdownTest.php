@@ -25,13 +25,6 @@ class ActionDropdownTest extends TestCase
         $this->assertModalTriggersAreButtons(Yii::$app->runAction('admin/user/update', ['id' => $user->id]));
     }
 
-    public function testEveryAccountActionIsStyledAsAButton(): void
-    {
-        $this->login();
-
-        $this->assertModalTriggersAreButtons(Yii::$app->runAction('admin/account/update'));
-    }
-
     private function assertModalTriggersAreButtons(string $html): void
     {
         preg_match_all('~<li class="dropdown-item">(.*?)</li>~s', $html, $items);
