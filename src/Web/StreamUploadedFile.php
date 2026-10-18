@@ -93,6 +93,12 @@ class StreamUploadedFile extends AbstractUploadedFile
             } catch (GuzzleException $exception) {
                 $sink->detach();
 
+                // Guzzle may already have closed the sink (a timeout on some cURL versions)
+                if (!is_resource($resource)) {
+                    Yii::warning("Fetching \"$url\" failed: {$exception->getMessage()}", __METHOD__);
+                    return null;
+                }
+
                 // The transfer aborted past the limit: the copy reports the size
                 if (ftell($resource) > Upload::getComponent()->maxStreamUploadSize) {
                     rewind($resource);
