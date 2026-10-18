@@ -44,6 +44,8 @@ class Resource
 
     protected ?Closure $url = null;
 
+    protected ?Closure $image = null;
+
     protected bool $readOnly = false;
 
     protected bool $creatable = true;
@@ -133,6 +135,17 @@ class Resource
     public function url(Closure $url): static
     {
         $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * A picture of the record, base64, which `get_record` shows the client beside the JSON.
+     *
+     * @param Closure(T): (array{data: string, mimeType: string}|null) $image
+     */
+    public function image(Closure $image): static
+    {
+        $this->image = $image;
         return $this;
     }
 
@@ -275,6 +288,14 @@ class Resource
     public function reorderRecords(?ActiveRecord $parent, array $ids): bool
     {
         return $this->reorder !== null && ($this->reorder)($parent, $ids);
+    }
+
+    /**
+     * @return array{data: string, mimeType: string}|null
+     */
+    public function getImage(ActiveRecord $record): ?array
+    {
+        return $this->image !== null ? ($this->image)($record) : null;
     }
 
     /**

@@ -24,7 +24,7 @@ class GetRecordTool extends ResourceTool
     public function getDescription(): string
     {
         return 'Returns every attribute of a record, the translations and custom attributes included, with its admin '
-            . 'and frontend URLs.';
+            . 'and frontend URLs; a file that is an image comes with a preview of it.';
     }
 
     #[Override]
@@ -45,6 +45,26 @@ class GetRecordTool extends ResourceTool
     public function isReadOnly(): bool
     {
         return true;
+    }
+
+    /**
+     * Overridden rather than {@see static::run()}, as the record's picture travels beside the JSON.
+     */
+    #[Override]
+    public function call(array $arguments): ToolResult
+    {
+        try {
+            $resource = $this->findResource($arguments);
+            $record = $this->findRecord($resource, $arguments['id']);
+            $image = $resource->getImage($record);
+
+            return ToolResult::success(
+                $this->getRecordData($resource, $record),
+                $image ? [['type' => 'image', ...$image]] : [],
+            );
+        } catch (ToolException $exception) {
+            return ToolResult::error($exception->getMessage(), $exception->data);
+        }
     }
 
     #[Override]

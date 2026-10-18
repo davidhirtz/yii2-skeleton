@@ -257,7 +257,8 @@ definition appended to `resources` as a closure, a tool to `tools`:
 
 `parent()`, `beforeInsert()`, `reorder()`, `defaultType()` and `url()` reproduce what the model's admin actions do
 besides `load()` and `insert()`; `query()` narrows it, `attributes()` and `exceptAttributes()` the writable attributes,
-`creatable(false)` and `readOnly()` the tools. A later registration of a name replaces an earlier one. The skeleton
+`creatable(false)` and `readOnly()` the tools, `image()` a picture `get_record` and `resources/read` show beside the
+JSON. A later registration of a name replaces an earlier one. The skeleton
 registers `redirect`.
 
 Each record is also an MCP resource, `record://entry/8`, read through `get_record` and its permission check: the

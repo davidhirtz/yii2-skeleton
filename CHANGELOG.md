@@ -8,6 +8,7 @@
 - Added MCP server instructions (`Mcp::$instructions`) and `Validators\Interfaces\JsonSchemaInterface`
 - Added `trail.client`, the MCP client a change came through (`Mcp::setClient()`)
 - Added `Web\ContentUploadedFile`, an upload from bytes a request carried
+- Added `Mcp\Resource::image()`, a picture MCP clients are shown beside a record
 - Added `Helpers\NetworkHelper`
 - Added `UrlCustomAttribute::schemes()`, by default `http`, `https`, `mailto` and `tel`
 - Changed the password reset email template

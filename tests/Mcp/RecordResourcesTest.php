@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Mcp\JsonRpcException;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Prompt;
 use Hirtz\Skeleton\Mcp\RecordResources;
+use Hirtz\Skeleton\Mcp\Resource;
 use Hirtz\Skeleton\Mcp\Server;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Test\TestCase;
@@ -67,6 +68,25 @@ class RecordResourcesTest extends TestCase
         $server = Mcp::getComponent()->createServer();
         self::assertArrayNotHasKey('resources', $this->getResult($server, 'initialize')['capabilities'] ?? []);
         self::assertSame(JsonRpcException::METHOD_NOT_FOUND, $server->handle($this->createMessage('resources/list'))['error']['code'] ?? null);
+    }
+
+    public function testARecordsImageIsShownBesideItsJson(): void
+    {
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('owner'));
+        $redirect = $this->createRedirect();
+
+        Mcp::getComponent()->resources = [
+            fn (): Resource => Resource::make('redirect', Redirect::class)
+                ->image(fn (Redirect $redirect): array => ['data' => base64_encode("Bild $redirect->id"), 'mimeType' => 'image/png']),
+        ];
+
+        $server = Mcp::getComponent()->createServer();
+
+        $contents = $this->getResult($server, 'resources/read', ['uri' => "record://redirect/$redirect->id"])['contents'] ?? [];
+        self::assertSame(['uri' => "record://redirect/$redirect->id", 'mimeType' => 'image/png', 'blob' => base64_encode("Bild $redirect->id")], $contents[1] ?? null);
+
+        $content = $this->getResult($server, 'tools/call', ['name' => 'get_record', 'arguments' => ['resource' => 'redirect', 'id' => $redirect->id]])['content'] ?? [];
+        self::assertSame(['type' => 'image', 'data' => base64_encode("Bild $redirect->id"), 'mimeType' => 'image/png'], $content[1] ?? null);
     }
 
     public function testAModernReadCarriesCachingHints(): void

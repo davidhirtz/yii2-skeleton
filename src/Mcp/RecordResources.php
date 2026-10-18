@@ -83,7 +83,7 @@ class RecordResources
     }
 
     /**
-     * @return list<array{uri: string, mimeType: string, text: string}>
+     * @return list<array{uri: string, mimeType: string, text?: string, blob?: string}>
      * @throws JsonRpcException
      */
     public function read(string $uri): array
@@ -101,6 +101,11 @@ class RecordResources
                 'mimeType' => self::MIME_TYPE,
                 'text' => Server::encode($result->structuredContent),
             ],
+            ...array_map(fn (array $block): array => [
+                'uri' => $uri,
+                'mimeType' => $block['mimeType'],
+                'blob' => $block['data'],
+            ], $result->content),
         ];
     }
 
