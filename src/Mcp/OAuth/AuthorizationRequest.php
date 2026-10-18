@@ -6,10 +6,6 @@ namespace Hirtz\Skeleton\Mcp\OAuth;
 
 use Hirtz\Skeleton\Models\OAuthGrant;
 
-/**
- * An error {@see self::fromParams()} throws is shown on the page: until the client and its redirect URI are known
- * there is nowhere to send one. Once the request exists, {@see self::validate()} names errors to redirect with.
- */
 readonly class AuthorizationRequest
 {
     /**

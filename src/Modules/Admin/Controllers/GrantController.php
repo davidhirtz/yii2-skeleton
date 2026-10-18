@@ -91,20 +91,17 @@ class GrantController extends Controller
         $issuer = $mcp->getIssuer();
         $resource = $mcp->getResourceUrl();
 
+        // Shown rather than sent to the client: a redirect nobody clicked would make the admin an open redirector
+        // for any host that publishes a metadata document (RFC 9700 §4.11.2)
         try {
             $request = AuthorizationRequest::fromParams($this->request->get(), $mcp->getClientMetadataFetcher(), $mcp->allowedClientIds);
+            $request->validate($resource);
         } catch (OAuthException $exception) {
             $this->response->setStatusCode(400);
 
             return $this->render('error', [
                 'message' => $exception->getMessage(),
             ]);
-        }
-
-        try {
-            $request->validate($resource);
-        } catch (OAuthException $exception) {
-            return $this->redirect($request->getRedirectUrl($exception->toArray(), $issuer));
         }
 
         if ($this->request->getIsPost()) {
@@ -222,7 +219,8 @@ class GrantController extends Controller
     }
 
     /**
-     * Approving the same client again replaces the scope it was granted and keeps its tokens.
+     * Approving the same client again replaces the scope it was granted and keeps its tokens, but for the write
+     * tokens of a grant narrowed to reading.
      */
     protected function saveGrant(AuthorizationRequest $request, string $resource, string $scope): OAuthGrant
     {
@@ -243,6 +241,10 @@ class GrantController extends Controller
         $grant->scope = $scope;
 
         $grant->save();
+
+        if ($grant->isReadOnly()) {
+            UserToken::deleteAll(['grant_id' => $grant->id, 'type' => UserToken::TYPE_MCP_WRITE]);
+        }
 
         return $grant;
     }

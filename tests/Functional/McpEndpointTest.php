@@ -51,9 +51,21 @@ class McpEndpointTest extends TestCase
             self::assertResponseStatusCodeSame($status);
         }
 
-        // a valid token is refused too while the address is blocked
+        // the clients of a remote connector share its addresses, so a valid token still passes
         $this->post(['jsonrpc' => '2.0', 'id' => 1, 'method' => 'ping'], $this->issueToken());
-        self::assertResponseStatusCodeSame(429);
+        self::assertResponseStatusCodeSame(200);
+    }
+
+    public function testAnExpiredTokenIsNotCounted(): void
+    {
+        $token = Mcp::getComponent()->issueToken($this->getUserFromFixture('owner'), false, -10);
+
+        foreach ([401, 401, 401] as $status) {
+            $this->post(['jsonrpc' => '2.0', 'id' => 1, 'method' => 'ping'], $token);
+            self::assertResponseStatusCodeSame($status);
+        }
+
+        self::assertResponseHeaderSame('www-authenticate', 'Bearer error="invalid_token"');
     }
 
     public function testAForeignOriginIsForbidden(): void

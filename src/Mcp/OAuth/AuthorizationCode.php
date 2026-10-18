@@ -36,9 +36,12 @@ readonly class AuthorizationCode
         $key = self::getCacheKey($code);
         $value = $cache?->get($key);
 
-        $cache?->delete($key);
+        // Only one of two concurrent exchanges deletes the entry (`DbCache` answers `true` regardless)
+        if (!$value instanceof self || !$cache->delete($key)) {
+            return null;
+        }
 
-        return $value instanceof self ? $value : null;
+        return $value;
     }
 
     public function verifyCodeVerifier(string $verifier): bool

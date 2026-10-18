@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Tests\Console;
 use Hirtz\Skeleton\Console\Application;
 use Hirtz\Skeleton\Console\Controllers\McpController;
 use Hirtz\Skeleton\Mcp\Mcp;
+use Hirtz\Skeleton\Models\OAuthGrant;
 use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
@@ -69,6 +70,22 @@ class McpControllerTest extends TestCase
         self::assertStringContainsString('mcp-write', $output);
         self::assertStringContainsString('never expires', $output);
         self::assertStringNotContainsString($token, $output);
+    }
+
+    public function testTheTokensOfAnOAuthGrantAreNotListed(): void
+    {
+        $grant = OAuthGrant::create();
+        $grant->user_id = $this->getUserFromFixture('owner')->id;
+        $grant->client_id = 'https://claude.ai/oauth/mcp-oauth-client-metadata';
+        $grant->resource = 'https://www.example.com/mcp';
+        $grant->scope = OAuthGrant::SCOPE_WRITE;
+        $grant->insert();
+
+        UserToken::issue($grant->user_id, UserToken::TYPE_MCP_WRITE, 'access-token', 60, $grant->id);
+        $controller = $this->createController('tokens');
+
+        self::assertSame(ExitCode::OK, $controller->actionTokens());
+        self::assertStringContainsString('No MCP tokens.', $controller->flushStdOutBuffer());
     }
 
     public function testRevokeRemovesTheToken(): void

@@ -143,7 +143,7 @@ class McpController extends Controller
     {
         return UserToken::find()
             ->whereUser($this->getUser()->id)
-            ->andWhere(['type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]])
+            ->andWhere(['grant_id' => null, 'type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]])
             ->orderBy(['id' => SORT_ASC]);
     }
 

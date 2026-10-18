@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Controllers;
 
-use Hirtz\Skeleton\Caching\CacheCounter;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\OAuth\OAuthException;
@@ -75,24 +74,38 @@ class OAuthController extends Controller
     public function actionToken(): Response
     {
         $mcp = Mcp::getComponent();
-        $cacheKey = [McpController::class, 'authentication-attempts', (string)$this->request->getUserIP()];
-
-        if (CacheCounter::get($cacheKey) >= $mcp->authenticationAttemptLimit) {
-            $this->response->getHeaders()->set('Retry-After', (string)$mcp->authenticationAttemptDuration);
-            return $this->respond(429, ['error' => 'slow_down']);
-        }
+        $params = $this->request->post();
 
         try {
-            $body = (new TokenIssuer($mcp))->handle($this->request->post(), $mcp->getResourceUrl());
+            $body = (new TokenIssuer($mcp))->handle($params, $mcp->getResourceUrl());
         } catch (OAuthException $exception) {
-            if ($exception->error === OAuthException::INVALID_GRANT) {
-                CacheCounter::increment($cacheKey, $mcp->authenticationAttemptDuration);
+            if (
+                $exception->error === OAuthException::INVALID_GRANT
+                && $this->isGuess($mcp, $params)
+                && !$mcp->countAuthenticationAttempt((string)$this->request->getUserIP())
+            ) {
+                $this->response->getHeaders()->set('Retry-After', (string)$mcp->authenticationAttemptDuration);
+                return $this->respond(429, ['error' => 'slow_down']);
             }
 
             return $this->respond($exception->getStatusCode(), $exception->toArray());
         }
 
         return $this->respond(200, $body);
+    }
+
+    /**
+     * A refresh token that exists has expired or was rotated away, which a client does in the normal run of things.
+     *
+     * @param array<array-key, mixed> $params
+     */
+    protected function isGuess(Mcp $mcp, array $params): bool
+    {
+        $token = $params['refresh_token'] ?? null;
+
+        return ($params['grant_type'] ?? null) !== 'refresh_token'
+            || !is_string($token)
+            || $mcp->isUnknownToken($token);
     }
 
     /**

@@ -97,10 +97,7 @@ class TokenIssuer
         }
 
         if ($record->type === UserToken::TYPE_MCP_ROTATED) {
-            Yii::warning("A rotated refresh token of OAuth grant $grant->id was presented, the grant is revoked", __METHOD__);
-            $grant->delete();
-
-            throw new OAuthException(OAuthException::INVALID_GRANT, 'The refresh token was already used.');
+            $this->revokeReusedGrant($grant);
         }
 
         $clientId = $this->getString($params, 'client_id');
@@ -115,9 +112,33 @@ class TokenIssuer
             throw new OAuthException(OAuthException::INVALID_GRANT, 'The refresh token was issued for another resource.');
         }
 
-        $record->updateAttributes(['type' => UserToken::TYPE_MCP_ROTATED]);
+        if (!$this->rotate($record)) {
+            $this->revokeReusedGrant($grant);
+        }
 
         return $this->issueTokens($grant);
+    }
+
+    /**
+     * Conditional, so of two requests presenting the same token only one wins and the other counts as a reuse.
+     */
+    protected function rotate(UserToken $record): bool
+    {
+        return UserToken::updateAll(['type' => UserToken::TYPE_MCP_ROTATED], [
+            'id' => $record->id,
+            'type' => UserToken::TYPE_MCP_REFRESH,
+        ]) === 1;
+    }
+
+    /**
+     * @throws OAuthException
+     */
+    protected function revokeReusedGrant(OAuthGrant $grant): never
+    {
+        Yii::warning("A rotated refresh token of OAuth grant $grant->id was presented, the grant is revoked", __METHOD__);
+        $grant->delete();
+
+        throw new OAuthException(OAuthException::INVALID_GRANT, 'The refresh token was already used.');
     }
 
     /**

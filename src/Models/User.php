@@ -352,12 +352,18 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
+    /**
+     * Every caller also signs out the other sessions, so the agents connected through MCP go too.
+     */
     public function afterPasswordChange(): void
     {
         $trail = Trail::instantiateByType(Trail::TYPE_PASSWORD);
         $trail->model_class = User::class;
         $trail->model_id = (string)$this->id;
         $trail->insert();
+
+        OAuthGrant::deleteAll(['user_id' => $this->id]);
+        UserToken::deleteAll(['user_id' => $this->id, 'type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]]);
     }
 
     public function generatePasswordHash(string $password): void

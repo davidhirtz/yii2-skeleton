@@ -67,6 +67,11 @@ class ModuleTest extends TestCase
         $request->setPathInfo('.well-known/appspecific/com.chrome.devtools.json');
         self::assertTrue($method->invoke($module, $request));
 
+        foreach (['mcp', 'oauth/token', 'en/admin/grant/create-token'] as $path) {
+            $request->setPathInfo($path);
+            self::assertTrue($method->invoke($module, $request), $path);
+        }
+
         $request->setPathInfo('admin/entry/index');
         self::assertFalse($method->invoke($module, $request));
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Controllers;
 
-use Hirtz\Skeleton\Caching\CacheCounter;
 use Hirtz\Skeleton\Mcp\JsonRpcException;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Server;
@@ -39,19 +38,13 @@ class McpController extends Controller
             return $this->respond(405);
         }
 
-        $cacheKey = [self::class, 'authentication-attempts', (string)$this->request->getUserIP()];
-
-        if (CacheCounter::get($cacheKey) >= $mcp->authenticationAttemptLimit) {
-            $this->response->getHeaders()->set('Retry-After', (string)$mcp->authenticationAttemptDuration);
-            return $this->respond(429);
-        }
-
         $bearer = $this->getBearerToken();
         $token = $bearer !== null ? $mcp->findToken($bearer, $mcp->getResourceUrl()) : null;
 
         if ($token === null) {
-            if ($bearer !== null) {
-                CacheCounter::increment($cacheKey, $mcp->authenticationAttemptDuration);
+            if ($bearer !== null && $mcp->isUnknownToken($bearer) && !$mcp->countAuthenticationAttempt((string)$this->request->getUserIP())) {
+                $this->response->getHeaders()->set('Retry-After', (string)$mcp->authenticationAttemptDuration);
+                return $this->respond(429);
             }
 
             $this->response->getHeaders()->set('WWW-Authenticate', $this->getAuthenticateChallenge($mcp, $bearer !== null));

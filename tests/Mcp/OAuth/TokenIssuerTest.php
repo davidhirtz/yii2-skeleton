@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Mcp\OAuth;
 
 use Hirtz\Skeleton\Mcp\Mcp;
+use Hirtz\Skeleton\Mcp\OAuth\AuthorizationCode;
 use Hirtz\Skeleton\Mcp\OAuth\OAuthException;
 use Hirtz\Skeleton\Mcp\OAuth\TokenIssuer;
 use Hirtz\Skeleton\Models\OAuthGrant;
 use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Override;
 
 class TokenIssuerTest extends TestCase
 {
@@ -29,6 +31,44 @@ class TokenIssuerTest extends TestCase
         self::assertSame(UserToken::TYPE_MCP_ROTATED, UserToken::find()->whereToken('refresh-token')->one()?->type);
         self::assertSame(UserToken::TYPE_MCP_READ, UserToken::find()->whereToken((string)$tokens['access_token'])->one()?->type);
         self::assertNotNull(OAuthGrant::findOne($grant->id)?->last_used_at);
+    }
+
+    public function testARotatedRefreshTokenRevokesTheGrant(): void
+    {
+        $grant = $this->createGrant('owner');
+        UserToken::issue($grant->user_id, UserToken::TYPE_MCP_REFRESH, 'refresh-token', 60, $grant->id);
+
+        $this->refresh('refresh-token');
+        $this->assertInvalidGrant('refresh-token');
+
+        self::assertNull(OAuthGrant::findOne($grant->id));
+    }
+
+    public function testARefreshLosingTheRaceRevokesTheGrant(): void
+    {
+        $grant = $this->createGrant('owner');
+        UserToken::issue($grant->user_id, UserToken::TYPE_MCP_REFRESH, 'refresh-token', 60, $grant->id);
+
+        try {
+            (new RacedTokenIssuer(Mcp::getComponent()))->handle([
+                'grant_type' => 'refresh_token',
+                'refresh_token' => 'refresh-token',
+            ], self::RESOURCE);
+
+            self::fail('Both requests were issued tokens.');
+        } catch (OAuthException $exception) {
+            self::assertSame(OAuthException::INVALID_GRANT, $exception->error);
+        }
+
+        self::assertNull(OAuthGrant::findOne($grant->id));
+    }
+
+    public function testACodeIsExchangedOnce(): void
+    {
+        $code = (new AuthorizationCode(1, 'https://claude.ai/client', 'https://claude.ai/callback', 'challenge', self::RESOURCE))->issue();
+
+        self::assertNotNull(AuthorizationCode::consume($code));
+        self::assertNull(AuthorizationCode::consume($code));
     }
 
     public function testAnExpiredRefreshTokenIsAnInvalidGrant(): void
@@ -124,5 +164,18 @@ class TokenIssuerTest extends TestCase
         } catch (OAuthException $exception) {
             self::assertSame(OAuthException::INVALID_GRANT, $exception->error);
         }
+    }
+}
+
+/**
+ * A concurrent request rotates the token between this one reading and rotating it.
+ */
+class RacedTokenIssuer extends TokenIssuer
+{
+    #[Override]
+    protected function rotate(UserToken $record): bool
+    {
+        parent::rotate($record);
+        return parent::rotate($record);
     }
 }

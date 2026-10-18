@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Mcp;
 
 use Closure;
 use Composer\InstalledVersions;
+use Hirtz\Skeleton\Caching\CacheCounter;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Mcp\OAuth\ClientMetadataFetcher;
 use Hirtz\Skeleton\Mcp\OAuth\ResourceUri;
@@ -64,7 +65,7 @@ class Mcp extends Component
     public array $allowedOrigins = [];
 
     /**
-     * @var int failed authentications per IP address before the endpoint answers `429`
+     * @var int guessed tokens per IP address before the endpoint answers `429`; an expired one is no guess
      */
     public int $authenticationAttemptLimit = 10;
 
@@ -193,6 +194,30 @@ class Mcp extends Component
         }
 
         return $record;
+    }
+
+    /**
+     * A token that exists but expired, or whose grant was revoked, is a client to send to refresh, not a guess.
+     */
+    public function isUnknownToken(string $token): bool
+    {
+        return !UserToken::find()->whereToken($token)->exists();
+    }
+
+    /**
+     * Counts a guessed token per address and answers `false` past the limit. Called after the lookup: the clients of
+     * a remote connector share its few addresses, so a valid token is never refused.
+     */
+    public function countAuthenticationAttempt(string $ip): bool
+    {
+        $cacheKey = [self::class, 'authentication-attempts', $ip];
+
+        if (CacheCounter::get($cacheKey) >= $this->authenticationAttemptLimit) {
+            return false;
+        }
+
+        CacheCounter::increment($cacheKey, $this->authenticationAttemptDuration);
+        return true;
     }
 
     public function isOAuthEnabled(): bool

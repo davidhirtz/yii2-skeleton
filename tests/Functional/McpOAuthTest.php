@@ -233,6 +233,22 @@ class McpOAuthTest extends TestCase
         self::assertNotContains('create_record', $names);
     }
 
+    public function testNarrowingAGrantRevokesItsWriteTokens(): void
+    {
+        $tokens = $this->authorize();
+
+        $this->open($this->getAuthorizeUrl());
+        self::$client->followRedirects(false);
+        $this->submit('button[name="approve"]', ['readOnly' => '1']);
+
+        $this->postMcp((string)$tokens['access_token']);
+        self::assertResponseStatusCodeSame(401);
+
+        $grant = OAuthGrant::findOne(['client_id' => self::CLIENT_ID]);
+        self::assertSame(OAuthGrant::SCOPE_READ, $grant?->scope);
+        self::assertNotNull(UserToken::find()->whereToken((string)$tokens['refresh_token'])->one());
+    }
+
     public function testAReadRequestCannotBeWidened(): void
     {
         $this->login();
@@ -273,15 +289,43 @@ class McpOAuthTest extends TestCase
         self::assertSelectorExists('[data-alert="danger"]');
     }
 
-    public function testAnInvalidRequestIsRedirectedWithItsError(): void
+    public function testAnInvalidRequestIsShownNotRedirected(): void
     {
         $this->login();
-        self::$client->followRedirects(false);
 
-        foreach (['invalid_request' => ['code_challenge_method' => 'plain'], 'invalid_target' => ['resource' => 'https://other.example/mcp']] as $error => $params) {
-            self::$client->request('GET', $this->getAuthorizeUrl($params));
-            self::assertSame($error, $this->getRedirectQuery()['error'] ?? null);
+        foreach ([['code_challenge_method' => 'plain'], ['resource' => 'https://other.example/mcp'], ['response_type' => 'token']] as $params) {
+            $this->open($this->getAuthorizeUrl($params));
+            self::assertResponseStatusCodeSame(400);
+            self::assertSelectorExists('[data-alert="danger"]');
         }
+    }
+
+    public function testOnlyGuessedRefreshTokensAreCounted(): void
+    {
+        $this->config['components']['mcp']['authenticationAttemptLimit'] = 2;
+        $this->reloadApplication();
+
+        $grant = OAuthGrant::create();
+        $grant->user_id = $this->getUserFromFixture('owner')->id;
+        $grant->client_id = self::CLIENT_ID;
+        $grant->resource = self::RESOURCE;
+        $grant->scope = OAuthGrant::SCOPE_WRITE;
+        $grant->insert();
+
+        UserToken::issue($grant->user_id, UserToken::TYPE_MCP_REFRESH, 'expired-refresh-token', -10, $grant->id);
+        self::$client = new Browser(['HTTP_HOST' => 'www.test.localhost', 'HTTPS' => 'on']);
+
+        foreach ([400, 400, 400] as $status) {
+            $this->postToken(['grant_type' => 'refresh_token', 'refresh_token' => 'expired-refresh-token']);
+            self::assertResponseStatusCodeSame($status);
+        }
+
+        foreach ([400, 400, 429] as $status) {
+            $this->postToken(['grant_type' => 'refresh_token', 'refresh_token' => 'guessed']);
+            self::assertResponseStatusCodeSame($status);
+        }
+
+        self::assertSame('slow_down', $this->getError());
     }
 
     public function testALoopbackRedirectIsWarnedAbout(): void

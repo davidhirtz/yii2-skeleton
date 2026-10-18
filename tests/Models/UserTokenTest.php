@@ -6,6 +6,8 @@ namespace Hirtz\Skeleton\Tests\Models;
 
 use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Console\Controllers\UserTokenController;
+use Hirtz\Skeleton\Mcp\Mcp;
+use Hirtz\Skeleton\Models\OAuthGrant;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Test\TestCase;
@@ -37,6 +39,33 @@ class UserTokenTest extends TestCase
 
         self::assertTrue($this->findByToken(UserToken::TYPE_VERIFICATION, $token));
         self::assertFalse($this->findByToken(UserToken::TYPE_PASSWORD_RESET, $token));
+    }
+
+    public function testAPasswordChangeRevokesTheMcpAccess(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+        $other = $this->getUserFromFixture('disabled');
+
+        $grant = OAuthGrant::create();
+        $grant->user_id = $user->id;
+        $grant->client_id = 'https://claude.ai/oauth/mcp-oauth-client-metadata';
+        $grant->resource = 'https://www.example.com/mcp';
+        $grant->scope = OAuthGrant::SCOPE_WRITE;
+        $grant->insert();
+
+        UserToken::issue($user->id, UserToken::TYPE_MCP_REFRESH, 'refresh-token', 60, $grant->id);
+        $token = Mcp::getComponent()->issueToken($user, true);
+        $otherToken = Mcp::getComponent()->issueToken($other, true);
+        $user->generateTwoFactorAuthenticationRecoveryCodes();
+        $recoveryCodeCount = $user->getTwoFactorAuthenticationRecoveryCodeCount();
+
+        $user->afterPasswordChange();
+
+        self::assertNull(OAuthGrant::findOne($grant->id));
+        self::assertNull(UserToken::find()->whereToken('refresh-token')->one());
+        self::assertNull(UserToken::find()->whereToken($token)->one());
+        self::assertNotNull(UserToken::find()->whereToken($otherToken)->one());
+        self::assertSame($recoveryCodeCount, $user->getTwoFactorAuthenticationRecoveryCodeCount());
     }
 
     public function testExpiredTokenIsNotFound(): void
