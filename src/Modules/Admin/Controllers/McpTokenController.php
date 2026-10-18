@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Models\Forms\McpTokenForm;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserToken;
+use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Controller;
@@ -27,6 +28,8 @@ use yii\web\Response;
  */
 class McpTokenController extends Controller
 {
+    use UserTrait;
+
     final public const string TOKEN_FLASH = 'mcpToken';
 
     /**
@@ -49,7 +52,13 @@ class McpTokenController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
+                        'actions' => ['create', 'index', 'revoke'],
                         'roles' => ['@'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['view'],
+                        'roles' => [User::AUTH_USER],
                     ],
                 ],
             ],
@@ -81,15 +90,21 @@ class McpTokenController extends Controller
         $token = Application::current()->getSession()->getFlash(self::TOKEN_FLASH, delete: true);
 
         return $this->render('index', [
-            'tokens' => new ActiveDataProvider([
-                'query' => UserToken::find()
-                    ->whereUser($user->id)
-                    ->andWhere(['grant_id' => null, 'type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]])
-                    ->orderBy(['created_at' => SORT_DESC]),
-                'sort' => false,
-                'pagination' => false,
-            ]),
+            'tokens' => $this->getTokenProvider($user),
             'token' => is_string($token) ? $token : null,
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Another user's tokens, which a manager may revoke but never create.
+     */
+    public function actionView(int $user): string
+    {
+        $user = $this->findUser($user, User::AUTH_USER);
+
+        return $this->render('view', [
+            'tokens' => $this->getTokenProvider($user),
             'user' => $user,
         ]);
     }
@@ -131,6 +146,18 @@ class McpTokenController extends Controller
             $this->success(Yii::t('skeleton', 'MCP_TOKEN_SUCCESS_REVOKED'));
         }
 
-        return $this->redirect($isOwn ? ['index'] : ['/admin/grant/view', 'user' => $token->user_id]);
+        return $this->redirect($isOwn ? ['index'] : ['view', 'user' => $token->user_id]);
+    }
+
+    protected function getTokenProvider(User $user): ActiveDataProvider
+    {
+        return new ActiveDataProvider([
+            'query' => UserToken::find()
+                ->whereUser($user->id)
+                ->andWhere(['grant_id' => null, 'type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]])
+                ->orderBy(['created_at' => SORT_DESC]),
+            'sort' => false,
+            'pagination' => false,
+        ]);
     }
 }

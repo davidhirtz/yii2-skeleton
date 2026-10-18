@@ -28,6 +28,7 @@ class UserSubmenu extends Submenu
             permissions: $this->getUserPermissionItem(),
             logins: $this->getUserLoginItem(),
             grants: $this->getUserGrantItem(),
+            tokens: $this->getUserMcpTokenItem(),
             trail: $this->getUserTrailItem(),
         );
 
@@ -67,12 +68,23 @@ class UserSubmenu extends Submenu
 
     protected function getUserGrantItem(): ?NavItem
     {
-        return Mcp::getComponent()->enableHttp && $this->webuser->can(User::AUTH_USER, ['user' => $this->model])
+        return Mcp::getComponent()->isOAuthEnabled() && $this->webuser->can(User::AUTH_USER, ['user' => $this->model])
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'GRANT_CONNECTED_APPS'))
                 ->icon('plug')
                 ->url(['/admin/grant/view', 'user' => $this->model->id])
                 ->routes(['admin/grant/view'])
+            : null;
+    }
+
+    protected function getUserMcpTokenItem(): ?NavItem
+    {
+        return Mcp::getComponent()->enableHttp && $this->webuser->can(User::AUTH_USER, ['user' => $this->model])
+            ? NavItem::make()
+                ->label(Yii::t('skeleton', 'MCP_TOKENS_TITLE'))
+                ->icon('key')
+                ->url(['/admin/mcp-token/view', 'user' => $this->model->id])
+                ->routes(['admin/mcp-token/view'])
             : null;
     }
 

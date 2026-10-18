@@ -112,16 +112,17 @@ class McpTokenPageTest extends TestCase
         self::assertNotNull($record);
 
         $this->login();
-        $this->open("admin/grant/view?user=$admin->id");
+        $this->open("admin/mcp-token/view?user=$admin->id");
 
         self::assertResponseIsSuccessful();
         self::assertSelectorExists("#user-token-$record->id");
+        self::assertSelectorExists(".tabs a.active[href=\"/admin/mcp-token/view?user=$admin->id\"]");
         self::assertSelectorNotExists('a[href="/admin/mcp-token/create"]');
 
         self::$client->followRedirects(false);
         $this->postRevoke($record->id);
 
-        self::assertResponseHeaderSame('location', "https://www.test.localhost/admin/grant/view?user=$admin->id");
+        self::assertResponseHeaderSame('location', "https://www.test.localhost/admin/mcp-token/view?user=$admin->id");
         self::assertNull(UserToken::findOne($record->id));
     }
 

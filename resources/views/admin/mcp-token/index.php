@@ -45,6 +45,5 @@ if ($token) {
 }
 
 echo GridContainer::make()
-    ->title(Yii::t('skeleton', 'MCP_TOKENS_TITLE'))
     ->grid(McpTokenGridView::make()
         ->provider($tokens));

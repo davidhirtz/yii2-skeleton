@@ -26,6 +26,5 @@ echo AccountHeader::make()
 echo AccountSubmenu::make();
 
 echo GridContainer::make()
-    ->title(Yii::t('skeleton', 'GRANT_CONNECTED_APPS'))
     ->grid(GrantGridView::make()
         ->provider($grants));

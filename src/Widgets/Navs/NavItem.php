@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Navs;
 
 use Closure;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Span;
@@ -127,7 +128,7 @@ class NavItem extends Widget
             $link->addContent($badge);
         }
 
-        $this->active ??= $this->hasActiveRoute() ?? Application::current()->getRequest()->getUrl() === $link->getAttribute('href');
+        $this->active ??= $this->hasActiveRoute() ?? $this->isCurrentUrl((string)$link->getAttribute('href'));
 
         if ($this->active) {
             $link->addClass('active');
@@ -175,6 +176,22 @@ class NavItem extends Widget
         }
 
         return null;
+    }
+
+    /**
+     * Compared with the current route built the same way as well: a URL manager may add a language prefix to every
+     * link that the request it answers did not carry.
+     */
+    protected function isCurrentUrl(string $href): bool
+    {
+        $request = Application::current()->getRequest();
+
+        if ($request->getUrl() === $href) {
+            return true;
+        }
+
+        return Yii::$app->controller instanceof Controller
+            && Url::to(['/' . Yii::$app->controller->route, ...$request->getQueryParams()]) === $href;
     }
 
     protected function getItems(): ?string

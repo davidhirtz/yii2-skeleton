@@ -119,6 +119,30 @@ class NavTest extends TestCase
         self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link active" href="/"><span class="nav-link-label">Home</span></a></li><li class="nav-item"><a class="nav-link" href="/site/test"><span class="nav-link-label">Test</span></a></li></ul>', $content);
     }
 
+    /**
+     * A URL manager adding a language prefix makes every link differ from the URL the request came in on.
+     */
+    public function testActiveItemFromTheCurrentRouteWhenTheUrlDiffers(): void
+    {
+        Yii::$app->controller = new class ('test', Yii::$app) extends Controller {
+            public function getRoute(): string
+            {
+                return 'site/test';
+            }
+        };
+
+        $this->getWebRequest()->setUrl('/de/site/test');
+
+        $content = Nav::make()
+            ->items([
+                NavItem::make()->label('Home')->url('/'),
+                NavItem::make()->label('Test')->url(['/site/test']),
+            ])
+            ->render();
+
+        self::assertEquals('<ul class="nav"><li class="nav-item"><a class="nav-link" href="/"><span class="nav-link-label">Home</span></a></li><li class="nav-item"><a class="nav-link active" href="/site/test"><span class="nav-link-label">Test</span></a></li></ul>', $content);
+    }
+
     public function testActiveItemWithRoutes(): void
     {
         $content = Nav::make()

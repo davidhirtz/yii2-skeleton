@@ -30,6 +30,5 @@ echo AccountHeader::make()
 echo AccountSubmenu::make();
 
 echo GridContainer::make()
-    ->title(Yii::t('skeleton', 'CREDENTIALS_TITLE'))
     ->grid(CredentialGridView::make()
         ->provider($credentials));

@@ -64,8 +64,7 @@ class GrantController extends Controller
     {
         $mcp = Mcp::getComponent();
 
-        // A manager's view of a user lists the access tokens too, so it needs no OAuth
-        if (!$mcp->enableHttp || ($action->id !== 'view' && !$mcp->isOAuthEnabled())) {
+        if (!$mcp->isOAuthEnabled()) {
             throw new NotFoundHttpException();
         }
 
@@ -136,7 +135,6 @@ class GrantController extends Controller
 
         return $this->render('view', [
             'grants' => $this->getGrantProvider($user),
-            'tokens' => $this->getTokenProvider($user),
             'user' => $user,
         ]);
     }
@@ -196,12 +194,8 @@ class GrantController extends Controller
         return $grant;
     }
 
-    protected function getGrantProvider(User $user): ?ActiveDataProvider
+    protected function getGrantProvider(User $user): ActiveDataProvider
     {
-        if (!Mcp::getComponent()->isOAuthEnabled()) {
-            return null;
-        }
-
         return new ActiveDataProvider([
             'query' => OAuthGrant::find()
                 ->where(['user_id' => $user->id])
@@ -211,15 +205,4 @@ class GrantController extends Controller
         ]);
     }
 
-    protected function getTokenProvider(User $user): ActiveDataProvider
-    {
-        return new ActiveDataProvider([
-            'query' => UserToken::find()
-                ->whereUser($user->id)
-                ->andWhere(['grant_id' => null, 'type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]])
-                ->orderBy(['created_at' => SORT_DESC]),
-            'sort' => false,
-            'pagination' => false,
-        ]);
-    }
 }
