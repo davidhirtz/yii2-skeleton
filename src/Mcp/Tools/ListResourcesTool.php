@@ -4,16 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Mcp\Tools;
 
-use Hirtz\Skeleton\Mcp\Mcp;
 use Override;
 use stdClass;
 
-class ListResourcesTool implements ToolInterface
+class ListResourcesTool extends ResourceTool
 {
-    public function __construct(protected Mcp $mcp)
-    {
-    }
-
     #[Override]
     public function getName(): string
     {
@@ -43,23 +38,25 @@ class ListResourcesTool implements ToolInterface
     }
 
     #[Override]
-    public function isIdempotent(): bool
-    {
-        return true;
-    }
-
-    #[Override]
-    public function call(array $arguments): ToolResult
+    protected function run(array $arguments): array
     {
         $resources = [];
 
         foreach ($this->mcp->getResources() as $resource) {
-            $resources[] = [
-                'name' => $resource->getName(),
-                'label' => $resource->instantiate()->getAdminType(),
-            ];
+            $record = $resource->instantiate();
+
+            if ($this->can($record)) {
+                $resources[] = array_filter([
+                    'name' => $resource->getName(),
+                    'label' => $record->getAdminType(),
+                    'has_types' => $resource->hasTypes(),
+                    'parent' => $resource->getParentParam(),
+                    'writable' => !$resource->isReadOnly(),
+                    'reorderable' => $resource->isReorderable(),
+                ], fn (mixed $value): bool => $value !== null);
+            }
         }
 
-        return ToolResult::success(['resources' => $resources]);
+        return ['resources' => $resources];
     }
 }

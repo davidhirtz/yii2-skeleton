@@ -6,9 +6,14 @@ namespace Hirtz\Skeleton\Mcp;
 
 use Closure;
 use Composer\InstalledVersions;
+use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Mcp\Tools\DescribeResourceTool;
+use Hirtz\Skeleton\Mcp\Tools\FindRecordsTool;
+use Hirtz\Skeleton\Mcp\Tools\GetRecordTool;
 use Hirtz\Skeleton\Mcp\Tools\ListResourcesTool;
 use Hirtz\Skeleton\Mcp\Tools\ToolCollection;
 use Hirtz\Skeleton\Mcp\Tools\ToolInterface;
+use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -20,7 +25,7 @@ use yii\base\InvalidConfigException;
 class Mcp extends Component
 {
     /**
-     * @var list<Closure(): Resource>
+     * @var list<Closure(): Resource<covariant ActiveRecord&AdminModelInterface>>
      */
     public array $resources = [];
 
@@ -30,7 +35,7 @@ class Mcp extends Component
     public array $tools = [];
 
     /**
-     * @var array<string, Resource>|null
+     * @var array<string, Resource<covariant ActiveRecord&AdminModelInterface>>|null
      */
     private ?array $resolvedResources = null;
 
@@ -42,7 +47,7 @@ class Mcp extends Component
     }
 
     /**
-     * @return array<string, Resource>
+     * @return array<string, Resource<covariant ActiveRecord&AdminModelInterface>>
      */
     public function getResources(): array
     {
@@ -63,6 +68,9 @@ class Mcp extends Component
         return $this->resolvedResources;
     }
 
+    /**
+     * @return Resource<covariant ActiveRecord&AdminModelInterface>|null
+     */
     public function getResource(string $name): ?Resource
     {
         return $this->getResources()[$name] ?? null;
@@ -75,6 +83,9 @@ class Mcp extends Component
     {
         $tools = [
             new ListResourcesTool($this),
+            new DescribeResourceTool($this),
+            new FindRecordsTool($this),
+            new GetRecordTool($this),
         ];
 
         foreach ($this->tools as $closure) {
