@@ -46,6 +46,8 @@ class Resource
 
     protected bool $readOnly = false;
 
+    protected bool $creatable = true;
+
     protected ?Closure $defaultType = null;
 
     /**
@@ -143,6 +145,15 @@ class Resource
         return $this;
     }
 
+    /**
+     * A resource that is not creatable is updated only, its records created elsewhere (a file by `attach_file`).
+     */
+    public function creatable(bool $creatable = true): static
+    {
+        $this->creatable = $creatable;
+        return $this;
+    }
+
     public function readOnly(bool $readOnly = true): static
     {
         $this->readOnly = $readOnly;
@@ -188,6 +199,11 @@ class Resource
     public function isReadOnly(): bool
     {
         return $this->readOnly;
+    }
+
+    public function isCreatable(): bool
+    {
+        return $this->creatable && !$this->readOnly;
     }
 
     public function isReorderable(): bool

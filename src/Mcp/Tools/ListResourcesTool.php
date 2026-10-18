@@ -58,6 +58,7 @@ class ListResourcesTool extends ResourceTool
                     'has_types' => $resource->hasTypes(),
                     'parent' => $resource->getParentParam(),
                     'writable' => !$resource->isReadOnly(),
+                    'creatable' => $resource->isCreatable(),
                     'reorderable' => $resource->isReorderable(),
                 ], fn (mixed $value): bool => $value !== null);
             }

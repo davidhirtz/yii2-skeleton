@@ -30,7 +30,7 @@ class CreateRecordTool extends ResourceTool
     {
         return array_values(array_filter(
             parent::getResources(),
-            fn (Resource $resource): bool => !$resource->isReadOnly(),
+            fn (Resource $resource): bool => $resource->isCreatable(),
         ));
     }
 
@@ -60,6 +60,11 @@ class CreateRecordTool extends ResourceTool
     protected function run(array $arguments): array
     {
         $resource = $this->findResource($arguments, true);
+
+        if (!$resource->isCreatable()) {
+            throw new ToolException("Resource {$resource->getName()} cannot be created, only updated.");
+        }
+
         $modelClass = $resource->getModelClass();
         $type = $arguments['type'] ?? $resource->getDefaultType();
 

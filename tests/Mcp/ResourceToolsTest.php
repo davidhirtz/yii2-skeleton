@@ -93,6 +93,7 @@ class ResourceToolsTest extends TestCase
                 'label' => 'ToolRecord',
                 'has_types' => true,
                 'writable' => true,
+                'creatable' => true,
                 'reorderable' => false,
             ],
         ], $result['resources'] ?? null);
@@ -364,6 +365,21 @@ class ResourceToolsTest extends TestCase
 
         self::assertTrue($result['reordered'] ?? null);
         self::assertSame([$second->id, $first->id], array_map(intval(...), ToolRecord::find()->select('id')->orderBy(['position' => SORT_ASC])->column()));
+    }
+
+    public function testAResourceThatIsNotCreatableIsOnlyUpdated(): void
+    {
+        $record = $this->insertRecord('Ärger');
+
+        Mcp::getComponent()->resources = [
+            fn (): Resource => Resource::make('scratch', ToolRecord::class)->creatable(false),
+        ];
+
+        $names = array_map(fn (ToolInterface $tool): string => $tool->getName(), Mcp::getComponent()->getTools());
+        self::assertNotContains('create_record', $names);
+
+        $result = $this->callTool('update_record', ['resource' => 'scratch', 'id' => $record->id, 'attributes' => ['name' => 'Ąb']]);
+        self::assertSame('Ąb', $result['attributes']['name'] ?? null);
     }
 
     public function testReorderIsOfferedOnlyForAReorderableResource(): void

@@ -70,6 +70,7 @@ class DescribeResourceTool extends ResourceTool
             'resource' => $resource->getName(),
             'label' => $record->getAdminType(),
             'writable' => !$resource->isReadOnly(),
+            'creatable' => $resource->isCreatable(),
             'reorderable' => $resource->isReorderable(),
         ];
 

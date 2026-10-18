@@ -80,6 +80,6 @@ class SetStatusTool extends ResourceTool
             $this->throwValidationErrors($record);
         }
 
-        return $this->getRecordSummary($resource, $record);
+        return $this->getRecordSummary($record);
     }
 }

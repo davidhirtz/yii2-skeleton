@@ -175,10 +175,9 @@ abstract class ResourceTool implements ToolInterface
     }
 
     /**
-     * @param Resource<covariant ActiveRecord&AdminModelInterface> $resource
      * @return array<string, mixed>
      */
-    protected function getRecordSummary(Resource $resource, ActiveRecord&AdminModelInterface $record): array
+    protected function getRecordSummary(ActiveRecord&AdminModelInterface $record): array
     {
         return array_filter([
             'id' => $record->getPrimaryKey(),

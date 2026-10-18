@@ -121,7 +121,7 @@ class FindRecordsTool extends ResourceTool
 
         foreach ($query->limit($limit)->offset($offset)->all() as $record) {
             if ($record instanceof AdminModelInterface && $this->can($record)) {
-                $records[] = $this->getRecordSummary($resource, $record);
+                $records[] = $this->getRecordSummary($record);
             }
         }
 

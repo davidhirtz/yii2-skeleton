@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Mcp\Tools;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use Exception;
 use Hirtz\Skeleton\Models\Interfaces\StaleSaveInterface;
 use Hirtz\Skeleton\Mcp\Resource;
@@ -68,7 +69,13 @@ class UpdateRecordTool extends ResourceTool
         $this->loadAttributes($resource, $record, $attributes);
 
         if ($record instanceof StaleSaveInterface && is_string($arguments['updated_at'] ?? null)) {
-            $record->setAttributes(['loadedAt' => $this->getTimestamp($arguments['updated_at'])]);
+            $loadedAt = $this->getTimestamp($arguments['updated_at']);
+            $updatedAt = $record->getAttribute('updated_at');
+
+            // Unchanged since the caller read it; the trail row of the last save may carry the next second
+            if (!$updatedAt instanceof DateTimeInterface || $updatedAt->getTimestamp() !== $loadedAt) {
+                $record->setAttributes(['loadedAt' => $loadedAt]);
+            }
         }
 
         if ($record->update() === false) {

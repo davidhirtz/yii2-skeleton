@@ -23,7 +23,6 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserToken;
 use Yii;
 use yii\base\Component;
-use yii\base\InvalidConfigException;
 
 /**
  * The `mcp` application component. Each bundle appends its resources and tools through its default config, as
@@ -80,13 +79,9 @@ class Mcp extends Component
         if ($this->resolvedResources === null) {
             $this->resolvedResources = [];
 
+            // A later registration replaces an earlier one of the same name, so an application's wins over a bundle's
             foreach ($this->resources as $closure) {
                 $resource = $closure();
-
-                if (isset($this->resolvedResources[$resource->getName()])) {
-                    throw new InvalidConfigException("MCP resource \"{$resource->getName()}\" is registered twice.");
-                }
-
                 $this->resolvedResources[$resource->getName()] = $resource;
             }
         }
@@ -118,15 +113,16 @@ class Mcp extends Component
             new ReorderTool($this),
         ];
 
-        $tools = array_values(array_filter($tools, fn (ResourceTool $tool): bool => $tool->isAvailable()));
-
         foreach ($this->tools as $closure) {
             if ($tool = $closure($this)) {
                 $tools[] = $tool;
             }
         }
 
-        return $tools;
+        return array_values(array_filter(
+            $tools,
+            fn (ToolInterface $tool): bool => !$tool instanceof ResourceTool || $tool->isAvailable(),
+        ));
     }
 
     /**
