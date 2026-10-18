@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Resource;
 use Hirtz\Skeleton\Mcp\Tools\CreateRecordTool;
+use Hirtz\Skeleton\Mcp\Tools\FindRecordsTool;
 use Hirtz\Skeleton\Mcp\Tools\FindTrailTool;
 use Hirtz\Skeleton\Mcp\Tools\GetRecordTool;
 use Hirtz\Skeleton\Mcp\Tools\ReorderTool;
@@ -418,6 +419,25 @@ class ResourceToolsTest extends TestCase
 
         $result = $this->callTool('update_record', ['resource' => 'scratch', 'id' => $record->id, 'attributes' => ['name' => 'Ąb']]);
         self::assertSame('Ąb', $result['attributes']['name'] ?? null);
+    }
+
+    public function testMissingFindsEmptyColumnsTranslationsAndCustomAttributes(): void
+    {
+        $complete = $this->insertRecord('Eins', ['teaser' => 'Kurz', 'teaser_de' => 'Kürzer 🎉']);
+        $sparse = $this->insertRecord('Zwei', ['teaser' => 'Ja']);
+        Translation::deleteAll(['model_class' => $sparse->getTranslationModelClass(), 'model_id' => $sparse->id, 'attribute' => 'name']);
+
+        $find = fn (array $missing): array => array_column((new FindRecordsTool(Mcp::getComponent()))
+            ->call(['resource' => 'scratch', 'missing' => $missing])
+            ->structuredContent['records'] ?? [], 'id');
+
+        self::assertSame([$sparse->id], $find(['name_de']));
+        self::assertSame([$sparse->id], $find(['teaser_de']));
+        self::assertSame([], $find(['name']));
+        self::assertNotContains($complete->id, $find(['name_de', 'teaser_de']));
+
+        $result = (new FindRecordsTool(Mcp::getComponent()))->call(['resource' => 'scratch', 'missing' => ['nope']]);
+        self::assertTrue($result->isError);
     }
 
     public function testTheTrailListsTheChangesOfAResource(): void

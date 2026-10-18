@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Mcp\Tools;
 
+use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
+use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
+use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
+use Hirtz\Skeleton\Models\Translation;
 use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Search\SearchHit;
 use Hirtz\Skeleton\Search\SearchRequest;
 use Override;
 use yii\db\Expression;
+use yii\db\Query;
 
 class FindRecordsTool extends ResourceTool
 {
@@ -37,7 +42,9 @@ class FindRecordsTool extends ResourceTool
     public function getDescription(): string
     {
         return 'Finds records of a resource. "filter" matches columns by equality (custom attributes are not '
-            . 'columns), "query" searches the text of searchable resources. Returns the total and a summary per record.';
+            . 'columns), "missing" finds records where any attribute named is empty, translations and custom '
+            . 'attributes included (e.g. ["name_de"]), "query" searches the text of searchable resources. Returns the '
+            . 'total and a summary per record.';
     }
 
     #[Override]
@@ -50,6 +57,11 @@ class FindRecordsTool extends ResourceTool
                 'filter' => [
                     'type' => 'object',
                     'description' => 'Column => value, a list of values matches any of them, e.g. {"status": 1, "parent_id": null}.',
+                ],
+                'missing' => [
+                    'type' => 'array',
+                    'items' => ['type' => 'string'],
+                    'description' => 'Attributes as describe_resource names them; a record matches when one of them is empty.',
                 ],
                 'query' => [
                     'type' => 'string',
@@ -98,6 +110,20 @@ class FindRecordsTool extends ResourceTool
             $query->andWhere(["$tableName.[[$column]]" => $value]);
         }
 
+        /** @var list<mixed> $missing */
+        $missing = $arguments['missing'] ?? [];
+
+        if ($missing) {
+            // Custom attributes are declared per type, which a record without one takes from its column default
+            $record = $resource->instantiate(is_int($filter['type'] ?? null) ? $filter['type'] : $resource->getDefaultType());
+            $record->loadDefaultValues();
+
+            $query->andWhere(['or', ...array_map(
+                fn (mixed $name): array|Expression => $this->getMissingCondition($record, is_string($name) ? $name : ''),
+                $missing,
+            )]);
+        }
+
         $text = trim((string)($arguments['query'] ?? ''));
 
         if ($text !== '') {
@@ -136,6 +162,46 @@ class FindRecordsTool extends ResourceTool
             'offset' => $offset,
             'records' => $records,
         ];
+    }
+
+    /**
+     * A translation is a row of its own, a custom attribute a key of the JSON column; a JSON `null` and an empty list
+     * count as empty too.
+     *
+     * @return array<int|string, mixed>|Expression
+     */
+    protected function getMissingCondition(ActiveRecord $record, string $name): array|Expression
+    {
+        $tableName = $record::tableName();
+
+        if ($record::getTableSchema()->getColumn($name) !== null) {
+            return ["$tableName.[[$name]]" => [null, '']];
+        }
+
+        if ($record instanceof TranslationInterface && isset($record->getTranslatedAttributeNames()[$name])) {
+            [$attribute, $language] = $record->getTranslatedAttributeNames()[$name];
+
+            return ['not exists', (new Query())
+                ->from(['t' => Translation::tableName()])
+                ->where([
+                    't.model_class' => $record->getTranslationModelClass(),
+                    't.language' => $language,
+                    't.attribute' => $attribute,
+                ])
+                ->andWhere("[[t]].[[model_id]] = $tableName.[[id]]")
+                ->andWhere(['not', ['t.value' => [null, '']]])];
+        }
+
+        if ($record instanceof CustomAttributeInterface && in_array($name, $record->getCustomAttributeNames(), true)) {
+            $value = "JSON_EXTRACT($tableName.[[{$record->getCustomAttributesColumn()}]], :path_$name)";
+
+            return new Expression(
+                "($value IS NULL OR JSON_TYPE($value) = 'NULL' OR JSON_LENGTH($value) = 0 OR JSON_UNQUOTE($value) = '')",
+                [":path_$name" => "$.\"$name\""],
+            );
+        }
+
+        throw new ToolException("Unknown attribute \"$name\" for missing, see describe_resource.");
     }
 
     /**
