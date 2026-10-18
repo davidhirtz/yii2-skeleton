@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Span;
+use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Models\OAuthGrant;
 use Hirtz\Skeleton\Modules\Admin\Controllers\GrantController;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
@@ -13,6 +14,7 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
+use Hirtz\Skeleton\Widgets\Grids\GridSummary;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Override;
 use Stringable;
@@ -82,5 +84,18 @@ class GrantGridView extends GridView
                     ->title(Yii::t('skeleton', 'GRANT_CONFIRM_REVOKE'))
                     ->url(['/admin/grant/revoke', 'id' => $grant->id]),
             ]);
+    }
+
+    /**
+     * Names the address to connect with, which nothing else in the admin shows.
+     */
+    #[Override]
+    protected function getSummary(): ?GridSummary
+    {
+        return parent::getSummary()
+            ?->emptyMessage(Yii::t('skeleton', 'GRANT_GRID_EMPTY', [
+                'url' => Mcp::getComponent()->getResourceUrl(),
+            ]))
+            ->visible(fn (): bool => $this->provider->getCount() === 0);
     }
 }

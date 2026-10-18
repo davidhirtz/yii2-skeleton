@@ -12,8 +12,11 @@ use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
 use Hirtz\Skeleton\Widgets\Grids\Columns\DataColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\RelativeTimeColumn;
+use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
+use Hirtz\Skeleton\Widgets\Grids\GridSummary;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Override;
+use Stringable;
 use Yii;
 
 /**
@@ -24,6 +27,8 @@ class CredentialGridView extends GridView
     #[Override]
     protected function configure(): void
     {
+        $this->header ??= [$this->getCreateButton()];
+
         $this->columns ??= [
             $this->getProviderColumn(),
             $this->getHintColumn(),
@@ -60,6 +65,25 @@ class CredentialGridView extends GridView
         return RelativeTimeColumn::make()
             ->property('created_at')
             ->hiddenForSmallDevices();
+    }
+
+    /**
+     * @see CredentialController::actionCreate()
+     */
+    protected function getCreateButton(): Stringable
+    {
+        return CreateButton::make()
+            ->label(Yii::t('skeleton', 'CREDENTIAL_CREATE_TITLE'))
+            ->url(['/admin/credential/create']);
+    }
+
+    #[Override]
+    protected function getSummary(): ?GridSummary
+    {
+        return parent::getSummary()
+            ?->emptyMessage(Yii::t('skeleton', 'CREDENTIAL_GRID_EMPTY'))
+            ->emptyLink(Yii::t('skeleton', 'CREDENTIAL_GRID_EMPTY_LINK'), ['/admin/credential/create'])
+            ->visible(fn (): bool => $this->provider->getCount() === 0);
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Functional;
 
 use Hirtz\Skeleton\Credentials\CredentialProvider;
+use Hirtz\Skeleton\Credentials\Credentials;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Models\UserCredential;
 use Hirtz\Skeleton\Test\TestCase;
@@ -22,14 +23,13 @@ class CredentialPageTest extends TestCase
     {
         parent::setUp();
 
-        $this->config['components']['credentials']['providers'] = [
+        // Assigned, not configured: the config would append to a sibling bundle's providers
+        Credentials::getComponent()->providers = [
             fn (): CredentialProvider => CredentialProvider::make('acme')
                 ->label('Äcme Bilder 🎨')
                 ->url('https://acme.example/keys')
                 ->verify(fn (string $secret): bool => $secret !== 'wrong'),
         ];
-
-        $this->reloadApplication();
     }
 
     public function testAKeyIsSavedShownByItsHintAndRemoved(): void
@@ -85,8 +85,7 @@ class CredentialPageTest extends TestCase
 
     public function testWithoutProvidersThePageIsAbsent(): void
     {
-        $this->config['components']['credentials']['providers'] = [];
-        $this->reloadApplication();
+        Credentials::getComponent()->providers = [];
 
         $this->login();
         $this->open('admin/credential/index');

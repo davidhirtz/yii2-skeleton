@@ -19,7 +19,6 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountHeader;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountSubmenu;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Alert;
-use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use yii\data\ActiveDataProvider;
@@ -44,9 +43,4 @@ if ($token) {
 echo GridContainer::make()
     ->title(Yii::t('skeleton', 'MCP_TOKENS_TITLE'))
     ->grid(McpTokenGridView::make()
-        ->provider($tokens)
-        ->footer([
-            CreateButton::make()
-                ->label(Yii::t('skeleton', 'MCP_TOKEN_BUTTON_NEW'))
-                ->url(['/admin/mcp-token/create']),
-        ]));
+        ->provider($tokens));

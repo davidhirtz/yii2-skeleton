@@ -15,7 +15,6 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\CredentialGridView;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountHeader;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountSubmenu;
 use Hirtz\Skeleton\Web\View;
-use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
@@ -29,9 +28,4 @@ echo AccountSubmenu::make();
 echo GridContainer::make()
     ->title(Yii::t('skeleton', 'CREDENTIALS_TITLE'))
     ->grid(CredentialGridView::make()
-        ->provider($credentials)
-        ->footer([
-            CreateButton::make()
-                ->label(Yii::t('skeleton', 'CREDENTIAL_CREATE_TITLE'))
-                ->url(['/admin/credential/create']),
-        ]));
+        ->provider($credentials));

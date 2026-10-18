@@ -36,7 +36,10 @@ class McpTokenPageTest extends TestCase
         self::assertSelectorNotExists('.tabs a[href="/admin/grant/index"]');
         self::assertSelectorNotExists('#mcp-token');
         self::assertSelectorNotExists('form select');
-        self::assertSelectorExists('a[href="/admin/mcp-token/create"]');
+        // an empty grid has no header, its text links the way instead
+        self::assertSelectorNotExists('.grid-header');
+        self::assertAnySelectorTextContains('.alert', 'No access tokens yet.');
+        self::assertSelectorExists('.alert a[href="/admin/mcp-token/create"]');
 
         $this->open('admin/mcp-token/create');
 
@@ -61,6 +64,7 @@ class McpTokenPageTest extends TestCase
         $this->open('admin/mcp-token/index');
         self::assertSelectorNotExists('#mcp-token');
         self::assertSelectorExists("#user-token-$record->id");
+        self::assertSelectorExists('.grid-header a[href="/admin/mcp-token/create"]');
     }
 
     public function testNeverIsAChoiceAndAnUnlistedLifetimeIsRefused(): void
