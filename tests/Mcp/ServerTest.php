@@ -42,6 +42,11 @@ class ServerTest extends TestCase
 
         $result = $this->request('tools/list', ['_meta' => $this->getModernMeta()]);
         self::assertSame('complete', $result['resultType'] ?? null);
+        self::assertSame(0, $result['ttlMs'] ?? null);
+        self::assertSame('private', $result['cacheScope'] ?? null);
+
+        $result = $this->request('ping', ['_meta' => $this->getModernMeta()]);
+        self::assertArrayNotHasKey('ttlMs', $result);
     }
 
     public function testAModernRequestWithoutCapabilitiesIsInvalid(): void

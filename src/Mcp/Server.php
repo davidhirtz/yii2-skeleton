@@ -31,6 +31,11 @@ class Server
     final public const string META_CLIENT_CAPABILITIES = 'io.modelcontextprotocol/clientCapabilities';
     final public const string META_SERVER_INFO = 'io.modelcontextprotocol/serverInfo';
 
+    /**
+     * @var list<string> the results the 2026-07-28 revision requires caching hints on
+     */
+    private const array CACHEABLE_METHODS = ['server/discover', 'tools/list'];
+
     private const int JSON_FLAGS = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR;
 
     public function __construct(
@@ -96,6 +101,7 @@ class Server
                 $result = [
                     'resultType' => 'complete',
                     ...$result,
+                    ...in_array($method, self::CACHEABLE_METHODS, true) ? $this->getCacheHints() : [],
                     '_meta' => [self::META_SERVER_INFO => $this->getServerInfo()],
                 ];
             }
@@ -215,6 +221,16 @@ class Server
     protected function getCapabilities(): array
     {
         return ['tools' => ['listChanged' => false]];
+    }
+
+    /**
+     * Private, as a read-only token lists fewer tools.
+     *
+     * @return array{ttlMs: int, cacheScope: string}
+     */
+    protected function getCacheHints(): array
+    {
+        return ['ttlMs' => 0, 'cacheScope' => 'private'];
     }
 
     /**
