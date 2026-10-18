@@ -13,7 +13,6 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
 use Hirtz\Skeleton\Modules\Admin\Module;
-use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
@@ -31,18 +30,6 @@ class GrantController extends Controller
 {
     use UserTrait;
 
-    final public const string TOKEN_FLASH = 'mcpToken';
-
-    /**
-     * @var list<int> the days a token created in the admin may last, besides never expiring
-     */
-    public array $tokenLifetimes = [30, 90, 365];
-
-    /**
-     * @var int|null the lifetime preselected, `null` for a token that never expires
-     */
-    public ?int $defaultTokenLifetime = 90;
-
     #[Override]
     public function behaviors(): array
     {
@@ -53,7 +40,7 @@ class GrantController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['authorize', 'create-token', 'index', 'revoke', 'revoke-token'],
+                        'actions' => ['authorize', 'index', 'revoke'],
                         'roles' => ['@'],
                     ],
                     [
@@ -66,9 +53,7 @@ class GrantController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'create-token' => ['post'],
                     'revoke' => ['post'],
-                    'revoke-token' => ['post'],
                 ],
             ],
         ];
@@ -79,7 +64,8 @@ class GrantController extends Controller
     {
         $mcp = Mcp::getComponent();
 
-        if (!$mcp->enableHttp || ($action->id === 'authorize' && !$mcp->isOAuthEnabled())) {
+        // A manager's view of a user lists the access tokens too, so it needs no OAuth
+        if (!$mcp->enableHttp || ($action->id !== 'view' && !$mcp->isOAuthEnabled())) {
             throw new NotFoundHttpException();
         }
 
@@ -134,18 +120,12 @@ class GrantController extends Controller
         ]);
     }
 
-    public function actionIndex(): Response|string
+    public function actionIndex(): string
     {
         $user = $this->webuser->getIdentity();
 
-        $token = Application::current()->getSession()->getFlash(self::TOKEN_FLASH, delete: true);
-
         return $this->render('index', [
             'grants' => $this->getGrantProvider($user),
-            'tokens' => $this->getTokenProvider($user),
-            'token' => is_string($token) ? $token : null,
-            'tokenLifetimes' => $this->tokenLifetimes,
-            'defaultTokenLifetime' => $this->defaultTokenLifetime,
             'user' => $user,
         ]);
     }
@@ -183,45 +163,6 @@ class GrantController extends Controller
         }
 
         return $this->redirect($isOwn ? ['index'] : ['view', 'user' => $grant->user_id]);
-    }
-
-    /**
-     * The token is shown once, on the page the redirect leads to.
-     */
-    public function actionCreateToken(): Response
-    {
-        $user = $this->webuser->getIdentity();
-        $days = (int)$this->request->post('expires');
-        $lifetime = in_array($days, $this->tokenLifetimes, true) ? $days * 86400 : null;
-
-        $token = Mcp::getComponent()->issueToken($user, (bool)$this->request->post('readOnly'), $lifetime);
-        Application::current()->getSession()->setFlash(self::TOKEN_FLASH, $token);
-
-        return $this->redirect(['index']);
-    }
-
-    public function actionRevokeToken(int $id): Response
-    {
-        $token = UserToken::find()
-            ->where(['id' => $id, 'grant_id' => null, 'type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]])
-            ->with('user')
-            ->one();
-
-        if ($token === null) {
-            throw new NotFoundHttpException();
-        }
-
-        $isOwn = $token->user_id === $this->webuser->getId();
-
-        if (!$isOwn && !$this->webuser->can(User::AUTH_USER, ['user' => $token->user])) {
-            throw new ForbiddenHttpException();
-        }
-
-        if ($token->delete()) {
-            $this->success(Yii::t('skeleton', 'MCP_TOKEN_SUCCESS_REVOKED'));
-        }
-
-        return $this->redirect($isOwn ? ['index'] : ['view', 'user' => $token->user_id]);
     }
 
     /**

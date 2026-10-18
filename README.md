@@ -227,7 +227,7 @@ alone:
 claude mcp add cms -- php /path/to/project/yii mcp/serve --user=me@example.com
 ```
 
-A public site enables `POST /mcp`, authenticated by a token from `mcp/token` or the account's *Connected apps* tab, which shows
+A public site enables `POST /mcp`, authenticated by a token from `mcp/token` or the account's *Access tokens* tab, which shows
 it once:
 
 ```php

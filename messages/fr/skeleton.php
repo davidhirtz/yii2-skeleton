@@ -268,6 +268,7 @@ return [
     'MAINTENANCE_TITLE' => 'Maintenance',
     'MCP_TOKENS_TITLE' => 'Jetons d\'accès',
     'MCP_TOKEN_BUTTON_CREATE' => 'Créer un jeton',
+    'MCP_TOKEN_BUTTON_NEW' => 'Nouveau jeton',
     'MCP_TOKEN_CONFIRM_REVOKE' => 'Êtes-vous sûr de vouloir révoquer ce jeton ? Toute application qui l\'utilise perd l\'accès.',
     'MCP_TOKEN_CREATED_AT_LABEL' => 'Créé',
     'MCP_TOKEN_CREATE_TITLE' => 'Nouveau jeton d\'accès',

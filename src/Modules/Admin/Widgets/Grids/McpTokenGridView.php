@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
 use Hirtz\Skeleton\Models\UserToken;
-use Hirtz\Skeleton\Modules\Admin\Controllers\GrantController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\McpTokenController;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Buttons\DeleteGridButton;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
@@ -70,7 +70,7 @@ class McpTokenGridView extends GridView
     }
 
     /**
-     * @see GrantController::actionRevokeToken()
+     * @see McpTokenController::actionRevoke()
      */
     protected function getButtonColumn(): ?Column
     {
@@ -79,7 +79,7 @@ class McpTokenGridView extends GridView
                 DeleteGridButton::make()
                     ->label(Yii::t('skeleton', 'GRANT_BUTTON_REVOKE'))
                     ->title(Yii::t('skeleton', 'MCP_TOKEN_CONFIRM_REVOKE'))
-                    ->url(['/admin/grant/revoke-token', 'id' => $token->id]),
+                    ->url(['/admin/mcp-token/revoke', 'id' => $token->id]),
             ]);
     }
 }

@@ -268,6 +268,7 @@ return [
     'MAINTENANCE_TITLE' => 'Maintenance',
     'MCP_TOKENS_TITLE' => 'Access tokens',
     'MCP_TOKEN_BUTTON_CREATE' => 'Create token',
+    'MCP_TOKEN_BUTTON_NEW' => 'New token',
     'MCP_TOKEN_CONFIRM_REVOKE' => 'Are you sure you want to revoke this token? Every app using it loses access.',
     'MCP_TOKEN_CREATED_AT_LABEL' => 'Created',
     'MCP_TOKEN_CREATE_TITLE' => 'New access token',

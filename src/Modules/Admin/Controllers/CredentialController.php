@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
 use Hirtz\Skeleton\Credentials\Credentials;
+use Hirtz\Skeleton\Models\Forms\UserCredentialForm;
 use Hirtz\Skeleton\Models\UserCredential;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Controller;
@@ -40,7 +41,6 @@ class CredentialController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'create' => ['post'],
                     'delete' => ['post'],
                 ],
             ],
@@ -69,29 +69,22 @@ class CredentialController extends Controller
                 'sort' => false,
                 'pagination' => false,
             ]),
-            'providers' => Credentials::getComponent()->getProviders(),
             'user' => $user,
         ]);
     }
 
-    public function actionCreate(): Response
+    public function actionCreate(): Response|string
     {
-        $provider = Credentials::getComponent()->getProvider((string)$this->request->post('provider'));
-        $secret = trim((string)$this->request->post('credentialSecret'));
+        $form = new UserCredentialForm($this->webuser->getIdentity());
 
-        if ($provider === null || $secret === '') {
-            throw new NotFoundHttpException();
-        }
-
-        if (!$provider->isValid($secret)) {
-            $this->error(Yii::t('skeleton', 'CREDENTIAL_ERROR_INVALID'));
+        if ($form->load($this->request->post()) && $form->save()) {
+            $this->success(Yii::t('skeleton', 'CREDENTIAL_SUCCESS_SAVED'));
             return $this->redirect(['index']);
         }
 
-        $credential = UserCredential::store((int)$this->webuser->getId(), $provider->getName(), $secret);
-        $this->errorOrSuccess($credential, Yii::t('skeleton', 'CREDENTIAL_SUCCESS_SAVED'));
-
-        return $this->redirect(['index']);
+        return $this->render('create', [
+            'form' => $form,
+        ]);
     }
 
     public function actionDelete(int $id): Response

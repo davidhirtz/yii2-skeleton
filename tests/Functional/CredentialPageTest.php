@@ -39,9 +39,15 @@ class CredentialPageTest extends TestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('.tabs a[href="/admin/credential/index"]');
-        self::assertSelectorExists('a[href="https://acme.example/keys"]');
+        self::assertSelectorNotExists('form input[type="password"]');
 
-        $this->submit('form[action="/admin/credential/create"]', ['provider' => 'acme', 'credentialSecret' => 'sk-test-wxyz']);
+        $this->open('admin/credential/create');
+        // a single service is no choice
+        self::assertSelectorExists('input[type="hidden"][name="UserCredentialForm[provider]"][value="acme"]');
+        self::assertSelectorExists('label[for="usercredentialform-secret"]');
+        self::assertAnySelectorTextContains('.form-hint', 'https://acme.example/keys');
+
+        $this->submit(values: $this->prefixFormValues('UserCredentialForm', ['provider' => 'acme', 'secret' => 'sk-test-wxyz']));
 
         self::assertAlertSame('The key was saved.', 'success');
         self::assertAnySelectorTextContains('td', '…wxyz');
@@ -58,10 +64,10 @@ class CredentialPageTest extends TestCase
     public function testAKeyTheServiceRefusesIsNotSaved(): void
     {
         $this->login();
-        $this->open('admin/credential/index');
-        $this->submit('form[action="/admin/credential/create"]', ['provider' => 'acme', 'credentialSecret' => 'wrong']);
+        $this->open('admin/credential/create');
+        $this->submit(values: $this->prefixFormValues('UserCredentialForm', ['provider' => 'acme', 'secret' => 'wrong']));
 
-        self::assertAlertSame('The service did not accept this key.', 'danger');
+        self::assertAnySelectorTextContains('body', 'The service did not accept this key.');
         self::assertNull(UserCredential::findOne(['user_id' => $this->getUserFromFixture('owner')->id]));
     }
 

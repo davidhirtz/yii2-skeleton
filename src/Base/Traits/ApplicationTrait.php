@@ -169,7 +169,7 @@ trait ApplicationTrait
                                 '_POST.value',
                                 '_POST.code',
                                 '_POST.code_verifier',
-                                '_POST.credentialSecret',
+                                '_POST.UserCredentialForm.secret',
                                 '_POST.refresh_token',
                                 '_POST.AccountCredentialsForm.newPassword',
                                 '_POST.AccountCredentialsForm.oldPassword',

@@ -59,7 +59,7 @@ class Module extends \yii\debug\Module
         '.well-known/appspecific/*',
         'mcp',
         'oauth/token',
-        '*/grant/create-token',
+        '*/mcp-token/create',
         '*/credential/create',
     ];
 

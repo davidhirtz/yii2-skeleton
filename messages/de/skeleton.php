@@ -268,6 +268,7 @@ return [
     'MAINTENANCE_TITLE' => 'Wartung',
     'MCP_TOKENS_TITLE' => 'Zugriffstoken',
     'MCP_TOKEN_BUTTON_CREATE' => 'Token erstellen',
+    'MCP_TOKEN_BUTTON_NEW' => 'Neues Token',
     'MCP_TOKEN_CONFIRM_REVOKE' => 'Sind Sie sicher, dass Sie dieses Token widerrufen wollen? Jede App, die es verwendet, verliert den Zugriff.',
     'MCP_TOKEN_CREATED_AT_LABEL' => 'Erstellt',
     'MCP_TOKEN_CREATE_TITLE' => 'Neues Zugriffstoken',

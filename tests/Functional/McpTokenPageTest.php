@@ -26,17 +26,25 @@ class McpTokenPageTest extends TestCase
         $this->reloadApplication();
     }
 
-    public function testATokenIsShownOnceAndAuthenticates(): void
+    public function testATokenIsCreatedOnItsOwnPageAndShownOnce(): void
     {
         $this->login();
-        $this->open('admin/grant/index');
+        $this->open('admin/mcp-token/index');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorExists('.tabs a[href="/admin/grant/index"]');
+        self::assertSelectorExists('.tabs a[href="/admin/mcp-token/index"]');
+        self::assertSelectorNotExists('.tabs a[href="/admin/grant/index"]');
         self::assertSelectorNotExists('#mcp-token');
-        self::assertSelectorExists('#mcp-token-expires option[value="90"][selected]');
+        self::assertSelectorNotExists('form select');
+        self::assertSelectorExists('a[href="/admin/mcp-token/create"]');
 
-        $this->submit('form[action="/admin/grant/create-token"]', ['readOnly' => '1', 'expires' => '30']);
+        $this->open('admin/mcp-token/create');
+
+        self::assertSelectorExists('label[for="mcptokenform-expires"]');
+        self::assertSelectorExists('select[name="McpTokenForm[expires]"] option[value="90"][selected]');
+        self::assertSelectorExists('input[type="checkbox"][name="McpTokenForm[readOnly]"]');
+
+        $this->submit(values: $this->prefixFormValues('McpTokenForm', ['readOnly' => '1', 'expires' => '30']));
 
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('#mcp-token');
@@ -50,26 +58,33 @@ class McpTokenPageTest extends TestCase
         self::assertNotNull($record->expires_at);
         self::assertEqualsWithDelta(time() + 30 * 86400, $record->expires_at->getTimestamp(), 60);
 
-        $this->open('admin/grant/index');
+        $this->open('admin/mcp-token/index');
         self::assertSelectorNotExists('#mcp-token');
         self::assertSelectorExists("#user-token-$record->id");
     }
 
-    public function testAnUnlistedLifetimeNeverExpires(): void
+    public function testNeverIsAChoiceAndAnUnlistedLifetimeIsRefused(): void
     {
         $this->login();
-        $this->open('admin/grant/index');
-
-        $request = $this->getWebRequest();
-        self::$crawler = self::$client->request('POST', 'https://www.test.localhost/admin/grant/create-token', [
-            'expires' => '1000',
-            $request->csrfParam => $request->getCsrfToken(),
-        ]);
+        $this->open('admin/mcp-token/create');
+        $this->submit(values: $this->prefixFormValues('McpTokenForm', ['expires' => '']));
 
         $record = Mcp::getComponent()->findToken(trim(self::$crawler->filter('#mcp-token')->text()));
 
         self::assertSame(UserToken::TYPE_MCP_WRITE, $record?->type);
         self::assertNull($record->expires_at);
+
+        $count = (int)UserToken::find()->whereUser($this->getUserFromFixture('owner')->id)->count();
+
+        $this->open('admin/mcp-token/create');
+        $request = $this->getWebRequest();
+        self::$crawler = self::$client->request('POST', 'https://www.test.localhost/admin/mcp-token/create', [
+            'McpTokenForm' => ['expires' => '1000'],
+            $request->csrfParam => $request->getCsrfToken(),
+        ]);
+
+        self::assertSelectorExists('.has-error, .is-invalid, [aria-invalid="true"]');
+        self::assertSame($count, (int)UserToken::find()->whereUser($this->getUserFromFixture('owner')->id)->count());
     }
 
     public function testATokenIsRevoked(): void
@@ -80,7 +95,7 @@ class McpTokenPageTest extends TestCase
         self::assertNotNull($record);
 
         $this->login();
-        $this->open('admin/grant/index');
+        $this->open('admin/mcp-token/index');
         $this->postRevoke($record->id);
 
         self::assertAlertSame('The token was revoked.', 'success');
@@ -99,7 +114,7 @@ class McpTokenPageTest extends TestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorExists("#user-token-$record->id");
-        self::assertSelectorNotExists('form[action="/admin/grant/create-token"]');
+        self::assertSelectorNotExists('a[href="/admin/mcp-token/create"]');
 
         self::$client->followRedirects(false);
         $this->postRevoke($record->id);
@@ -108,7 +123,7 @@ class McpTokenPageTest extends TestCase
         self::assertNull(UserToken::findOne($record->id));
     }
 
-    public function testWithoutOAuthTheConsentPageIsAbsent(): void
+    public function testWithoutOAuthTheConnectedAppsAreAbsent(): void
     {
         $this->login();
 
@@ -116,29 +131,28 @@ class McpTokenPageTest extends TestCase
         self::assertResponseStatusCodeSame(404);
 
         $this->open('admin/grant/index');
-        // the access tokens alone, no grants
-        self::assertCount(1, self::$crawler->filter('.grid'));
+        self::assertResponseStatusCodeSame(404);
     }
 
-    public function testWithoutHttpThePageIsAbsent(): void
+    public function testWithoutHttpThePagesAreAbsent(): void
     {
         $this->config['components']['mcp']['enableHttp'] = false;
         $this->reloadApplication();
 
         $this->login();
-        $this->open('admin/grant/index');
+        $this->open('admin/mcp-token/index');
 
         self::assertResponseStatusCodeSame(404);
 
         $this->open('admin/account/update');
-        self::assertSelectorNotExists('.tabs a[href="/admin/grant/index"]');
+        self::assertSelectorNotExists('.tabs a[href="/admin/mcp-token/index"]');
     }
 
     private function postRevoke(int|string $id): void
     {
         $request = $this->getWebRequest();
 
-        self::$crawler = self::$client->request('POST', "https://www.test.localhost/admin/grant/revoke-token?id=$id", [
+        self::$crawler = self::$client->request('POST', "https://www.test.localhost/admin/mcp-token/revoke?id=$id", [
             $request->csrfParam => $request->getCsrfToken(),
         ]);
     }

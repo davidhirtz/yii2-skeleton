@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Modules\Admin\Controllers\CredentialController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Modules\Admin\Controllers\GrantController;
+use Hirtz\Skeleton\Modules\Admin\Controllers\McpTokenController;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Navs\Submenu;
 use Override;
@@ -24,6 +25,7 @@ class AccountSubmenu extends Submenu
             logins: $this->getLoginItem(),
             security: $this->getSecurityItem(),
             grants: $this->getGrantItem(),
+            tokens: $this->getMcpTokenItem(),
             credentials: $this->getCredentialItem(),
         );
 
@@ -74,6 +76,21 @@ class AccountSubmenu extends Submenu
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'CREDENTIALS_TITLE'))
                 ->url(['/admin/credential/index'])
+                ->routes(['admin/credential/'])
+                ->icon('lock')
+            : null;
+    }
+
+    /**
+     * @see McpTokenController::actionIndex()
+     */
+    protected function getMcpTokenItem(): ?NavItem
+    {
+        return Mcp::getComponent()->enableHttp
+            ? NavItem::make()
+                ->label(Yii::t('skeleton', 'MCP_TOKENS_TITLE'))
+                ->url(['/admin/mcp-token/index'])
+                ->routes(['admin/mcp-token/'])
                 ->icon('key')
             : null;
     }
@@ -83,7 +100,7 @@ class AccountSubmenu extends Submenu
      */
     protected function getGrantItem(): ?NavItem
     {
-        return Mcp::getComponent()->enableHttp
+        return Mcp::getComponent()->isOAuthEnabled()
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'GRANT_CONNECTED_APPS'))
                 ->url(['/admin/grant/index'])
