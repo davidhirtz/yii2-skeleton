@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Web;
 
 use Hirtz\Skeleton\Base\Traits\ApplicationTrait;
 use Hirtz\Skeleton\Controllers\McpController;
+use Hirtz\Skeleton\Controllers\OAuthController;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Rbac\DbManager;
 use Override;
@@ -118,6 +119,18 @@ class Application extends \yii\web\Application
         if ($mcp instanceof Mcp && $mcp->enableHttp) {
             $this->controllerMap['mcp'] ??= McpController::class;
             $this->addUrlManagerRules(['mcp' => 'mcp/index'], true);
+
+            if ($mcp->enableOAuth) {
+                $this->controllerMap['oauth'] ??= OAuthController::class;
+
+                // A client probes the path-suffixed document first (RFC 9728 §3.1), the first rule builds the URL
+                $this->addUrlManagerRules([
+                    '.well-known/oauth-protected-resource/mcp' => 'oauth/protected-resource',
+                    '.well-known/oauth-protected-resource' => 'oauth/protected-resource',
+                    '.well-known/oauth-authorization-server' => 'oauth/authorization-server',
+                    'oauth/token' => 'oauth/token',
+                ], true);
+            }
         }
     }
 

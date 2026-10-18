@@ -7,6 +7,8 @@ namespace Hirtz\Skeleton\Mcp;
 use Closure;
 use Composer\InstalledVersions;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Mcp\OAuth\ClientMetadataFetcher;
+use Hirtz\Skeleton\Mcp\OAuth\ResourceUri;
 use Hirtz\Skeleton\Mcp\Tools\CreateRecordTool;
 use Hirtz\Skeleton\Mcp\Tools\DescribeResourceTool;
 use Hirtz\Skeleton\Mcp\Tools\FindRecordsTool;
@@ -21,6 +23,7 @@ use Hirtz\Skeleton\Mcp\Tools\UpdateRecordTool;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserToken;
+use Hirtz\Skeleton\Web\Request;
 use Yii;
 use yii\base\Component;
 
@@ -58,6 +61,20 @@ class Mcp extends Component
     public int $authenticationAttemptDuration = 900;
 
     public int $tokenLength = 48;
+
+    /**
+     * @var bool whether `POST /mcp` also takes the tokens of its OAuth 2.1 authorization server, which needs
+     * {@see self::$enableHttp}
+     */
+    public bool $enableOAuth = false;
+
+    public int $accessTokenLifetime = 3600;
+    public int $refreshTokenLifetime = 2592000;
+
+    /**
+     * @var list<string> prefixes a client's `client_id` must start with, e.g. `https://claude.ai/`; empty allows any
+     */
+    public array $allowedClientIds = [];
 
     /**
      * @var array<string, Resource<covariant ActiveRecord&AdminModelInterface>>|null
@@ -140,13 +157,13 @@ class Mcp extends Component
     /**
      * A user who could not log in is not authenticated by a token either.
      */
-    public function findToken(string $token): ?UserToken
+    public function findToken(string $token, ?string $resource = null): ?UserToken
     {
         $record = UserToken::find()
             ->whereToken($token)
             ->andWhere(['type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]])
             ->unexpired()
-            ->with('user')
+            ->with(['user', 'grant'])
             ->one();
 
         $user = $record?->user;
@@ -155,7 +172,52 @@ class Mcp extends Component
             return null;
         }
 
+        if ($record->grant_id !== null) {
+            $grant = $record->grant;
+
+            if (!$this->enableOAuth || $grant === null || ($resource !== null && !ResourceUri::equals($grant->resource, $resource))) {
+                return null;
+            }
+
+            $grant->touchLastUsedAt();
+        }
+
         return $record;
+    }
+
+    public function isOAuthEnabled(): bool
+    {
+        return $this->enableHttp && $this->enableOAuth;
+    }
+
+    /**
+     * The URL of the HTTP endpoint, which is the resource its OAuth tokens are bound to. Built from the request: the
+     * route is a literal, and a URL manager would add a language prefix where a page is localised.
+     */
+    public function getResourceUrl(): string
+    {
+        return $this->getBaseUrl() . '/mcp';
+    }
+
+    public function getResourceMetadataUrl(): string
+    {
+        return $this->getBaseUrl() . '/.well-known/oauth-protected-resource/mcp';
+    }
+
+    public function getIssuer(): string
+    {
+        return Request::current()?->getHostInfo() ?? '';
+    }
+
+    protected function getBaseUrl(): string
+    {
+        $request = Request::current();
+        return $request ? $request->getHostInfo() . $request->getBaseUrl() : '';
+    }
+
+    public function getClientMetadataFetcher(): ClientMetadataFetcher
+    {
+        return Yii::$container->get(ClientMetadataFetcher::class);
     }
 
     public function createServer(bool $readOnly = false): Server

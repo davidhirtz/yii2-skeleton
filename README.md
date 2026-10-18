@@ -220,7 +220,25 @@ claude mcp add --transport http cms https://www.example.com/mcp --header "Author
 ```
 
 A token is shown once and stored as its HMAC (`UserToken` types `mcp-read`, `mcp-write`); a disabled user's tokens stop
-working, and failed attempts are counted per address (`authenticationAttemptLimit`, `429` past it). A resource is a
+working, and failed attempts are counted per address (`authenticationAttemptLimit`, `429` past it).
+
+`enableOAuth` makes the site the endpoint's own OAuth 2.1 authorization server, so claude.ai adds it as a custom connector
+by URL and `claude mcp add --transport http cms https://www.example.com/mcp` needs no header:
+
+```php
+'mcp' => [
+    'enableHttp' => true,
+    'enableOAuth' => true,
+    'allowedClientIds' => [], // `client_id` prefixes, e.g. `https://claude.ai/`; empty allows any client
+],
+```
+
+A client identifies itself by a Client ID Metadata Document (there is no dynamic registration), the user approves it,
+read-only or read-write, on the admin's consent page (`admin/grant/authorize`), and revokes it under the account's
+*Connected apps* (a manager under the user's). Access tokens last `accessTokenLifetime` (an hour), refresh tokens
+`refreshTokenLifetime` (30 days) and rotate; reusing a rotated one revokes the connection. The tokens are bound to the
+endpoint's URL, so behind a proxy `Request::$trustedHosts` must be set or the metadata names `http://`. A password
+change revokes no connection. A resource is a
 definition appended to `resources` as a closure, a tool to `tools`:
 
 ```php

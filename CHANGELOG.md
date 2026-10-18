@@ -2,6 +2,8 @@
 
 - Added an MCP server (`Mcp\Mcp`, `mcp/serve`, `mcp/token`, `POST /mcp` with `enableHttp`) with generic tools over registered resources
 - Added `Web\User::setSessionlessIdentity()`
+- Added OAuth 2.1 for `POST /mcp` (`Mcp::$enableOAuth`, `Models\OAuthGrant`, the admin's connected apps)
+- Added `Helpers\NetworkHelper`
 - Added `UrlCustomAttribute::schemes()`, by default `http`, `https`, `mailto` and `tel`
 - Changed the password reset email template
 - Changed `TinyMceField::contentStyle()` to also take an array of CSS rules keyed by selector

@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @see \Hirtz\Skeleton\Modules\Admin\Controllers\GrantController::actionIndex()
+ *
+ * @var View $this
+ * @var ActiveDataProvider $provider
+ * @var User $user
+ */
+
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\GrantGridView;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountHeader;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AccountSubmenu;
+use Hirtz\Skeleton\Web\View;
+use Hirtz\Skeleton\Widgets\Grids\GridContainer;
+use yii\data\ActiveDataProvider;
+
+echo AccountHeader::make()
+    ->model($user);
+
+echo AccountSubmenu::make();
+
+echo GridContainer::make()
+    ->grid(GrantGridView::make()
+        ->provider($provider));

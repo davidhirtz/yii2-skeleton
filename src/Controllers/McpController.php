@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Caching\CacheCounter;
 use Hirtz\Skeleton\Mcp\JsonRpcException;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Server;
+use Hirtz\Skeleton\Models\OAuthGrant;
 use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Web\User as WebUser;
@@ -17,7 +18,7 @@ use yii\web\Response;
 
 /**
  * The stateless Streamable HTTP transport: one JSON-RPC message per POST, answered as JSON, authenticated by a
- * token `mcp/token` issued.
+ * token `mcp/token` or the OAuth token endpoint issued.
  *
  * @extends Controller<Module>
  */
@@ -46,14 +47,14 @@ class McpController extends Controller
         }
 
         $bearer = $this->getBearerToken();
-        $token = $bearer !== null ? $mcp->findToken($bearer) : null;
+        $token = $bearer !== null ? $mcp->findToken($bearer, $mcp->getResourceUrl()) : null;
 
         if ($token === null) {
             if ($bearer !== null) {
                 CacheCounter::increment($cacheKey, $mcp->authenticationAttemptDuration);
             }
 
-            $this->response->getHeaders()->set('WWW-Authenticate', $bearer !== null ? 'Bearer error="invalid_token"' : 'Bearer');
+            $this->response->getHeaders()->set('WWW-Authenticate', $this->getAuthenticateChallenge($mcp, $bearer !== null));
             return $this->respond(401);
         }
 
@@ -93,6 +94,20 @@ class McpController extends Controller
         return $origin === null
             || $origin === $this->request->getHostInfo()
             || in_array($origin, $mcp->allowedOrigins, true);
+    }
+
+    protected function getAuthenticateChallenge(Mcp $mcp, bool $isInvalid): string
+    {
+        $params = $isInvalid ? ['error' => 'invalid_token'] : [];
+
+        if ($mcp->isOAuthEnabled()) {
+            $params['resource_metadata'] = $mcp->getResourceMetadataUrl();
+            $params['scope'] = OAuthGrant::SCOPE_WRITE;
+        }
+
+        $params = array_map(fn (string $name, string $value): string => "$name=\"$value\"", array_keys($params), $params);
+
+        return rtrim('Bearer ' . implode(', ', $params));
     }
 
     protected function getBearerToken(): ?string

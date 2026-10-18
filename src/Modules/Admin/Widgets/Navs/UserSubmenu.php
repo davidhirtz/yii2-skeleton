@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
@@ -26,6 +27,7 @@ class UserSubmenu extends Submenu
             user: $this->getUserUpdateItem(),
             permissions: $this->getUserPermissionItem(),
             logins: $this->getUserLoginItem(),
+            grants: $this->getUserGrantItem(),
             trail: $this->getUserTrailItem(),
         );
 
@@ -60,6 +62,17 @@ class UserSubmenu extends Submenu
                 ->icon('bars')
                 ->url(['/admin/user-login/view', 'user' => $this->model->id])
                 ->routes(['admin/user-login/view'])
+            : null;
+    }
+
+    protected function getUserGrantItem(): ?NavItem
+    {
+        return Mcp::getComponent()->isOAuthEnabled() && $this->webuser->can(User::AUTH_USER, ['user' => $this->model])
+            ? NavItem::make()
+                ->label(Yii::t('skeleton', 'GRANT_CONNECTED_APPS'))
+                ->icon('plug')
+                ->url(['/admin/grant/view', 'user' => $this->model->id])
+                ->routes(['admin/grant/view'])
             : null;
     }
 

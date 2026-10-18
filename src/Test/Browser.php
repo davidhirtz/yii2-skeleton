@@ -126,6 +126,9 @@ class Browser extends AbstractBrowser
 
         $response->clear();
 
+        // `clear()` keeps the format, which a JSON action would hand on to the next page
+        $response->format = \yii\web\Response::FORMAT_HTML;
+
         Yii::$app->set('view', Yii::$app->getComponents()['view']);
 
         return new Response($content, $status, $headers);

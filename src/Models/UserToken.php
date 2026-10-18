@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Models;
 
 use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
+use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\SecretKey;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
@@ -20,12 +21,14 @@ use Yii;
  *
  * @property string $id
  * @property int $user_id
+ * @property int|null $grant_id
  * @property string $type
  * @property string $token the HMAC, never the token itself
  * @property DateTime|null $expires_at
  * @property DateTime $created_at
  *
  * @property-read User $user {@see static::getUser()}
+ * @property-read OAuthGrant|null $grant {@see static::getGrant()}
  */
 class UserToken extends ActiveRecord
 {
@@ -34,6 +37,12 @@ class UserToken extends ActiveRecord
     public const string TYPE_RECOVERY_CODE = 'recovery';
     public const string TYPE_MCP_READ = 'mcp-read';
     public const string TYPE_MCP_WRITE = 'mcp-write';
+    public const string TYPE_MCP_REFRESH = 'mcp-refresh';
+
+    /**
+     * A refresh token already exchanged, kept until it expires so that its reuse is noticed.
+     */
+    public const string TYPE_MCP_ROTATED = 'mcp-rotated';
 
     #[Override]
     public function rules(): array
@@ -76,10 +85,11 @@ class UserToken extends ActiveRecord
     /**
      * @param int|null $lifetime seconds until the token expires, `null` for one that is spent rather than aged out
      */
-    public static function issue(int $userId, string $type, string $token, ?int $lifetime = null): static
+    public static function issue(int $userId, string $type, string $token, ?int $lifetime = null, ?int $grantId = null): static
     {
         $record = static::create();
         $record->user_id = $userId;
+        $record->grant_id = $grantId;
         $record->type = $type;
         $record->token = static::hash($token);
         $record->expires_at = $lifetime === null ? null : new DateTime("+$lifetime seconds");
@@ -96,6 +106,16 @@ class UserToken extends ActiveRecord
     {
         /** @var UserQuery<User> $query */
         $query = $this->hasOne(User::class, ['id' => 'user_id']);
+        return $query;
+    }
+
+    /**
+     * @return ActiveQuery<OAuthGrant>
+     */
+    public function getGrant(): ActiveQuery
+    {
+        /** @var ActiveQuery<OAuthGrant> $query */
+        $query = $this->hasOne(OAuthGrant::class, ['id' => 'grant_id']);
         return $query;
     }
 
