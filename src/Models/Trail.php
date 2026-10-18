@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Models;
 
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\I18n\Message;
+use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
@@ -26,6 +27,7 @@ use yii\db\ActiveRecordInterface;
  * @property int $id
  * @property string|null $model_class
  * @property int|null $user_id
+ * @property string|null $client the MCP client the change came through
  * @property string|null $message
  * @property array<string, mixed>|null $data
  * @property DateTime $created_at
@@ -83,6 +85,11 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         if ($webuser) {
             $id = $webuser->getId();
             $this->user_id = $id !== null ? (int)$id : null;
+        }
+
+        // Only a request that loaded the component can be an MCP one
+        if (Yii::$app->has('mcp', true)) {
+            $this->client ??= Mcp::getComponent()->getClient();
         }
 
         if (is_array($this->model_id)) {

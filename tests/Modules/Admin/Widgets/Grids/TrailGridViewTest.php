@@ -260,6 +260,14 @@ class TrailGridViewTest extends TestCase
         self::assertSame([User::class, '9'], explode('@', $route['model']));
     }
 
+    public function testTheClientIsShownBelowTheUser(): void
+    {
+        $trail = Trail::create();
+        $trail->client = 'claude.ai <b>';
+
+        self::assertSame('<div class="text-muted">via claude.ai &lt;b&gt;</div>', (string)TestTrailGridView::make()->userColumnContent($trail));
+    }
+
     protected function createUserTrail(string $id): Trail
     {
         // A delete renders its message rather than an attribute table, which is what links the record.
@@ -287,6 +295,11 @@ class TestTrailGridView extends TrailGridView
     public function updatedAttributeContent(mixed $oldValue, mixed $newValue): string|Stringable
     {
         return $this->getUpdatedAttributeContent($oldValue, $newValue);
+    }
+
+    public function userColumnContent(Trail $trail): string|Stringable
+    {
+        return $this->getUserColumnContent($trail);
     }
 
     /**

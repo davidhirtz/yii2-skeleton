@@ -77,6 +77,8 @@ class SchemaBuilderTest extends TestCase
                 'published_at' => 'datetime null',
                 'day' => 'date null',
                 'size' => 'string null',
+                'note' => 'string null',
+                'loose' => 'integer null',
                 'custom_attributes' => 'json null',
                 'updated_by_user_id' => 'integer null',
                 'updated_at' => 'datetime null',
@@ -111,7 +113,7 @@ class SchemaBuilderTest extends TestCase
         self::assertSame(['title' => 'Email', 'type' => 'string', 'format' => 'email'], $properties['email']);
         self::assertSame(['title' => 'Website', 'type' => 'string', 'format' => 'uri'], $properties['website']);
         self::assertSame(['title' => 'Color', 'type' => 'string', 'pattern' => '^#(?:[0-9a-fA-F]{3}){1,2}$'], $properties['color']);
-        self::assertSame(['title' => 'Body', 'type' => 'string', 'contentMediaType' => 'text/html'], $properties['body']);
+        self::assertSame(['title' => 'Body', 'description' => 'Purified to the tags a[href|rel|target|title], br, li, ol, p, span, strong, ul.', 'type' => 'string', 'contentMediaType' => 'text/html'], $properties['body']);
     }
 
     public function testNumberValidatorsMapToNumbers(): void
@@ -130,6 +132,24 @@ class SchemaBuilderTest extends TestCase
         self::assertSame(['title' => 'Size', 'enum' => ['s', 'm', 'l']], $properties['size']);
         self::assertSame('integer', $properties['status']['type'] ?? null);
         self::assertEqualsCanonicalizing(array_keys(SchemaRecord::getStatusDefinitions()), $properties['status']['enum'] ?? null);
+        self::assertStringStartsWith('Values: ', $properties['status']['description'] ?? '');
+
+        foreach (SchemaRecord::getStatusDefinitions() as $value => $definition) {
+            self::assertStringContainsString("$value: {$definition->getName()}", $properties['status']['description'] ?? '');
+        }
+    }
+
+    public function testAColumnTypesAnAttributeNoValidatorTypes(): void
+    {
+        $properties = $this->getProperties();
+
+        self::assertSame(['title' => 'Loose', 'type' => ['integer', 'null']], $properties['loose']);
+        self::assertSame(['title' => 'Free'], $properties['free']);
+    }
+
+    public function testASentenceWithAPlaceholderIsLeftOutOfTheHint(): void
+    {
+        self::assertSame(['title' => 'Note', 'description' => 'Kurz und knapp.', 'type' => ['string', 'null']], $this->getProperties()['note']);
     }
 
     public function testDatesMapToFormats(): void
@@ -170,7 +190,7 @@ class SchemaBuilderTest extends TestCase
         self::assertSame(['title' => 'Ratio', 'type' => 'number'], $properties['ratio']);
         self::assertSame(['title' => 'Layout', 'enum' => [1, 2]], $properties['layout']);
         self::assertSame(['title' => 'Tags', 'type' => 'array', 'items' => ['enum' => ['a', 'b']]], $properties['tags']);
-        self::assertSame(['title' => 'Intro', 'type' => 'string', 'contentMediaType' => 'text/html', 'maxLength' => 65535], $properties['intro']);
+        self::assertSame(['title' => 'Intro', 'description' => 'Purified to the tags a[href|rel|target|title], br, li, ol, p, span, strong, ul.', 'type' => 'string', 'contentMediaType' => 'text/html', 'maxLength' => 65535], $properties['intro']);
         self::assertSame(['title' => 'Contact', 'type' => 'string', 'maxLength' => 255, 'format' => 'email'], $properties['contact']);
         self::assertSame('string', $properties['link']['type'] ?? null);
         self::assertSame('^#(?:[0-9a-fA-F]{3}){1,2}$', $properties['tint']['pattern'] ?? null);
@@ -343,7 +363,7 @@ class SchemaRecord extends ActiveRecord implements
             [['day'], DateTimeValidator::class, 'type' => AttributeTypecastBehavior::TYPE_DATE],
             [['size'], 'in', 'range' => ['s', 'm', 'l']],
             [['parent_id'], RelationValidator::class],
-            [['free', 'position', 'entry_count', 'updated_by_user_id', 'created_at', 'updated_at'], 'safe'],
+            [['free', 'note', 'loose', 'position', 'entry_count', 'updated_by_user_id', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -364,6 +384,7 @@ class SchemaRecord extends ActiveRecord implements
         return [
             ...parent::attributeHints(),
             'name' => '<b>Ein Hinweis</b> для 東京 🎉',
+            'note' => 'Kurz und knapp. Jetzt: {count} Zeichen.',
         ];
     }
 

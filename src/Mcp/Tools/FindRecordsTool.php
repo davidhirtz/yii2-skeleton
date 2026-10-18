@@ -28,6 +28,12 @@ class FindRecordsTool extends ResourceTool
     }
 
     #[Override]
+    public function getTitle(): string
+    {
+        return 'Find records';
+    }
+
+    #[Override]
     public function getDescription(): string
     {
         return 'Finds records of a resource. "filter" matches columns by equality (custom attributes are not '

@@ -25,6 +25,7 @@ use Yii;
  * @property string $type
  * @property string $token the HMAC, never the token itself
  * @property DateTime|null $expires_at
+ * @property DateTime|null $last_used_at
  * @property DateTime $created_at
  *
  * @property-read User $user {@see static::getUser()}
@@ -97,6 +98,16 @@ class UserToken extends ActiveRecord
         $record->insert();
 
         return $record;
+    }
+
+    /**
+     * At most once per interval: an MCP token authenticates every request.
+     */
+    public function touchLastUsedAt(int $interval = 60): void
+    {
+        if ($this->last_used_at === null || $this->last_used_at->getTimestamp() < time() - $interval) {
+            $this->updateAttributes(['last_used_at' => new DateTime()]);
+        }
     }
 
     /**

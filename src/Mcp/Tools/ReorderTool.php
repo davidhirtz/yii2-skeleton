@@ -16,6 +16,18 @@ class ReorderTool extends ResourceTool
     }
 
     #[Override]
+    public function getTitle(): string
+    {
+        return 'Reorder records';
+    }
+
+    #[Override]
+    public function isDestructive(): bool
+    {
+        return true;
+    }
+
+    #[Override]
     public function getDescription(): string
     {
         return 'Puts the records of a reorderable resource in the given order, under the parent where the resource '

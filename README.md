@@ -240,7 +240,8 @@ read-only or read-write, on the admin's consent page (`admin/grant/authorize`), 
 *Connected apps* (a manager under the user's). Access tokens last `accessTokenLifetime` (an hour), refresh tokens
 `refreshTokenLifetime` (30 days) and rotate; reusing a rotated one revokes the connection. The tokens are bound to the
 endpoint's URL, so behind a proxy `Request::$trustedHosts` must be set or the metadata names `http://`. A password
-change revokes every connection and token, as it signs out the other sessions. A resource is a
+change revokes every connection and token, as it signs out the other sessions. A change made through MCP records its
+client in the trail (`trail.client`: the OAuth client's host, `MCP token #12` or `mcp/serve`). A resource is a
 definition appended to `resources` as a closure, a tool to `tools`:
 
 ```php
@@ -270,8 +271,15 @@ templates name every resource the user may read, the list holds each one's ten m
             ->argument('topic', 'What the post is about', required: true)
             ->text(fn (array $arguments): string => "Draft a blog post about {$arguments['topic']} as an entry."),
     ],
+    'instructions' => [
+        fn (): string => 'A blog post is an entry of the type Article.',
+    ],
 ],
 ```
+
+`initialize` answers instructions: how to go about the tools, the content languages, that a write is live once
+enabled; each closure in `instructions` appends a paragraph. A validator the schema cannot map by class describes its
+attribute through `Validators\Interfaces\JsonSchemaInterface`; an attribute no validator types takes its column's type.
 
 ## Console commands
 

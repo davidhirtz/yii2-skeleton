@@ -38,6 +38,11 @@ class GrantController extends Controller
      */
     public array $tokenLifetimes = [30, 90, 365];
 
+    /**
+     * @var int|null the lifetime preselected, `null` for a token that never expires
+     */
+    public ?int $defaultTokenLifetime = 90;
+
     #[Override]
     public function behaviors(): array
     {
@@ -140,6 +145,7 @@ class GrantController extends Controller
             'tokens' => $this->getTokenProvider($user),
             'token' => is_string($token) ? $token : null,
             'tokenLifetimes' => $this->tokenLifetimes,
+            'defaultTokenLifetime' => $this->defaultTokenLifetime,
             'user' => $user,
         ]);
     }

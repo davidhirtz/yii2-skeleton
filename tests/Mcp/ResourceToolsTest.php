@@ -11,6 +11,10 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Resource;
+use Hirtz\Skeleton\Mcp\Tools\CreateRecordTool;
+use Hirtz\Skeleton\Mcp\Tools\GetRecordTool;
+use Hirtz\Skeleton\Mcp\Tools\ReorderTool;
+use Hirtz\Skeleton\Mcp\Tools\SetStatusTool;
 use Hirtz\Skeleton\Mcp\Tools\ToolInterface;
 use Hirtz\Skeleton\Mcp\Tools\UpdateRecordTool;
 use Hirtz\Skeleton\Models\Actions\ReorderActiveRecords;
@@ -340,12 +344,44 @@ class ResourceToolsTest extends TestCase
         self::assertSame('Resource scratch is read-only.', $result->structuredContent['error'] ?? null);
     }
 
+    public function testOnlyToolsOverwritingRecordsAreDestructive(): void
+    {
+        $mcp = Mcp::getComponent();
+
+        self::assertTrue((new UpdateRecordTool($mcp))->isDestructive());
+        self::assertTrue((new SetStatusTool($mcp))->isDestructive());
+        self::assertTrue((new ReorderTool($mcp))->isDestructive());
+        self::assertFalse((new CreateRecordTool($mcp))->isDestructive());
+        self::assertFalse((new GetRecordTool($mcp))->isDestructive());
+    }
+
     public function testAReadOnlyServerOffersNoWriteTool(): void
     {
         $response = Mcp::getComponent()->createServer(true)->handle(['jsonrpc' => '2.0', 'id' => 1, 'method' => 'tools/list']);
         $names = array_column($response['result']['tools'] ?? [], 'name');
 
         self::assertSame(['list_resources', 'describe_resource', 'find_records', 'get_record'], $names);
+    }
+
+    public function testTheInstructionsNameTheLanguagesAndWhatBundlesAdd(): void
+    {
+        Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
+
+        $mcp = Mcp::getComponent();
+        $mcp->instructions = [fn (): string => 'Einträge sind Seiten 📄.', fn (): ?string => null];
+
+        $instructions = $mcp->getInstructions();
+
+        self::assertStringContainsString('list_resources', $instructions);
+        self::assertStringContainsString('(_de)', $instructions);
+        self::assertStringContainsString('drafts', $instructions);
+        self::assertStringEndsWith("\n\nEinträge sind Seiten 📄.", $instructions);
+
+        self::assertStringContainsString('read-only', $mcp->getInstructions(true));
+        self::assertStringNotContainsString('drafts', $mcp->getInstructions(true));
+
+        $response = $mcp->createServer()->handle(['jsonrpc' => '2.0', 'id' => 1, 'method' => 'initialize', 'params' => []]);
+        self::assertSame($instructions, $response['result']['instructions'] ?? null);
     }
 
     public function testReorder(): void

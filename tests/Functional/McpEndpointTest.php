@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Tests\Functional;
 
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Server;
+use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Test\Browser;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
@@ -54,6 +55,20 @@ class McpEndpointTest extends TestCase
         // the clients of a remote connector share its addresses, so a valid token still passes
         $this->post(['jsonrpc' => '2.0', 'id' => 1, 'method' => 'ping'], $this->issueToken());
         self::assertResponseStatusCodeSame(200);
+    }
+
+    public function testAPersonalTokenRecordsItsLastUse(): void
+    {
+        $token = $this->issueToken();
+        self::assertNull(UserToken::find()->whereToken($token)->one()?->last_used_at);
+
+        $this->post(['jsonrpc' => '2.0', 'id' => 1, 'method' => 'ping'], $token);
+
+        self::assertResponseStatusCodeSame(200);
+        self::assertNotNull(UserToken::find()->whereToken($token)->one()?->last_used_at);
+
+        $id = UserToken::find()->whereToken($token)->select('id')->scalar();
+        self::assertSame("MCP token #$id", Mcp::getComponent()->getClient());
     }
 
     public function testAnExpiredTokenIsNotCounted(): void

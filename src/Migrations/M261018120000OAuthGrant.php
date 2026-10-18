@@ -49,11 +49,25 @@ class M261018120000OAuthGrant extends Migration
             ALTER TABLE `user_token` ADD CONSTRAINT `user_token_grant_id_ibfk` FOREIGN KEY (`grant_id`) REFERENCES `oauth_grant` (`id`) ON DELETE CASCADE
             SQL
         );
+
+        $this->execute(
+            <<<'SQL'
+            ALTER TABLE `user_token` ADD `last_used_at` datetime DEFAULT NULL AFTER `expires_at`
+            SQL
+        );
+
+        $this->execute(
+            <<<'SQL'
+            ALTER TABLE `trail` ADD `client` varchar(100) DEFAULT NULL AFTER `user_id`
+            SQL
+        );
     }
 
     #[Override]
     public function safeDown(): void
     {
+        $this->dropColumn('{{%trail}}', 'client');
+        $this->dropColumn('{{%user_token}}', 'last_used_at');
         $this->dropForeignKey('user_token_grant_id_ibfk', '{{%user_token}}');
         $this->dropColumn('{{%user_token}}', 'grant_id');
         $this->dropTable('{{%oauth_grant}}');

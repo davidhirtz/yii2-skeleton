@@ -26,6 +26,7 @@ class McpTokenGridView extends GridView
         $this->columns ??= [
             $this->getScopeColumn(),
             $this->getExpiresAtColumn(),
+            $this->getLastUsedAtColumn(),
             $this->getCreatedAtColumn(),
             $this->getButtonColumn(),
         ];
@@ -51,6 +52,13 @@ class McpTokenGridView extends GridView
             ->content(fn (UserToken $token): string => $token->expires_at
                 ? Yii::$app->getFormatter()->asDate($token->expires_at)
                 : Yii::t('skeleton', 'MCP_TOKEN_EXPIRES_NEVER'));
+    }
+
+    protected function getLastUsedAtColumn(): ?Column
+    {
+        return RelativeTimeColumn::make()
+            ->property('last_used_at')
+            ->title(Yii::t('skeleton', 'MCP_TOKEN_LAST_USED_AT_LABEL'));
     }
 
     protected function getCreatedAtColumn(): ?Column

@@ -15,6 +15,12 @@ class GetRecordTool extends ResourceTool
     }
 
     #[Override]
+    public function getTitle(): string
+    {
+        return 'Get a record';
+    }
+
+    #[Override]
     public function getDescription(): string
     {
         return 'Returns every attribute of a record, the translations and custom attributes included, with its admin '

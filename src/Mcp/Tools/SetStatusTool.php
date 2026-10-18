@@ -17,6 +17,18 @@ class SetStatusTool extends ResourceTool
     }
 
     #[Override]
+    public function getTitle(): string
+    {
+        return 'Set the status';
+    }
+
+    #[Override]
+    public function isDestructive(): bool
+    {
+        return true;
+    }
+
+    #[Override]
     public function getDescription(): string
     {
         return 'Sets the status of a record, one of the ids describe_resource lists, e.g. to publish or unpublish it.';

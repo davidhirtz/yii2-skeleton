@@ -5,6 +5,8 @@
 - Added OAuth 2.1 for `POST /mcp` (`Mcp::$enableOAuth`, `Models\OAuthGrant`, the admin's connected apps)
 - Added creating and revoking MCP tokens in the admin's connected apps
 - Added MCP resources (`record://<resource>/<id>`, `Mcp::$enableResources`) and prompts (`Mcp::$prompts`, `Mcp\Prompt`)
+- Added MCP server instructions (`Mcp::$instructions`) and `Validators\Interfaces\JsonSchemaInterface`
+- Added `trail.client`, the MCP client a change came through (`Mcp::setClient()`)
 - Added `Helpers\NetworkHelper`
 - Added `UrlCustomAttribute::schemes()`, by default `http`, `https`, `mailto` and `tel`
 - Changed the password reset email template

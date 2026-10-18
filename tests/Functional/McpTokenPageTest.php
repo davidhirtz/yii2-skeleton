@@ -34,6 +34,7 @@ class McpTokenPageTest extends TestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('.tabs a[href="/admin/grant/index"]');
         self::assertSelectorNotExists('#mcp-token');
+        self::assertSelectorExists('#mcp-token-expires option[value="90"][selected]');
 
         $this->submit('form[action="/admin/grant/create-token"]', ['readOnly' => '1', 'expires' => '30']);
 

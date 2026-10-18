@@ -50,6 +50,11 @@ class Mcp extends Component
     public array $prompts = [];
 
     /**
+     * @var list<Closure(self): ?string> paragraphs a bundle appends to what the server tells a client in `initialize`
+     */
+    public array $instructions = [];
+
+    /**
      * @var bool whether the records are offered as MCP resources (`record://entry/8`) besides the tools
      */
     public bool $enableResources = true;
@@ -91,6 +96,8 @@ class Mcp extends Component
      * @var array<string, Resource<covariant ActiveRecord&AdminModelInterface>>|null
      */
     private ?array $resolvedResources = null;
+
+    private ?string $client = null;
 
     public static function getComponent(): self
     {
@@ -191,6 +198,8 @@ class Mcp extends Component
             }
 
             $grant->touchLastUsedAt();
+        } else {
+            $record->touchLastUsedAt();
         }
 
         return $record;
@@ -218,6 +227,19 @@ class Mcp extends Component
 
         CacheCounter::increment($cacheKey, $this->authenticationAttemptDuration);
         return true;
+    }
+
+    /**
+     * Names the client of this request in the trail: an OAuth client's host, a token or the stdio transport.
+     */
+    public function setClient(?string $client): void
+    {
+        $this->client = $client !== null ? mb_substr($client, 0, 100) : null;
+    }
+
+    public function getClient(): ?string
+    {
+        return $this->client;
     }
 
     public function isOAuthEnabled(): bool
@@ -263,6 +285,41 @@ class Mcp extends Component
         return array_map(fn (Closure $closure): Prompt => $closure(), $this->prompts);
     }
 
+    /**
+     * What a client would otherwise learn over several calls, or guess: the order of the calls, the languages, and
+     * that a saved record is live once enabled.
+     */
+    public function getInstructions(bool $readOnly = false): string
+    {
+        $i18n = Yii::$app->getI18n();
+        $languages = [];
+
+        foreach ($i18n->getLanguages() as $language) {
+            $suffix = substr($i18n->getAttributeName('x', $language), 1);
+            $languages[] = $i18n->getLabel($language) . ' (' . ($suffix !== '' ? $suffix : 'no suffix') . ')';
+        }
+
+        $paragraphs = [
+            'This server manages the content of the website "' . Yii::$app->name . '" as the user who connected it, '
+            . 'with that user\'s permissions.',
+            'Start with list_resources, then call describe_resource for a resource (and type) before writing: it '
+            . 'names the attributes, the type and status ids with their names, and the tags an HTML attribute keeps. '
+            . 'Find records with find_records ("filter" on columns, "query" for text) and read one with get_record.',
+            'A translated attribute has one property per content language: ' . implode(', ', $languages) . '.',
+            $readOnly
+                ? 'This connection is read-only.'
+                : 'Every write is saved at once and shown on the website when the record\'s status is enabled, so '
+                . 'create records as drafts unless asked to publish. Pass the updated_at that get_record answered '
+                . 'to update_record, which then refuses to overwrite an edit made since.',
+        ];
+
+        foreach ($this->instructions as $closure) {
+            $paragraphs[] = $closure($this);
+        }
+
+        return implode("\n\n", array_filter($paragraphs));
+    }
+
     public function createServer(bool $readOnly = false): Server
     {
         return new Server(
@@ -271,6 +328,7 @@ class Mcp extends Component
             InstalledVersions::getPrettyVersion('davidhirtz/yii2-skeleton') ?? 'dev',
             $this->enableResources && $this->getResources() ? new RecordResources($this) : null,
             $this->getPrompts(),
+            $this->getInstructions($readOnly),
         );
     }
 }

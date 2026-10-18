@@ -490,6 +490,19 @@ class TrailGridView extends GridView
 
     protected function getUserColumnContent(Trail $trail): string|Stringable
     {
+        $username = $this->getUsername($trail);
+
+        if (!$trail->client) {
+            return $username;
+        }
+
+        return $username . Div::make()
+            ->addClass('text-muted')
+            ->text(Yii::t('skeleton', 'TRAIL_CLIENT', ['client' => $trail->client]));
+    }
+
+    protected function getUsername(Trail $trail): string|Stringable
+    {
         if (!$trail->user_id) {
             return '';
         }

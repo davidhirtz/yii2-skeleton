@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Validators;
 
 use Closure;
+use Hirtz\Skeleton\Validators\Interfaces\JsonSchemaInterface;
+use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\helpers\HtmlPurifier;
 use yii\validators\Validator;
 
-class HtmlValidator extends Validator
+class HtmlValidator extends Validator implements JsonSchemaInterface
 {
     /**
      * @var array<int|string, array<int|string, string>|string>|Closure(): array<int|string, array<int|string, string>|string>
@@ -96,6 +98,21 @@ class HtmlValidator extends Validator
         $this->setAllowedCssProperties();
 
         parent::init();
+    }
+
+    #[\Override]
+    public function getJsonSchema(Model $model, string $attribute): array
+    {
+        $allowed = $this->purifierOptions['HTML.Allowed'] ?? null;
+        $classes = $this->purifierOptions['Attr.AllowedClasses'] ?? null;
+
+        return array_filter([
+            'type' => 'string',
+            'contentMediaType' => 'text/html',
+            'description' => is_string($allowed)
+                ? 'Purified to the tags ' . str_replace(',', ', ', $allowed) . (is_array($classes) ? ' and the classes ' . implode(', ', $classes) : '') . '.'
+                : null,
+        ]);
     }
 
     protected function setDefaultOptions(): void

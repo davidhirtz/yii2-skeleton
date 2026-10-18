@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @var ActiveDataProvider $tokens
  * @var string|null $token
  * @var list<int> $tokenLifetimes
+ * @var int|null $defaultTokenLifetime
  * @var User $user
  */
 
@@ -96,6 +97,7 @@ echo Container::make()
                                     ->label(Yii::t('skeleton', 'MCP_TOKEN_EXPIRES_NEVER')),
                                 ...array_map(fn (int $days): Option => Option::make()
                                     ->value($days)
+                                    ->selected($days === $defaultTokenLifetime)
                                     ->label(Yii::t('skeleton', 'MCP_TOKEN_EXPIRES_DAYS', ['days' => $days])), $tokenLifetimes),
                             ),
                         Button::make()

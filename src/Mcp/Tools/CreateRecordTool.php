@@ -19,6 +19,12 @@ class CreateRecordTool extends ResourceTool
     }
 
     #[Override]
+    public function getTitle(): string
+    {
+        return 'Create a record';
+    }
+
+    #[Override]
     public function getDescription(): string
     {
         return 'Creates a record and returns it as get_record does, or the validation errors per attribute. Call '

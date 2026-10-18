@@ -16,6 +16,12 @@ class ListResourcesTool extends ResourceTool
     }
 
     #[Override]
+    public function getTitle(): string
+    {
+        return 'List resources';
+    }
+
+    #[Override]
     public function getDescription(): string
     {
         return 'Lists the content resources this site offers. Call describe_resource for the attributes of one.';

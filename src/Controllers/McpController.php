@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Web\User as WebUser;
 use JsonException;
+use Yii;
 use yii\base\Module;
 use yii\web\Response;
 
@@ -52,6 +53,9 @@ class McpController extends Controller
         }
 
         WebUser::setSessionlessIdentity($token->user);
+        $mcp->setClient($token->grant ? $token->grant->getClientHost() : "MCP token #$token->id");
+
+        Yii::info("token=$token->id client={$mcp->getClient()}", 'mcp');
 
         try {
             $message = json_decode($this->request->getRawBody(), true, 512, JSON_THROW_ON_ERROR);

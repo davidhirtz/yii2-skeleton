@@ -8,6 +8,8 @@ interface ToolInterface
 {
     public function getName(): string;
 
+    public function getTitle(): string;
+
     public function getDescription(): string;
 
     /**
@@ -19,6 +21,11 @@ interface ToolInterface
     public function isReadOnly(): bool;
 
     public function isIdempotent(): bool;
+
+    /**
+     * Whether a call may overwrite or remove what is there, which a client takes as the reason to ask first.
+     */
+    public function isDestructive(): bool;
 
     /**
      * @param array<string, mixed> $arguments

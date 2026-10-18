@@ -53,6 +53,12 @@ abstract class ResourceTool implements ToolInterface
         return $this->isReadOnly();
     }
 
+    #[Override]
+    public function isDestructive(): bool
+    {
+        return false;
+    }
+
     /**
      * @return list<Resource<covariant ActiveRecord&AdminModelInterface>> the resources the tool takes
      */

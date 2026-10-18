@@ -54,6 +54,8 @@ class RecordResourcesTest extends TestCase
 
     public function testTheCapabilitiesNameWhatIsOffered(): void
     {
+        // A sibling bundle may register prompts, as the cms does in the monorepo
+        Mcp::getComponent()->prompts = [];
         $capabilities = $this->getResult(Mcp::getComponent()->createServer(), 'initialize')['capabilities'] ?? [];
 
         self::assertArrayHasKey('resources', $capabilities);
@@ -87,7 +89,8 @@ class RecordResourcesTest extends TestCase
 
     public function testPromptsAreListedAndFilledIn(): void
     {
-        $this->config['components']['mcp']['prompts'] = [
+        // Assigned, not configured: the config would append to a sibling bundle's prompts
+        Mcp::getComponent()->prompts = [
             fn (): Prompt => Prompt::make('new_post')
                 ->title('Neuer Beitrag')
                 ->description('Drafts a post')
@@ -96,7 +99,6 @@ class RecordResourcesTest extends TestCase
                 ->text(fn (array $arguments): string => "Draft a post about {$arguments['topic']}" . (isset($arguments['tone']) ? ", {$arguments['tone']}" : '') . '.'),
         ];
 
-        $this->reloadApplication();
         $server = Mcp::getComponent()->createServer();
 
         self::assertArrayHasKey('prompts', $this->getResult($server, 'initialize')['capabilities'] ?? []);

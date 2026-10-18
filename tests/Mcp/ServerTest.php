@@ -22,6 +22,7 @@ class ServerTest extends TestCase
         self::assertSame('2025-06-18', $result['protocolVersion'] ?? null);
         self::assertSame(['tools' => ['listChanged' => false]], $result['capabilities'] ?? null);
         self::assertSame(['name' => 'Tëst Ünïcode 測試', 'version' => '1.0'], $result['serverInfo'] ?? null);
+        self::assertSame('Süß 🍰', $result['instructions'] ?? null);
     }
 
     public function testInitializeFallsBackToTheNewestLegacyVersion(): void
@@ -38,6 +39,7 @@ class ServerTest extends TestCase
 
         self::assertSame('complete', $result['resultType'] ?? null);
         self::assertSame(Server::getSupportedVersions(), $result['supportedVersions'] ?? null);
+        self::assertSame('Süß 🍰', $result['instructions'] ?? null);
         self::assertSame('1.0', $result['_meta'][Server::META_SERVER_INFO]['version'] ?? null);
 
         $result = $this->request('tools/list', ['_meta' => $this->getModernMeta()]);
@@ -129,6 +131,8 @@ class ServerTest extends TestCase
         $tools = $this->request('tools/list')['tools'] ?? [];
 
         self::assertSame(['echo', 'write'], array_column($tools, 'name'));
+        self::assertSame('Echo', $tools[0]['title'] ?? null);
+        self::assertTrue($tools[1]['annotations']['destructiveHint'] ?? null);
         self::assertSame([
             'readOnlyHint' => true,
             'destructiveHint' => false,
@@ -220,7 +224,7 @@ class ServerTest extends TestCase
 
     private function createServer(bool $readOnly = false): Server
     {
-        return new Server(new ToolCollection([new EchoTool(), new WriteTool()], $readOnly), 'Tëst Ünïcode 測試', '1.0');
+        return new Server(new ToolCollection([new EchoTool(), new WriteTool()], $readOnly), 'Tëst Ünïcode 測試', '1.0', instructions: 'Süß 🍰');
     }
 }
 
@@ -230,6 +234,12 @@ class EchoTool implements ToolInterface
     public function getName(): string
     {
         return 'echo';
+    }
+
+    #[Override]
+    public function getTitle(): string
+    {
+        return 'Echo';
     }
 
     #[Override]
@@ -264,6 +274,12 @@ class EchoTool implements ToolInterface
     }
 
     #[Override]
+    public function isDestructive(): bool
+    {
+        return false;
+    }
+
+    #[Override]
     public function call(array $arguments): ToolResult
     {
         if ($arguments['text'] === 'fail') {
@@ -276,6 +292,12 @@ class EchoTool implements ToolInterface
 
 class WriteTool extends EchoTool
 {
+    #[Override]
+    public function isDestructive(): bool
+    {
+        return true;
+    }
+
     #[Override]
     public function getName(): string
     {

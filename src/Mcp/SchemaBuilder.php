@@ -15,9 +15,8 @@ use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Validators\DateTimeValidator;
-use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Validators\HexColorValidator;
-use Hirtz\Skeleton\Validators\HtmlValidator;
+use Hirtz\Skeleton\Validators\Interfaces\JsonSchemaInterface;
 use Hirtz\Skeleton\Validators\RelationValidator;
 use stdClass;
 use Yii;
@@ -117,22 +116,86 @@ class SchemaBuilder
     protected function buildProperty(Model $model, string $name): array
     {
         $schema = ['title' => $model->getAttributeLabel($name)];
-
-        if ($hint = trim(strip_tags($model->getAttributeHint($name)))) {
-            $schema['description'] = $hint;
-        }
-
-        foreach ($model->getActiveValidators($name) as $validator) {
-            $schema = [...$schema, ...$this->mapValidator($model, $name, $validator)];
-        }
+        $descriptions = [$this->getHint($model, $name)];
 
         $definition = $this->findCustomAttribute($model, $name);
+        $mapped = array_map(fn (mixed $validator): array => $this->mapValidator($model, $name, $validator), $model->getActiveValidators($name));
 
         if ($definition !== null) {
-            $schema = [...$schema, ...$this->mapCustomAttribute($model, $definition)];
+            $mapped[] = $this->mapCustomAttribute($model, $definition);
         }
 
-        return $schema;
+        foreach ($mapped as $properties) {
+            $descriptions[] = $properties['description'] ?? null;
+            unset($properties['description']);
+
+            $schema = [...$schema, ...$properties];
+        }
+
+        // A column's type only fills in for a validator naming none
+        if (!isset($schema['type']) && !isset($schema['enum']) && $definition === null) {
+            $schema = [...$schema, ...$this->mapColumn($model, $name)];
+        }
+
+        $description = implode(' ', array_filter($descriptions));
+
+        return $description !== ''
+            ? ['title' => $schema['title'], 'description' => $description, ...$schema]
+            : $schema;
+    }
+
+    /**
+     * A sentence holding a placeholder (`Now: {count}.`) is filled in by the form's script, so it is left out.
+     */
+    protected function getHint(Model $model, string $name): ?string
+    {
+        $hint = trim(strip_tags($model->getAttributeHint($name)));
+        $hint = trim((string)preg_replace('/[^.!?]*\{\w+\}[^.!?]*[.!?]?/u', '', $hint));
+
+        return $hint !== '' ? $hint : null;
+    }
+
+    /**
+     * Lists the values of an enum with their names, which the ids alone do not say.
+     *
+     * @param array<int|string, string> $names
+     */
+    public static function describeEnum(array $names): string
+    {
+        $values = [];
+
+        foreach ($names as $value => $name) {
+            $values[] = "$value: $name";
+        }
+
+        return 'Values: ' . implode(', ', $values) . '.';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function mapColumn(Model $model, string $name): array
+    {
+        $column = $model instanceof ActiveRecord ? $model::getTableSchema()->getColumn($name) : null;
+
+        if ($column === null) {
+            return [];
+        }
+
+        $type = match ($column->phpType) {
+            'integer' => 'integer',
+            'double' => 'number',
+            'boolean' => 'boolean',
+            'string' => 'string',
+            'array' => 'array',
+            default => null,
+        };
+
+        if ($type === null) {
+            return [];
+        }
+
+        return ['type' => $column->allowNull ? [$type, 'null'] : $type];
     }
 
     /**
@@ -141,6 +204,7 @@ class SchemaBuilder
     protected function mapValidator(Model $model, string $name, mixed $validator): array
     {
         return match (true) {
+            $validator instanceof JsonSchemaInterface => $validator->getJsonSchema($model, $name),
             $validator instanceof HexColorValidator => ['type' => 'string', 'pattern' => '^#(?:[0-9a-fA-F]{3}){1,2}$'],
             $validator instanceof StringValidator => array_filter([
                 'type' => 'string',
@@ -153,10 +217,6 @@ class SchemaBuilder
                 'maximum' => is_int($validator->max) || is_float($validator->max) ? $validator->max : null,
             ], fn (mixed $value): bool => $value !== null),
             $validator instanceof BooleanValidator => ['type' => 'boolean'],
-            $validator instanceof DynamicRangeValidator => [
-                ...$validator->integerOnly ? ['type' => 'integer'] : [],
-                'enum' => $validator->getDynamicRange($model, $name),
-            ],
             $validator instanceof RangeValidator => is_array($validator->range) && !$validator->not
                 ? ($validator->allowArray
                     ? ['type' => 'array', 'items' => ['enum' => array_values($validator->range)]]
@@ -172,7 +232,6 @@ class SchemaBuilder
                     '$comment' => 'Without an offset, the time is read in the time zone ' . Yii::$app->getTimeZone() . '.',
                 ],
             $validator instanceof RelationValidator => ['type' => ['integer', 'null'], '$comment' => 'The id of the related record.'],
-            $validator instanceof HtmlValidator => ['type' => 'string', 'contentMediaType' => 'text/html'],
             default => [],
         };
     }

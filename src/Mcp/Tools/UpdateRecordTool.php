@@ -20,6 +20,18 @@ class UpdateRecordTool extends ResourceTool
     }
 
     #[Override]
+    public function getTitle(): string
+    {
+        return 'Update a record';
+    }
+
+    #[Override]
+    public function isDestructive(): bool
+    {
+        return true;
+    }
+
+    #[Override]
     public function getDescription(): string
     {
         return 'Updates the given attributes of a record and returns it as get_record does, or the validation errors '

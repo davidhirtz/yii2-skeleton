@@ -20,6 +20,12 @@ class DescribeResourceTool extends ResourceTool
     }
 
     #[Override]
+    public function getTitle(): string
+    {
+        return 'Describe a resource';
+    }
+
+    #[Override]
     public function getDescription(): string
     {
         return 'Describes a resource: the JSON Schema of the attributes create_record and update_record take for a '

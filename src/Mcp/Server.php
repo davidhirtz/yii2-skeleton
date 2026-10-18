@@ -54,6 +54,7 @@ class Server
         protected readonly string $version,
         protected readonly ?RecordResources $records = null,
         protected readonly array $prompts = [],
+        protected readonly ?string $instructions = null,
     ) {
     }
 
@@ -217,6 +218,7 @@ class Server
                 : self::LEGACY_PROTOCOL_VERSIONS[0],
             'capabilities' => $this->getCapabilities(),
             'serverInfo' => $this->getServerInfo(),
+            ...$this->instructions ? ['instructions' => $this->instructions] : [],
         ];
     }
 
@@ -228,6 +230,7 @@ class Server
         return [
             'supportedVersions' => self::getSupportedVersions(),
             'capabilities' => $this->getCapabilities(),
+            ...$this->instructions ? ['instructions' => $this->instructions] : [],
             '_meta' => [self::META_SERVER_INFO => $this->getServerInfo()],
         ];
     }
@@ -296,11 +299,12 @@ class Server
     {
         return [
             'name' => $tool->getName(),
+            'title' => $tool->getTitle(),
             'description' => $tool->getDescription(),
             'inputSchema' => $tool->getInputSchema(),
             'annotations' => [
                 'readOnlyHint' => $tool->isReadOnly(),
-                'destructiveHint' => false,
+                'destructiveHint' => $tool->isDestructive(),
                 'idempotentHint' => $tool->isIdempotent(),
                 'openWorldHint' => false,
             ],

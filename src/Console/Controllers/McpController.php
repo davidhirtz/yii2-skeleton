@@ -64,7 +64,10 @@ class McpController extends Controller
         // A notice on STDOUT would corrupt the stream
         ini_set('display_errors', 'stderr');
 
-        $transport = new StdioTransport(Mcp::getComponent()->createServer($this->readOnly));
+        $mcp = Mcp::getComponent();
+        $mcp->setClient('mcp/serve');
+
+        $transport = new StdioTransport($mcp->createServer($this->readOnly));
         $transport->run();
 
         return ExitCode::OK;

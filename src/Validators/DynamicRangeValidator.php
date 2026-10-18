@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Validators;
 
+use Hirtz\Skeleton\Mcp\SchemaBuilder;
+use Hirtz\Skeleton\Models\Definitions\Definition;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Types\Type;
+use Hirtz\Skeleton\Validators\Interfaces\JsonSchemaInterface;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\Inflector;
 use yii\validators\RangeValidator;
 
-class DynamicRangeValidator extends RangeValidator
+class DynamicRangeValidator extends RangeValidator implements JsonSchemaInterface
 {
     /**
      * @var bool whether numeric values should be cast to integer if validation was successful.
@@ -54,6 +57,29 @@ class DynamicRangeValidator extends RangeValidator
      */
     public function getDynamicRange(Model $model, string $attribute): array
     {
+        return array_keys($this->getDefinitions($model, $attribute));
+    }
+
+    #[\Override]
+    public function getJsonSchema(Model $model, string $attribute): array
+    {
+        $definitions = $this->getDefinitions($model, $attribute);
+        $names = array_filter(array_map(fn (mixed $definition): ?string => $definition instanceof Definition ? $definition->getName() : null, $definitions));
+
+        return array_filter([
+            'type' => $this->integerOnly ? 'integer' : null,
+            'enum' => array_keys($definitions),
+            'description' => $names ? SchemaBuilder::describeEnum($names) : null,
+        ], fn (mixed $value): bool => $value !== null);
+    }
+
+    /**
+     * The definitions in range, keyed by value.
+     *
+     * @return array<int|string, mixed>
+     */
+    protected function getDefinitions(Model $model, string $attribute): array
+    {
         $method = 'get' . Inflector::camelize($attribute) . 'Definitions';
 
         if (!$model->hasMethod($method)) {
@@ -71,7 +97,7 @@ class DynamicRangeValidator extends RangeValidator
 
         foreach ($definitions as $value => $definition) {
             if (!$definition instanceof Type || $definition->isAvailableOrStored($model, $attribute)) {
-                $range[] = $value;
+                $range[$value] = $definition;
             }
         }
 

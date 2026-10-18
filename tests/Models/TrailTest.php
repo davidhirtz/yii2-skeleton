@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Models;
 
+use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Models\Definitions\DefinitionRegistry;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\Types\TrailType;
@@ -32,6 +33,19 @@ class TrailTest extends TestCase
         self::assertFalse($trail->isCreateType());
         self::assertFalse($trail->hasAttributesEnabled());
         self::assertFalse($trail->hasDataModelEnabled());
+    }
+
+    public function testATrailWrittenThroughMcpNamesTheClient(): void
+    {
+        $trail = Trail::create();
+        $trail->insert();
+        self::assertNull($trail->client);
+
+        Mcp::getComponent()->setClient('claude.ai');
+
+        $trail = Trail::create();
+        $trail->insert();
+        self::assertSame('claude.ai', Trail::findOne($trail->id)?->client);
     }
 
     public function testTheColumnDefaultIsThePlainMessageType(): void
