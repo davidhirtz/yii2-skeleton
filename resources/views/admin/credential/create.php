@@ -24,6 +24,5 @@ echo AccountHeader::make()
 echo AccountSubmenu::make();
 
 echo FormContainer::make()
-    ->title(Yii::t('skeleton', 'CREDENTIAL_CREATE_TITLE'))
     ->form(UserCredentialActiveForm::make()
         ->model($form));

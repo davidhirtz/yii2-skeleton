@@ -201,7 +201,9 @@ component:
         fn (): CredentialProvider => CredentialProvider::make('acme')
             ->label('Acme')
             ->url('https://acme.example/keys')
-            ->verify(fn (string $key): bool => AcmeClient::isValidKey($key)),
+            // a single `key` unless the service needs more fields, custom attributes the form shows per provider
+            ->fields(TextCustomAttribute::make('account')->required(), CredentialProvider::createSecretField('key', 'Key'))
+            ->verify(fn (array $values): bool => AcmeClient::isValid($values['account'], $values['key'])),
     ],
 ],
 ```
@@ -209,7 +211,7 @@ component:
 With a provider declared, the account gets an *API keys* tab. A key is stored encrypted under `SecretKey` and shown
 only by its last four characters; nobody reads it again. A manager of the user lists and removes the user's keys on the
 user's *API keys* tab. The code calling the service asks
-`UserCredential::findSecret($userId, 'acme')`. A password change keeps the keys.
+`UserCredential::findValues($userId, 'acme')`. A password change keeps the keys.
 
 ### MCP server
 
@@ -225,7 +227,7 @@ Locally or over SSH, `mcp/serve` speaks stdio as `--user` (the owner by default)
 alone:
 
 ```bash
-claude mcp add cms -- php /path/to/project/yii mcp/serve --user=me@example.com
+claude mcp add website -- php /path/to/project/yii mcp/serve --user=me@example.com
 ```
 
 A public site enables `POST /mcp`, authenticated by a token from `mcp/token` or the account's *Access tokens* tab, which shows
@@ -239,7 +241,7 @@ it once:
 ```
 
 ```bash
-claude mcp add --transport http cms https://www.example.com/mcp --header "Authorization: Bearer <token>"
+claude mcp add --transport http website https://www.example.com/mcp --header "Authorization: Bearer <token>"
 ```
 
 A token is shown once and stored as its HMAC (`UserToken` types `mcp-read`, `mcp-write`); a disabled user's tokens stop
@@ -247,7 +249,7 @@ working, and guessed tokens are counted per address (`authenticationAttemptLimit
 no guess, and a valid one is never refused.
 
 `enableOAuth` makes the site the endpoint's own OAuth 2.1 authorization server, so claude.ai adds it as a custom connector
-by URL and `claude mcp add --transport http cms https://www.example.com/mcp` needs no header:
+by URL and `claude mcp add --transport http website https://www.example.com/mcp` needs no header:
 
 ```php
 'mcp' => [

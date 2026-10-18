@@ -14,13 +14,13 @@ use Override;
 use Yii;
 
 /**
- * A user's own key for a third-party service. Written once and never shown again: only {@see static::findSecret()}
- * decrypts it, for the code that calls the service.
+ * A user's own key for a third-party service, one or several values as the service's fields name them. Written once
+ * and never shown again: only {@see static::findValues()} decrypts it, for the code that calls the service.
  *
  * @property int $id
  * @property int $user_id
  * @property string $provider
- * @property string $secret the encrypted key, never the key itself
+ * @property string $secret the encrypted values, never the values themselves
  * @property string $hint
  * @property DateTime|null $last_used_at
  * @property DateTime $created_at
@@ -76,36 +76,57 @@ class UserCredential extends ActiveRecord
 
     /**
      * Saving a key for a service the user already has one for replaces it.
+     *
+     * @param array<string, string> $values
      */
-    public static function store(int $userId, string $provider, string $secret): static
+    public static function store(int $userId, string $provider, array $values): static
     {
         $record = static::findOne(['user_id' => $userId, 'provider' => $provider]) ?? static::create();
         $record->user_id = $userId;
         $record->provider = $provider;
-        $record->setSecret($secret);
+        $record->setValues($values);
         $record->save();
 
         return $record;
     }
 
-    public static function findSecret(int $userId, string $provider): ?string
+    /**
+     * @return array<string, string>|null
+     */
+    public static function findValues(int $userId, string $provider): ?array
     {
         $record = static::findOne(['user_id' => $userId, 'provider' => $provider]);
-        $secret = $record ? SecretKey::decrypt($record->secret) : null;
+        $values = $record ? $record->getValues() : null;
 
-        if ($record && $secret !== null && ($record->last_used_at?->getTimestamp() ?? 0) < time() - 60) {
+        if ($record && $values !== null && ($record->last_used_at?->getTimestamp() ?? 0) < time() - 60) {
             $record->updateAttributes(['last_used_at' => new DateTime()]);
         }
 
-        return $secret;
+        return $values;
     }
 
-    public function setSecret(string $secret): void
+    /**
+     * The hint is the end of the last value, the secret where a service asks for an ID and a secret.
+     *
+     * @param array<string, string> $values
+     */
+    public function setValues(array $values): void
     {
-        $secret = trim($secret);
+        $values = array_map(trim(...), $values);
 
-        $this->secret = SecretKey::encrypt($secret);
-        $this->hint = '…' . mb_substr($secret, -4);
+        $this->secret = SecretKey::encrypt(json_encode($values, JSON_THROW_ON_ERROR));
+        $this->hint = '…' . mb_substr((string)end($values), -4);
+    }
+
+    /**
+     * @return array<string, string>|null
+     */
+    protected function getValues(): ?array
+    {
+        $json = SecretKey::decrypt($this->secret);
+        $values = $json !== null ? json_decode($json, true) : null;
+
+        return is_array($values) ? array_map(strval(...), array_filter($values, is_scalar(...))) : null;
     }
 
     /**

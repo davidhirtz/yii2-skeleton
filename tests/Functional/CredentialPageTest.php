@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Tests\Functional;
 
 use Hirtz\Skeleton\Credentials\CredentialProvider;
 use Hirtz\Skeleton\Credentials\Credentials;
+use Hirtz\Skeleton\Models\CustomAttributes\TextCustomAttribute;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Models\UserCredential;
 use Hirtz\Skeleton\Test\TestCase;
@@ -28,7 +29,7 @@ class CredentialPageTest extends TestCase
             fn (): CredentialProvider => CredentialProvider::make('acme')
                 ->label('Äcme Bilder 🎨')
                 ->url('https://acme.example/keys')
-                ->verify(fn (string $secret): bool => $secret !== 'wrong'),
+                ->verify(fn (array $values): bool => ($values['key'] ?? '') !== 'wrong'),
         ];
     }
 
@@ -49,10 +50,10 @@ class CredentialPageTest extends TestCase
         self::assertSelectorNotExists('a.nav-link.active[href="/admin/user/index"]');
         // a single service is no choice
         self::assertSelectorExists('input[type="hidden"][name="UserCredentialForm[provider]"][value="acme"]');
-        self::assertSelectorExists('label[for="usercredentialform-secret"]');
+        self::assertSelectorExists('label[for="usercredentialform-key"]');
         self::assertAnySelectorTextContains('.form-hint', 'https://acme.example/keys');
 
-        $this->submit(values: $this->prefixFormValues('UserCredentialForm', ['provider' => 'acme', 'secret' => 'sk-test-wxyz']));
+        $this->submit(values: $this->prefixFormValues('UserCredentialForm', ['provider' => 'acme', 'key' => 'sk-test-wxyz']));
 
         self::assertAlertSame('The key was saved.', 'success');
         self::assertAnySelectorTextContains('td', '…wxyz');
@@ -66,11 +67,50 @@ class CredentialPageTest extends TestCase
         self::assertNull(UserCredential::findOne($record->id));
     }
 
+    public function testAProviderWithFieldsOfItsOwnIsLoadedOnChange(): void
+    {
+        Credentials::getComponent()->providers[] = fn (): CredentialProvider => CredentialProvider::make('duo')
+            ->label('Düo')
+            ->fields(
+                TextCustomAttribute::make('client_id')->label('Client ID')->required(),
+                CredentialProvider::createSecretField('client_secret', 'Client secret'),
+            );
+
+        $this->login();
+        $this->open('admin/credential/create');
+
+        self::assertSelectorExists('select[name="UserCredentialForm[provider]"][hx-post]');
+        self::assertSelectorExists('input[name="UserCredentialForm[key]"][type="password"]');
+
+        $request = $this->getWebRequest();
+        self::$crawler = self::$client->request('POST', 'https://www.test.localhost/admin/credential/create', [
+            'UserCredentialForm' => ['provider' => 'duo'],
+            $request->csrfParam => $request->getCsrfToken(),
+        ], server: ['HTTP_X_FORM_RELOAD' => '1']);
+
+        self::assertSelectorNotExists('input[name="UserCredentialForm[key]"]');
+        self::assertSelectorExists('input[name="UserCredentialForm[client_id]"]');
+        self::assertSelectorExists('input[name="UserCredentialForm[client_secret]"][type="password"]');
+        self::assertNull(UserCredential::findOne(['user_id' => $this->getUserFromFixture('owner')->id]));
+
+        $this->submit(values: $this->prefixFormValues('UserCredentialForm', [
+            'provider' => 'duo',
+            'client_id' => 'Grüße-ID',
+            'client_secret' => 'geheim-9876',
+        ]));
+
+        self::assertAlertSame('The key was saved.', 'success');
+        self::assertSame(
+            ['client_id' => 'Grüße-ID', 'client_secret' => 'geheim-9876'],
+            UserCredential::findValues($this->getUserFromFixture('owner')->id, 'duo'),
+        );
+    }
+
     public function testAKeyTheServiceRefusesIsNotSaved(): void
     {
         $this->login();
         $this->open('admin/credential/create');
-        $this->submit(values: $this->prefixFormValues('UserCredentialForm', ['provider' => 'acme', 'secret' => 'wrong']));
+        $this->submit(values: $this->prefixFormValues('UserCredentialForm', ['provider' => 'acme', 'key' => 'wrong']));
 
         self::assertAnySelectorTextContains('body', 'The service did not accept this key.');
         self::assertNull(UserCredential::findOne(['user_id' => $this->getUserFromFixture('owner')->id]));
@@ -79,7 +119,7 @@ class CredentialPageTest extends TestCase
     public function testAManagerSeesAndRemovesAUsersKey(): void
     {
         $admin = $this->getUserFromFixture('admin');
-        $record = UserCredential::store($admin->id, 'acme', 'sk-users-key-wxyz');
+        $record = UserCredential::store($admin->id, 'acme', ['key' => 'sk-users-key-wxyz']);
 
         $this->login();
         $this->open("admin/credential/view?user=$admin->id");
@@ -101,7 +141,7 @@ class CredentialPageTest extends TestCase
 
     public function testAKeyOfAUserOneCannotManageIsNotFound(): void
     {
-        $record = UserCredential::store($this->getUserFromFixture('owner')->id, 'acme', 'not-yours');
+        $record = UserCredential::store($this->getUserFromFixture('owner')->id, 'acme', ['key' => 'not-yours']);
 
         // the fixture's admin has two-factor authentication, which a login form test does not go through
         $this->getWebUser()->enableTwoFactorAuthentication = false;

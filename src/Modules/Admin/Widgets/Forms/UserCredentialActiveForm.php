@@ -7,8 +7,8 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms;
 use Hirtz\Skeleton\Models\Forms\UserCredentialForm;
 use Hirtz\Skeleton\Modules\Admin\Controllers\CredentialController;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
-use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\SelectField;
+use Hirtz\Skeleton\Widgets\Forms\Traits\CustomAttributeFieldsTrait;
 use Override;
 use Stringable;
 use Yii;
@@ -20,6 +20,8 @@ use Yii;
  */
 class UserCredentialActiveForm extends ActiveForm
 {
+    use CustomAttributeFieldsTrait;
+
     #[Override]
     protected function configure(): void
     {
@@ -33,23 +35,22 @@ class UserCredentialActiveForm extends ActiveForm
         return [
             [
                 $this->getProviderField(),
-                $this->getSecretField(),
+                ...$this->getCustomAttributeFields(),
             ],
         ];
     }
 
+    /**
+     * Another provider asks for other fields, so a change reloads the form.
+     */
     protected function getProviderField(): string|Stringable
     {
-        return SelectField::make()
-            ->property('provider')
-            ->items($this->model->getProviderItems());
-    }
+        $items = $this->model->getProviderItems();
 
-    protected function getSecretField(): string|Stringable
-    {
-        return InputField::make()
-            ->property('secret')
-            ->type('password')
-            ->attribute('autocomplete', 'off');
+        $field = SelectField::make()
+            ->property('provider')
+            ->items($items);
+
+        return count($items) > 1 ? $field->reloadsForm() : $field;
     }
 }

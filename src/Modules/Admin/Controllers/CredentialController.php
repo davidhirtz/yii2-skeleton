@@ -92,7 +92,7 @@ class CredentialController extends Controller
     {
         $form = new UserCredentialForm($this->webuser->getIdentity());
 
-        if ($form->load($this->request->post()) && $form->save()) {
+        if ($form->load($this->request->post()) && !$this->request->isFormReload() && $form->save()) {
             $this->success(Yii::t('skeleton', 'CREDENTIAL_SUCCESS_SAVED'));
             return $this->redirect(['index']);
         }
