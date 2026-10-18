@@ -22,6 +22,12 @@ class LoopbackStreamUploadedFile extends StreamUploadedFile
     {
         return $ip === '127.0.0.1' || parent::isPublicIp($ip);
     }
+
+    #[Override]
+    protected function resolveHost(string $host): array
+    {
+        return $host === 'fixture.invalid' ? ['127.0.0.1'] : parent::resolveHost($host);
+    }
 }
 
 class StreamUploadedFileTest extends TestCase
@@ -116,6 +122,15 @@ class StreamUploadedFileTest extends TestCase
     public function testFollowsRedirect(): void
     {
         $upload = $this->getStreamUploadedFile(['url' => self::getUrl('redirect')]);
+
+        self::assertEquals(UPLOAD_ERR_OK, $upload->error);
+        self::assertStringEqualsFile($upload->tempName, self::README_CONTENT);
+    }
+
+    public function testTheTransferIsPinnedToTheCheckedAddress(): void
+    {
+        // `.invalid` never resolves, so only the pinned address reaches the fixture server
+        $upload = $this->getStreamUploadedFile(['url' => str_replace('127.0.0.1', 'fixture.invalid', self::getUrl('README.md'))]);
 
         self::assertEquals(UPLOAD_ERR_OK, $upload->error);
         self::assertStringEqualsFile($upload->tempName, self::README_CONTENT);

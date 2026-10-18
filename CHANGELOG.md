@@ -1,3 +1,7 @@
+## Unreleased
+
+- Changed `Web\StreamUploadedFile` to fetch through Guzzle and cURL, pinned to the checked address (no `allow_url_fopen` needed); removed its stream context and header helpers
+
 ## 3.19.1 (October 18, 2026)
 
 - Fixed the file log dropping warnings

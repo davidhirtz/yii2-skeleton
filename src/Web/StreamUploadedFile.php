@@ -4,10 +4,17 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\FnStream;
+use GuzzleHttp\Psr7\Utils;
+use GuzzleHttp\RequestOptions;
 use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Helpers\NetworkHelper;
 use Hirtz\Skeleton\Upload\Upload;
 use Override;
+use Psr\Http\Message\StreamInterface;
 use Yii;
 
 /**
@@ -19,6 +26,11 @@ use Yii;
 class StreamUploadedFile extends AbstractUploadedFile
 {
     public ?string $url = null;
+
+    /**
+     * @var array<string, string> the address each host was checked at, which the transfer is pinned to
+     */
+    private array $checkedIps = [];
 
     #[Override]
     protected function saveTemporaryFile(): void
@@ -66,11 +78,6 @@ class StreamUploadedFile extends AbstractUploadedFile
      */
     protected function openUrl(string $url)
     {
-        if (!ini_get('allow_url_fopen')) {
-            Yii::error('Uploading from a URL needs `allow_url_fopen`.', __METHOD__);
-            return null;
-        }
-
         $maxRedirects = Upload::getComponent()->maxStreamUploadRedirects;
 
         for ($hop = 0; $hop <= $maxRedirects; ++$hop) {
@@ -78,26 +85,40 @@ class StreamUploadedFile extends AbstractUploadedFile
                 return null;
             }
 
-            $stream = @fopen($url, 'rb', false, $this->createStreamContext());
+            $resource = Utils::tryFopen('php://temp', 'w+b');
+            $sink = Utils::streamFor($resource);
 
-            if (!$stream) {
-                return null;
-            }
+            try {
+                $response = $this->getClient()->request('GET', $url, $this->getRequestOptions($url, $sink));
+            } catch (GuzzleException $exception) {
+                $sink->detach();
 
-            $headers = $this->getResponseHeaders($stream);
-            $status = $this->getStatusCode($headers);
-            $location = $status >= 300 && $status < 400 ? $this->getLocation($headers) : null;
-
-            if ($location === null) {
-                if ($status >= 200 && $status < 300) {
-                    return $stream;
+                // The transfer aborted past the limit: the copy reports the size
+                if (ftell($resource) > Upload::getComponent()->maxStreamUploadSize) {
+                    rewind($resource);
+                    return $resource;
                 }
 
-                fclose($stream);
+                fclose($resource);
+                Yii::warning("Fetching \"$url\" failed: {$exception->getMessage()}", __METHOD__);
                 return null;
             }
 
-            fclose($stream);
+            $sink->detach();
+            $status = $response->getStatusCode();
+            $location = $status >= 300 && $status < 400 ? $response->getHeaderLine('Location') : '';
+
+            if ($location === '') {
+                if ($status >= 200 && $status < 300) {
+                    rewind($resource);
+                    return $resource;
+                }
+
+                fclose($resource);
+                return null;
+            }
+
+            fclose($resource);
             $url = $this->resolveLocation($url, $location);
 
             if ($url === null) {
@@ -109,9 +130,37 @@ class StreamUploadedFile extends AbstractUploadedFile
     }
 
     /**
-     * The address is resolved here and again by the stream wrapper, so a name answering differently the second
-     * time is not covered — the fetch is behind a permission, which is what that residual is weighed against.
+     * cURL connects to the address {@see isAllowedUrl()} checked, and a write refused once the body is past
+     * {@see Upload::$maxStreamUploadSize} aborts the transfer.
+     *
+     * @return array<string, mixed>
      */
+    protected function getRequestOptions(string $url, StreamInterface $sink): array
+    {
+        $upload = Upload::getComponent();
+        $maxSize = $upload->maxStreamUploadSize;
+
+        $options = [
+            RequestOptions::ALLOW_REDIRECTS => false,
+            RequestOptions::CONNECT_TIMEOUT => $upload->streamUploadTimeout,
+            RequestOptions::TIMEOUT => $upload->streamUploadTimeout,
+            RequestOptions::HTTP_ERRORS => false,
+            RequestOptions::SINK => FnStream::decorate($sink, [
+                'write' => static fn (string $data): int => (int)$sink->getSize() > $maxSize ? 0 : $sink->write($data),
+            ]),
+        ];
+
+        $host = (string)parse_url($url, PHP_URL_HOST);
+        $ip = $this->checkedIps[$host] ?? null;
+
+        if ($ip !== null && defined('CURLOPT_RESOLVE')) {
+            $port = parse_url($url, PHP_URL_PORT) ?: (str_starts_with(strtolower($url), 'https:') ? 443 : 80);
+            $options['curl'] = [CURLOPT_RESOLVE => ["$host:$port:" . (str_contains($ip, ':') ? "[$ip]" : $ip)]];
+        }
+
+        return $options;
+    }
+
     protected function isAllowedUrl(string $url): bool
     {
         $scheme = strtolower((string)parse_url($url, PHP_URL_SCHEME));
@@ -137,9 +186,11 @@ class StreamUploadedFile extends AbstractUploadedFile
 
         if (!$ips) {
             Yii::warning("Refused to fetch \"$url\", \"$host\" does not resolve", __METHOD__);
+            return false;
         }
 
-        return (bool)$ips;
+        $this->checkedIps[$host] = $ips[0];
+        return true;
     }
 
     /**
@@ -155,70 +206,9 @@ class StreamUploadedFile extends AbstractUploadedFile
         return NetworkHelper::isPublicIp($ip);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    protected function createStreamContextOptions(): array
+    protected function getClient(): ClientInterface
     {
-        return [
-            'http' => [
-                'method' => 'GET',
-                'follow_location' => 0,
-                'ignore_errors' => true,
-                'timeout' => Upload::getComponent()->streamUploadTimeout,
-            ],
-        ];
-    }
-
-    /**
-     * @return resource
-     */
-    protected function createStreamContext()
-    {
-        return stream_context_create($this->createStreamContextOptions());
-    }
-
-    /**
-     * @param resource $stream
-     * @return list<string>
-     */
-    protected function getResponseHeaders($stream): array
-    {
-        $data = stream_get_meta_data($stream)['wrapper_data'] ?? [];
-
-        return is_array($data) ? array_values(array_filter($data, is_string(...))) : [];
-    }
-
-    /**
-     * @param list<string> $headers
-     */
-    protected function getStatusCode(array $headers): int
-    {
-        $status = 0;
-
-        foreach ($headers as $header) {
-            if (preg_match('#^HTTP/\S+\s+(\d{3})#', $header, $matches)) {
-                $status = (int)$matches[1];
-            }
-        }
-
-        return $status;
-    }
-
-    /**
-     * @param list<string> $headers
-     */
-    protected function getLocation(array $headers): ?string
-    {
-        $location = null;
-
-        foreach ($headers as $header) {
-            if (stripos($header, 'location:') === 0) {
-                $location = trim(substr($header, 9));
-            }
-        }
-
-        return $location ?: null;
+        return new Client();
     }
 
     protected function resolveLocation(string $url, string $location): ?string
