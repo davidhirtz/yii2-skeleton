@@ -353,7 +353,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
-     * Every caller also signs out the other sessions, so the agents connected through MCP go too.
+     * Every caller also logs out the other sessions, so the agents connected through MCP go too.
      */
     public function afterPasswordChange(): void
     {

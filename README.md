@@ -264,7 +264,7 @@ read-only or read-write, on the admin's consent page (`admin/grant/authorize`), 
 *Connected apps* (a manager under the user's). Access tokens last `accessTokenLifetime` (an hour), refresh tokens
 `refreshTokenLifetime` (30 days) and rotate; reusing a rotated one revokes the connection. The tokens are bound to the
 endpoint's URL, so behind a proxy `Request::$trustedHosts` must be set or the metadata names `http://`. A password
-change revokes every connection and token, as it signs out the other sessions. A change made through MCP records its
+change revokes every connection and token, as it logs out the other sessions. A change made through MCP records its
 client in the trail (`trail.client`: the OAuth client's host, `MCP token #12` or `mcp/serve`). A resource is a
 definition appended to `resources` as a closure, a tool to `tools`:
 

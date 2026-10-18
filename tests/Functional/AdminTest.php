@@ -16,6 +16,6 @@ class AdminTest extends TestCase
         $this->open('https://draft.test.localhost/admin');
 
         self::assertCurrentUrlEquals('https://test.localhost/admin/account/login');
-        self::assertAnyAlertErrorSame('You must login to view this page!');
+        self::assertAnyAlertErrorSame('You must log in to view this page!');
     }
 }
