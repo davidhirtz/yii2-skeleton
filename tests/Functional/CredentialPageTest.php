@@ -52,6 +52,8 @@ class CredentialPageTest extends TestCase
         self::assertSelectorExists('input[type="hidden"][name="UserCredentialForm[provider]"][value="acme"]');
         self::assertSelectorExists('label[for="usercredentialform-key"]');
         self::assertAnySelectorTextContains('.form-hint', 'https://acme.example/keys');
+        self::assertSelectorTextNotContains('.form-hint', 'stored encrypted');
+        self::assertAnySelectorTextContains('.alert', 'Your key is stored encrypted and never shown again.');
 
         $this->submit(values: $this->prefixFormValues('UserCredentialForm', ['provider' => 'acme', 'key' => 'sk-test-wxyz']));
 

@@ -135,18 +135,12 @@ class UserCredentialForm extends Model implements CustomAttributeInterface
     #[Override]
     public function attributeHints(): array
     {
-        $provider = $this->getProvider();
+        $url = $this->getProvider()?->getUrl();
         $names = $this->getCustomAttributeNames();
-
-        $hint = Yii::t('skeleton', 'CREDENTIAL_HINT');
-
-        if ($url = $provider?->getUrl()) {
-            $hint .= ' ' . Yii::t('skeleton', 'CREDENTIAL_GET_KEY') . " {$provider->getLabel()}: $url";
-        }
 
         return [
             ...array_filter($this->getCustomAttributeHints(), fn (?string $hint): bool => $hint !== null),
-            (string)end($names) => $hint,
+            ...$url ? [(string)end($names) => Yii::t('skeleton', 'CREDENTIAL_GET_KEY') . " $url"] : [],
         ];
     }
 
