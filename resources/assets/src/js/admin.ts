@@ -17,7 +17,7 @@ import {closeModal, createModal} from './includes/modals';
 import scrollActiveIntoView from './includes/scrollActiveIntoView';
 import search from './includes/search';
 import selectLink from './includes/selectLink';
-import sticky from './includes/sticky';
+import sticky, {jump} from './includes/sticky';
 import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
 import networkError from './includes/networkError';
@@ -135,9 +135,24 @@ htmx.on('htmx:after:swap', (event: Event) => {
 // A save lands back on the page it was made on, where an instant jump to the top reads as a glitch and a scroll
 // reads as the page answering. Navigation keeps the jump, so the new page does not scroll past its own header.
 // `show:top` is a bare `scrollIntoView(true)`, so the choice is the document's own `scroll-behavior`.
+// htmx jumps inside the view transition, where the named regions would morph from their scrolled positions
+// (monorepo issue #550), so the jump is made before the old page is captured.
 htmx.on('htmx:before:swap', (event: Event) => {
-    const method = (event as CustomEvent).detail.ctx?.request?.method;
+    const {ctx, tasks} = (event as CustomEvent).detail;
+    const method = ctx?.request?.method;
     document.documentElement.style.scrollBehavior = method === 'POST' ? 'smooth' : 'auto';
+
+    if (method === 'POST') {
+        return;
+    }
+
+    const task = (tasks as {type: string; target: Element | string | null; swapSpec?: {show?: string; showTarget?: string}}[])
+        .find((task) => task.type === 'main' && task.swapSpec?.show === 'top' && !task.swapSpec.showTarget);
+    const $target = typeof task?.target === 'string' ? document.querySelector(task.target) : task?.target;
+
+    if ($target && $target.getBoundingClientRect().top < 0) {
+        jump($target);
+    }
 });
 
 // Only a swap of `#wrap` is a navigation, and `data-navigate` says so for the CSS. A narrower one — a grid's

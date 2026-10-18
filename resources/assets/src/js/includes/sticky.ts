@@ -69,6 +69,23 @@ const onResize = (): void => {
     resizeTimeout = window.setTimeout(remeasure, 150);
 };
 
+const updateWithoutTransition = (): void => {
+    const transitions = [...items].map(($el): [HTMLElement, string] => [$el, $el.style.transition]);
+
+    transitions.forEach(([$el]) => $el.style.transition = 'none');
+    update();
+    transitions.forEach(([$el, transition]) => {
+        $el.getBoundingClientRect();
+        $el.style.transition = transition;
+    });
+};
+
+// A jump the page makes for a swap is not the user scrolling: the header takes its state at once.
+export const jump = ($target: Element): void => {
+    $target.scrollIntoView(true);
+    updateWithoutTransition();
+};
+
 export default ($el: HTMLElement): void => {
     items.add($el);
     measure($el);
@@ -85,9 +102,5 @@ export default ($el: HTMLElement): void => {
 
     // Apply the initial state with the transition suppressed, so a page that loads already scrolled
     // doesn't animate the collapse on load; the reflow commits it before transitions are restored.
-    const transition = $el.style.transition;
-    $el.style.transition = 'none';
-    update();
-    $el.getBoundingClientRect();
-    $el.style.transition = transition;
+    updateWithoutTransition();
 };
