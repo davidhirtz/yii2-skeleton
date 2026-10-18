@@ -134,9 +134,16 @@ class AccountController extends Controller
     {
         // A login in another tab renews the token, and so does an expired session: a page left open answers a fresh
         // copy of itself rather than a 400.
-        $isGuestForm = in_array($action->id, ['create', 'login', 'recover', 'resend', 'reset'], true);
+        $reloadsWhenExpired = in_array($action->id, [
+            'create',
+            'language',
+            'login',
+            'recover',
+            'resend',
+            'reset',
+        ], true);
 
-        if ($isGuestForm) {
+        if ($reloadsWhenExpired) {
             $this->enableCsrfValidation = false;
         }
 
@@ -144,7 +151,7 @@ class AccountController extends Controller
             return false;
         }
 
-        if ($isGuestForm && !$this->request->validateCsrfToken()) {
+        if ($reloadsWhenExpired && !$this->request->validateCsrfToken()) {
             $this->reloadExpiredPage($action->id);
             return false;
         }
@@ -160,14 +167,29 @@ class AccountController extends Controller
             return $this->goHome();
         }
 
+        $this->error(Yii::t('skeleton', 'ACCOUNT_ERROR_PAGE_EXPIRED'));
+
+        // The language is posted from whatever page the navbar is on and never renders one itself.
+        if ($actionId === 'language') {
+            return $this->reloadReferrer();
+        }
+
         foreach ($this->request->post() as $values) {
             if (is_array($values) && is_string($values['email'] ?? null)) {
                 Application::current()->getSession()->set('email', $values['email']);
             }
         }
 
-        $this->error(Yii::t('skeleton', 'ACCOUNT_ERROR_PAGE_EXPIRED'));
         return $this->redirect($this->request->getUrl());
+    }
+
+    protected function reloadReferrer(): Response
+    {
+        if ($this->request->isHtmxRequest()) {
+            return Application::current()->getResponse()->setHtmxReload();
+        }
+
+        return $this->redirect($this->request->getReferrer() ?? ['/admin/dashboard/index']);
     }
 
     public function actionLogin(): Response|string
@@ -482,11 +504,7 @@ class AccountController extends Controller
 
         $module->setSessionLanguage($language);
 
-        if ($this->request->isHtmxRequest()) {
-            return Application::current()->getResponse()->setHtmxReload();
-        }
-
-        return $this->redirect($this->request->getReferrer() ?? ['/admin/dashboard/index']);
+        return $this->reloadReferrer();
     }
 
     /**

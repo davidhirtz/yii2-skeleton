@@ -118,6 +118,33 @@ class AdminLanguageTest extends TestCase
     }
 
     /**
+     * A login in another tab renews the token the navbar was rendered with.
+     */
+    public function testAStaleTokenReloadsThePageWithoutSwitching(): void
+    {
+        $this->login();
+
+        $this->postLanguage('de', ['HTTP_HX_REQUEST' => 'true'], 'stale');
+
+        self::assertResponseIsSuccessful();
+        self::assertResponseHeaderSame('hx-refresh', 'true');
+        self::assertNull(self::getAdminModule()->getSessionLanguage());
+        self::assertSame([Yii::t('skeleton', 'ACCOUNT_ERROR_PAGE_EXPIRED')], $this->getWebSession()->getFlash('danger'));
+    }
+
+    public function testAStalePlainRequestRedirectsToTheReferrerWithoutSwitching(): void
+    {
+        $this->login();
+
+        self::$client->followRedirects(false);
+        $this->postLanguage('de', ['HTTP_REFERER' => 'https://www.test.localhost/admin/user/index'], 'stale');
+
+        self::assertResponseStatusCodeSame(302);
+        self::assertResponseHeaderSame('location', 'https://www.test.localhost/admin/user/index');
+        self::assertNull(self::getAdminModule()->getSessionLanguage());
+    }
+
+    /**
      * A guest has no account to fall back to, and the login page is where the language is picked first.
      */
     public function testTheLoginPageSwitchesTheLanguage(): void
@@ -182,13 +209,13 @@ class AdminLanguageTest extends TestCase
     /**
      * @param array<string, mixed> $server
      */
-    private function postLanguage(string $language, array $server = []): void
+    private function postLanguage(string $language, array $server = [], ?string $token = null): void
     {
         $request = $this->getWebRequest();
 
         self::$crawler = self::$client->request('POST', 'https://www.test.localhost/admin/account/language', [
             'language' => $language,
-            $request->csrfParam => $request->getCsrfToken(),
+            $request->csrfParam => $token ?? $request->getCsrfToken(),
         ], [], $server);
     }
 
