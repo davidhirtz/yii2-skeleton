@@ -147,9 +147,7 @@ trait ApplicationTrait
                     'targets' => [
                         'file' => [
                             'class' => FileTarget::class,
-                            // A warning is the file log's: a report is something to act on, and a project raising the level
-            // configures `targets.sentry.levels` itself.
-            'levels' => ['error'],
+                            'levels' => ['error', 'warning'],
                             'fileMode' => 0770,
                             'logVars' => [
                                 '_GET',

@@ -1,3 +1,8 @@
+## Unreleased
+
+- Fixed the file log dropping warnings
+- Fixed the MCP client metadata fetch bypassing cURL, which ignored the address pin
+
 ## 3.19.0 (October 18, 2026)
 
 - Added an MCP server (`Mcp\Mcp`, `mcp/serve`, `mcp/token`, `POST /mcp` with `enableHttp`) with generic tools over registered resources

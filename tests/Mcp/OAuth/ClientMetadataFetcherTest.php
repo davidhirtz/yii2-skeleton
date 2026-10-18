@@ -10,11 +10,13 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\RequestOptions;
 use Hirtz\Skeleton\Mcp\OAuth\ClientMetadata;
 use Hirtz\Skeleton\Mcp\OAuth\ClientMetadataFetcher;
 use Hirtz\Skeleton\Mcp\OAuth\OAuthException;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
+use Psr\Http\Message\StreamInterface;
 use Yii;
 
 class ClientMetadataFetcherTest extends TestCase
@@ -85,6 +87,31 @@ class ClientMetadataFetcherTest extends TestCase
     {
         $this->handler->append(new Response(200, [], $this->getDocument(['client_name' => str_repeat('x', 6000)])));
         $this->assertRefused();
+    }
+
+    public function testTheTransferIsPinnedToTheCheckedAddressThroughCurl(): void
+    {
+        $this->handler->append(new Response(200, [], $this->getDocument()));
+        $this->createFetcher()->fetch(self::CLIENT_ID);
+
+        $options = $this->handler->getLastOptions();
+
+        // `stream` would hand the request to Guzzle's PHP-stream handler, which ignores the `curl` options
+        self::assertArrayNotHasKey(RequestOptions::STREAM, $options);
+        self::assertSame(['claude.ai:443:160.79.104.10'], $options['curl'][CURLOPT_RESOLVE] ?? null);
+    }
+
+    public function testTheSinkRefusesToGrowPastTheMaximumSize(): void
+    {
+        $this->handler->append(new Response(200, [], $this->getDocument()));
+        $this->createFetcher()->fetch(self::CLIENT_ID);
+
+        $sink = $this->handler->getLastOptions()[RequestOptions::SINK] ?? null;
+        self::assertInstanceOf(StreamInterface::class, $sink);
+
+        // cURL aborts the transfer on a write answering fewer bytes than it was given
+        self::assertSame(0, $sink->write(str_repeat('Å', 2560)));
+        self::assertSame(4, $sink->write('🤖'));
     }
 
     public function testARedirectIsNotFollowed(): void

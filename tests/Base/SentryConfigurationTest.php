@@ -42,6 +42,7 @@ class SentryConfigurationTest extends TestCase
 
         self::assertInstanceOf(SentryTarget::class, $target);
         self::assertInstanceOf(FileTarget::class, $targets['file']);
+        self::assertSame(Logger::LEVEL_ERROR | Logger::LEVEL_WARNING, $targets['file']->getLevels());
 
         self::assertSame('https://public@sentry.localhost/1', $target->dsn);
         // A page nobody asked for is not an error worth a report, nor is a mistyped command or a warning; the 5xx is.

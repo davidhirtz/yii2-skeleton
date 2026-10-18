@@ -7,10 +7,13 @@ namespace Hirtz\Skeleton\Mcp\OAuth;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\FnStream;
+use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\RequestOptions;
 use Hirtz\Skeleton\Helpers\NetworkHelper;
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use Yii;
 
@@ -92,7 +95,7 @@ class ClientMetadataFetcher
             RequestOptions::CONNECT_TIMEOUT => $this->connectTimeout,
             RequestOptions::TIMEOUT => $this->timeout,
             RequestOptions::HTTP_ERRORS => false,
-            RequestOptions::STREAM => true,
+            RequestOptions::SINK => $this->createSink(),
         ];
 
         // Without cURL the name is resolved a second time, the residual `StreamUploadedFile` accepts as well
@@ -130,16 +133,28 @@ class ClientMetadataFetcher
         return [$data, $this->getCacheDuration($response)];
     }
 
+    /**
+     * A write refused past `maxSize` makes cURL abort the transfer, which `stream` cannot do without dropping
+     * the `CURLOPT_RESOLVE` pin, as Guzzle then fetches through a PHP stream.
+     */
+    protected function createSink(): StreamInterface
+    {
+        $sink = Utils::streamFor(Utils::tryFopen('php://temp', 'w+'));
+        $maxSize = $this->maxSize;
+
+        return FnStream::decorate($sink, [
+            'write' => static fn (string $data): int => (int)$sink->getSize() + strlen($data) > $maxSize
+                ? 0
+                : $sink->write($data),
+        ]);
+    }
+
     protected function readBody(ResponseInterface $response): string
     {
         $stream = $response->getBody();
-        $body = '';
+        $stream->rewind();
 
-        while (!$stream->eof() && strlen($body) <= $this->maxSize) {
-            $body .= $stream->read($this->maxSize + 1 - strlen($body));
-        }
-
-        return $body;
+        return $stream->read($this->maxSize + 1);
     }
 
     protected function resolvePublicIp(string $host): ?string
