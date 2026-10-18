@@ -24,6 +24,5 @@ echo AccountHeader::make()
 echo AccountSubmenu::make();
 
 echo FormContainer::make()
-    ->title(Yii::t('skeleton', 'MCP_TOKEN_CREATE_TITLE'))
     ->form(McpTokenActiveForm::make()
         ->model($form));
