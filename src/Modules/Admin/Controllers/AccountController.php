@@ -132,24 +132,48 @@ class AccountController extends Controller
     #[Override]
     public function beforeAction($action): bool
     {
-        // A login in another tab renews the token, and so does an expired session: the login answers it itself.
-        if ($action->id === 'login') {
+        // A login in another tab renews the token, and so does an expired session: a page left open answers a fresh
+        // copy of itself rather than a 400.
+        $isGuestForm = in_array($action->id, ['create', 'login', 'recover', 'resend', 'reset'], true);
+
+        if ($isGuestForm) {
             $this->enableCsrfValidation = false;
         }
 
-        return parent::beforeAction($action);
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
+
+        if ($isGuestForm && !$this->request->validateCsrfToken()) {
+            $this->reloadExpiredPage($action->id);
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function reloadExpiredPage(string $actionId): Response
+    {
+        Application::current()->getResponse()->setHtmxReload();
+
+        if (!$this->webuser->getIsGuest() && in_array($actionId, ['create', 'login'], true)) {
+            return $this->goHome();
+        }
+
+        foreach ($this->request->post() as $values) {
+            if (is_array($values) && is_string($values['email'] ?? null)) {
+                Application::current()->getSession()->set('email', $values['email']);
+            }
+        }
+
+        $this->error(Yii::t('skeleton', 'ACCOUNT_ERROR_PAGE_EXPIRED'));
+        return $this->redirect($this->request->getUrl());
     }
 
     public function actionLogin(): Response|string
     {
-        $isTokenValid = $this->request->validateCsrfToken();
-
         if (!$this->webuser->getIsGuest()) {
-            if ($isTokenValid) {
-                $this->error(Yii::t('skeleton', 'ACCOUNT_ERROR_LOGOUT_BEFORE_LOGIN'));
-            }
-
-            Application::current()->getResponse()->setHtmxReload();
+            $this->error(Yii::t('skeleton', 'ACCOUNT_ERROR_LOGOUT_BEFORE_LOGIN'));
             return $this->goHome();
         }
 
@@ -157,9 +181,7 @@ class AccountController extends Controller
         $form->email = $this->request->get('email', Application::current()->getSession()->get('email'));
 
         if ($form->load($this->request->post())) {
-            if (!$isTokenValid) {
-                $form->addError('email', Yii::t('skeleton', 'LOGIN_ERROR_TOKEN_EXPIRED'));
-            } elseif ($form->login()) {
+            if ($form->login()) {
                 $this->success($form->user->login_count === 1
                     ? Yii::t('skeleton', 'ACCOUNT_SUCCESS_LOGIN_SUCCESSFUL')
                     : Yii::t('skeleton', 'ACCOUNT_WELCOME_BACK', [

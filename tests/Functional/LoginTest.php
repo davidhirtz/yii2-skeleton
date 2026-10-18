@@ -182,7 +182,7 @@ class LoginTest extends TestCase
         self::assertSelectorNotExists('[data-alert="error"]');
     }
 
-    public function testAStaleTokenAsksForTheCredentialsAgain(): void
+    public function testAStaleTokenReloadsTheFormWithTheEmail(): void
     {
         $user = $this->getUserFromFixture('owner');
 
@@ -194,8 +194,9 @@ class LoginTest extends TestCase
             ]),
         ]);
 
-        self::assertResponseStatusCodeSame(200);
-        self::assertAnyValidationErrorSame(Yii::t('skeleton', 'LOGIN_ERROR_TOKEN_EXPIRED'));
+        self::assertCurrentUrlEquals('admin/account/login');
+        self::assertAlertSame(Yii::t('skeleton', 'ACCOUNT_ERROR_PAGE_EXPIRED'), 'danger');
+        self::assertInputValueSame('Login[email]', $user->email);
         self::assertTrue($this->getWebUser()->getIsGuest());
 
         $this->submitLoginForm($user->email, 'password');
