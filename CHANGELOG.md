@@ -1,4 +1,4 @@
-## Unreleased
+## 3.19.0 (October 18, 2026)
 
 - Added an MCP server (`Mcp\Mcp`, `mcp/serve`, `mcp/token`, `POST /mcp` with `enableHttp`) with generic tools over registered resources
 - Added `Web\User::setSessionlessIdentity()`
