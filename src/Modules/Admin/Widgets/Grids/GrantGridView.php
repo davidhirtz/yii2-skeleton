@@ -44,7 +44,7 @@ class GrantGridView extends GridView
         return DataColumn::make()
             ->property('client_name')
             ->content(fn (OAuthGrant $grant): Stringable => Div::make()->content(
-                Div::make()->text($grant->client_name ?? $grant->getClientHost()),
+                Div::make()->class('strong')->text($grant->client_name ?? $grant->getClientHost()),
                 Span::make()->class('small')->text($grant->getClientHost()),
             ));
     }
