@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Mcp\OAuth\ResourceUri;
 use Hirtz\Skeleton\Mcp\Tools\CreateRecordTool;
 use Hirtz\Skeleton\Mcp\Tools\DescribeResourceTool;
 use Hirtz\Skeleton\Mcp\Tools\FindRecordsTool;
+use Hirtz\Skeleton\Mcp\Tools\FindTrailTool;
 use Hirtz\Skeleton\Mcp\Tools\GetRecordTool;
 use Hirtz\Skeleton\Mcp\Tools\ListResourcesTool;
 use Hirtz\Skeleton\Mcp\Tools\ReorderTool;
@@ -146,6 +147,7 @@ class Mcp extends Component
             new UpdateRecordTool($this),
             new SetStatusTool($this),
             new ReorderTool($this),
+            new FindTrailTool($this),
         ];
 
         foreach ($this->tools as $closure) {

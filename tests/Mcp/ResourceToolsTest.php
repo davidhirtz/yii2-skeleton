@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Resource;
 use Hirtz\Skeleton\Mcp\Tools\CreateRecordTool;
+use Hirtz\Skeleton\Mcp\Tools\FindTrailTool;
 use Hirtz\Skeleton\Mcp\Tools\GetRecordTool;
 use Hirtz\Skeleton\Mcp\Tools\ReorderTool;
 use Hirtz\Skeleton\Mcp\Tools\SetStatusTool;
@@ -20,6 +21,7 @@ use Hirtz\Skeleton\Mcp\Tools\UpdateRecordTool;
 use Hirtz\Skeleton\Models\Actions\ReorderActiveRecords;
 use Hirtz\Skeleton\Models\CustomAttributes\TextCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\StaleSaveInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
@@ -335,7 +337,7 @@ class ResourceToolsTest extends TestCase
         ];
 
         $names = array_map(fn (ToolInterface $tool): string => $tool->getName(), Mcp::getComponent()->getTools());
-        self::assertSame(['list_resources', 'describe_resource', 'find_records', 'get_record'], $names);
+        self::assertSame(['list_resources', 'describe_resource', 'find_records', 'get_record', 'find_trail'], $names);
 
         $tool = new UpdateRecordTool(Mcp::getComponent());
         $result = $tool->call(['resource' => 'scratch', 'id' => $record->id, 'attributes' => ['name' => 'x']]);
@@ -360,7 +362,7 @@ class ResourceToolsTest extends TestCase
         $response = Mcp::getComponent()->createServer(true)->handle(['jsonrpc' => '2.0', 'id' => 1, 'method' => 'tools/list']);
         $names = array_column($response['result']['tools'] ?? [], 'name');
 
-        self::assertSame(['list_resources', 'describe_resource', 'find_records', 'get_record'], $names);
+        self::assertSame(['list_resources', 'describe_resource', 'find_records', 'get_record', 'find_trail'], $names);
     }
 
     public function testTheInstructionsNameTheLanguagesAndWhatBundlesAdd(): void
@@ -416,6 +418,37 @@ class ResourceToolsTest extends TestCase
 
         $result = $this->callTool('update_record', ['resource' => 'scratch', 'id' => $record->id, 'attributes' => ['name' => 'Ąb']]);
         self::assertSame('Ąb', $result['attributes']['name'] ?? null);
+    }
+
+    public function testTheTrailListsTheChangesOfAResource(): void
+    {
+        $record = $this->insertRecord('Ärger');
+        Mcp::getComponent()->setClient('claude.ai');
+
+        $update = (new UpdateRecordTool(Mcp::getComponent()))->call(['resource' => 'scratch', 'id' => $record->id, 'attributes' => ['name' => 'Ölung 🎉']]);
+        self::assertFalse($update->isError, json_encode($update->structuredContent) ?: '');
+
+        $trail = new Trail();
+        $trail->model_class = User::class;
+        $trail->model_id = (string)$this->getUserFromFixture('owner')->id;
+        $trail->insert();
+
+        $tool = new FindTrailTool(Mcp::getComponent());
+        $records = $tool->call(['resource' => 'scratch', 'id' => $record->id])->structuredContent['records'] ?? [];
+
+        self::assertSame('scratch', $records[0]['resource'] ?? null);
+        self::assertSame(['Ärger', 'Ölung 🎉'], $records[0]['changes']['name'] ?? null);
+        self::assertSame('claude.ai', $records[0]['client'] ?? null);
+        self::assertCount(2, $records);
+
+        $all = $tool->call(['client' => 'claude.ai'])->structuredContent;
+        self::assertSame(1, $all['total'] ?? null);
+
+        // a model no resource offers stays out of the trail an agent reads
+        $ids = array_column($tool->call(['limit' => 100])->structuredContent['records'] ?? [], 'id');
+        self::assertNotContains($trail->id, $ids);
+
+        self::assertTrue($tool->call(['id' => $record->id])->isError);
     }
 
     public function testReorderIsOfferedOnlyForAReorderableResource(): void

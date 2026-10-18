@@ -196,7 +196,8 @@ The `mcp` component (`Mcp\Mcp`) lets an agent read and write content through the
 user's permissions: translations, search rows, counts, trail and validation work as in the admin, and nothing takes
 SQL. The tools are generic — `list_resources`, `describe_resource` (the JSON Schema of a type's attributes, its
 statuses and the content languages), `find_records`, `get_record`, `create_record`, `update_record`, `set_status`,
-`reorder` — over resources the bundles register; there is no delete. The server answers protocol versions
+`reorder`, and `find_trail` (the recorded changes of the resources the user may read, under `Trail::AUTH_TRAIL_INDEX`) —
+over resources the bundles register; there is no delete. The server answers protocol versions
 `2026-07-28`, `2025-11-25` and `2025-06-18`.
 
 Locally or over SSH, `mcp/serve` speaks stdio as `--user` (the owner by default), `--read-only` offering the read tools
