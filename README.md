@@ -257,6 +257,21 @@ besides `load()` and `insert()`; `query()` narrows it, `attributes()` and `excep
 `creatable(false)` and `readOnly()` the tools. A later registration of a name replaces an earlier one. The skeleton
 registers `redirect`.
 
+Each record is also an MCP resource, `record://entry/8`, read through `get_record` and its permission check: the
+templates name every resource the user may read, the list holds each one's ten most recently updated records
+(`enableResources` turns this off). Prompts, which a client offers as commands, are definitions appended to `prompts`:
+
+```php
+'mcp' => [
+    'prompts' => [
+        fn (): Prompt => Prompt::make('new_post')
+            ->description('Drafts a blog post')
+            ->argument('topic', 'What the post is about', required: true)
+            ->text(fn (array $arguments): string => "Draft a blog post about {$arguments['topic']} as an entry."),
+    ],
+],
+```
+
 ## Console commands
 
 | Command | Purpose |

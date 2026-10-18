@@ -83,7 +83,7 @@ class ServerTest extends TestCase
 
     public function testAnUnknownMethodIsNotFound(): void
     {
-        $response = $this->createServer()->handle($this->createMessage('resources/list'));
+        $response = $this->createServer()->handle($this->createMessage('completion/complete'));
         self::assertSame(JsonRpcException::METHOD_NOT_FOUND, $response['error']['code'] ?? null);
     }
 

@@ -44,6 +44,16 @@ class Mcp extends Component
     public array $tools = [];
 
     /**
+     * @var list<Closure(): Prompt>
+     */
+    public array $prompts = [];
+
+    /**
+     * @var bool whether the records are offered as MCP resources (`record://entry/8`) besides the tools
+     */
+    public bool $enableResources = true;
+
+    /**
      * @var bool whether `POST /mcp` answers, authenticated by the tokens `mcp/token` issues
      */
     public bool $enableHttp = false;
@@ -220,12 +230,22 @@ class Mcp extends Component
         return Yii::$container->get(ClientMetadataFetcher::class);
     }
 
+    /**
+     * @return list<Prompt>
+     */
+    public function getPrompts(): array
+    {
+        return array_map(fn (Closure $closure): Prompt => $closure(), $this->prompts);
+    }
+
     public function createServer(bool $readOnly = false): Server
     {
         return new Server(
             new ToolCollection($this->getTools(), $readOnly),
             Yii::$app->name,
             InstalledVersions::getPrettyVersion('davidhirtz/yii2-skeleton') ?? 'dev',
+            $this->enableResources && $this->getResources() ? new RecordResources($this) : null,
+            $this->getPrompts(),
         );
     }
 }

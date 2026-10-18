@@ -165,8 +165,8 @@ class McpEndpointTest extends TestCase
         self::assertResponseStatusCodeSame(400);
         self::assertSame(-32020, $this->getJsonResponseData()['error']['code'] ?? null);
 
-        $message['method'] = 'resources/list';
-        $this->post($message, $token, [...$headers, 'HTTP_MCP_METHOD' => 'resources/list']);
+        $message['method'] = 'completion/complete';
+        $this->post($message, $token, [...$headers, 'HTTP_MCP_METHOD' => 'completion/complete']);
         self::assertResponseStatusCodeSame(404);
         self::assertSame(-32601, $this->getJsonResponseData()['error']['code'] ?? null);
     }

@@ -34,14 +34,26 @@ class Server
     /**
      * @var list<string> the results the 2026-07-28 revision requires caching hints on
      */
-    private const array CACHEABLE_METHODS = ['server/discover', 'tools/list'];
+    private const array CACHEABLE_METHODS = [
+        'server/discover',
+        'tools/list',
+        'resources/list',
+        'resources/templates/list',
+        'resources/read',
+        'prompts/list',
+    ];
 
     private const int JSON_FLAGS = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR;
 
+    /**
+     * @param list<Prompt> $prompts
+     */
     public function __construct(
         public readonly ToolCollection $tools,
         protected readonly string $name,
         protected readonly string $version,
+        protected readonly ?RecordResources $records = null,
+        protected readonly array $prompts = [],
     ) {
     }
 
@@ -182,6 +194,11 @@ class Server
             'server/discover' => $this->discover(),
             'tools/list' => ['tools' => array_map($this->describeTool(...), $this->tools->all())],
             'tools/call' => $this->callTool($params)->toArray(),
+            'resources/list' => ['resources' => $this->getRecords()->list()],
+            'resources/templates/list' => ['resourceTemplates' => $this->getRecords()->getTemplates()],
+            'resources/read' => ['contents' => $this->getRecords()->read(is_string($params['uri'] ?? null) ? $params['uri'] : '')],
+            'prompts/list' => ['prompts' => array_map(fn (Prompt $prompt): array => $prompt->toArray(), $this->getPrompts())],
+            'prompts/get' => $this->getPrompt($params)->get(is_array($params['arguments'] ?? null) ? $params['arguments'] : []),
             default => throw new JsonRpcException(JsonRpcException::METHOD_NOT_FOUND, "Method not found: $method"),
         };
     }
@@ -220,7 +237,38 @@ class Server
      */
     protected function getCapabilities(): array
     {
-        return ['tools' => ['listChanged' => false]];
+        return array_filter([
+            'tools' => ['listChanged' => false],
+            'resources' => $this->records ? new stdClass() : null,
+            'prompts' => $this->prompts ? ['listChanged' => false] : null,
+        ]);
+    }
+
+    protected function getRecords(): RecordResources
+    {
+        return $this->records ?? throw new JsonRpcException(JsonRpcException::METHOD_NOT_FOUND, 'Method not found: resources');
+    }
+
+    /**
+     * @return list<Prompt>
+     */
+    protected function getPrompts(): array
+    {
+        return $this->prompts ?: throw new JsonRpcException(JsonRpcException::METHOD_NOT_FOUND, 'Method not found: prompts');
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    protected function getPrompt(array $params): Prompt
+    {
+        foreach ($this->getPrompts() as $prompt) {
+            if ($prompt->getName() === ($params['name'] ?? null)) {
+                return $prompt;
+            }
+        }
+
+        throw new JsonRpcException(JsonRpcException::INVALID_PARAMS, 'Unknown prompt: ' . (is_string($params['name'] ?? null) ? $params['name'] : ''));
     }
 
     /**
