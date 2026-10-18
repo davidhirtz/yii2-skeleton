@@ -7,12 +7,17 @@ namespace Hirtz\Skeleton\Mcp;
 use Closure;
 use Composer\InstalledVersions;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Mcp\Tools\CreateRecordTool;
 use Hirtz\Skeleton\Mcp\Tools\DescribeResourceTool;
 use Hirtz\Skeleton\Mcp\Tools\FindRecordsTool;
 use Hirtz\Skeleton\Mcp\Tools\GetRecordTool;
 use Hirtz\Skeleton\Mcp\Tools\ListResourcesTool;
+use Hirtz\Skeleton\Mcp\Tools\ReorderTool;
+use Hirtz\Skeleton\Mcp\Tools\ResourceTool;
+use Hirtz\Skeleton\Mcp\Tools\SetStatusTool;
 use Hirtz\Skeleton\Mcp\Tools\ToolCollection;
 use Hirtz\Skeleton\Mcp\Tools\ToolInterface;
+use Hirtz\Skeleton\Mcp\Tools\UpdateRecordTool;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Yii;
 use yii\base\Component;
@@ -86,7 +91,13 @@ class Mcp extends Component
             new DescribeResourceTool($this),
             new FindRecordsTool($this),
             new GetRecordTool($this),
+            new CreateRecordTool($this),
+            new UpdateRecordTool($this),
+            new SetStatusTool($this),
+            new ReorderTool($this),
         ];
+
+        $tools = array_values(array_filter($tools, fn (ResourceTool $tool): bool => $tool->isAvailable()));
 
         foreach ($this->tools as $closure) {
             if ($tool = $closure($this)) {

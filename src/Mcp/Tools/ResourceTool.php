@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Db\Date;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Resource;
+use Hirtz\Skeleton\Mcp\SchemaBuilder;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
@@ -53,12 +54,27 @@ abstract class ResourceTool implements ToolInterface
     }
 
     /**
-     * @param list<Resource<covariant ActiveRecord&AdminModelInterface>>|null $resources
+     * @return list<Resource<covariant ActiveRecord&AdminModelInterface>> the resources the tool takes
+     */
+    public function getResources(): array
+    {
+        return array_values($this->mcp->getResources());
+    }
+
+    /**
+     * A tool no resource can be passed to is not offered.
+     */
+    public function isAvailable(): bool
+    {
+        return $this->getResources() !== [];
+    }
+
+    /**
      * @return array<string, mixed>
      */
-    protected function getResourceProperty(?array $resources = null): array
+    protected function getResourceProperty(): array
     {
-        $resources ??= array_values($this->mcp->getResources());
+        $resources = $this->getResources();
 
         return [
             'type' => 'string',
@@ -102,6 +118,55 @@ abstract class ResourceTool implements ToolInterface
         }
 
         return $record;
+    }
+
+    /**
+     * @param Resource<covariant ActiveRecord&AdminModelInterface> $resource
+     * @param array<string, mixed> $attributes
+     */
+    protected function loadAttributes(Resource $resource, ActiveRecord $record, array $attributes): void
+    {
+        $writable = (new SchemaBuilder($resource))->getWritableAttributes($record);
+
+        if ($unknown = array_values(array_diff(array_keys($attributes), $writable))) {
+            throw new ToolException('Not writable: ' . implode(', ', $unknown) . '. See describe_resource.', [
+                'writable' => $writable,
+            ]);
+        }
+
+        $record->load($attributes, '');
+    }
+
+    /**
+     * @return never
+     */
+    protected function throwValidationErrors(ActiveRecord $record): void
+    {
+        throw new ToolException('The record was not saved.', ['errors' => $record->getErrors()]);
+    }
+
+    /**
+     * @param Resource<covariant ActiveRecord&AdminModelInterface> $resource
+     */
+    protected function findParent(Resource $resource, mixed $id): ?ActiveRecord
+    {
+        $parentClass = $resource->getParentClass();
+
+        if ($id === null || $parentClass === null) {
+            if ($resource->isParentRequired()) {
+                throw new ToolException("A {$resource->getName()} belongs to a parent: pass \"parent\".");
+            }
+
+            return null;
+        }
+
+        $parent = is_int($id) || is_string($id) ? $parentClass::findOne($id) : null;
+
+        if (!$parent instanceof AdminModelInterface || !$this->can($parent)) {
+            throw new ToolException('Parent not found: ' . (is_scalar($id) ? $id : ''));
+        }
+
+        return $parent;
     }
 
     protected function can(AdminModelInterface $record): bool

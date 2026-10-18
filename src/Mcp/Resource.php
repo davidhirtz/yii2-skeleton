@@ -46,6 +46,8 @@ class Resource
 
     protected bool $readOnly = false;
 
+    protected ?Closure $defaultType = null;
+
     /**
      * @param class-string<T> $modelClass
      */
@@ -66,8 +68,8 @@ class Resource
     /**
      * @template TParent of ActiveRecord&AdminModelInterface
      * @param class-string<TParent> $parentClass
-     * @param Closure(T, TParent|null): (bool|null) $populate called before `load()`, the parent `null` only
-     * when it is optional; `false` refuses the parent as if it did not exist
+     * @param Closure(T, TParent|null): mixed $populate called before `load()`, the parent `null` only when it is
+     * optional; `false` refuses the parent as if it did not exist
      */
     public function parent(string $param, string $parentClass, Closure $populate, bool $required = true): static
     {
@@ -132,10 +134,24 @@ class Resource
         return $this;
     }
 
+    /**
+     * @param Closure(): ?int $defaultType the type a record is created as when the caller names none
+     */
+    public function defaultType(Closure $defaultType): static
+    {
+        $this->defaultType = $defaultType;
+        return $this;
+    }
+
     public function readOnly(bool $readOnly = true): static
     {
         $this->readOnly = $readOnly;
         return $this;
+    }
+
+    public function getDefaultType(): ?int
+    {
+        return $this->defaultType !== null ? ($this->defaultType)() : null;
     }
 
     public function getName(): string

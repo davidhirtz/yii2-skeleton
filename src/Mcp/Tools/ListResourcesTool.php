@@ -22,6 +22,12 @@ class ListResourcesTool extends ResourceTool
     }
 
     #[Override]
+    public function isAvailable(): bool
+    {
+        return true;
+    }
+
+    #[Override]
     public function getInputSchema(): array
     {
         return [

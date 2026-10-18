@@ -56,7 +56,7 @@ class DescribeResourceTool extends ResourceTool
         $resource = $this->findResource($arguments);
         $modelClass = $resource->getModelClass();
 
-        $type = $arguments['type'] ?? null;
+        $type = $arguments['type'] ?? $resource->getDefaultType();
         $types = is_subclass_of($modelClass, TypeAttributeInterface::class) ? $modelClass::getTypeDefinitions() : [];
 
         if (is_int($type) && !isset($types[$type])) {

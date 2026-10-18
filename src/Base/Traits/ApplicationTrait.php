@@ -17,12 +17,14 @@ use Hirtz\Skeleton\Log\FileTarget;
 use Hirtz\Skeleton\Log\SentryTarget;
 use Hirtz\Skeleton\Mail\Mailer;
 use Hirtz\Skeleton\Mcp\Mcp;
+use Hirtz\Skeleton\Mcp\Resource;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\DatabaseComponents;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Definitions\DefinitionRegistry;
+use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Rbac\DbManager;
@@ -193,6 +195,9 @@ trait ApplicationTrait
                 ],
                 'mcp' => [
                     'class' => Mcp::class,
+                    'resources' => [
+                        fn (): Resource => Resource::make('redirect', Redirect::class),
+                    ],
                 ],
                 'search' => [
                     'class' => Search::class,

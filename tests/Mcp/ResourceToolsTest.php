@@ -11,6 +11,9 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Resource;
+use Hirtz\Skeleton\Mcp\Tools\ToolInterface;
+use Hirtz\Skeleton\Mcp\Tools\UpdateRecordTool;
+use Hirtz\Skeleton\Models\Actions\ReorderActiveRecords;
 use Hirtz\Skeleton\Models\CustomAttributes\TextCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
@@ -20,6 +23,8 @@ use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Models\Redirect;
+use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Models\Translation;
 use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
@@ -196,6 +201,175 @@ class ResourceToolsTest extends TestCase
 
         $result = $this->callTool('get_record', ['resource' => 'scratch', 'id' => $record->id], true);
         self::assertStringStartsWith('Record not found', $result['error'] ?? '');
+    }
+
+    public function testCreateRecord(): void
+    {
+        $result = $this->callTool('create_record', [
+            'resource' => 'scratch',
+            'attributes' => ['name' => 'Åsa ąb', 'name_de' => 'Mu' . "\u{308}" . 'ller 🎉', 'teaser_de' => 'Привет 東京'],
+        ]);
+
+        $id = $result['id'] ?? self::fail('No id');
+        $record = ToolRecord::findOne($id);
+
+        self::assertNotNull($record);
+        self::assertSame('Mu' . "\u{308}" . 'ller 🎉', $record->getI18nAttribute('name', 'de'));
+        self::assertSame('Привет 東京', $record->getAttribute('teaser_de'));
+        self::assertSame(ToolRecord::TYPE_DEFAULT, $record->type);
+
+        self::assertSame(['Mu' . "\u{308}" . 'ller 🎉'], Translation::find()
+            ->select('value')
+            ->where(['model_class' => ToolRecord::class, 'model_id' => $id, 'attribute' => 'name', 'language' => 'de'])
+            ->column());
+
+        $trail = Trail::find()->where(['model_class' => ToolRecord::class, 'model_id' => (string)$id, 'type' => Trail::TYPE_CREATE])->one();
+        self::assertSame($this->getUserFromFixture('owner')->id, $trail?->user_id);
+    }
+
+    public function testCreateRecordOfAType(): void
+    {
+        $result = $this->callTool('create_record', [
+            'resource' => 'scratch',
+            'type' => ToolRecord::TYPE_OTHER,
+            'attributes' => ['name' => 'Other', 'name_de' => 'Andere'],
+        ]);
+
+        self::assertSame('Ånother', $result['type_name'] ?? null);
+
+        $result = $this->callTool('create_record', ['resource' => 'scratch', 'type' => 9, 'attributes' => []], true);
+        self::assertSame('Unknown type 9 for scratch.', $result['error'] ?? null);
+    }
+
+    public function testCreateRecordAnswersTheValidationErrors(): void
+    {
+        $result = $this->callTool('create_record', ['resource' => 'scratch', 'attributes' => ['name' => str_repeat('ą', 51)]], true);
+
+        self::assertSame('The record was not saved.', $result['error'] ?? null);
+        self::assertEqualsCanonicalizing(['name', 'name_de'], array_keys($result['errors'] ?? []));
+        self::assertSame(0, (int)ToolRecord::find()->count());
+    }
+
+    public function testAnAttributeThatIsNotWritableIsRefused(): void
+    {
+        $result = $this->callTool('create_record', ['resource' => 'scratch', 'attributes' => ['name' => 'A', 'position' => 3, 'type' => 2]], true);
+
+        self::assertSame('Not writable: position, type. See describe_resource.', $result['error'] ?? null);
+        self::assertContains('name_de', $result['writable'] ?? []);
+    }
+
+    public function testUpdateRecord(): void
+    {
+        $record = $this->insertRecord('Ärger');
+        $result = $this->callTool('update_record', ['resource' => 'scratch', 'id' => $record->id, 'attributes' => ['name_de' => 'Ąb']]);
+
+        self::assertSame('Ąb', $result['attributes']['name_de'] ?? null);
+
+        $record->refresh();
+        self::assertSame('Ąb', $record->getI18nAttribute('name', 'de'));
+        self::assertSame('Ärger', $record->name);
+    }
+
+    public function testAStaleUpdateIsRefused(): void
+    {
+        $record = $this->insertRecord('Ärger');
+
+        $record->name = 'Changed by someone else';
+        $record->update();
+
+        $result = $this->callTool('update_record', [
+            'resource' => 'scratch',
+            'id' => $record->id,
+            'attributes' => ['name' => 'Mine'],
+            'updated_at' => '2000-01-01T00:00:00+00:00',
+        ], true);
+
+        self::assertArrayHasKey('loadedAt', $result['errors'] ?? []);
+        self::assertIsString($result['updated_at'] ?? null);
+
+        $record->refresh();
+        self::assertSame('Changed by someone else', $record->name);
+
+        $result = $this->callTool('update_record', [
+            'resource' => 'scratch',
+            'id' => $record->id,
+            'attributes' => ['name' => 'Mine'],
+            'updated_at' => $this->callTool('get_record', ['resource' => 'scratch', 'id' => $record->id])['attributes']['updated_at'] ?? '',
+        ]);
+
+        self::assertSame('Mine', $result['attributes']['name'] ?? null);
+    }
+
+    public function testSetStatus(): void
+    {
+        $record = $this->insertRecord('Ärger');
+        $result = $this->callTool('set_status', ['resource' => 'scratch', 'id' => $record->id, 'status' => ToolRecord::STATUS_DISABLED]);
+
+        self::assertSame(ToolRecord::STATUS_DISABLED, $result['status'] ?? null);
+
+        $result = $this->callTool('set_status', ['resource' => 'scratch', 'id' => $record->id, 'status' => 42], true);
+        self::assertSame('Unknown status 42, see describe_resource.', $result['error'] ?? null);
+    }
+
+    public function testAWriteToARefusedRecordLooksNotFound(): void
+    {
+        $record = $this->insertRecord('Ärger');
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
+
+        $result = $this->callTool('update_record', ['resource' => 'scratch', 'id' => $record->id, 'attributes' => ['name' => 'x']], true);
+
+        self::assertSame('Resource not found: scratch', $result['error'] ?? null);
+    }
+
+    public function testAReadOnlyResourceIsNotWritten(): void
+    {
+        $record = $this->insertRecord('Ärger');
+
+        Mcp::getComponent()->resources = [
+            fn (): Resource => Resource::make('scratch', ToolRecord::class)->readOnly(),
+        ];
+
+        $names = array_map(fn (ToolInterface $tool): string => $tool->getName(), Mcp::getComponent()->getTools());
+        self::assertSame(['list_resources', 'describe_resource', 'find_records', 'get_record'], $names);
+
+        $tool = new UpdateRecordTool(Mcp::getComponent());
+        $result = $tool->call(['resource' => 'scratch', 'id' => $record->id, 'attributes' => ['name' => 'x']]);
+
+        self::assertTrue($result->isError);
+        self::assertSame('Resource scratch is read-only.', $result->structuredContent['error'] ?? null);
+    }
+
+    public function testAReadOnlyServerOffersNoWriteTool(): void
+    {
+        $response = Mcp::getComponent()->createServer(true)->handle(['jsonrpc' => '2.0', 'id' => 1, 'method' => 'tools/list']);
+        $names = array_column($response['result']['tools'] ?? [], 'name');
+
+        self::assertSame(['list_resources', 'describe_resource', 'find_records', 'get_record'], $names);
+    }
+
+    public function testReorder(): void
+    {
+        $first = $this->insertRecord('Eins');
+        $second = $this->insertRecord('Zwei');
+
+        Mcp::getComponent()->resources = [
+            fn (): Resource => Resource::make('scratch', ToolRecord::class)
+                ->reorder(fn (?ActiveRecord $parent, array $ids): bool => (new ReorderActiveRecords(
+                    ToolRecord::find()->where(['id' => $ids])->all(),
+                    array_flip($ids),
+                ))->run() !== false),
+        ];
+
+        $result = $this->callTool('reorder', ['resource' => 'scratch', 'ids' => [$second->id, $first->id]]);
+
+        self::assertTrue($result['reordered'] ?? null);
+        self::assertSame([$second->id, $first->id], array_map(intval(...), ToolRecord::find()->select('id')->orderBy(['position' => SORT_ASC])->column()));
+    }
+
+    public function testReorderIsOfferedOnlyForAReorderableResource(): void
+    {
+        $names = array_map(fn (ToolInterface $tool): string => $tool->getName(), Mcp::getComponent()->getTools());
+        self::assertNotContains('reorder', $names);
     }
 
     /**
