@@ -241,6 +241,7 @@ return [
     'HOST_ALERT_MESSAGE' => 'Links on this installation, password reset emails among them, take their host from the request. Set allowedHosts in config/params.php, or pin urlManager.hostInfo.',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Your email was not found.',
+    'LOGIN_ERROR_TOKEN_EXPIRED' => 'The page has expired. Please enter your email and password again.',
     'LOGIN_TOO_MANY_ATTEMPTS' => 'Too many failed login attempts. Please wait a few minutes before trying again.',
     'LOGIN_TWO_FACTOR_EXPIRED' => 'The login has expired. Please enter your email and password again.',
     'LOG_DATE' => 'Date',

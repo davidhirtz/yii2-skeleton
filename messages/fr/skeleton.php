@@ -241,6 +241,7 @@ return [
     'HOST_ALERT_MESSAGE' => 'Les liens de cette installation, y compris ceux des e-mails de réinitialisation du mot de passe, reprennent l’hôte de la requête. Veuillez définir allowedHosts dans config/params.php ou fixer urlManager.hostInfo.',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Votre adresse e-mail est introuvable.',
+    'LOGIN_ERROR_TOKEN_EXPIRED' => 'La page a expiré. Veuillez saisir à nouveau votre adresse e-mail et votre mot de passe.',
     'LOGIN_TOO_MANY_ATTEMPTS' => 'Trop de tentatives de connexion échouées. Veuillez patienter quelques minutes avant de réessayer.',
     'LOGIN_TWO_FACTOR_EXPIRED' => 'La connexion a expiré. Veuillez saisir à nouveau votre adresse e-mail et votre mot de passe.',
     'LOG_DATE' => 'Date',

@@ -241,6 +241,7 @@ return [
     'HOST_ALERT_MESSAGE' => 'Links dieser Installation, auch die in E-Mails zum Zurücksetzen des Passworts, übernehmen den Host der Anfrage. Bitte allowedHosts in config/params.php setzen oder urlManager.hostInfo festlegen.',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'Ihre E-Mail-Adresse wurde nicht gefunden.',
+    'LOGIN_ERROR_TOKEN_EXPIRED' => 'Die Seite ist abgelaufen. Bitte E-Mail-Adresse und Passwort erneut eingeben.',
     'LOGIN_TOO_MANY_ATTEMPTS' => 'Zu viele fehlgeschlagene Anmeldeversuche. Bitte warten Sie einige Minuten, bevor Sie es erneut versuchen.',
     'LOGIN_TWO_FACTOR_EXPIRED' => 'Die Anmeldung ist abgelaufen. Bitte E-Mail-Adresse und Passwort erneut eingeben.',
     'LOG_DATE' => 'Datum',

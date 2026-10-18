@@ -241,6 +241,7 @@ return [
     'HOST_ALERT_MESSAGE' => 'As ligações desta instalação, incluindo as dos e-mails de reposição da palavra-passe, usam o anfitrião do pedido. Defina allowedHosts em config/params.php ou fixe urlManager.hostInfo.',
     'I18N_ATTRIBUTES_LABEL_LANGUAGE' => '{label} ({language})',
     'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND' => 'O seu e-mail não foi encontrado.',
+    'LOGIN_ERROR_TOKEN_EXPIRED' => 'A página expirou. Introduza novamente o seu e-mail e a sua palavra-passe.',
     'LOGIN_TOO_MANY_ATTEMPTS' => 'Demasiadas tentativas de início de sessão falhadas. Aguarde alguns minutos antes de tentar novamente.',
     'LOGIN_TWO_FACTOR_EXPIRED' => 'O início de sessão expirou. Introduza novamente o seu e-mail e a sua palavra-passe.',
     'LOG_DATE' => 'Data',

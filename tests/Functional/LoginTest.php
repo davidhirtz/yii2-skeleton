@@ -182,12 +182,55 @@ class LoginTest extends TestCase
         self::assertSelectorNotExists('[data-alert="error"]');
     }
 
-    private function submitLoginForm(?string $email = null, ?string $password = null, ?string $code = null): void
+    public function testAStaleTokenAsksForTheCredentialsAgain(): void
     {
+        $user = $this->getUserFromFixture('owner');
+
+        $this->submit(values: [
+            '_csrf' => 'stale',
+            ...$this->prefixFormValues(LoginForm::instance()->formName(), [
+                'email' => $user->email,
+                'password' => 'password',
+            ]),
+        ]);
+
+        self::assertResponseStatusCodeSame(200);
+        self::assertAnyValidationErrorSame(Yii::t('skeleton', 'LOGIN_ERROR_TOKEN_EXPIRED'));
+        self::assertTrue($this->getWebUser()->getIsGuest());
+
+        $this->submitLoginForm($user->email, 'password');
+        self::assertCurrentUrlEquals('admin/dashboard/index');
+    }
+
+    /**
+     * Logging in renews the token, so a login form still open in another tab posts one that no longer validates.
+     */
+    public function testALoginFromAnotherTabLeadsToTheDashboard(): void
+    {
+        $login = self::$crawler;
+        $this->submitLoginForm($this->getUserFromFixture('owner')->email, 'password');
+
+        self::$crawler = $login;
+        self::$client->followRedirects(false);
+        $this->submitLoginForm('', '', server: ['HTTP_HX_REQUEST' => 'true']);
+
+        self::assertResponseHeaderSame('hx-redirect', 'https://www.test.localhost/admin/dashboard/index');
+        self::assertNull($this->getWebSession()->getFlash('error'));
+    }
+
+    /**
+     * @param array<string, mixed> $server
+     */
+    private function submitLoginForm(
+        ?string $email = null,
+        ?string $password = null,
+        ?string $code = null,
+        array $server = [],
+    ): void {
         $this->submit(values: $this->prefixFormValues(LoginForm::instance()->formName(), array_filter([
             'email' => $email,
             'password' => $password,
             'code' => $code,
-        ])));
+        ])), server: $server);
     }
 }
