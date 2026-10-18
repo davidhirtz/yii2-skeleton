@@ -190,6 +190,54 @@ version a decision is stored and logged with is `version` plus a fingerprint of 
 a changed service asks every visitor again on its own, a reworded text does not. Raise `version` for a change of
 wording that should.
 
+### MCP server
+
+The `mcp` component (`Mcp\Mcp`) lets an agent read and write content through the model layer, as a user and under that
+user's permissions: translations, search rows, counts, trail and validation work as in the admin, and nothing takes
+SQL. The tools are generic — `list_resources`, `describe_resource` (the JSON Schema of a type's attributes, its
+statuses and the content languages), `find_records`, `get_record`, `create_record`, `update_record`, `set_status`,
+`reorder` — over resources the bundles register; there is no delete. The server answers protocol versions
+`2026-07-28`, `2025-11-25` and `2025-06-18`.
+
+Locally or over SSH, `mcp/serve` speaks stdio as `--user` (the owner by default), `--read-only` offering the read tools
+alone:
+
+```bash
+claude mcp add cms -- php /path/to/project/yii mcp/serve --user=me@example.com
+```
+
+A public site enables `POST /mcp`, authenticated by a token from `mcp/token`:
+
+```php
+'mcp' => [
+    'enableHttp' => true,
+    'allowedOrigins' => [], // a browser's `Origin` other than the site's own, `403` otherwise
+],
+```
+
+```bash
+claude mcp add --transport http cms https://www.example.com/mcp --header "Authorization: Bearer <token>"
+```
+
+A token is shown once and stored as its HMAC (`UserToken` types `mcp-read`, `mcp-write`); a disabled user's tokens stop
+working, and failed attempts are counted per address (`authenticationAttemptLimit`, `429` past it). A resource is a
+definition appended to `resources` as a closure, a tool to `tools`:
+
+```php
+'mcp' => [
+    'resources' => [
+        fn (): Resource => Resource::make('product', Product::class)
+            ->parent('shop', Shop::class, fn (Product $product, ?Shop $shop) => $product->populateShopRelation($shop))
+            ->exceptAttributes('sku'),
+    ],
+],
+```
+
+`parent()`, `beforeInsert()`, `reorder()`, `defaultType()` and `url()` reproduce what the model's admin actions do
+besides `load()` and `insert()`; `query()` narrows it, `attributes()` and `exceptAttributes()` the writable attributes,
+`creatable(false)` and `readOnly()` the tools. A later registration of a name replaces an earlier one. The skeleton
+registers `redirect`.
+
 ## Console commands
 
 | Command | Purpose |
@@ -204,6 +252,7 @@ wording that should.
 | `consent/clear`, `consent/optimize` | cookie consent log retention; `clear` takes `--sleep` |
 | `redirect/clean` | delete redirect loops and shorten chains; `--hosts`, `--dryRun` |
 | `maintenance/enable`, `maintenance/disable`, `maintenance` | the pre-rendered maintenance page (`runtime/maintenance.php`); `enable` takes `--redirect`, `--retry`, `--refresh`, `--statusCode`, `--viewFile` |
+| `mcp/serve`, `mcp/token`, `mcp/tokens`, `mcp/revoke [id]` | the MCP server over stdio and the tokens of its HTTP endpoint; `--user`, `--read-only`, `--expires` (days) |
 | `registry/push`, `registry/show` | report the installation to a version registry; `--url`, `--strict` |
 | `upgrade` | the v2 → v3 upgrade steps the bundle runs itself |
 | `asset/clear`, `email/test <address>`, `message` | published assets, the mailer, message extraction |
