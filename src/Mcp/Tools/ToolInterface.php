@@ -28,6 +28,11 @@ interface ToolInterface
     public function isDestructive(): bool;
 
     /**
+     * Whether a call reaches a service outside the site, such as an image generator.
+     */
+    public function isOpenWorld(): bool;
+
+    /**
      * @param array<string, mixed> $arguments
      */
     public function call(array $arguments): ToolResult;

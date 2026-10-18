@@ -280,6 +280,12 @@ class EchoTool implements ToolInterface
     }
 
     #[Override]
+    public function isOpenWorld(): bool
+    {
+        return false;
+    }
+
+    #[Override]
     public function call(array $arguments): ToolResult
     {
         if ($arguments['text'] === 'fail') {

@@ -59,6 +59,12 @@ abstract class ResourceTool implements ToolInterface
         return false;
     }
 
+    #[Override]
+    public function isOpenWorld(): bool
+    {
+        return false;
+    }
+
     /**
      * @return list<Resource<covariant ActiveRecord&AdminModelInterface>> the resources the tool takes
      */

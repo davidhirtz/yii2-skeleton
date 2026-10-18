@@ -306,7 +306,7 @@ class Server
                 'readOnlyHint' => $tool->isReadOnly(),
                 'destructiveHint' => $tool->isDestructive(),
                 'idempotentHint' => $tool->isIdempotent(),
-                'openWorldHint' => false,
+                'openWorldHint' => $tool->isOpenWorld(),
             ],
         ];
     }
