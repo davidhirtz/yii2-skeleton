@@ -67,7 +67,7 @@ class UserSubmenu extends Submenu
 
     protected function getUserGrantItem(): ?NavItem
     {
-        return Mcp::getComponent()->isOAuthEnabled() && $this->webuser->can(User::AUTH_USER, ['user' => $this->model])
+        return Mcp::getComponent()->enableHttp && $this->webuser->can(User::AUTH_USER, ['user' => $this->model])
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'GRANT_CONNECTED_APPS'))
                 ->icon('plug')

@@ -10,8 +10,10 @@ use Hirtz\Skeleton\Mcp\OAuth\AuthorizationRequest;
 use Hirtz\Skeleton\Mcp\OAuth\OAuthException;
 use Hirtz\Skeleton\Models\OAuthGrant;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
@@ -29,6 +31,13 @@ class GrantController extends Controller
 {
     use UserTrait;
 
+    final public const string TOKEN_FLASH = 'mcpToken';
+
+    /**
+     * @var list<int> the days a token created in the admin may last, besides never expiring
+     */
+    public array $tokenLifetimes = [30, 90, 365];
+
     #[Override]
     public function behaviors(): array
     {
@@ -39,7 +48,7 @@ class GrantController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['authorize', 'index', 'revoke'],
+                        'actions' => ['authorize', 'create-token', 'index', 'revoke', 'revoke-token'],
                         'roles' => ['@'],
                     ],
                     [
@@ -52,7 +61,9 @@ class GrantController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
+                    'create-token' => ['post'],
                     'revoke' => ['post'],
+                    'revoke-token' => ['post'],
                 ],
             ],
         ];
@@ -61,7 +72,9 @@ class GrantController extends Controller
     #[Override]
     public function beforeAction($action): bool
     {
-        if (!Mcp::getComponent()->isOAuthEnabled()) {
+        $mcp = Mcp::getComponent();
+
+        if (!$mcp->enableHttp || ($action->id === 'authorize' && !$mcp->isOAuthEnabled())) {
             throw new NotFoundHttpException();
         }
 
@@ -123,8 +136,13 @@ class GrantController extends Controller
     {
         $user = $this->webuser->getIdentity();
 
+        $token = Application::current()->getSession()->getFlash(self::TOKEN_FLASH, delete: true);
+
         return $this->render('index', [
-            'provider' => $this->getProvider($user),
+            'grants' => $this->getGrantProvider($user),
+            'tokens' => $this->getTokenProvider($user),
+            'token' => is_string($token) ? $token : null,
+            'tokenLifetimes' => $this->tokenLifetimes,
             'user' => $user,
         ]);
     }
@@ -134,7 +152,8 @@ class GrantController extends Controller
         $user = $this->findUser($user, User::AUTH_USER);
 
         return $this->render('view', [
-            'provider' => $this->getProvider($user),
+            'grants' => $this->getGrantProvider($user),
+            'tokens' => $this->getTokenProvider($user),
             'user' => $user,
         ]);
     }
@@ -164,6 +183,45 @@ class GrantController extends Controller
     }
 
     /**
+     * The token is shown once, on the page the redirect leads to.
+     */
+    public function actionCreateToken(): Response
+    {
+        $user = $this->webuser->getIdentity();
+        $days = (int)$this->request->post('expires');
+        $lifetime = in_array($days, $this->tokenLifetimes, true) ? $days * 86400 : null;
+
+        $token = Mcp::getComponent()->issueToken($user, (bool)$this->request->post('readOnly'), $lifetime);
+        Application::current()->getSession()->setFlash(self::TOKEN_FLASH, $token);
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionRevokeToken(int $id): Response
+    {
+        $token = UserToken::find()
+            ->where(['id' => $id, 'grant_id' => null, 'type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]])
+            ->with('user')
+            ->one();
+
+        if ($token === null) {
+            throw new NotFoundHttpException();
+        }
+
+        $isOwn = $token->user_id === $this->webuser->getId();
+
+        if (!$isOwn && !$this->webuser->can(User::AUTH_USER, ['user' => $token->user])) {
+            throw new ForbiddenHttpException();
+        }
+
+        if ($token->delete()) {
+            $this->success(Yii::t('skeleton', 'MCP_TOKEN_SUCCESS_REVOKED'));
+        }
+
+        return $this->redirect($isOwn ? ['index'] : ['view', 'user' => $token->user_id]);
+    }
+
+    /**
      * Approving the same client again replaces the scope it was granted and keeps its tokens.
      */
     protected function saveGrant(AuthorizationRequest $request, string $resource, string $scope): OAuthGrant
@@ -189,11 +247,27 @@ class GrantController extends Controller
         return $grant;
     }
 
-    protected function getProvider(User $user): ActiveDataProvider
+    protected function getGrantProvider(User $user): ?ActiveDataProvider
     {
+        if (!Mcp::getComponent()->isOAuthEnabled()) {
+            return null;
+        }
+
         return new ActiveDataProvider([
             'query' => OAuthGrant::find()
                 ->where(['user_id' => $user->id])
+                ->orderBy(['created_at' => SORT_DESC]),
+            'sort' => false,
+            'pagination' => false,
+        ]);
+    }
+
+    protected function getTokenProvider(User $user): ActiveDataProvider
+    {
+        return new ActiveDataProvider([
+            'query' => UserToken::find()
+                ->whereUser($user->id)
+                ->andWhere(['grant_id' => null, 'type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]])
                 ->orderBy(['created_at' => SORT_DESC]),
             'sort' => false,
             'pagination' => false,

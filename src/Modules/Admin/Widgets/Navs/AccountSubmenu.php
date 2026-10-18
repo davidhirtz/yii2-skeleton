@@ -67,7 +67,7 @@ class AccountSubmenu extends Submenu
      */
     protected function getGrantItem(): ?NavItem
     {
-        return Mcp::getComponent()->isOAuthEnabled()
+        return Mcp::getComponent()->enableHttp
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'GRANT_CONNECTED_APPS'))
                 ->url(['/admin/grant/index'])
