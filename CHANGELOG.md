@@ -1,4 +1,4 @@
-## Unreleased
+## 3.19.1 (October 18, 2026)
 
 - Fixed the file log dropping warnings
 - Fixed the MCP client metadata fetch bypassing cURL, which ignored the address pin
