@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Hirtz\Skeleton\Mcp\Tools;
+
+interface ToolInterface
+{
+    public function getName(): string;
+
+    public function getDescription(): string;
+
+    /**
+     * @return array<string, mixed> a JSON Schema `object`, whose `required` keys and scalar `type`s the server checks
+     * before {@see static::call()}
+     */
+    public function getInputSchema(): array;
+
+    public function isReadOnly(): bool;
+
+    public function isIdempotent(): bool;
+
+    /**
+     * @param array<string, mixed> $arguments
+     */
+    public function call(array $arguments): ToolResult;
+}

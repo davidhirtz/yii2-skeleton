@@ -16,6 +16,7 @@ use Hirtz\Skeleton\I18n\I18N;
 use Hirtz\Skeleton\Log\FileTarget;
 use Hirtz\Skeleton\Log\SentryTarget;
 use Hirtz\Skeleton\Mail\Mailer;
+use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Caching\CacheComponents;
 use Hirtz\Skeleton\Db\ActiveQuery;
@@ -40,6 +41,7 @@ use yii\validators\TrimValidator;
 use yii\web\JqueryAsset;
 
 /**
+ * @property Mcp $mcp
  * @property Search $search
  * @property Sitemap $sitemap
  * @property Upload $upload
@@ -188,6 +190,9 @@ trait ApplicationTrait
                     'class' => Mailer::class,
                     'htmlLayout' => '@skeleton/../resources/mail/layouts/html',
                     'useFileTransport' => YII_DEBUG,
+                ],
+                'mcp' => [
+                    'class' => Mcp::class,
                 ],
                 'search' => [
                     'class' => Search::class,

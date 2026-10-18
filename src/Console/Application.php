@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Console\Controllers\AssetController;
 use Hirtz\Skeleton\Console\Controllers\EmailController;
 use Hirtz\Skeleton\Console\Controllers\HelpController;
 use Hirtz\Skeleton\Console\Controllers\MaintenanceController;
+use Hirtz\Skeleton\Console\Controllers\McpController;
 use Hirtz\Skeleton\Console\Controllers\MessageController;
 use Hirtz\Skeleton\Console\Controllers\MigrateController;
 use Hirtz\Skeleton\Console\Controllers\ParamsController;
@@ -119,6 +120,7 @@ class Application extends \yii\console\Application
             'email' => EmailController::class,
             'help' => HelpController::class,
             'maintenance' => MaintenanceController::class,
+            'mcp' => McpController::class,
             'message' => MessageController::class,
             'migrate' => MigrateController::class,
             'params' => ParamsController::class,
