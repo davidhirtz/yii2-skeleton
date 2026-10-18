@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Registry;
 
+use Hirtz\Skeleton\Db\Connection;
 use Hirtz\Skeleton\Db\MigrationHistory;
 use Hirtz\Skeleton\Helpers\VersionHelper;
 use Hirtz\Skeleton\Log\SentryTarget;
@@ -49,7 +50,7 @@ class Report implements JsonSerializable
      */
     public function toArray(): array
     {
-        $db = Yii::$app->getDb();
+        $db = $this->getDb();
 
         $report = [
             'schema' => self::SCHEMA,
@@ -62,13 +63,13 @@ class Report implements JsonSerializable
             'url' => $this->getUrl(),
             'php' => PHP_VERSION,
             'os' => php_uname('s') . ' ' . php_uname('r'),
-            'database' => [
+            'database' => $db ? [
                 'driver' => $db->getDriverName(),
                 'version' => $db->getServerVersion(),
-            ],
+            ] : null,
             'yii' => Yii::getVersion(),
             'extensions' => VersionHelper::getInstalledExtensions(),
-            'migration' => $this->getMigration(),
+            'migration' => $db ? $this->getMigration($db) : null,
             'mailer' => $this->getMailer(),
             'sentry' => $this->getSentry(),
             'reported_at' => time(),
@@ -108,13 +109,23 @@ class Report implements JsonSerializable
         }
     }
 
+    protected function getDb(): ?Connection
+    {
+        if (!Yii::$app->has('db')) {
+            return null;
+        }
+
+        $db = Yii::$app->getDb();
+        return $db->dsn ? $db : null;
+    }
+
     /**
      * @return array{version: string|null, applied_at: int|null, pending: int}
      */
-    protected function getMigration(): array
+    protected function getMigration(Connection $db): array
     {
         /** @var MigrationHistory $history */
-        $history = Yii::createObject(MigrationHistory::class, [Yii::$app->getDb()]);
+        $history = Yii::createObject(MigrationHistory::class, [$db]);
         $last = $history->getLastApplied();
 
         return [

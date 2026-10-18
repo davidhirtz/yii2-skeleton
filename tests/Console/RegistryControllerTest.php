@@ -69,6 +69,27 @@ class RegistryControllerTest extends TestCase
         self::assertStringContainsString('to registry.test.localhost as project "monorepo", installation #7.', $output);
     }
 
+    public function testAnInstallationWithoutADatabaseIsReported(): void
+    {
+        $this->configure(new Response(200, [], '{}'));
+
+        $db = Yii::$app->getDb();
+        $dsn = $db->dsn;
+        $db->dsn = '';
+
+        try {
+            self::assertSame(ExitCode::OK, $this->createController()->actionPush());
+        } finally {
+            $db->dsn = $dsn;
+        }
+
+        $body = json_decode((string)$this->getRequest(0)->getBody(), true);
+
+        self::assertIsArray($body);
+        self::assertNull($body['database']);
+        self::assertNull($body['migration']);
+    }
+
     public function testTheUrlOptionNamesTheInstallation(): void
     {
         $this->configure(new Response(200, [], '{}'));

@@ -69,6 +69,22 @@ class ReportTest extends TestCase
         self::assertSame(count($history->getPending()), $report['migration']['pending']);
     }
 
+    public function testAnInstallationWithoutADatabaseReportsNeitherDatabaseNorMigration(): void
+    {
+        $db = Yii::$app->getDb();
+        $dsn = $db->dsn;
+        $db->dsn = '';
+
+        try {
+            $report = Report::create()->toArray();
+        } finally {
+            $db->dsn = $dsn;
+        }
+
+        self::assertNull($report['database']);
+        self::assertNull($report['migration']);
+    }
+
     /**
      * A console URL manager without a configured `hostInfo` throws rather than answering `null`.
      */
