@@ -55,6 +55,7 @@ echo Container::make()
                     ->content(Yii::t('skeleton', 'GRANT_AUTHORIZE_LOOPBACK_WARNING'))
                 : null,
             Form::make()
+                ->addClass('form')
                 ->attribute('hx-boost', 'false')
                 ->content(
                     Div::make()
