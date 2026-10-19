@@ -234,10 +234,13 @@ class GroupCustomAttribute extends CustomAttribute
         return $item;
     }
 
+    /**
+     * An empty string is what the form posts once the last row is removed, which skips the group's own validator.
+     */
     #[Override]
     public function normalize(mixed $value): mixed
     {
-        return $value;
+        return $value === '' ? null : $value;
     }
 
     /**

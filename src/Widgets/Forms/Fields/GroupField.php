@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Assets\CustomAttributesAssetBundle;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Html\Label;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
@@ -137,7 +138,13 @@ class GroupField extends Field
         $container = Div::make()
             ->addClass('custom-attribute-group')
             ->attribute('data-group', $this->property)
-            ->content(Div::make()
+            // Without it, removing the last row posts nothing for the group and the stored rows survive the save.
+            // It goes first, as a row's input names overwrite it in PHP's parse.
+            ->content($this->group->isMultiple() ? Input::make()->attributes([
+                'type' => 'hidden',
+                'name' => (string)($this->attributes['name'] ?? ''),
+                'value' => '',
+            ]) : null, Div::make()
                 ->addClass('custom-attribute-group-items')
                 ->attribute('data-group-items', true)
                 ->attribute('data-sort-announcement', $this->group->isSortable()

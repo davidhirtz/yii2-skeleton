@@ -71,6 +71,20 @@ class GroupCustomAttributeTest extends TestCase
         ], $model->links);
     }
 
+    public function testRemovingTheLastRowClearsTheGroup(): void
+    {
+        $model = $this->createRecord();
+        $model->links = [['label' => 'One', 'url' => 'https://one.example.com']];
+
+        self::assertTrue($model->save(), implode(' ', $model->getErrorSummary(true)));
+
+        // What the form's hidden input posts once the last row is gone.
+        self::assertTrue($model->load([$model->formName() => ['links' => '']]));
+        self::assertTrue($model->save(), implode(' ', $model->getErrorSummary(true)));
+
+        self::assertNull($model->links);
+    }
+
     public function testChildErrorsAreCopiedIntoTheOwnerAndOntoTheItem(): void
     {
         $model = $this->createRecord();

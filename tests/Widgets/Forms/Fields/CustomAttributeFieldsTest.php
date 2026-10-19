@@ -116,6 +116,7 @@ class CustomAttributeFieldsTest extends TestCase
             ->render();
 
         self::assertStringContainsString('data-group="links"', $content);
+        self::assertStringContainsString('<input type="hidden" name="FieldRecord[links]" value="">', $content);
         self::assertStringContainsString('data-group-max="2"', $content);
         self::assertStringContainsString('data-group-sortable', $content);
 
@@ -233,6 +234,7 @@ class CustomAttributeFieldsTest extends TestCase
             ->render();
 
         self::assertStringContainsString('name="FieldRecord[meta][title]"', $content);
+        self::assertStringNotContainsString('name="FieldRecord[meta]"', $content);
 
         self::assertStringNotContainsString('data-group-template', $content);
         self::assertStringNotContainsString('data-group-add', $content);
