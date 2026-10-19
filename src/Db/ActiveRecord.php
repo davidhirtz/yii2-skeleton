@@ -112,19 +112,29 @@ class ActiveRecord extends \yii\db\ActiveRecord
         }
     }
 
-    /**
-     * Keeps a key no current definition claims, so switching a type back does not lose its values, and overwrites in
-     * place because MySQL reorders the keys of a rebuilt object and every save would then read as changed.
-     */
     protected function serializeCustomAttributes(): void
     {
         if (!$this instanceof CustomAttributeInterface || !$this->hasCustomAttributesColumn) {
             return;
         }
 
-        $column = $this->getCustomAttributesColumn();
-        $values = $this->getAttribute($column);
+        $this->setAttribute($this->getCustomAttributesColumn(), $this->getSerializedCustomAttributesColumn());
+    }
+
+    /**
+     * Keeps a key no current definition claims, so switching a type back does not lose its values, and overwrites in
+     * place because MySQL reorders the keys of a rebuilt object and every save would then read as changed.
+     *
+     * @return array<string, mixed>|null the column's value holding the current custom attribute values
+     */
+    public function getSerializedCustomAttributesColumn(): ?array
+    {
+        $values = $this->getAttribute($this->getCustomAttributesColumn());
         $values = is_array($values) ? $values : [];
+
+        if (!$this instanceof CustomAttributeInterface) {
+            return $values ?: null;
+        }
 
         foreach ($this->getCustomAttributeDefinitions() as $definition) {
             foreach ($definition->getAttributeNames($this) as $name) {
@@ -139,7 +149,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
             }
         }
 
-        $this->setAttribute($column, $values ?: null);
+        return $values ?: null;
     }
 
     /**
