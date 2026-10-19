@@ -8,7 +8,8 @@ Built per bundle with esbuild (TypeScript + Sass), `cd bundles/yii2-skeleton && 
 `resources/assets/dist/` is **committed** (leave the churning CSS source maps out when only scripts changed).
 `esbuild.config.js` in the skeleton is shared; a bundle's `esbuild.js` passes entry points and resolves
 everything from the skeleton's `node_modules` (`npm install` there once; a bundle needs its own only for what it
-imports). JS tests are Vitest in the skeleton's `resources/assets/tests/`, mirroring `src/`, (happy-dom), `npm test` there; no CI runs them. The build runs `tsc --noEmit` first and exits before writing; restart `npm run dev` after touching the
+imports). A bundle never reaches into another's sources by a relative path (a Composer install has none):
+Sass `@use "shared/…"` resolves through the load paths, a skeleton type is declared locally. JS tests are Vitest in the skeleton's `resources/assets/tests/`, mirroring `src/`, (happy-dom), `npm test` there; no CI runs them. The build runs `tsc --noEmit` first and exits before writing; restart `npm run dev` after touching the
 config. Styles are always `.scss`. Anything npm-level is maintained in the skeleton (`npx update-browserslist-db`,
 `npm update && npm run build` for a Dependabot alert — a lockfile bump alone ships the vulnerable TinyMCE on;
 TinyMCE is the one npm dependency a browser sees). esbuild's `0.x` minor is not an API break. Sass deprecations
