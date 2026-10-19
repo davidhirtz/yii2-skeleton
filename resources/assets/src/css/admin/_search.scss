@@ -125,14 +125,16 @@
   min-width: 0;
 }
 
-.search-result-title {
+.search-result-title,
+.model-heading-title {
   font-weight: 700;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.search-result-heading {
+.search-result-heading,
+.model-heading {
   align-items: center;
   display: flex;
   gap: .5rem;
@@ -140,7 +142,8 @@
 }
 
 // The page header's bar and dots, the bar a little shorter to suit the smaller type.
-.search-result-subtitle {
+.search-result-subtitle,
+.model-heading-subtitle {
   align-items: center;
   display: flex;
   flex-shrink: 0;
@@ -156,7 +159,8 @@
     width: .25rem;
   }
 
-  .search-result-title + &::before {
+  .search-result-title + &::before,
+  .model-heading-title + &::before {
     width: .75rem;
   }
 }

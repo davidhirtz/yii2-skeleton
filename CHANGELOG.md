@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `Widgets\AdminModelHeading`, a record named by the record owning its page and its position, as the search names it
 - Added `ActiveRecord::getSerializedCustomAttributesColumn()`
 - Added `RecordCustomAttribute` and the record methods of `CustomAttributesTrait`, a custom attribute naming another record
 - Added option groups to `SelectField` and a hidden mode to `AutocompleteField`, posting the picked value while showing its text
