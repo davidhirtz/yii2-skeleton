@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Added the admin styles `.thumbnail` and `.thumbnail-badges`
+- Added `FileHelper::removeEmptyDirectories()`
 
 ## 3.19.2 (October 18, 2026)
 

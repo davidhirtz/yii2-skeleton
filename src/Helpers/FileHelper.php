@@ -70,6 +70,23 @@ class FileHelper extends BaseFileHelper
         return true;
     }
 
+    /**
+     * Removes the directories deleting `$path` left empty, up to but not including `$root`.
+     */
+    public static function removeEmptyDirectories(string $path, string $root): void
+    {
+        $root = rtrim((string)Yii::getAlias($root), '/');
+        $directory = dirname((string)Yii::getAlias($path));
+
+        while (
+            str_starts_with($directory, "$root/")
+            && count(@scandir($directory) ?: ['.', '..', 'unreadable']) === 2
+            && @rmdir($directory)
+        ) {
+            $directory = dirname($directory);
+        }
+    }
+
     #[Override]
     public static function createDirectory($path, $mode = 0775, $recursive = true): bool
     {

@@ -32,6 +32,26 @@ class FileHelperTest extends TestCase
         self::assertFileDoesNotExist($folder);
     }
 
+    public function testRemovingEmptyDirectoriesStopsAtTheRootAndAtAnyContent(): void
+    {
+        $root = Yii::getAlias('@runtime/files');
+        FileHelper::createDirectory("$root/kept/a/b");
+        file_put_contents("$root/kept/other.txt", '');
+
+        FileHelper::removeEmptyDirectories("$root/kept/a/b/file.jpg", $root);
+
+        self::assertDirectoryDoesNotExist("$root/kept/a");
+        self::assertDirectoryExists("$root/kept");
+
+        unlink("$root/kept/other.txt");
+        FileHelper::removeEmptyDirectories("$root/kept/other.txt", "$root/");
+
+        self::assertDirectoryDoesNotExist("$root/kept");
+        self::assertDirectoryExists($root);
+
+        FileHelper::removeDirectory($root);
+    }
+
     public function testAFilenameIsTakenByAnyOfItsExtensions(): void
     {
         $folder = Yii::getAlias('@runtime/files');
