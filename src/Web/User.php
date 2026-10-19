@@ -238,17 +238,17 @@ class User extends \yii\web\User
      * The auto login cookie is a credential, so the logout has to remove it whatever scope it was written under. A
      * `Domain` the installation has since gained or lost — a tenant's, an edited `cookie_domain` — leaves a second
      * cookie of the same name behind that the scoped deletion never reaches, and the next request logs the account
-     * straight back in. {@see \yii\web\CookieCollection} is keyed by name, so the host-only deletion cannot go
-     * through it and is sent as a header of its own.
+     * straight back in. {@see \yii\web\CookieCollection} is keyed by name, so the twin deletions cannot go
+     * through it and are sent as headers of their own.
      */
     #[Override]
     protected function removeIdentityCookie(): void
     {
         $cookie = Yii::$container->get(Cookie::class, [], $this->identityCookie);
+        $host = (string)Application::current()->getRequest()->getHostName();
 
-        if ($cookie->domain !== '') {
-            Application::current()->getResponse()->getHeaders()
-                ->add('Set-Cookie', CookieHelper::getExpiredHeader($cookie));
+        foreach (CookieHelper::getExpiredTwinHeaders($cookie, $host) as $header) {
+            Application::current()->getResponse()->getHeaders()->add('Set-Cookie', $header);
         }
 
         parent::removeIdentityCookie();

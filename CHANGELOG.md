@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Changed `Web\Response::removeHostOnlyCookies()` to `removeCookieTwins()`, which with `Web\User` expires a twin under every parent domain of the host too (`CookieHelper::getExpiredTwinHeaders()`)
 - Added `esbuild.config.js` to the package, so a bundle builds its assets outside the monorepo
 - Added the admin styles `.thumbnail` and `.thumbnail-badges`
 - Added `FileHelper::removeEmptyDirectories()`

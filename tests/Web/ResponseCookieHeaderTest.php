@@ -37,29 +37,44 @@ class ResponseCookieHeaderTest extends TestCase
     }
 
     /**
-     * A host-only `_session` beside the domain-scoped one is what PHP hands the application, so every request
-     * starts a fresh session and nothing it carries survives the redirect that was meant to show it (#195).
+     * A stale `_session` beside the domain-scoped one is what PHP hands the application, so every request starts a
+     * fresh session and nothing it carries survives the redirect that was meant to show it (#195).
      */
-    public function testTheHostOnlyTwinOfTheSessionCookieIsRemoved(): void
+    public function testTheTwinsOfTheSessionCookieAreRemoved(): void
     {
         $this->setCookieDomain();
         $_SERVER['HTTP_COOKIE'] = '_session=stale; _session=live';
 
-        self::assertSame(
-            ['_session=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax'],
-            $this->send(),
-        );
+        self::assertSame([
+            '_session=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax',
+            '_session=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax; Domain=www.test.localhost',
+        ], $this->send());
     }
 
-    public function testTheHostOnlyTwinOfTheCsrfCookieIsRemoved(): void
+    /**
+     * A tenant scopes the cookies to its host, so a parent domain configured later leaves a twin that a deletion
+     * without `Domain` never reaches: the upload chunks of monorepo issue #555 each landed in a new session.
+     */
+    public function testTheTwinOfATenantScopedSessionCookieIsRemoved(): void
+    {
+        $this->setCookieDomain('www.test.localhost');
+        $_SERVER['HTTP_COOKIE'] = '_session=stale; _session=live';
+
+        self::assertSame([
+            '_session=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax',
+            '_session=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax; Domain=test.localhost',
+        ], $this->send());
+    }
+
+    public function testTheTwinsOfTheCsrfCookieAreRemoved(): void
     {
         $this->setCookieDomain();
         $_SERVER['HTTP_COOKIE'] = '_csrf=stale; _csrf=live';
 
-        self::assertSame(
-            ['_csrf=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax'],
-            $this->send(),
-        );
+        self::assertSame([
+            '_csrf=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax',
+            '_csrf=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax; Domain=www.test.localhost',
+        ], $this->send());
     }
 
     public function testACookieSentOnceIsLeftAlone(): void
@@ -71,14 +86,17 @@ class ResponseCookieHeaderTest extends TestCase
     }
 
     /**
-     * Without a `Domain` there is no twin to tell apart, and the deletion would take the live cookie with it.
+     * Without a `Domain` the live cookie is the host-only one, which only a deletion without `Domain` would reach.
      */
-    public function testNothingIsRemovedWithoutACookieDomain(): void
+    public function testTheHostOnlyCookieIsKeptWithoutACookieDomain(): void
     {
         Yii::$container->set(Cookie::class, ['sameSite' => Cookie::SAME_SITE_LAX]);
         $_SERVER['HTTP_COOKIE'] = '_session=stale; _session=live';
 
-        self::assertSame([], $this->send());
+        self::assertSame([
+            '_session=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax; Domain=www.test.localhost',
+            '_session=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax; Domain=test.localhost',
+        ], $this->send());
     }
 
     /**
@@ -109,10 +127,10 @@ class ResponseCookieHeaderTest extends TestCase
         self::assertNotNull($response->getCookies()->get('_auth'));
     }
 
-    private function setCookieDomain(): void
+    private function setCookieDomain(string $domain = '.test.localhost'): void
     {
         Yii::$container->set(Cookie::class, [
-            'domain' => '.domain.localhost',
+            'domain' => $domain,
             'sameSite' => Cookie::SAME_SITE_LAX,
             'secure' => true,
         ]);

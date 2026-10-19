@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
+use Override;
 use Yii;
 use yii\base\InvalidRouteException;
 use yii\helpers\Json;
 use yii\web\Cookie;
 use Hirtz\Skeleton\Helpers\CookieHelper;
 use Hirtz\Skeleton\Helpers\Url;
-
-;
 
 class Response extends \yii\web\Response
 {
@@ -30,7 +29,7 @@ class Response extends \yii\web\Response
      * a single `setHtmxReload()` turned every later response of the same test into an empty 200 carrying
      * `HX-Refresh`, so a login answered after one read as a login that had silently failed.
      */
-    #[\Override]
+    #[Override]
     public function clear(): void
     {
         $this->htmxRedirectTarget = self::HTMX_REDIRECT_TARGET;
@@ -39,7 +38,7 @@ class Response extends \yii\web\Response
         parent::clear();
     }
 
-    #[\Override]
+    #[Override]
     protected function prepare(): void
     {
         if (Application::current()->getRequest()->getIsDraft()) {
@@ -50,24 +49,24 @@ class Response extends \yii\web\Response
             $this->prepareHtmxReload();
         }
 
-        $this->removeHostOnlyCookies();
+        $this->removeCookieTwins();
 
         parent::prepare();
     }
 
     /**
      * A cookie's identity is its name *and* its scope, and PHP keeps the **first** of two the browser sends, which
-     * is the stale one. So a host-only `_session` left over from an earlier scope of the installation silently
+     * is the stale one. So a `_session` left over from an earlier scope of the installation silently
      * discards every session written under the configured `Domain`: each request reads the dead id, starts a fresh
      * session and writes a domain-scoped cookie nothing ever reads back — the admin language, the flashes and the
      * CSRF token a form was rendered with all die between requests, with nothing on the server to say why. Nothing
      * else clears the twin, since the application only ever writes the scoped cookie (monorepo issue #195).
      *
-     * This is {@see \Hirtz\Skeleton\Web\User::removeIdentityCookie()} for the two cookies that have no logout to
+     * This is {@see User::removeIdentityCookie} for the two cookies that have no logout to
      * hang the deletion on, and it is sent only for a name the request actually carried twice, so a healed browser
      * stops paying for it.
      */
-    protected function removeHostOnlyCookies(): void
+    protected function removeCookieTwins(): void
     {
         $request = Application::current()->getRequest();
         $duplicates = $request->getDuplicateCookieNames();
@@ -80,9 +79,12 @@ class Response extends \yii\web\Response
         $cookies = [];
 
         if (in_array($session->getName(), $duplicates, true)) {
+            $params = $session->getCookieParams();
+
             $cookies[] = Yii::$container->get(Cookie::class, [], [
                 'name' => $session->getName(),
-                'secure' => (bool)($session->getCookieParams()['secure'] ?? false),
+                'domain' => (string)($params['domain'] ?? ''),
+                'secure' => (bool)($params['secure'] ?? false),
             ]);
         }
 
@@ -93,9 +95,11 @@ class Response extends \yii\web\Response
             ]);
         }
 
+        $host = (string)$request->getHostName();
+
         foreach ($cookies as $cookie) {
-            if ($cookie->domain !== '') {
-                $this->getHeaders()->add('Set-Cookie', CookieHelper::getExpiredHeader($cookie));
+            foreach (CookieHelper::getExpiredTwinHeaders($cookie, $host) as $header) {
+                $this->getHeaders()->add('Set-Cookie', $header);
             }
         }
     }
@@ -107,7 +111,7 @@ class Response extends \yii\web\Response
      * it came with, found no session behind it on the next request, and every flash died with it. A cookie the
      * application adds as a header is therefore appended after the rest, never sent through the collection.
      */
-    #[\Override]
+    #[Override]
     protected function sendHeaders(): void
     {
         $cookies = $this->getHeaders()->remove('Set-Cookie');
@@ -148,7 +152,7 @@ class Response extends \yii\web\Response
     /**
      * @param array<int|string, mixed>|string $url
      */
-    #[\Override]
+    #[Override]
     public function redirect($url, $statusCode = 302, $checkAjax = true): static
     {
         if (is_array($url) && isset($url[0])) {
@@ -205,7 +209,7 @@ class Response extends \yii\web\Response
     }
 
     /**
-     * Answers an htmx request with a fresh document instead of swapping into the current one: `HX-Redirect` for a
+     * Answers a htmx request with a fresh document instead of swapping into the current one: `HX-Redirect` for a
      * redirect issued after this, `HX-Refresh` for a response that stays where it is. The page was rendered for a
      * session that is over — the navbar and the flashes outside `#wrap` that no swap reaches among it, down to the
      * CSRF token it carries — so nothing of it can be kept.

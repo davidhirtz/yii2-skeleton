@@ -85,10 +85,10 @@ class UserIdentityCookieTest extends TestCase
      * A `Domain` the installation has gained or lost leaves a second cookie of the same name behind, which the
      * scoped deletion never reaches — and it logs the account straight back in on the next request.
      */
-    public function testTheHostOnlyCookieIsRemovedBesideTheScopedOne(): void
+    public function testTheTwinsAreRemovedBesideTheScopedOne(): void
     {
         Yii::$container->set(Cookie::class, [
-            'domain' => '.domain.localhost',
+            'domain' => '.test.localhost',
             'sameSite' => Cookie::SAME_SITE_LAX,
         ]);
 
@@ -98,15 +98,18 @@ class UserIdentityCookieTest extends TestCase
         $this->login($user);
 
         $this->assertIdentityCookieRemoved();
-        self::assertSame('.domain.localhost', $this->getResponseIdentityCookie()?->domain);
+        self::assertSame('.test.localhost', $this->getResponseIdentityCookie()?->domain);
 
-        self::assertSame(
-            ['_auth=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax'],
-            $this->getWebResponse()->getHeaders()->get('Set-Cookie', null, false),
-        );
+        self::assertSame([
+            '_auth=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax',
+            '_auth=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax; Domain=www.test.localhost',
+        ], $this->getWebResponse()->getHeaders()->get('Set-Cookie', null, false));
     }
 
-    public function testTheHostOnlyCookieNeedsNoSecondHeaderWithoutADomain(): void
+    /**
+     * The host-only cookie goes through the collection; a header without `Domain` would only repeat it.
+     */
+    public function testOnlyTheDomainTwinsNeedAHeaderWithoutADomain(): void
     {
         $user = $this->getUserFromFixture('owner');
 
@@ -114,7 +117,11 @@ class UserIdentityCookieTest extends TestCase
         $this->login($user);
 
         $this->assertIdentityCookieRemoved();
-        self::assertNull($this->getWebResponse()->getHeaders()->get('Set-Cookie'));
+
+        self::assertSame([
+            '_auth=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax; Domain=www.test.localhost',
+            '_auth=; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Lax; Domain=test.localhost',
+        ], $this->getWebResponse()->getHeaders()->get('Set-Cookie', null, false));
     }
 
     public function testNoCookieSendsNothing(): void
