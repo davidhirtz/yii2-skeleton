@@ -140,17 +140,24 @@ class GroupField extends Field
             ->attribute('data-group', $this->property)
             // Without it, removing the last row posts nothing for the group and the stored rows survive the save.
             // It goes first, as a row's input names overwrite it in PHP's parse.
-            ->content($this->group->isMultiple() ? Input::make()->attributes([
-                'type' => 'hidden',
-                'name' => (string)($this->attributes['name'] ?? ''),
-                'value' => '',
-            ]) : null, Div::make()
-                ->addClass('custom-attribute-group-items')
-                ->attribute('data-group-items', true)
-                ->attribute('data-sort-announcement', $this->group->isSortable()
-                    ? Yii::t('skeleton', 'GRID_SORT_ANNOUNCEMENT', ['position' => '{position}', 'count' => '{count}'])
-                    : null)
-                ->content(...$this->getItemElements($items)));
+            ->content(
+                $this->group->isMultiple()
+                    ? Input::make()->attributes([
+                    'type' => 'hidden',
+                    'name' => (string)($this->attributes['name'] ?? ''),
+                    'value' => '',
+                ])
+                    : null,
+                Div::make()
+                    ->addClass('custom-attribute-group-items')
+                    ->attribute('data-group-items', true)
+                    ->attribute(
+                        'data-sort-announcement', $this->group->isSortable()
+                        ? Yii::t('skeleton', 'GRID_SORT_ANNOUNCEMENT', ['position' => '{position}', 'count' => '{count}'])
+                        : null
+                    )
+                    ->content(...$this->getItemElements($items))
+            );
 
         if (!$this->group->isMultiple()) {
             return $container;
@@ -390,8 +397,8 @@ class GroupField extends Field
             // One row has nowhere to move to; the script hides it again as rows come and go.
             $this->group->isSortable()
                 ? DraggableSortButton::make()
-                    ->class('btn')
-                    ->attribute('hidden', $sortable ? null : true)
+                ->class('btn')
+                ->attribute('hidden', $sortable ? null : true)
                 : null,
             $this->getRemoveButton(),
         ]));
