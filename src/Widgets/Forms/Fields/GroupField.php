@@ -152,7 +152,8 @@ class GroupField extends Field
                     ->addClass('custom-attribute-group-items')
                     ->attribute('data-group-items', true)
                     ->attribute(
-                        'data-sort-announcement', $this->group->isSortable()
+                        'data-sort-announcement',
+                        $this->group->isSortable()
                         ? Yii::t('skeleton', 'GRID_SORT_ANNOUNCEMENT', ['position' => '{position}', 'count' => '{count}'])
                         : null
                     )
