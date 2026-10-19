@@ -36,6 +36,11 @@ const logger = (type) => {
     };
 };
 
+// A bundle checked out on its own has the skeleton under `vendor/`, without `node_modules`, and installs the tools itself.
+const getTsc = () => [skeletonDir, process.cwd()]
+    .map((dir) => join(dir, 'node_modules/.bin/tsc'))
+    .find((path) => existsSync(path)) ?? 'tsc';
+
 // esbuild strips types without checking them, so a type error would otherwise reach the committed dist/ unnoticed.
 // Answers the compiler's report, or null when the bundle has no tsconfig.json or type-checks cleanly.
 const checkTypes = async () => {
@@ -44,7 +49,7 @@ const checkTypes = async () => {
     }
 
     try {
-        await promisify(execFile)(join(skeletonDir, 'node_modules/.bin/tsc'), ['--noEmit', '--pretty', 'false']);
+        await promisify(execFile)(getTsc(), ['--noEmit', '--pretty', 'false']);
         return null;
     } catch (error) {
         return error.stdout || error.message;

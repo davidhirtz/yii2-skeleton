@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `esbuild.config.js` to the package, so a bundle builds its assets outside the monorepo
 - Added the admin styles `.thumbnail` and `.thumbnail-badges`
 - Added `FileHelper::removeEmptyDirectories()`
 - Added the `file-upload:prepare` event, which lets a script add fields to the request completing an upload

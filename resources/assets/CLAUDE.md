@@ -6,10 +6,12 @@ The skeleton's TypeScript and Sass. Read with the root `CLAUDE.md`, whose htmx s
 
 Built per bundle with esbuild (TypeScript + Sass), `cd bundles/yii2-skeleton && npm run dev` / `build`; output in
 `resources/assets/dist/` is **committed** (leave the churning CSS source maps out when only scripts changed).
-`esbuild.config.js` in the skeleton is shared; a bundle's `esbuild.js` passes entry points and resolves
-everything from the skeleton's `node_modules` (`npm install` there once; a bundle needs its own only for what it
-imports). A bundle never reaches into another's sources by a relative path (a Composer install has none):
-Sass `@use "shared/…"` resolves through the load paths, a skeleton type is declared locally. JS tests are Vitest in the skeleton's `resources/assets/tests/`, mirroring `src/`, (happy-dom), `npm test` there; no CI runs them. The build runs `tsc --noEmit` first and exits before writing; restart `npm run dev` after touching the
+`esbuild.config.js` in the skeleton is shared and ships with it (its `src/` does not); a bundle's `esbuild.js` loads
+`../yii2-skeleton/` or else `vendor/davidhirtz/yii2-skeleton/` and passes entry points. In the monorepo the tools
+resolve from the skeleton's `node_modules` (`npm install` there once); a bundle's `devDependencies` repeat them
+(`esbuild`, `esbuild-sass-plugin`, `postcss`, `autoprefixer`, `typescript` with a `tsconfig.json`) for a checkout on
+its own — bump them with the skeleton's. A bundle never reaches into another's sources (a Composer install has
+none): no skeleton Sass, a skeleton type declared locally. JS tests are Vitest in the skeleton's `resources/assets/tests/`, mirroring `src/`, (happy-dom), `npm test` there; no CI runs them. The build runs `tsc --noEmit` first and exits before writing; restart `npm run dev` after touching the
 config. Styles are always `.scss`. Anything npm-level is maintained in the skeleton (`npx update-browserslist-db`,
 `npm update && npm run build` for a Dependabot alert — a lockfile bump alone ships the vulnerable TinyMCE on;
 TinyMCE is the one npm dependency a browser sees). esbuild's `0.x` minor is not an API break. Sass deprecations
