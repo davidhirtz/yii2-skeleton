@@ -12,6 +12,12 @@ const isOnScreen = ($el: Element): boolean => {
     return bottom > 0 && top < window.innerHeight;
 };
 
+export type FileUploadPrepareDetail = {
+    file: File,
+    input: HTMLInputElement,
+    fields: Promise<[string, Blob] | null>[],
+};
+
 // HTTP/2 has no reason phrase, so the server sends its message in a header as well.
 const getErrorMessage = (response: Response): string => {
     const message = response.headers.get('X-Upload-Error');
@@ -76,6 +82,11 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
             const file = files[fileIndex];
             const totalChunks = Math.ceil(file.size / chunkSize);
 
+            // A bundle's script adds fields to the request completing the file (`yii2-media-video` a frame of the
+            // video), prepared while the chunks before it upload.
+            const detail: FileUploadPrepareDetail = {file, input: $input, fields: []};
+            this.dispatchEvent(new CustomEvent('file-upload:prepare', {bubbles: true, detail}));
+
             for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
                 const body = new FormData();
                 const headers: HeadersInit = new Headers();
@@ -88,6 +99,14 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                     headers.set('Content-Range', `bytes ${start}-${end - 1}/${file.size}`);
                 } else {
                     body.append($input.name, file);
+                }
+
+                if (chunkIndex === totalChunks - 1) {
+                    for (const field of await Promise.all(detail.fields)) {
+                        if (field) {
+                            body.append(field[0], field[1]);
+                        }
+                    }
                 }
 
                 if (fileIndex < files.length - 1) {

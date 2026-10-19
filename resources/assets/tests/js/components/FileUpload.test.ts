@@ -70,4 +70,31 @@ describe('file-upload', () => {
         expect(values).toEqual(['']);
         expect(document.body.inert).toBe(false);
     });
+
+    it('appends what a listener prepares to the request completing the file', async () => {
+        const bodies: FormData[] = [];
+
+        vi.stubGlobal('fetch', vi.fn(async (_url: string, init: RequestInit) => {
+            bodies.push(init.body as FormData);
+            return new Response('', {status: 204});
+        }));
+
+        const listener = (event: Event) => {
+            const detail = (event as CustomEvent).detail;
+            detail.fields.push(Promise.resolve(['preview', new Blob(['frame'], {type: 'image/webp'})]));
+            detail.fields.push(Promise.resolve(null));
+        };
+
+        document.addEventListener('file-upload:prepare', listener);
+
+        try {
+            await upload();
+        } finally {
+            document.removeEventListener('file-upload:prepare', listener);
+        }
+
+        expect(bodies).toHaveLength(1);
+        expect(bodies[0].get('upload')).toBeInstanceOf(File);
+        expect(bodies[0].get('preview')).toBeInstanceOf(Blob);
+    });
 });

@@ -17,7 +17,7 @@ class Formatter extends \yii\i18n\Formatter
      * @param array<int, mixed> $textOptions
      */
     #[Override]
-    public function asShortSize($value, $decimals = null, $options = [], $textOptions = [])
+    public function asShortSize($value, $decimals = null, $options = [], $textOptions = []): ?string
     {
         if ($decimals === null && is_numeric($value)) {
             $decimals = abs((float)$value) < $this->sizeFormatBase ** 2 ? 0 : 1;

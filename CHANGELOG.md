@@ -2,6 +2,7 @@
 
 - Added the admin styles `.thumbnail` and `.thumbnail-badges`
 - Added `FileHelper::removeEmptyDirectories()`
+- Added the `file-upload:prepare` event, which lets a script add fields to the request completing an upload
 - Added `I18n\Formatter` as the `formatter` component: short sizes in kB, MB, … and whole below a megabyte
 
 ## 3.19.2 (October 18, 2026)
