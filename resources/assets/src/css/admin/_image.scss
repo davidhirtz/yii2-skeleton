@@ -17,6 +17,19 @@
   width: 8rem;
 }
 
+.thumbnail {
+  position: relative;
+  width: fit-content;
+}
+
+.thumbnail-badges {
+  display: flex;
+  gap: .25rem;
+  left: .3125rem;
+  position: absolute;
+  top: .3125rem;
+}
+
 .img-thumbnails {
   display: flex;
   flex-wrap: wrap;

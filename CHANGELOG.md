@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added the admin styles `.thumbnail` and `.thumbnail-badges`
+
 ## 3.19.2 (October 18, 2026)
 
 - Changed `Web\StreamUploadedFile` to fetch through Guzzle and cURL, pinned to the checked address (no `allow_url_fopen` needed); removed its stream context and header helpers
