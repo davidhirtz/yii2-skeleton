@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Controllers\ConsentController;
 use Hirtz\Skeleton\Controllers\HealthController;
 use Hirtz\Skeleton\Controllers\SitemapController;
 use Hirtz\Skeleton\Db\Connection;
+use Hirtz\Skeleton\I18n\Formatter;
 use Hirtz\Skeleton\I18n\I18N;
 use Hirtz\Skeleton\Log\FileTarget;
 use Hirtz\Skeleton\Log\SentryTarget;
@@ -131,6 +132,9 @@ trait ApplicationTrait
                 // Shared by every server of an installation, as the cache counters it guards may be
                 'mutex' => [
                     'class' => MysqlMutex::class,
+                ],
+                'formatter' => [
+                    'class' => Formatter::class,
                 ],
                 'i18n' => [
                     'class' => I18N::class,

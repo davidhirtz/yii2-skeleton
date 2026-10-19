@@ -41,7 +41,7 @@ class MaintenanceInfo extends InfoList
             $this->getValue(
                 Yii::t('skeleton', 'SYSTEM_ASSETS_PUBLISHED', [
                     'count' => $assets['count'],
-                    'size' => Yii::$app->getFormatter()->asShortSize($assets['size'], 1),
+                    'size' => Yii::$app->getFormatter()->asShortSize($assets['size']),
                 ]),
                 $assets['modified'] ? RelativeTime::make()->value($assets['modified']) : null,
             ),
