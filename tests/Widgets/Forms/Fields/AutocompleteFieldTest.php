@@ -60,4 +60,34 @@ class AutocompleteFieldTest extends TestCase
     {
         self::assertStringNotContainsString('combobox', AutocompleteField::make()->render());
     }
+
+    /**
+     * Derived from the input id, so a group's row template rewrites it with the name rather than repeat it per row.
+     */
+    public function testTheResultsIdIsDerivedFromTheInputId(): void
+    {
+        $html = AutocompleteField::make()
+            ->url('/autocomplete')
+            ->attribute('id', 'section-gallery-__ID__-image')
+            ->render();
+
+        self::assertStringContainsString('hx-target="#section-gallery-__ID__-image-results"', $html);
+        self::assertStringContainsString('<div id="section-gallery-__ID__-image-results"', $html);
+    }
+
+    public function testTheHiddenModePostsTheValueAndShowsTheText(): void
+    {
+        $html = AutocompleteField::make()
+            ->url('/autocomplete?scope=abc')
+            ->hidden()
+            ->text('Москва & 東京.jpg')
+            ->attribute('name', 'Section[hero]')
+            ->attribute('id', 'section-hero')
+            ->value('12')
+            ->render();
+
+        self::assertStringContainsString('<input type="hidden" name="Section[hero]" value="12" data-autocomplete-value-input>', $html);
+        self::assertMatchesRegularExpression('/<input type="text" id="section-hero"[^>]*value="Москва &amp; 東京.jpg"[^>]*data-autocomplete-search/u', $html);
+        self::assertSame(1, substr_count($html, 'name="Section[hero]"'));
+    }
 }

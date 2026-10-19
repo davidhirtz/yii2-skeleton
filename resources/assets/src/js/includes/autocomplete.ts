@@ -2,14 +2,18 @@ import combobox from "./combobox";
 import {openUnder} from "./popover";
 
 // The options are rendered by the endpoint and swapped in by htmx, so this only opens the popover, moves the active
-// option through it and writes the picked value back into the input.
+// option through it and writes the picked value back into the input. With a hidden value input beside it, the value
+// goes there and the option's text into the search input.
 export default ($container: HTMLElement) => {
-    const $input = $container.querySelector('input') as HTMLInputElement | null;
+    const $input = $container.querySelector('[data-autocomplete-search]') as HTMLInputElement | null;
+    const $value = $container.querySelector('[data-autocomplete-value-input]') as HTMLInputElement | null;
     const $results = $container.querySelector('[data-autocomplete-results]') as HTMLElement | null;
 
     if (!$input || !$results) {
         return;
     }
+
+    let picked = $input.value;
 
     let teardown: (() => void) | null = null;
 
@@ -42,8 +46,14 @@ export default ($container: HTMLElement) => {
     };
 
     const select = ($option: HTMLElement) => {
-        $input.value = $option.dataset.autocompleteValue!;
-        $input.dispatchEvent(new Event('change', {bubbles: true}));
+        if ($value) {
+            $value.value = $option.dataset.autocompleteValue!;
+            $input.value = picked = $option.dataset.autocompleteText ?? $option.textContent?.trim() ?? '';
+            $value.dispatchEvent(new Event('change', {bubbles: true}));
+        } else {
+            $input.value = $option.dataset.autocompleteValue!;
+            $input.dispatchEvent(new Event('change', {bubbles: true}));
+        }
 
         $results.innerHTML = '';
         close();
@@ -57,6 +67,14 @@ export default ($container: HTMLElement) => {
 
         [...body.keys()].forEach((key: string) => body.delete(key));
         body.set('q', $input.value);
+    });
+
+    // A typed name must never be posted beside the id picked before it.
+    $input.addEventListener('input', () => {
+        if ($value && $value.value !== '' && $input.value !== picked) {
+            $value.value = '';
+            $value.dispatchEvent(new Event('change', {bubbles: true}));
+        }
     });
 
     $results.addEventListener('click', (event: Event) => {

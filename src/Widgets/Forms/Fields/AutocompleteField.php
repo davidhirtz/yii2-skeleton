@@ -7,13 +7,15 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Widgets\Forms\AutocompleteList;
 use Override;
 use Stringable;
 
 /**
  * An input whose suggestions an endpoint renders as an {@see AutocompleteList} and htmx swaps into a popover below
- * it. Picking one writes its value into the input, so the endpoint decides what the field holds.
+ * it. Picking one writes its value into the input, so the endpoint decides what the field holds. In hidden mode the
+ * value goes into a hidden input posting the attribute and the option's text into the visible one, which has no name.
  */
 class AutocompleteField extends InputField
 {
@@ -29,9 +31,12 @@ class AutocompleteField extends InputField
     protected array|string|null $url = null;
 
     /**
-     * Not the input's id: it is read before {@see Field::configure()} assigns that one from the attribute name.
+     * Derived from the input's id, so a group's row template rewrites it with the name.
      */
     protected ?string $resultsId = null;
+
+    protected bool $hidden = false;
+    protected ?string $text = null;
 
     /**
      * @param array<int|string, mixed>|string|null $url
@@ -42,10 +47,31 @@ class AutocompleteField extends InputField
         return $this;
     }
 
+    public function hidden(bool $hidden = true): static
+    {
+        $this->hidden = $hidden;
+        return $this;
+    }
+
+    /**
+     * The text the visible input shows for the value in hidden mode.
+     */
+    public function text(?string $text): static
+    {
+        $this->text = $text;
+        return $this;
+    }
+
     #[Override]
     protected function configure(): void
     {
         $this->attributes['autocomplete'] ??= 'off';
+
+        // Assigned before the parent does, since the results id is derived from it.
+        if ($this->model && $this->property) {
+            $this->attributes['name'] ??= Html::getInputName($this->model, $this->property);
+            $this->attributes['id'] ??= Html::getInputIdByName($this->attributes['name']);
+        }
 
         if ($this->url) {
             $this->addAutocompleteAttributes();
@@ -61,10 +87,28 @@ class AutocompleteField extends InputField
             return parent::getInput();
         }
 
+        if (!$this->hidden) {
+            return Div::make()
+                ->class('autocomplete')
+                ->attribute('data-autocomplete', '')
+                ->content(parent::getInput(), $this->getResults());
+        }
+
+        $value = Input::make()
+            ->type('hidden')
+            ->attribute('name', $this->attributes['name'] ?? null)
+            ->attribute('value', $this->attributes['value'] ?? null)
+            ->attribute('disabled', $this->attributes['disabled'] ?? null)
+            ->attribute('data-autocomplete-value-input', true);
+
+        $search = Input::make()
+            ->attributes([...$this->attributes, 'name' => null, 'value' => $this->text])
+            ->addClass('input');
+
         return Div::make()
             ->class('autocomplete')
             ->attribute('data-autocomplete', '')
-            ->content(parent::getInput(), $this->getResults());
+            ->content($value, $search, $this->getResults());
     }
 
     protected function getResults(): Stringable
@@ -80,7 +124,12 @@ class AutocompleteField extends InputField
 
     protected function getResultsId(): string
     {
-        return $this->resultsId ??= Html::getId();
+        if ($this->resultsId === null) {
+            $id = $this->attributes['id'] ?? null;
+            $this->resultsId = is_string($id) && $id !== '' ? "$id-results" : Html::getId();
+        }
+
+        return $this->resultsId;
     }
 
     /**
@@ -104,6 +153,7 @@ class AutocompleteField extends InputField
             'aria-autocomplete' => 'list',
             'aria-controls' => $this->getResultsId(),
             'aria-expanded' => 'false',
+            'data-autocomplete-search' => true,
         ];
     }
 }

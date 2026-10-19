@@ -61,6 +61,8 @@ class DuplicateActiveRecord
 
     protected function duplicateInternal(): bool
     {
+        $this->setCustomAttributeBaselines();
+
         if ($this->beforeDuplicate() && $this->duplicate->insert()) {
             $this->afterDuplicate();
             return true;
@@ -86,6 +88,24 @@ class DuplicateActiveRecord
         $event->duplicate = $this->duplicate;
 
         $this->model->trigger(static::EVENT_AFTER_DUPLICATE, $event);
+    }
+
+    /**
+     * A changed-value rule exempts what the source holds, so a value that left its scope since still duplicates.
+     */
+    protected function setCustomAttributeBaselines(): void
+    {
+        if (!$this->duplicate instanceof CustomAttributeInterface || !$this->model instanceof CustomAttributeInterface) {
+            return;
+        }
+
+        $baselines = [];
+
+        foreach ($this->model->getCustomAttributeNames() as $name) {
+            $baselines[$name] = $this->model->getOldAttribute($name);
+        }
+
+        $this->duplicate->setCustomAttributeBaselines($baselines);
     }
 
     /**

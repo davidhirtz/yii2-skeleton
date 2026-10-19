@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
 use Hirtz\Skeleton\Html\Input;
+use Hirtz\Skeleton\Html\Optgroup;
 use Hirtz\Skeleton\Html\Option;
 use Hirtz\Skeleton\Html\Select;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
@@ -18,7 +19,8 @@ class SelectField extends Field
     use TagInputTrait;
 
     /**
-     * @var array<int|string, string|int|array<string, mixed>>
+     * @var array<int|string, string|int|array<string, mixed>> an item with an `items` key is an option group,
+     * labelled by its `label`
      */
     protected array $items = [];
 
@@ -155,7 +157,18 @@ class SelectField extends Field
      */
     protected function isHiddenInput(): bool
     {
-        return !$this->multiple && count($this->items) <= 1 && $this->isRequired();
+        return !$this->multiple && $this->getOptionCount() <= 1 && $this->isRequired();
+    }
+
+    protected function getOptionCount(): int
+    {
+        $count = 0;
+
+        foreach ($this->items as $item) {
+            $count += is_array($item) && is_array($item['items'] ?? null) ? count($item['items']) : 1;
+        }
+
+        return $count;
     }
 
     #[Override]
@@ -181,23 +194,41 @@ class SelectField extends Field
         }
 
         foreach ($this->items as $value => $attributes) {
-            $value = (string)$value;
+            if (is_array($attributes) && is_array($attributes['items'] ?? null)) {
+                $group = Optgroup::make()
+                    ->attribute('label', (string)($attributes['label'] ?? $value));
 
-            if (is_array($attributes)) {
-                $label = $attributes['label'] ?? $value;
-                unset($attributes['label']);
-            } else {
-                $label = (string)$attributes;
-                $attributes = [];
+                foreach ($attributes['items'] as $itemValue => $itemAttributes) {
+                    $group->addOption($this->getOption((string)$itemValue, $itemAttributes, $selected));
+                }
+
+                $select->addOption($group);
+                continue;
             }
 
-            $select->addOption(Option::make()
-                ->attributes([...$attributes, ...$this->itemAttributes[$value] ?? []])
-                ->label($label)
-                ->selected(in_array($value, $selected, true))
-                ->value($value));
+            $select->addOption($this->getOption((string)$value, $attributes, $selected));
         }
 
         return $select;
+    }
+
+    /**
+     * @param array<string> $selected
+     */
+    protected function getOption(string $value, mixed $attributes, array $selected): Option
+    {
+        if (is_array($attributes)) {
+            $label = (string)($attributes['label'] ?? $value);
+            unset($attributes['label']);
+        } else {
+            $label = (string)$attributes;
+            $attributes = [];
+        }
+
+        return Option::make()
+            ->attributes([...$attributes, ...$this->itemAttributes[$value] ?? []])
+            ->label($label)
+            ->selected(in_array($value, $selected, true))
+            ->value($value);
     }
 }

@@ -82,4 +82,29 @@ class SelectFieldTest extends TestCase
         self::assertEquals($html, $select->render(true));
     }
 
+    public function testAnItemWithItemsIsAnOptionGroup(): void
+    {
+        $select = SelectField::make()
+            ->items([
+                'a' => ['label' => 'Héroes & Å', 'items' => [3 => 'Москва.jpg', 4 => ['label' => '東京.png', 'data-x' => 'y']]],
+                5 => 'Loose',
+            ])
+            ->value('4');
+
+        $html = $select->render();
+
+        self::assertStringContainsString('<optgroup label="Héroes &amp; Å"><option value="3">Москва.jpg</option><option value="4" selected data-x="y">東京.png</option></optgroup><option value="5">Loose</option>', $html);
+    }
+
+    /**
+     * A group holds options, so a required group of two is a choice and not a hidden input.
+     */
+    public function testAnOptionGroupCountsItsOptions(): void
+    {
+        $select = SelectField::make()
+            ->attribute('required', true)
+            ->items(['a' => ['label' => 'Heroes', 'items' => [3 => 'A', 4 => 'B']]]);
+
+        self::assertStringContainsString('<select', $select->render());
+    }
 }

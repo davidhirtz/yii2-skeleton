@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Added `RecordCustomAttribute` and the record methods of `CustomAttributesTrait`, a custom attribute naming another record
+- Added option groups to `SelectField` and a hidden mode to `AutocompleteField`, posting the picked value while showing its text
 - Added `admin/script-error/create`, to which the admin reports its browser errors (logged under the `js` category)
 - Changed `Web\Response::removeHostOnlyCookies()` to `removeCookieTwins()`, which with `Web\User` expires a twin under every parent domain of the host too (`CookieHelper::getExpiredTwinHeaders()`)
 - Added `esbuild.config.js` to the package, so a bundle builds its assets outside the monorepo

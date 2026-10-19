@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Interfaces;
 
+use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
+use Hirtz\Skeleton\Models\CustomAttributes\RecordCustomAttribute;
 use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 
 /**
@@ -79,4 +81,26 @@ interface CustomAttributeInterface
     public function applyCustomAttributeDefaults(): void;
 
     public function resetCustomAttributes(): void;
+
+    public function populateCustomAttributeRecord(string $name, ?ActiveRecord $record): void;
+
+    public function getCustomAttributeRecord(string $name): ?ActiveRecord;
+
+    /**
+     * @param class-string<RecordCustomAttribute> $class
+     * @return array<int, array<string, int>>
+     */
+    public function getCustomAttributeRecordIds(string $class): array;
+
+    /**
+     * @param class-string<RecordCustomAttribute> $class
+     */
+    public function clearCustomAttributeRecordId(string $class, int $id): bool;
+
+    public function getCustomAttributeBaseline(string $name): mixed;
+
+    /**
+     * @param array<string, mixed> $baselines
+     */
+    public function setCustomAttributeBaselines(array $baselines): void;
 }

@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
 use Hirtz\Skeleton\Models\CustomAttributes\GroupCustomAttribute;
+use Hirtz\Skeleton\Models\CustomAttributes\RecordCustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\UploadCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
@@ -49,6 +50,16 @@ trait CustomAttributesTrait
     private array $customAttributeItemSources = [];
 
     /**
+     * @var array<string, array{int, ActiveRecord|null}> the record per attribute name and the id it was resolved for
+     */
+    private array $customAttributeRecords = [];
+
+    /**
+     * @var array<string, mixed>
+     */
+    private array $customAttributeBaselines = [];
+
+    /**
      * @return list<CustomAttribute> the configured definitions, or those of the type options when none were set
      */
     public function getCustomAttributes(): array
@@ -87,6 +98,7 @@ trait CustomAttributesTrait
 
             $this->customAttributeItems = [];
             $this->customAttributeItemSources = [];
+            $this->customAttributeRecords = [];
             $this->resetValidators();
         }
 
@@ -280,8 +292,148 @@ trait CustomAttributesTrait
         $this->customAttributesKey = null;
         $this->customAttributeItems = [];
         $this->customAttributeItemSources = [];
+        $this->customAttributeRecords = [];
 
         $this->resetValidators();
+    }
+
+    /**
+     * @param string $name the attribute name, translated variant included
+     */
+    public function populateCustomAttributeRecord(string $name, ?ActiveRecord $record): void
+    {
+        $id = $this->getCustomAttributeRecordId($name);
+
+        if ($id !== null) {
+            $this->customAttributeRecords[$name] = [$id, $record];
+        }
+    }
+
+    /**
+     * Loaded lazily when not populated, and resolved again once the value was reassigned.
+     */
+    public function getCustomAttributeRecord(string $name): ?ActiveRecord
+    {
+        $id = $this->getCustomAttributeRecordId($name);
+
+        if ($id === null) {
+            return null;
+        }
+
+        [$resolvedId, $record] = $this->customAttributeRecords[$name] ?? [null, null];
+
+        if ($resolvedId !== $id) {
+            $definition = $this->getCustomAttribute($name);
+
+            $record = $definition instanceof RecordCustomAttribute
+                ? $definition->findRecords($this, [$id])[$id] ?? null
+                : null;
+
+            $this->customAttributeRecords[$name] = [$id, $record];
+        }
+
+        return $record;
+    }
+
+    /**
+     * @param class-string<RecordCustomAttribute> $class
+     * @return array<int, array<string, int>> how often each name holds an id, nested names joined by `.`
+     */
+    public function getCustomAttributeRecordIds(string $class): array
+    {
+        $ids = [];
+
+        foreach ($this->getCustomAttributeDefinitions() as $definition) {
+            foreach ($definition->getAttributeNames($this) as $name) {
+                if ($definition instanceof $class) {
+                    $id = $definition->normalize($this->{$name});
+
+                    if ($id !== null) {
+                        $ids[$id][$name] = ($ids[$id][$name] ?? 0) + 1;
+                    }
+                } elseif ($definition instanceof GroupCustomAttribute) {
+                    foreach ($this->getCustomAttributeItems($name) as $item) {
+                        foreach ($item->getCustomAttributeRecordIds($class) as $id => $counts) {
+                            foreach ($counts as $itemName => $count) {
+                                $ids[$id]["$name.$itemName"] = ($ids[$id]["$name.$itemName"] ?? 0) + $count;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach ($ids as &$counts) {
+            ksort($counts);
+        }
+
+        return $ids;
+    }
+
+    /**
+     * Clears every value holding the id, in a group the value alone and not its row.
+     *
+     * @param class-string<RecordCustomAttribute> $class
+     * @return bool whether a value changed
+     */
+    public function clearCustomAttributeRecordId(string $class, int $id): bool
+    {
+        $changed = false;
+
+        foreach ($this->getCustomAttributeDefinitions() as $definition) {
+            foreach ($definition->getAttributeNames($this) as $name) {
+                if ($definition instanceof $class) {
+                    if ($definition->normalize($this->{$name}) === $id) {
+                        $this->{$name} = null;
+                        $changed = true;
+                    }
+                } elseif ($definition instanceof GroupCustomAttribute) {
+                    $items = $this->getCustomAttributeItems($name);
+                    $cleared = false;
+
+                    foreach ($items as $item) {
+                        $cleared = $item->clearCustomAttributeRecordId($class, $id) || $cleared;
+                    }
+
+                    if ($cleared) {
+                        $values = array_values(array_map(
+                            static fn (CustomAttributeGroupItem $item): array => $item->getSerializedCustomAttributes(),
+                            $items,
+                        ));
+
+                        $value = $definition->isMultiple() ? $values : ($values[0] ?: null);
+
+                        $this->{$name} = $value;
+                        $this->customAttributeItemSources[$name] = $value;
+                        $changed = true;
+                    }
+                }
+            }
+        }
+
+        return $changed;
+    }
+
+    /**
+     * The value a changed-value rule compares against: the stored one, or what a duplicate was handed by its source.
+     */
+    public function getCustomAttributeBaseline(string $name): mixed
+    {
+        if (array_key_exists($name, $this->customAttributeBaselines)) {
+            return $this->customAttributeBaselines[$name];
+        }
+
+        return $this instanceof ActiveRecord && !$this->getIsNewRecord()
+            ? $this->getOldAttribute($name)
+            : null;
+    }
+
+    /**
+     * @param array<string, mixed> $baselines
+     */
+    public function setCustomAttributeBaselines(array $baselines): void
+    {
+        $this->customAttributeBaselines = $baselines;
     }
 
     /**
@@ -298,6 +450,15 @@ trait CustomAttributesTrait
 
         parent::setAttributes(array_diff_key($values, array_flip($this->getCustomAttributeNames())), $safeOnly);
         parent::setAttributes(array_intersect_key($values, array_flip($this->getCustomAttributeNames())), $safeOnly);
+    }
+
+    private function getCustomAttributeRecordId(string $name): ?int
+    {
+        $definition = $this->getCustomAttribute($name);
+
+        return $definition instanceof RecordCustomAttribute
+            ? $definition->normalize($this->{$name})
+            : null;
     }
 
     protected function getCustomAttributesKey(): mixed

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Forms;
 
 use Hirtz\Skeleton\Html\Button;
+use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Ul;
@@ -25,14 +26,14 @@ class AutocompleteList extends Widget
     use TagAttributesTrait;
 
     /**
-     * @var list<array{text: string, value: int|string}>
+     * @var list<array{text: string, value: int|string, description?: string|null}>
      */
     protected array $options = [];
 
     protected ?string $emptyText = null;
 
     /**
-     * @param list<array{text: string, value: int|string}> $options
+     * @param list<array{text: string, value: int|string, description?: string|null}> $options
      */
     public function options(array $options): static
     {
@@ -62,16 +63,27 @@ class AutocompleteList extends Widget
     }
 
     /**
-     * @param array{text: string, value: int|string} $option
+     * @param array{text: string, value: int|string, description?: string|null} $option
      */
     protected function getOptionItem(array $option): Stringable
     {
         $button = Button::make()
             ->class('dropdown-option')
             ->attribute('data-autocomplete-value', (string)$option['value'])
+            ->attribute('data-autocomplete-text', $option['text'])
             ->attribute('role', 'option')
-            ->attribute('tabindex', '-1')
-            ->text($option['text']);
+            ->attribute('tabindex', '-1');
+
+        $description = $option['description'] ?? null;
+
+        if ($description !== null && $description !== '') {
+            $button->content(
+                Div::make()->text($option['text']),
+                Div::make()->class('small')->text($description),
+            );
+        } else {
+            $button->text($option['text']);
+        }
 
         return Li::make()
             ->class('dropdown-item')

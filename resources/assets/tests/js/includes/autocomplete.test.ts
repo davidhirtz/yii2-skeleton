@@ -18,7 +18,7 @@ describe('autocomplete', () => {
 
     beforeEach(() => {
         document.body.innerHTML = '<div data-autocomplete>'
-            + '<input role="combobox" aria-expanded="false" aria-controls="results">'
+            + '<input role="combobox" aria-expanded="false" aria-controls="results" data-autocomplete-search>'
             + '<div id="results" role="listbox" data-autocomplete-results popover="manual"></div>'
             + '</div>';
 
@@ -126,5 +126,60 @@ describe('autocomplete', () => {
 
         expect($input.value).toBe('1');
         expect($input.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('sends the query alone, so htmx keeps the parameters of the URL', () => {
+        const body = new FormData();
+        body.set('Section[hero]', '12');
+        $input.value = 'Zürich';
+
+        $input.dispatchEvent(new CustomEvent('htmx:config:request', {detail: {ctx: {request: {body}}}}));
+
+        expect([...body.entries()]).toEqual([['q', 'Zürich']]);
+    });
+});
+
+describe('autocomplete with a hidden value', () => {
+    let $input: HTMLInputElement;
+    let $value: HTMLInputElement;
+    let $results: HTMLElement;
+
+    beforeEach(() => {
+        document.body.innerHTML = '<div data-autocomplete>'
+            + '<input type="hidden" name="Section[hero]" value="7" data-autocomplete-value-input>'
+            + '<input role="combobox" aria-expanded="false" aria-controls="results" value="Å.jpg" data-autocomplete-search>'
+            + '<div id="results" role="listbox" data-autocomplete-results popover="manual"></div>'
+            + '</div>';
+
+        const $container = document.querySelector<HTMLElement>('[data-autocomplete]')!;
+        $value = $container.querySelector('[data-autocomplete-value-input]')!;
+        $input = $container.querySelector('[data-autocomplete-search]')!;
+        $results = document.getElementById('results')!;
+        $results.hidePopover = () => undefined;
+
+        autocomplete($container);
+
+        $results.innerHTML = '<ul role="none"><li role="none">'
+            + '<button role="option" tabindex="-1" data-autocomplete-value="9" data-autocomplete-text="Москва.jpg">'
+            + '<div>Москва.jpg</div><div class="small">Heroes</div></button>'
+            + '</li></ul>';
+    });
+
+    it('writes the value into the hidden input and the text into the visible one', () => {
+        const change = vi.fn();
+        $value.addEventListener('change', change);
+
+        ($results.querySelector('[data-autocomplete-value="9"]') as HTMLElement).click();
+
+        expect($value.value).toBe('9');
+        expect($input.value).toBe('Москва.jpg');
+        expect(change).toHaveBeenCalledOnce();
+    });
+
+    it('clears the value once the text is edited without a pick', () => {
+        $input.value = 'Å.jp';
+        $input.dispatchEvent(new Event('input', {bubbles: true}));
+
+        expect($value.value).toBe('');
     });
 });

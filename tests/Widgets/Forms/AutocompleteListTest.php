@@ -49,4 +49,14 @@ class AutocompleteListTest extends TestCase
         self::assertMatchesRegularExpression('/<li[^>]*role="option"[^>]*aria-disabled="true"/', $html);
         self::assertStringNotContainsString('data-autocomplete-value', $html);
     }
+
+    public function testADescriptionIsASecondLineAndTheTextIsWhatThePickWrites(): void
+    {
+        $html = AutocompleteList::make()
+            ->options([['text' => 'Москва.jpg', 'value' => 9, 'description' => 'Héroes & Å']])
+            ->render();
+
+        self::assertStringContainsString('data-autocomplete-text="Москва.jpg"', $html);
+        self::assertStringContainsString('<div>Москва.jpg</div><div class="small">Héroes &amp; Å</div>', $html);
+    }
 }
