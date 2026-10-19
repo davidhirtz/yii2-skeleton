@@ -11,7 +11,6 @@ import {asidePin} from './includes/aside';
 import autocomplete from './includes/autocomplete';
 import busy from './includes/busy';
 import collapse from './includes/collapse';
-import dropdown from './includes/dropdown';
 import filter from './includes/filter';
 import {closeModal, createModal} from './includes/modals';
 import scrollActiveIntoView from './includes/scrollActiveIntoView';
@@ -28,6 +27,7 @@ import staleSave from './includes/staleSave';
 import configureHtmx from './includes/htmxConfig';
 import characterCounter from './includes/characterCounter';
 
+import './includes/dropdown';
 import './includes/FlashAlert';
 import './includes/submitOnEnter';
 
@@ -38,20 +38,28 @@ declare global {
 }
 
 onLoad(($container) => {
-    // A form swapped in by a failed save is the container itself, so it is asked too.
+    // A form swapped in by a failed save is the container itself, so it is asked too. An element's error is reported,
+    // never thrown: it would leave every element after it unwired (monorepo issue #559).
     const queryAll = (selector: string, method: Function) => {
+        const $elements = [...$container.querySelectorAll(selector)];
+
         if ($container.matches(selector)) {
-            method($container);
+            $elements.unshift($container);
         }
 
-        $container.querySelectorAll(selector).forEach(($el: Element) => method($el));
+        $elements.forEach(($el: Element) => {
+            try {
+                method($el);
+            } catch (error) {
+                reportError(error);
+            }
+        });
     };
 
     queryAll('[data-aside-pin]', asidePin);
     queryAll('[data-autocomplete]', autocomplete);
     queryAll('[data-busy]', busy);
     queryAll('[data-collapse]', collapse);
-    queryAll('[popovertarget]', dropdown);
     queryAll('[data-filter]', filter);
     queryAll('[data-modal]', closeModal);
     queryAll('[data-scroll-active]', scrollActiveIntoView);

@@ -3,6 +3,15 @@ import htmx from 'htmx.org';
 const callbacks: Array<($root: HTMLElement) => void> = [];
 let $processed: HTMLElement | null = null;
 
+// A callback's error is reported rather than thrown, so the ones registered after it still run (monorepo issue #559).
+const run = (callback: ($root: HTMLElement) => void, $root: HTMLElement) => {
+    try {
+        callback($root);
+    } catch (error) {
+        reportError(error);
+    }
+};
+
 // htmx hands its callback an `Element`, and everything registered here wants the `HTMLElement` it is in
 // practice — so the narrowing happens once, here, rather than as a cast in every caller.
 //
@@ -16,13 +25,13 @@ htmx.onLoad(($root) => {
     }
 
     $processed = $root;
-    callbacks.forEach((callback) => callback($root));
+    callbacks.forEach((callback) => run(callback, $root));
 });
 
 export default ($callback: ($root: HTMLElement) => void) => {
     callbacks.push($callback);
 
     if ($processed) {
-        $callback($processed);
+        run($callback, $processed);
     }
 };

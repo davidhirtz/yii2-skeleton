@@ -31,9 +31,11 @@ The admin runs **htmx 4**. What shapes everything: nothing inherits an attribute
 `:inherited` (missing it is silent and swaps the whole page); an empty attribute cancels an inherited one; events
 are renamed (`htmx:after:process`, `htmx:config:request`, `htmx:before:swap`), fire on the issuing element, and
 carry `detail.ctx`; a container listener must check `event.target`; no history cache (back/forward re-fetch).
-- `htmx.onLoad()` goes through `includes/onLoad.ts`; a script an asset bundle introduces after a swap
-  initialises the current document itself (`crop.ts`, `data-crop-ready`). Bundle scripts go in `<head>`; the
-  `hx-head` extension (imported into `admin.ts` **after** the htmx import) carries them across swaps.
+- `htmx.onLoad()` goes through `includes/onLoad.ts`, which, like `admin.ts`'s `queryAll()`, reports an initialiser's
+  error (`reportError()`) instead of throwing it. Menus (`includes/dropdown.ts`) are wired by capture listeners on the
+  document, not from `onLoad`: `popovertarget` opens a menu without any script, unpositioned (#559). A script an
+  asset bundle introduces after a swap initialises the current document itself (`crop.ts`, `data-crop-ready`).
+  Bundle scripts go in `<head>`; the `hx-head` extension (imported into `admin.ts` **after** the htmx import) carries them across swaps.
 - Only the skeleton's scripts may `import htmx` (a bundle would ship a second copy); a bundle listens for its
   events or does the DOM work itself. `components/*.ts` wire only what their custom element contains
   (`ColorPicker`, `FileUpload`, `RelativeTime`, `tinymce-editor`, `flash-alert`).

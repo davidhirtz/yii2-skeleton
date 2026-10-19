@@ -3,18 +3,28 @@ import {autoUpdate, computePosition, flip, offset, shift} from "@floating-ui/dom
 import {lockScroll, unlockScroll} from "./scrollLock";
 import {teardownOnDisconnect} from "./teardown";
 
-export default ($btn: HTMLElement) => {
-    const $popover = document.getElementById($btn.getAttribute('popovertarget')!) as HTMLElement | null;
+// Listeners on the document, not per button from `onLoad`: `popovertarget` opens a menu without any script, so a
+// button an initialiser's error left unwired opened its menu in the top left corner (monorepo issue #559). Neither
+// event bubbles, hence the capture phase.
+const teardowns = new WeakMap<HTMLElement, () => void>();
 
-    if (!$popover) {
-        return;
+const getButton = (event: Event, $popover: HTMLElement): HTMLElement | null => {
+    const $source = (event as ToggleEvent & {source?: Element | null}).source;
+
+    if ($source instanceof HTMLElement) {
+        return $source.hasAttribute('popovertarget') ? $source : null;
     }
 
+    return $popover.id
+        ? document.querySelector<HTMLElement>(`[popovertarget="${CSS.escape($popover.id)}"]`)
+        : null;
+};
+
+const open = ($btn: HTMLElement, $popover: HTMLElement) => {
     const $items = $popover.querySelectorAll('a:not([inert],.disabled),button:not([inert],:disabled,.disabled),input:not([inert],:disabled,.disabled)') as NodeListOf<HTMLElement>;
     const $dropdown = $btn.closest('.dropdown');
     const preferred = $dropdown?.classList.contains('dropup') ? 'top-start' : 'bottom-start';
     let selected = 0;
-    let teardown: (() => void) | null = null;
 
     // `selected` indexes this list, not `$items` — the filter dropdown hides items as it is typed in.
     const visibleItems = () => [...$items].filter($item => $item.checkVisibility());
@@ -52,32 +62,47 @@ export default ($btn: HTMLElement) => {
         });
     }
 
-    $popover.addEventListener('beforetoggle', (event) => {
-        if ((event as ToggleEvent).newState === 'open') {
-            $popover.style.visibility = 'hidden';
-        }
-    });
+    const cleanup = autoUpdate($btn, $popover, updatePosition);
 
-    $popover.addEventListener('toggle', (event) => {
-        if ((event as ToggleEvent).newState === 'open') {
-            const cleanup = autoUpdate($btn, $popover, updatePosition);
+    $popover.addEventListener('keydown', keydownEvent);
+    lockScroll($popover);
 
-            $popover.addEventListener('keydown', keydownEvent);
-            lockScroll($popover);
+    teardowns.set($popover, teardownOnDisconnect($popover, () => {
+        $popover.removeEventListener('keydown', keydownEvent);
+        unlockScroll($popover);
+        cleanup();
+    }));
 
-            teardown = teardownOnDisconnect($popover, () => {
-                $popover.removeEventListener('keydown', keydownEvent);
-                unlockScroll($popover);
-                cleanup();
-            });
-
-            if ($btn.hasAttribute('data-autofocus')) {
-                requestAnimationFrame(() => visibleItems()[selected]?.focus());
-            }
-        } else {
-            $popover.style.visibility = '';
-            teardown?.();
-            teardown = null;
-        }
-    });
+    if ($btn.hasAttribute('data-autofocus')) {
+        requestAnimationFrame(() => visibleItems()[selected]?.focus());
+    }
 }
+
+document.addEventListener('beforetoggle', (event) => {
+    const $popover = event.target;
+
+    if ($popover instanceof HTMLElement && (event as ToggleEvent).newState === 'open' && getButton(event, $popover)) {
+        $popover.style.visibility = 'hidden';
+    }
+}, true);
+
+document.addEventListener('toggle', (event) => {
+    const $popover = event.target;
+
+    if (!($popover instanceof HTMLElement)) {
+        return;
+    }
+
+    if ((event as ToggleEvent).newState !== 'open') {
+        teardowns.get($popover)?.();
+        teardowns.delete($popover);
+        return;
+    }
+
+    const $btn = getButton(event, $popover);
+
+    if ($btn) {
+        teardowns.get($popover)?.();
+        open($btn, $popover);
+    }
+}, true);
