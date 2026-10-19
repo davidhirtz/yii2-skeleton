@@ -8,6 +8,7 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\Admin\TimezoneModal;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\AsideMenu;
@@ -23,6 +24,7 @@ AdminAssetBundle::register($this);
 $module = Module::current();
 $colorScheme = $module->getColorScheme();
 $asideCollapsed = $module->isAsideCollapsed();
+$scriptErrorUrl = Application::current()->getUser()->getIsGuest() ? null : Url::to(['/admin/script-error/create']);
 ?>
 <?php $this->beginPage() ?>
     <!DOCTYPE html>
@@ -33,7 +35,7 @@ $asideCollapsed = $module->isAsideCollapsed();
         <title><?= Html::encode($this->getDocumentTitle()); ?></title>
         <?php $this->head() ?>
     </head>
-    <body hx-select:inherited="#wrap" hx-swap:inherited="outerHTML show:top" hx-target:inherited="#wrap" hx-boost:inherited="true">
+    <body hx-select:inherited="#wrap" hx-swap:inherited="outerHTML show:top" hx-target:inherited="#wrap" hx-boost:inherited="true"<?= $scriptErrorUrl ? ' data-script-error-url="' . Html::encode($scriptErrorUrl) . '" data-csrf-param="' . Html::encode(Application::current()->getRequest()->csrfParam) . '"' : ''; ?>>
     <?php $this->beginBody() ?>
     <div class="wrap">
         <?= NavBar::make(); ?>

@@ -1,3 +1,5 @@
+// First, so that it hears what every module below throws while it is evaluated.
+import './includes/scriptError';
 import htmx from 'htmx.org'
 
 import onLoad from './includes/onLoad';

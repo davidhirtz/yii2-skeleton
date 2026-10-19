@@ -35,6 +35,8 @@ carry `detail.ctx`; a container listener must check `event.target`; no history c
   error (`reportError()`) instead of throwing it. Menus (`includes/dropdown.ts`) are wired by capture listeners on the
   document, not from `onLoad`: `popovertarget` opens a menu without any script, unpositioned (#559). A script an
   asset bundle introduces after a swap initialises the current document itself (`crop.ts`, `data-crop-ready`).
+  `includes/scriptError.ts` (imported first) beacons window errors and rejections to `admin/script-error/create`,
+  logged as `error` under `js` (Sentry takes `error` only); the body names the URL for a logged-in user alone.
   Bundle scripts go in `<head>`; the `hx-head` extension (imported into `admin.ts` **after** the htmx import) carries them across swaps.
 - Only the skeleton's scripts may `import htmx` (a bundle would ship a second copy); a bundle listens for its
   events or does the DOM work itself. `components/*.ts` wire only what their custom element contains

@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `admin/script-error/create`, to which the admin reports its browser errors (logged under the `js` category)
 - Changed `Web\Response::removeHostOnlyCookies()` to `removeCookieTwins()`, which with `Web\User` expires a twin under every parent domain of the host too (`CookieHelper::getExpiredTwinHeaders()`)
 - Added `esbuild.config.js` to the package, so a bundle builds its assets outside the monorepo
 - Added the admin styles `.thumbnail` and `.thumbnail-badges`
