@@ -300,6 +300,10 @@
   --table-sort-color: var(--color-black);
   --table-th-border-color: transparent;
 
+  // Thumbnail
+  --thumbnail-play-bg: color-mix(in srgb, var(--color-black) 60%, transparent);
+  --thumbnail-play-color: var(--color-white);
+
   // Trail
   --trail-table-bg: repeating-linear-gradient(-45deg, var(--color-gray-100), var(--color-gray-100) 0.5em, transparent 0.5em, transparent 1em);
   --trail-delete-bg: var(--color-red-50);
