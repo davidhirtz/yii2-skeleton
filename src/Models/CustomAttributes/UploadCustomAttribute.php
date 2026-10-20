@@ -90,6 +90,19 @@ class UploadCustomAttribute extends CustomAttribute
     }
 
     /**
+     * @return string|null the URL of the stored file, `null` while the attribute is empty or holds a token
+     */
+    public function getUrl(ActiveRecord $owner, string $name): ?string
+    {
+        $value = $owner->getAttribute($name);
+        $upload = $this->getUpload();
+
+        return is_string($value) && $value !== '' && !$upload->isToken($value)
+            ? $upload->getUrl($owner, $name, $value)
+            : null;
+    }
+
+    /**
      * The `accept` attribute of the file input, so the picker offers the right files to begin with.
      */
     public function getAccept(): ?string

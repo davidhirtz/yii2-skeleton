@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Changed MCP `describe_resource` to list upload and disabled custom attributes as `readOnly`, and `get_record` to answer an upload as its URL
+- Added `UploadCustomAttribute::getUrl()`
 - Added `Html\Track` and content to `Html\Video`
 - Added `Widgets\AdminModelHeading`, a record named by the record owning its page and its position, as the search names it
 - Changed `SearchResultList` to the `.model-heading` classes in place of `.search-result-heading`, `-title` and `-subtitle`

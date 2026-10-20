@@ -30,7 +30,8 @@ class DescribeResourceTool extends ResourceTool
     {
         return 'Describes a resource: the JSON Schema of the attributes create_record and update_record take for a '
             . 'type, the types and statuses with their ids, and the content languages. A translated attribute has '
-            . 'one property per language, the source language without a suffix (name, name_de, …).';
+            . 'one property per language, the source language without a suffix (name, name_de, …). A readOnly '
+            . 'property is answered by get_record, a file as its URL, and never written.';
     }
 
     #[Override]

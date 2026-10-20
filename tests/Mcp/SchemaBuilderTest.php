@@ -198,9 +198,30 @@ class SchemaBuilderTest extends TestCase
         self::assertSame('date-time', $properties['starts_at']['format'] ?? null);
     }
 
-    public function testAnUploadIsLeftOut(): void
+    public function testAnUploadIsAReadOnlyUrl(): void
     {
-        self::assertArrayNotHasKey('attachment', $this->getProperties());
+        self::assertSame(
+            ['title' => 'Attachment', 'type' => ['string', 'null'], 'format' => 'uri', 'readOnly' => true],
+            $this->getProperties()['attachment'],
+        );
+    }
+
+    public function testADisabledAttributeIsReadOnlyAndKeepsItsType(): void
+    {
+        self::assertSame(
+            ['title' => 'Score', 'type' => 'integer', 'minimum' => 0, 'readOnly' => true],
+            $this->getProperties()['score'],
+        );
+    }
+
+    public function testReadOnlyAttributesAreNotWritable(): void
+    {
+        $builder = new SchemaBuilder(Resource::make('schema', SchemaRecord::class));
+        $record = SchemaRecord::instantiateByType(SchemaRecord::TYPE_DEFAULT);
+
+        self::assertSame(['score', 'attachment'], $builder->getReadOnlyAttributes($record));
+        self::assertNotContains('score', $builder->getWritableAttributes($record));
+        self::assertNotContains('attachment', $builder->getWritableAttributes($record));
     }
 
     public function testAGroupIsAnArrayOfObjects(): void
@@ -317,6 +338,7 @@ class SchemaRecord extends ActiveRecord implements
                     BooleanCustomAttribute::make('flag'),
                     NumberCustomAttribute::make('count')->max(10),
                     NumberCustomAttribute::make('ratio')->integerOnly(false),
+                    NumberCustomAttribute::make('score')->min(0)->disabled(),
                     SelectCustomAttribute::make('layout')->options([1 => 'Eins', 2 => 'Zwei']),
                     SelectCustomAttribute::make('tags')->options(['a' => 'Å', 'b' => 'ą'])->multiple(),
                     HtmlCustomAttribute::make('intro'),

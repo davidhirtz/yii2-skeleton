@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Db\I18nActiveQuery;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Resource;
 use Hirtz\Skeleton\Mcp\Tools\CreateRecordTool;
@@ -21,6 +22,7 @@ use Hirtz\Skeleton\Mcp\Tools\ToolInterface;
 use Hirtz\Skeleton\Mcp\Tools\UpdateRecordTool;
 use Hirtz\Skeleton\Models\Actions\ReorderActiveRecords;
 use Hirtz\Skeleton\Models\CustomAttributes\TextCustomAttribute;
+use Hirtz\Skeleton\Models\CustomAttributes\UploadCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
@@ -44,6 +46,7 @@ use Hirtz\Skeleton\Models\Traits\VisibleAttributeTrait;
 use Hirtz\Skeleton\Models\Types\Type;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Override;
 use Yii;
@@ -116,7 +119,8 @@ class ResourceToolsTest extends TestCase
         self::assertSame(['status', 'name', 'name_de'], array_keys($result['attributes']['properties'] ?? []));
 
         $result = $this->callTool('describe_resource', ['resource' => 'scratch']);
-        self::assertSame(['teaser', 'teaser_de', 'status', 'name', 'name_de'], array_keys($result['attributes']['properties'] ?? []));
+        self::assertSame(['teaser', 'teaser_de', 'status', 'name', 'name_de', 'attachment'], array_keys($result['attributes']['properties'] ?? []));
+        self::assertTrue($result['attributes']['properties']['attachment']['readOnly'] ?? false);
     }
 
     public function testDescribeAnUnknownType(): void
@@ -171,6 +175,23 @@ class ResourceToolsTest extends TestCase
         self::assertSame('Ąb', $result['attributes']['teaser_de'] ?? null);
         self::assertArrayNotHasKey('custom_attributes', $result['attributes'] ?? []);
         self::assertMatchesRegularExpression('/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d[+-]\d\d:\d\d$/', $result['attributes']['updated_at'] ?? '');
+    }
+
+    public function testGetRecordAnswersAFileAsItsUrl(): void
+    {
+        $record = $this->insertRecord('Ärger', ['attachment' => 'Prüfung.pdf']);
+        $result = $this->callTool('get_record', ['resource' => 'scratch', 'id' => $record->id]);
+
+        self::assertSame(
+            Url::to(Upload::getComponent()->getUrl($record, 'attachment', 'Prüfung.pdf'), true),
+            $result['attributes']['attachment'] ?? null,
+        );
+
+        $record = $this->insertRecord('Leer');
+        $result = $this->callTool('get_record', ['resource' => 'scratch', 'id' => $record->id]);
+
+        self::assertArrayHasKey('attachment', $result['attributes'] ?? []);
+        self::assertNull($result['attributes']['attachment']);
     }
 
     public function testARefusedRecordLooksNotFound(): void
@@ -565,6 +586,7 @@ class ToolRecord extends ActiveRecord implements
                 ->name('Default')
                 ->customAttributes(fn (): array => [
                     TextCustomAttribute::make('teaser')->max(30)->translatable(),
+                    UploadCustomAttribute::make('attachment')->extensions(['pdf']),
                 ]),
             Type::make(self::TYPE_OTHER)
                 ->name('Ånother'),

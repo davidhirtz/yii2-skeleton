@@ -27,6 +27,7 @@ use yii\validators\NumberValidator;
 use yii\validators\RangeValidator;
 use yii\validators\StringValidator;
 use yii\validators\UrlValidator;
+use yii\validators\Validator;
 
 /**
  * Describes the attributes a record of one type takes as a JSON Schema, read off the validators the record carries —
@@ -59,7 +60,7 @@ class SchemaBuilder
      */
     public function build(ActiveRecord $record): array
     {
-        return $this->buildObject($record, $this->getWritableAttributes($record));
+        return $this->buildObject($record, $this->getWritableAttributes($record), $this->getReadOnlyAttributes($record));
     }
 
     /**
@@ -84,10 +85,35 @@ class SchemaBuilder
     }
 
     /**
+     * @return list<string> custom attributes a caller reads and never writes: an upload, answered as its URL, and a
+     * disabled one
+     */
+    public function getReadOnlyAttributes(ActiveRecord $record): array
+    {
+        if (!$record instanceof CustomAttributeInterface) {
+            return [];
+        }
+
+        $attributes = [];
+
+        foreach ($record->getCustomAttributeDefinitions() as $definition) {
+            if (
+                $definition->isVisible($record)
+                && ($definition instanceof UploadCustomAttribute || $definition->isDisabled($record))
+            ) {
+                $attributes = [...$attributes, ...$definition->getAttributeNames($record)];
+            }
+        }
+
+        return $this->resource->filterAttributes($record, $attributes);
+    }
+
+    /**
      * @param list<string> $attributes
+     * @param list<string> $readOnly
      * @return array<string, mixed>
      */
-    protected function buildObject(Model $model, array $attributes): array
+    protected function buildObject(Model $model, array $attributes, array $readOnly = []): array
     {
         $properties = [];
         $required = [];
@@ -99,6 +125,14 @@ class SchemaBuilder
 
             if ($definition ? $definition->isRequired($model) : $model->isAttributeRequired($name)) {
                 $required[] = $name;
+            }
+        }
+
+        foreach ($readOnly as $name) {
+            $definition = $this->findCustomAttribute($model, $name);
+
+            if ($definition !== null) {
+                $properties[$name] = $this->buildReadOnlyProperty($model, $name, $definition);
             }
         }
 
@@ -142,6 +176,33 @@ class SchemaBuilder
         return $description !== ''
             ? ['title' => $schema['title'], 'description' => $description, ...$schema]
             : $schema;
+    }
+
+    /**
+     * A disabled attribute carries no validator but `safe`, so its type is read off the rules it has when enabled.
+     *
+     * @return array<string, mixed>
+     */
+    protected function buildReadOnlyProperty(Model $model, string $name, CustomAttribute $definition): array
+    {
+        $schema = ['title' => $model->getAttributeLabel($name)];
+
+        if ($definition instanceof UploadCustomAttribute) {
+            return [...$schema, 'type' => ['string', 'null'], 'format' => 'uri', 'readOnly' => true];
+        }
+
+        foreach ((clone $definition)->disabled(false)->getRules($model) as $rule) {
+            $type = $rule[1] ?? null;
+
+            if (is_string($type)) {
+                $validator = Validator::createValidator($type, $model, (array)$rule[0], array_slice($rule, 2, null, true));
+                $schema = [...$schema, ...$this->mapValidator($model, $name, $validator)];
+            }
+        }
+
+        unset($schema['description']);
+
+        return [...$schema, 'readOnly' => true];
     }
 
     /**

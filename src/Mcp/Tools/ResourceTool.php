@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Mcp\Resource;
 use Hirtz\Skeleton\Mcp\SchemaBuilder;
+use Hirtz\Skeleton\Models\CustomAttributes\UploadCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
@@ -211,6 +212,15 @@ abstract class ResourceTool implements ToolInterface
 
         if ($record instanceof CustomAttributeInterface) {
             unset($attributes[$record->getCustomAttributesColumn()]);
+
+            foreach ($record->getCustomAttributeDefinitions() as $definition) {
+                if ($definition instanceof UploadCustomAttribute) {
+                    foreach ($definition->getAttributeNames($record) as $name) {
+                        $url = $definition->getUrl($record, $name);
+                        $attributes[$name] = $url !== null ? $this->getAbsoluteUrl($url) ?? $url : null;
+                    }
+                }
+            }
         }
 
         return array_filter([
