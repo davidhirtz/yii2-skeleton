@@ -71,7 +71,7 @@
   }
 }
 
-.custom-attribute-group-item:has([data-group-body]:not([hidden])) .input-group {
+.custom-attribute-group-item:has(> [data-group-body]:not([hidden])) > .input-group {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
