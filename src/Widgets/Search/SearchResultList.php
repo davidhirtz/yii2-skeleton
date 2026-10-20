@@ -125,7 +125,7 @@ class SearchResultList extends Widget
     protected function getHeading(SearchResult $result): Stringable
     {
         $title = Span::make()
-            ->class('search-result-title')
+            ->class('model-heading-title')
             ->content($this->markKeywords($result->title));
 
         if (!$result->subtitles) {
@@ -133,11 +133,11 @@ class SearchResultList extends Widget
         }
 
         $subtitles = array_map(fn (string $subtitle): Stringable => Span::make()
-            ->class('search-result-subtitle')
+            ->class('model-heading-subtitle')
             ->text($subtitle), $result->subtitles);
 
         return Span::make()
-            ->class('search-result-heading')
+            ->class('model-heading')
             ->content($title, ...$subtitles);
     }
 

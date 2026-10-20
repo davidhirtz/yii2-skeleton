@@ -17,9 +17,9 @@ class SearchResultListTest extends TestCase
             ->results([new SearchResult('About', subtitles: ['Section 2/5', 'Asset 1/2'])]);
 
         self::assertStringContainsString(
-            '<span class="search-result-heading"><span class="search-result-title"><mark>About</mark></span>'
-            . '<span class="search-result-subtitle">Section 2/5</span>'
-            . '<span class="search-result-subtitle">Asset 1/2</span></span>',
+            '<span class="model-heading"><span class="model-heading-title"><mark>About</mark></span>'
+            . '<span class="model-heading-subtitle">Section 2/5</span>'
+            . '<span class="model-heading-subtitle">Asset 1/2</span></span>',
             $html
         );
     }
@@ -28,7 +28,7 @@ class SearchResultListTest extends TestCase
     {
         $html = (string)SearchResultList::make()->results([new SearchResult('About')]);
 
-        self::assertStringContainsString('<span class="search-result-title">About</span>', $html);
-        self::assertStringNotContainsString('search-result-heading', $html);
+        self::assertStringContainsString('<span class="model-heading-title">About</span>', $html);
+        self::assertStringNotContainsString('class="model-heading"', $html);
     }
 }

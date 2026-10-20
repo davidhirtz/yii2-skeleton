@@ -125,7 +125,6 @@
   min-width: 0;
 }
 
-.search-result-title,
 .model-heading-title {
   font-weight: 700;
   overflow: hidden;
@@ -133,7 +132,6 @@
   white-space: nowrap;
 }
 
-.search-result-heading,
 .model-heading {
   align-items: center;
   display: flex;
@@ -142,7 +140,6 @@
 }
 
 // The page header's bar and dots, the bar a little shorter to suit the smaller type.
-.search-result-subtitle,
 .model-heading-subtitle {
   align-items: center;
   display: flex;
@@ -159,7 +156,6 @@
     width: .25rem;
   }
 
-  .search-result-title + &::before,
   .model-heading-title + &::before {
     width: .75rem;
   }
