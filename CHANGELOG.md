@@ -1,4 +1,4 @@
-## Unreleased
+## 3.20.0 (October 20, 2026)
 
 - Changed `data-select-link` to point the link marked `data-select-link-target` in its `.form-action` or input group, and added a `url` to `AutocompleteList` options for it
 - Added `CustomAttribute::plainText()` and `FormTextField`: a custom attribute shown as text, which no post sets
