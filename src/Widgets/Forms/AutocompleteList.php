@@ -26,14 +26,14 @@ class AutocompleteList extends Widget
     use TagAttributesTrait;
 
     /**
-     * @var list<array{text: string, value: int|string, description?: string|null}>
+     * @var list<array{text: string, value: int|string, description?: string|null, url?: string|null}>
      */
     protected array $options = [];
 
     protected ?string $emptyText = null;
 
     /**
-     * @param list<array{text: string, value: int|string, description?: string|null}> $options
+     * @param list<array{text: string, value: int|string, description?: string|null, url?: string|null}> $options
      */
     public function options(array $options): static
     {
@@ -63,7 +63,7 @@ class AutocompleteList extends Widget
     }
 
     /**
-     * @param array{text: string, value: int|string, description?: string|null} $option
+     * @param array{text: string, value: int|string, description?: string|null, url?: string|null} $option
      */
     protected function getOptionItem(array $option): Stringable
     {
@@ -71,6 +71,7 @@ class AutocompleteList extends Widget
             ->class('dropdown-option')
             ->attribute('data-autocomplete-value', (string)$option['value'])
             ->attribute('data-autocomplete-text', $option['text'])
+            ->attribute('data-autocomplete-url', $option['url'] ?? null)
             ->attribute('role', 'option')
             ->attribute('tabindex', '-1');
 

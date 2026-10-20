@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Changed `data-select-link` to point the link marked `data-select-link-target` in its `.form-action` or input group, and added a `url` to `AutocompleteList` options for it
 - Added `CustomAttribute::plainText()` and `FormTextField`: a custom attribute shown as text, which no post sets
 - Added `IconCustomAttribute::getUrl()` and `withVersion()`, which appends the file time to it
 - Changed MCP `describe_resource` to list upload and disabled custom attributes as `readOnly`, and `get_record` to answer an upload as its URL

@@ -145,11 +145,11 @@ describe('autocomplete with a hidden value', () => {
     let $results: HTMLElement;
 
     beforeEach(() => {
-        document.body.innerHTML = '<div data-autocomplete>'
+        document.body.innerHTML = '<div class="input-group"><div data-autocomplete>'
             + '<input type="hidden" name="Section[hero]" value="7" data-autocomplete-value-input>'
             + '<input role="combobox" aria-expanded="false" aria-controls="results" value="Å.jpg" data-autocomplete-search>'
             + '<div id="results" role="listbox" data-autocomplete-results popover="manual"></div>'
-            + '</div>';
+            + '</div><a href="/admin/media/file/update?id=7" data-select-link-target>Open</a></div>';
 
         const $container = document.querySelector<HTMLElement>('[data-autocomplete]')!;
         $value = $container.querySelector('[data-autocomplete-value-input]')!;
@@ -160,7 +160,8 @@ describe('autocomplete with a hidden value', () => {
         autocomplete($container);
 
         $results.innerHTML = '<ul role="none"><li role="none">'
-            + '<button role="option" tabindex="-1" data-autocomplete-value="9" data-autocomplete-text="Москва.jpg">'
+            + '<button role="option" tabindex="-1" data-autocomplete-value="9" data-autocomplete-text="Москва.jpg"'
+            + ' data-autocomplete-url="/admin/media/file/update?id=9">'
             + '<div>Москва.jpg</div><div class="small">Heroes</div></button>'
             + '</li></ul>';
     });
@@ -173,6 +174,7 @@ describe('autocomplete with a hidden value', () => {
 
         expect($value.value).toBe('9');
         expect($input.value).toBe('Москва.jpg');
+        expect(document.querySelector('[data-select-link-target]')?.getAttribute('href')).toBe('/admin/media/file/update?id=9');
         expect(change).toHaveBeenCalledOnce();
     });
 
@@ -181,5 +183,6 @@ describe('autocomplete with a hidden value', () => {
         $input.dispatchEvent(new Event('input', {bubbles: true}));
 
         expect($value.value).toBe('');
+        expect((document.querySelector('[data-select-link-target]') as HTMLAnchorElement).hidden).toBe(true);
     });
 });

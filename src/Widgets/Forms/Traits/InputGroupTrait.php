@@ -24,6 +24,14 @@ trait InputGroupTrait
         return $this;
     }
 
+    /**
+     * @return list<string|Stringable>
+     */
+    public function getAppend(): array
+    {
+        return $this->append;
+    }
+
     public function prepend(string|Stringable|null ...$content): static
     {
         $this->prepend = array_values(array_filter($content));

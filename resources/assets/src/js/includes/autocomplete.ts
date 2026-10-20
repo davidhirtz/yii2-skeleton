@@ -15,6 +15,18 @@ export default ($container: HTMLElement) => {
 
     let picked = $input.value;
 
+    const $link = $container.closest('.input-group')?.querySelector<HTMLAnchorElement>('a[data-select-link-target]');
+
+    const setLink = (url: string | undefined) => {
+        if ($link) {
+            if (url) {
+                $link.href = url;
+            }
+
+            $link.hidden = !url;
+        }
+    };
+
     let teardown: (() => void) | null = null;
 
     const state = combobox($input, $results, '[data-autocomplete-value]');
@@ -49,6 +61,7 @@ export default ($container: HTMLElement) => {
         if ($value) {
             $value.value = $option.dataset.autocompleteValue!;
             $input.value = picked = $option.dataset.autocompleteText ?? $option.textContent?.trim() ?? '';
+            setLink($option.dataset.autocompleteUrl);
             $value.dispatchEvent(new Event('change', {bubbles: true}));
         } else {
             $input.value = $option.dataset.autocompleteValue!;
@@ -73,6 +86,7 @@ export default ($container: HTMLElement) => {
     $input.addEventListener('input', () => {
         if ($value && $value.value !== '' && $input.value !== picked) {
             $value.value = '';
+            setLink(undefined);
             $value.dispatchEvent(new Event('change', {bubbles: true}));
         }
     });
