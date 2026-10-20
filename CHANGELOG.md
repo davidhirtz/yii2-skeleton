@@ -1,3 +1,7 @@
+## Unreleased
+
+- Changed `Flashes` to collapse repeated messages into one alert with a count and fold those beyond `limit()` into a last alert
+
 ## 3.20.0 (October 20, 2026)
 
 - Changed `data-select-link` to point the link marked `data-select-link-target` in its `.form-action` or input group, and added a `url` to `AutocompleteList` options for it

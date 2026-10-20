@@ -204,6 +204,7 @@ return [
     'ERROR_SUMMARY_RECORD_COULD_UPDATED' => 'Der Datensatz konnte nicht aktualisiert werden:',
     'FILTER_DROPDOWN_FILTER' => 'Filter ...',
     'FILTER_DROPDOWN_SHOW_ALL' => 'Alle anzeigen',
+    'FLASHES_MORE' => '{count, plural, one{# weitere Meldung} other{# weitere Meldungen}}',
     'FORM_TRANSLATION_ALL_FIELDS' => 'Alle Felder',
     'FORM_TRANSLATION_LANGUAGES' => 'Sprachen',
     'GRANT_AUTHORIZE_ERROR_TITLE' => 'Verbindung fehlgeschlagen',

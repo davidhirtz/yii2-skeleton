@@ -47,4 +47,33 @@ class FlashesTest extends TestCase
         self::assertStringContainsString(Yii::t('skeleton', 'COMMON_NETWORK_ERROR'), $html);
         self::assertStringContainsString('data-alert="danger"', $html);
     }
+
+    public function testRepeatedMessagesCollapseIntoOneAlert(): void
+    {
+        foreach (range(1, 50) as $i) {
+            $this->getWebSession()->addFlash('success', 'The file was created.');
+        }
+
+        $html = (string)Flashes::make();
+
+        self::assertSame(1, substr_count(strstr($html, '<template', true) ?: $html, '<flash-alert>'));
+        self::assertStringContainsString('The file was created. <span class="alert-count">50</span>', $html);
+    }
+
+    public function testMessagesBeyondTheLimitFoldIntoTheLastAlert(): void
+    {
+        foreach (['Å', 'ą', 'Ж', '漢', '🎉', "Mu\u{308}ller", '404'] as $name) {
+            $this->getWebSession()->addFlash('success', "The asset “{$name}” was created.");
+        }
+
+        $this->getWebSession()->addFlash('danger', 'Failed.');
+
+        $html = (string)Flashes::make()->limit(3);
+
+        self::assertSame(4, substr_count(strstr($html, '<template', true) ?: $html, '<flash-alert>'));
+        self::assertStringContainsString('<div class="alert-content">The asset “ą” was created.</div>', $html);
+        self::assertStringContainsString('<details><summary>' . Yii::t('skeleton', 'FLASHES_MORE', ['count' => 5]) . '</summary><ul><li>The asset “Ж” was created.</li>', $html);
+        self::assertStringContainsString('<li>The asset “404” was created.</li></ul></details>', $html);
+        self::assertStringContainsString('Failed.', $html);
+    }
 }

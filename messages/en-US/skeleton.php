@@ -204,6 +204,7 @@ return [
     'ERROR_SUMMARY_RECORD_COULD_UPDATED' => 'The record could not be updated:',
     'FILTER_DROPDOWN_FILTER' => 'Filter ...',
     'FILTER_DROPDOWN_SHOW_ALL' => 'Show All',
+    'FLASHES_MORE' => '{count, plural, one{# more message} other{# more messages}}',
     'FORM_TRANSLATION_ALL_FIELDS' => 'All fields',
     'FORM_TRANSLATION_LANGUAGES' => 'Languages',
     'GRANT_AUTHORIZE_ERROR_TITLE' => 'Connection failed',

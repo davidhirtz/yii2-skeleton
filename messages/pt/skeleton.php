@@ -204,6 +204,7 @@ return [
     'ERROR_SUMMARY_RECORD_COULD_UPDATED' => 'Não foi possível atualizar o registo:',
     'FILTER_DROPDOWN_FILTER' => 'Filtrar ...',
     'FILTER_DROPDOWN_SHOW_ALL' => 'Mostrar tudo',
+    'FLASHES_MORE' => '{count, plural, one{Mais # mensagem} other{Mais # mensagens}}',
     'FORM_TRANSLATION_ALL_FIELDS' => 'Todos os campos',
     'FORM_TRANSLATION_LANGUAGES' => 'Idiomas',
     'GRANT_AUTHORIZE_ERROR_TITLE' => 'Falha na ligação',

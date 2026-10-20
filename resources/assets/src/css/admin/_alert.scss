@@ -4,19 +4,31 @@
   align-items: flex-end;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
   pointer-events: none;
   position: fixed;
   right: 2rem;
   top: .5rem;
   z-index: 60;
 
+  // The gap is the wrapper's margin, so a closing alert takes its room with it (`FlashAlert.ts` collapses the
+  // height) rather than leaving the ones below to jump. `clip` keeps the alert sliding out to the side visible.
+  flash-alert {
+    display: block;
+    margin-bottom: .5rem;
+    overflow-x: visible;
+    overflow-y: clip;
+    transition: height .3s ease, margin-bottom .3s ease;
+
+    &.dismissed {
+      margin-bottom: 0;
+    }
+  }
 
   .alert {
-    justify-self: end;
     pointer-events: all;
     transition-behavior: allow-discrete;
     transition: opacity .3s ease, translate .3s ease;
+    transition-delay: calc(var(--flash-index, 0) * 60ms);
     max-width: min(32rem, calc(100vw - 2rem));
 
     @starting-style {
@@ -24,6 +36,25 @@
       translate: 1rem;
     }
   }
+
+  .dismissed .alert {
+    transition-delay: 0s;
+  }
+
+  details ul {
+    margin-top: .5rem;
+  }
+}
+
+.alert-count {
+  background: var(--alert-color);
+  border-radius: 1em;
+  color: var(--alert-bg);
+  font-size: .875em;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  padding: .125em .5em;
+  white-space: nowrap;
 }
 
 .alert {

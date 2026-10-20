@@ -204,6 +204,7 @@ return [
     'ERROR_SUMMARY_RECORD_COULD_UPDATED' => 'L’enregistrement n’a pas pu être mis à jour :',
     'FILTER_DROPDOWN_FILTER' => 'Filtrer ...',
     'FILTER_DROPDOWN_SHOW_ALL' => 'Tout afficher',
+    'FLASHES_MORE' => '{count, plural, one{# autre message} other{# autres messages}}',
     'FORM_TRANSLATION_ALL_FIELDS' => 'Tous les champs',
     'FORM_TRANSLATION_LANGUAGES' => 'Langues',
     'GRANT_AUTHORIZE_ERROR_TITLE' => 'Échec de la connexion',
