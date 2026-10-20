@@ -1,6 +1,6 @@
 ## Unreleased
 
-- Added `Html\Track`
+- Added `Html\Track` and content to `Html\Video`
 - Added `Widgets\AdminModelHeading`, a record named by the record owning its page and its position, as the search names it
 - Changed `SearchResultList` to the `.model-heading` classes in place of `.search-result-heading`, `-title` and `-subtitle`
 - Added `ActiveRecord::getSerializedCustomAttributesColumn()`
