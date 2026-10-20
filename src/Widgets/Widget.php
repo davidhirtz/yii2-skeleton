@@ -33,7 +33,7 @@ abstract class Widget implements Configurable, Stringable, ViewContextInterface
     protected ?string $viewPath = null;
 
     /**
-     * @var Closure[]
+     * @var list<Closure(static): mixed>
      */
     private array $configureClosures = [];
     private ?string $html = null;
@@ -66,7 +66,7 @@ abstract class Widget implements Configurable, Stringable, ViewContextInterface
     }
 
     /**
-     * @param Closure(static): (void|static) $callback
+     * @param Closure(static): mixed $callback
      * @return $this
      */
     public function prepare(Closure $callback): static
@@ -88,7 +88,9 @@ abstract class Widget implements Configurable, Stringable, ViewContextInterface
     protected function configure(): void
     {
         Event::trigger($this, self::EVENT_CONFIGURE);
-        $this->evaluate($this->configureClosures, $this);
+        foreach ($this->configureClosures as $closure) {
+            $closure($this);
+        }
     }
 
     final public function __toString(): string

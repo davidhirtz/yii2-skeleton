@@ -55,6 +55,18 @@ class WidgetTest extends TestCase
         self::assertSame('child,default,event', TestChildWidget::make()->render());
     }
 
+    public function testEveryPrepareClosureReceivesTheWidgetWhateverThePreviousOneReturned(): void
+    {
+        $content = TestWidget::make()
+            ->prepare(static function (TestWidget $widget): void {
+                $widget->addPart('first');
+            })
+            ->prepare(static fn (TestWidget $widget) => $widget->addPart('second'))
+            ->render();
+
+        self::assertSame('default,first,second', $content);
+    }
+
     public function testPrepareIsEvaluatedOnActiveForm(): void
     {
         $content = ActiveForm::make()
