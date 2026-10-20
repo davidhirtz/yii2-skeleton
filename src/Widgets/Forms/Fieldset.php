@@ -151,7 +151,7 @@ class Fieldset extends Widget
             : null;
 
         if ($definition) {
-            return $definition->createField($this->model);
+            return $definition->getField($this->model);
         }
 
         $validators = $this->model->getActiveValidators($property);

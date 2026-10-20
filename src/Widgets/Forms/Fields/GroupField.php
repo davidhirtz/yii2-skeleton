@@ -295,7 +295,7 @@ class GroupField extends Field
     {
         foreach ($item->getCustomAttributeDefinitions() as $definition) {
             if ($definition->isVisible($item)) {
-                return $definition->createField($item)
+                return $definition->getField($item)
                     ->form($this->form)
                     ->label('')
                     ->showRow(false)

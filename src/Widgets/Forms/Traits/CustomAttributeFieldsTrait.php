@@ -33,7 +33,7 @@ trait CustomAttributeFieldsTrait
 
         foreach ($model->getCustomAttributeDefinitions() as $definition) {
             if (!in_array($definition->name, $except, true) && $definition->isVisible($model)) {
-                $fields[] = $definition->createField($model);
+                $fields[] = $definition->getField($model);
             }
         }
 

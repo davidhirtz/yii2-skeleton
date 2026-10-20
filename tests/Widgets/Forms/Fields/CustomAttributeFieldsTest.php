@@ -28,6 +28,7 @@ use Hirtz\Skeleton\Widgets\Forms\Fields\GroupField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\TypeSelectField;
 use Hirtz\Skeleton\Widgets\Forms\Fieldset;
 use Override;
+use yii\base\InvalidConfigException;
 use Yii;
 
 class CustomAttributeFieldsTest extends TestCase
@@ -591,6 +592,44 @@ class CustomAttributeFieldsTest extends TestCase
         return $select[0] ?? self::fail('The form renders no select.');
     }
 
+    public function testAPlainTextAttributeIsShownAsTextAndNeverLoaded(): void
+    {
+        $model = $this->createRecord();
+        $model->setAttribute('note', 'Åsa 🎬 Mu' . "\u{308}" . 'ller');
+
+        $content = Fieldset::make()
+            ->model($model)
+            ->rows(['note'])
+            ->render();
+
+        self::assertStringContainsString('<div class="form-text">Åsa 🎬 Mu' . "\u{308}" . 'ller</div>', $content);
+        self::assertStringNotContainsString('FieldRecord[note]', $content);
+
+        $model->load(['FieldRecord' => ['note' => 'Posted']]);
+        self::assertSame('Åsa 🎬 Mu' . "\u{308}" . 'ller', $model->getAttribute('note'));
+        self::assertNotContains('note', $model->safeAttributes());
+    }
+
+    public function testAnEmptyPlainTextAttributeIsNotShown(): void
+    {
+        $content = Fieldset::make()
+            ->model($this->createRecord())
+            ->rows(['note'])
+            ->render();
+
+        self::assertStringNotContainsString('form-text', $content);
+    }
+
+    public function testATranslatedAttributeCannotBePlainText(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+
+        TextCustomAttribute::make('heading')
+            ->translatable()
+            ->plainText()
+            ->getField($this->createRecord());
+    }
+
     protected function createRecord(): FieldRecord
     {
         $model = FieldRecord::create();
@@ -649,6 +688,8 @@ class FieldRecord extends ActiveRecord implements
                         ->multiple(),
                     TextCustomAttribute::make('locked')
                         ->disabled(),
+                    TextCustomAttribute::make('note')
+                        ->plainText(),
                     TextCustomAttribute::make('secret')
                         ->visible(false),
                 ]),

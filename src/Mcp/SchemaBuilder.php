@@ -86,7 +86,7 @@ class SchemaBuilder
 
     /**
      * @return list<string> custom attributes a caller reads and never writes: an upload, answered as its URL, and a
-     * disabled one
+     * disabled or plain-text one
      */
     public function getReadOnlyAttributes(ActiveRecord $record): array
     {
@@ -99,7 +99,7 @@ class SchemaBuilder
         foreach ($record->getCustomAttributeDefinitions() as $definition) {
             if (
                 $definition->isVisible($record)
-                && ($definition instanceof UploadCustomAttribute || $definition->isDisabled($record))
+                && ($definition instanceof UploadCustomAttribute || $definition->isDisabled($record) || $definition->isPlainText($record))
             ) {
                 $attributes = [...$attributes, ...$definition->getAttributeNames($record)];
             }
@@ -179,7 +179,8 @@ class SchemaBuilder
     }
 
     /**
-     * A disabled attribute carries no validator but `safe`, so its type is read off the rules it has when enabled.
+     * A disabled or plain-text attribute carries no validator but `safe`, so its type is read off the rules it has
+     * when enabled.
      *
      * @return array<string, mixed>
      */
@@ -191,7 +192,7 @@ class SchemaBuilder
             return [...$schema, 'type' => ['string', 'null'], 'format' => 'uri', 'readOnly' => true];
         }
 
-        foreach ((clone $definition)->disabled(false)->getRules($model) as $rule) {
+        foreach ((clone $definition)->disabled(false)->plainText(false)->getRules($model) as $rule) {
             $type = $rule[1] ?? null;
 
             if (is_string($type)) {

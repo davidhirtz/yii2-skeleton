@@ -9,8 +9,10 @@ use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
+use Hirtz\Skeleton\Widgets\Forms\Fields\FormTextField;
 use Stringable;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
@@ -26,6 +28,7 @@ abstract class CustomAttribute
     protected Closure|bool $required = false;
     protected Closure|bool $visible = true;
     protected Closure|bool $disabled = false;
+    protected Closure|bool $plainText = false;
     protected mixed $default = null;
     protected ?Closure $field = null;
 
@@ -72,6 +75,15 @@ abstract class CustomAttribute
     public function disabled(Closure|bool $disabled = true): static
     {
         $this->disabled = $disabled;
+        return $this;
+    }
+
+    /**
+     * Shows the formatted value as text instead of an input, so nothing is posted; a translatable attribute refuses it.
+     */
+    public function plainText(Closure|bool $plainText = true): static
+    {
+        $this->plainText = $plainText;
         return $this;
     }
 
@@ -135,6 +147,11 @@ abstract class CustomAttribute
         return $this->disabled instanceof Closure ? (bool)($this->disabled)($owner) : $this->disabled;
     }
 
+    public function isPlainText(Model $owner): bool
+    {
+        return $this->plainText instanceof Closure ? (bool)($this->plainText)($owner) : $this->plainText;
+    }
+
     public function getDefault(): mixed
     {
         return $this->default;
@@ -161,7 +178,7 @@ abstract class CustomAttribute
 
         $names = $this->getAttributeNames($owner);
 
-        if ($this->isDisabled($owner)) {
+        if ($this->isDisabled($owner) || $this->isPlainText($owner)) {
             return [[array_map(static fn (string $name) => "!$name", $names), 'safe']];
         }
 
@@ -222,6 +239,24 @@ abstract class CustomAttribute
     }
 
     abstract public function createField(Model $owner): Field;
+
+    /**
+     * The field a form renders: the definition's own, or the value as text.
+     */
+    public function getField(Model $owner): Field
+    {
+        if (!$this->isPlainText($owner)) {
+            return $this->createField($owner);
+        }
+
+        if ($this->isTranslatable()) {
+            throw new InvalidConfigException("Custom attribute \"$this->name\" cannot be translatable and plain text.");
+        }
+
+        $value = $this->formatValue($owner, $owner->{$this->name});
+
+        return $this->configureField(FormTextField::make()->content(is_array($value) ? null : $value), $owner);
+    }
 
     /**
      * Side effects a definition has beyond the JSON column, such as a file to move into place or to remove. Called

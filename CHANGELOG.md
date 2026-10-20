@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `CustomAttribute::plainText()` and `FormTextField`: a custom attribute shown as text, which no post sets
 - Added `IconCustomAttribute::getUrl()` and `withVersion()`, which appends the file time to it
 - Changed MCP `describe_resource` to list upload and disabled custom attributes as `readOnly`, and `get_record` to answer an upload as its URL
 - Added `UploadCustomAttribute::getUrl()`
