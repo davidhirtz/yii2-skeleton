@@ -88,7 +88,7 @@ class UserForm extends Model
     {
         $this->isNewUser = $this->user->getIsNewRecord();
 
-        if (!$this->user->isOwner() && $this->status !== null) {
+        if ($this->user->isStatusUpdatable() && $this->status !== null) {
             $this->user->status = (int)$this->status;
         }
 

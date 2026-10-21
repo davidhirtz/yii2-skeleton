@@ -179,6 +179,20 @@ class UserAuthControllerTest extends TestCase
         self::assertNotEmpty($this->getWebSession()->getFlash('success'));
     }
 
+    public function testRevokingYourOwnPermissionLeadsToYourAccount(): void
+    {
+        $user = $this->loginWithAuthUpdateOnly();
+
+        $response = $this->post('admin/user-auth/delete', [
+            'id' => $user->id,
+            'name' => User::AUTH_USER_ASSIGN,
+            'type' => Item::TYPE_PERMISSION,
+        ]);
+
+        self::assertInstanceOf(Response::class, $response);
+        self::assertStringEndsWith('/admin/account/update', (string)$response->getHeaders()->get('location'));
+    }
+
     public function testDeleteReportsAnItemThatWasNotAssigned(): void
     {
         $this->login();

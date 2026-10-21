@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
 use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
 
 class UserControllerTest extends TestCase
 {
@@ -83,6 +84,19 @@ class UserControllerTest extends TestCase
 
         $this->expectException(ForbiddenHttpException::class);
         $this->createUserController()->actionStatus($owner->id);
+    }
+
+    public function testNobodyDisablesTheirOwnAccount(): void
+    {
+        $user = $this->login();
+
+        $html = $this->createUserController()->actionUpdate($user->id);
+
+        self::assertIsString($html);
+        self::assertStringNotContainsString('name="UserForm[status]"', $html);
+
+        $this->expectException(NotFoundHttpException::class);
+        $this->createUserController()->actionStatus($user->id);
     }
 
     public function testAFailedOwnershipTransferRedirectsWithTheError(): void

@@ -244,7 +244,7 @@ class AccountController extends Controller
             ? Yii::t('skeleton', 'ACCOUNT_SUCCESS_OTHER_SESSIONS_ENDED', ['count' => $count])
             : Yii::t('skeleton', 'ACCOUNT_SUCCESS_NO_OTHER_SESSIONS'));
 
-        return $this->redirect(['security']);
+        return $this->redirect(['credentials']);
     }
 
     public function actionConfirm(string $code): Response|string
@@ -398,6 +398,11 @@ class AccountController extends Controller
         if ($form->load($this->request->post())) {
             if ($form->save()) {
                 $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
+            }
+
+            // A new email logs out until it is confirmed, unless unconfirmed emails may log in.
+            if ($this->webuser->getIsGuest()) {
+                return $this->redirect(['login']);
             }
 
             if (!$form->hasErrors()) {

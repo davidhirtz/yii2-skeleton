@@ -180,6 +180,7 @@ class AccountSecurityTest extends TestCase
         $response = $this->post('admin/account/logout-other-sessions');
 
         self::assertInstanceOf(Response::class, $response);
+        self::assertStringEndsWith('/admin/account/credentials', (string)$response->getHeaders()->get('location'));
         self::assertNotEmpty($this->getWebSession()->getFlash('success'));
 
         // A new auth key, or the other browsers' auto login cookies would log them straight back in

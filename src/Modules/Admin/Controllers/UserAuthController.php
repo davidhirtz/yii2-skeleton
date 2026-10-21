@@ -102,6 +102,11 @@ class UserAuthController extends Controller
             ]));
         }
 
+        // Revoking your own permission may leave you without this page.
+        if (!$this->webuser->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
+            return $this->redirect(['/admin/account/update']);
+        }
+
         return $this->redirect(['/admin/user-auth/index', 'id' => $user->id]);
     }
 

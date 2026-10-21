@@ -37,7 +37,7 @@ trait UserActiveFormTrait
                 static fn (Status $status): string => $status->getName(),
                 $this->model->user::getStatusDefinitions(),
             ))
-            ->visible(!$this->model->user->isOwner());
+            ->visible($this->model->user->isStatusUpdatable());
     }
 
     protected function getNameField(): string|Stringable

@@ -676,12 +676,13 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
-     * The owner's star is not a status, so there is nothing to cycle through. No `#[Override]`: the method comes
-     * from a trait this class uses itself.
+     * The owner's star is not a status, so there is nothing to cycle through, and disabling your own account would
+     * log you out. No `#[Override]`: the method comes from a trait this class uses itself.
      */
     public function isStatusUpdatable(): bool
     {
-        return !$this->isOwner();
+        $userId = WebUser::current()?->getId();
+        return !$this->isOwner() && ($userId === null || $this->id !== $userId);
     }
 
     /**

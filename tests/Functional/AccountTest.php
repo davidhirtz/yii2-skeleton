@@ -83,6 +83,29 @@ class AccountTest extends TestCase
         self::assertSubmenuLinks();
     }
 
+    /**
+     * A new email logs out until it is confirmed, so the credentials page, which needs a login, is not where to land.
+     */
+    public function testANewEmailWithoutUnconfirmedLoginLandsOnTheLogin(): void
+    {
+        $this->login('owner');
+        $this->getWebUser()->enableUnconfirmedEmailLogin = false;
+
+        $this->open('admin/account/credentials');
+
+        self::$client->followRedirects(false);
+
+        $this->submit('form#account-credentials-form', [
+            ...$this->prefixFormValues('User', ['email' => 'renamed@domain.com']),
+            ...$this->prefixFormValues('AccountCredentialsForm', ['oldPassword' => 'password']),
+        ]);
+
+        $location = self::$client->getInternalResponse()->getHeader('location');
+
+        self::assertIsString($location);
+        self::assertStringEndsWith('/admin/account/login', $location);
+    }
+
     public function testSecurity(): void
     {
         $this->login('owner');
