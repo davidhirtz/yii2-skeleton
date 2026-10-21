@@ -12,13 +12,16 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\MainMenu;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SystemNavItem;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Navs\Nav;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
 use Hirtz\Skeleton\Widgets\Widget;
 use Yii;
+use yii\base\ErrorException;
 use yii\base\Event;
+use yii\base\UserException;
 use yii\rbac\Item;
 
 class ModuleTest extends TestCase
@@ -60,6 +63,29 @@ class ModuleTest extends TestCase
     public function testErrorView(): void
     {
         self::assertFileExists(Yii::getAlias(Module::ERROR_VIEW));
+    }
+
+    public function testErrorViewRendersAPhpErrorWithoutTheViewComponent(): void
+    {
+        $handler = Application::current()->getErrorHandler();
+        // Yii's `ErrorException` asks Xdebug for the stack, which warns while Xdebug is loaded with `XDEBUG_MODE=off`
+        $handler->exception = @new ErrorException('Declaration must be compatible', 0, E_COMPILE_ERROR);
+
+        $content = $handler->renderFile(Module::ERROR_VIEW, ['exception' => $handler->exception]);
+
+        self::assertStringContainsString('<h1>An internal server error occurred.</h1>', $content);
+        self::assertStringNotContainsString('<link', $content);
+    }
+
+    public function testErrorViewRegistersTheAdminAssets(): void
+    {
+        $handler = Application::current()->getErrorHandler();
+        $handler->exception = new UserException('Ångström');
+
+        $content = $handler->renderFile(Module::ERROR_VIEW, ['exception' => $handler->exception]);
+
+        self::assertStringContainsString('<h1>Ångström</h1>', $content);
+        self::assertStringContainsString('<link', $content);
     }
 
     public function testDashboard(): void

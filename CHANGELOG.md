@@ -1,3 +1,7 @@
+## Unreleased
+
+- Fixed the admin error view calling `registerAssetBundle()` on the error handler when it renders a PHP error
+
 ## 3.21.0 (October 21, 2026)
 
 - Added `Modules\Admin\Module::getHomeRoute()`: the dashboard, or the account of a user the dashboard does not admit
