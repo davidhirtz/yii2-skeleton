@@ -114,6 +114,21 @@ class AccountResendConfirmTest extends TestCase
         self::assertNull($user->getLatestToken(UserToken::TYPE_VERIFICATION));
     }
 
+    public function testTheLoginPageOffersItWithoutPasswordReset(): void
+    {
+        $webuser = $this->getWebUser();
+        $webuser->enablePasswordReset = false;
+        $webuser->enableUnconfirmedEmailLogin = false;
+
+        $this->open('admin/account/login');
+        self::assertSelectorExists('a[href="/admin/account/resend"]');
+
+        $webuser->enableUnconfirmedEmailLogin = true;
+
+        $this->open('admin/account/login');
+        self::assertSelectorNotExists('a[href="/admin/account/resend"]');
+    }
+
     private function submitAccountResendConfirmForm(string $email = ''): void
     {
         $this->submit(values: $this->prefixFormValues(AccountResendConfirmForm::instance(), [
