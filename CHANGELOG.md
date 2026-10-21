@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Removed the `.btn-sm` class; every badge is now the same height
+- Fixed `cache/flush` refusing the names of the caches as unexpected arguments
 
 ## 3.21.1 (October 21, 2026)
 

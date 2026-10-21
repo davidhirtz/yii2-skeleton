@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Console;
 
 use Hirtz\Skeleton\Base\Traits\ApplicationTrait;
 use Hirtz\Skeleton\Console\Controllers\AssetController;
+use Hirtz\Skeleton\Console\Controllers\CacheController;
 use Hirtz\Skeleton\Console\Controllers\EmailController;
 use Hirtz\Skeleton\Console\Controllers\HelpController;
 use Hirtz\Skeleton\Console\Controllers\MaintenanceController;
@@ -116,6 +117,7 @@ class Application extends \yii\console\Application
         return [
             ...parent::coreCommands(),
             'asset' => AssetController::class,
+            'cache' => CacheController::class,
             'consent' => ConsentController::class,
             'email' => EmailController::class,
             'help' => HelpController::class,
