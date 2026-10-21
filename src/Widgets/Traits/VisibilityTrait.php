@@ -49,10 +49,11 @@ trait VisibilityTrait
     {
         $visible = $this->visible instanceof Closure ? ($this->visible)($this) : $this->visible;
 
-        if (!$visible) {
-            return false;
-        }
+        return $visible && $this->isGranted();
+    }
 
+    protected function isGranted(): bool
+    {
         if ($this->roles === null) {
             return true;
         }

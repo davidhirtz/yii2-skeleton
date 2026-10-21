@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Modules\Admin;
 
 use Hirtz\Skeleton\Models\AuthItem;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\Admin\ModuleInterface;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\MainMenu;
@@ -30,8 +31,12 @@ class ModuleTest extends TestCase
     {
         parent::setUp();
 
-        // The admin menu is a logged-in surface: `DashboardNavItem` and `SystemNavItem` are guarded by `ROLE_AUTHENTICATED`.
-        $this->getWebUser()->login($this->getUserFromFixture('admin'));
+        // The admin menu is a logged-in surface, and `SystemNavItem` is a manager's.
+        $user = $this->getUserFromFixture('admin');
+        $auth = Yii::$app->getAuthManager();
+        $auth->assign($auth->getRole(User::AUTH_ROLE_MANAGER) ?? self::fail('No manager role.'), $user->id);
+
+        $this->getWebUser()->login($user);
 
         /** @var Module $module */
         $module = Yii::$app->getModule('admin');

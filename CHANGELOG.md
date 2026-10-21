@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Changed `NavItem` to show an item the user may not open for a sub-item they may, linking to it, instead of merging the sub-items' roles after the visibility check
 - Added a searchable multi-select for every `SelectField` with `multiple()`; an option with `data-locked` stays selected
 - Fixed a `SelectField` with `multiple()` posting nothing when every option was deselected, which left the old list
 - Fixed "Delete user" on a user's other tabs posting to that tab's controller

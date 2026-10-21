@@ -200,17 +200,43 @@ class NavItem extends Widget
             return null;
         }
 
-        usort($this->items, fn (self $a, self $b) => $a->order <=> $b->order);
-
-        $subnav = Nav::make()
+        return Nav::make()
             ->class('subnav')
-            ->items($this->items)
+            ->items($this->getSortedItems())
             ->render();
+    }
 
-        foreach ($this->items as $item) {
-            $this->roles($item->getRoles());
+    /**
+     * An item the user may not open is still shown for a sub-item they may, and leads to the first of those. A
+     * sub-item without roles of its own goes with its parent.
+     */
+    #[Override]
+    protected function isGranted(): bool
+    {
+        if (parent::isGranted()) {
+            return true;
         }
 
-        return $subnav;
+        foreach ($this->getSortedItems() as $item) {
+            if ($item->roles !== null && $item->isVisible()) {
+                $this->url = $item->url;
+                $this->active ??= $this->hasActiveRoute() ?? false;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return list<NavItem>
+     */
+    protected function getSortedItems(): array
+    {
+        $items = array_values($this->items);
+        usort($items, fn (self $a, self $b) => $a->order <=> $b->order);
+
+        return $items;
     }
 }

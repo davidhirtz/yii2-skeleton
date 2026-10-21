@@ -92,6 +92,42 @@ class NavTest extends TestCase
         self::assertStringContainsString('Home', $nav());
     }
 
+    public function testAParentIsShownForTheRoleOfASubItemAndLeadsToIt(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->assignPermission($user->id, User::AUTH_USER_ASSIGN);
+        $this->getWebUser()->setIdentity($user);
+
+        $content = NavItem::make()
+            ->label('Parent')
+            ->url('/parent')
+            ->roles([User::AUTH_USER])
+            ->addItem(
+                NavItem::make()->label('Open')->url('/open')->order(2)->roles([User::AUTH_USER_ASSIGN]),
+                NavItem::make()->label('Inherits')->url('/inherits')->order(1),
+                NavItem::make()->label('Closed')->url('/closed')->order(0)->roles([User::AUTH_USER]),
+            )
+            ->render();
+
+        self::assertStringStartsWith('<li class="nav-item"><a class="nav-link" href="/open"><span class="nav-link-label">Parent</span></a>', $content);
+        self::assertStringContainsString('<span class="nav-link-label">Open</span>', $content);
+        self::assertStringNotContainsString('<span class="nav-link-label">Closed</span>', $content);
+    }
+
+    public function testAParentIsNotShownForASubItemWithoutRoles(): void
+    {
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
+
+        $content = NavItem::make()
+            ->label('Parent')
+            ->url('/parent')
+            ->roles([User::AUTH_USER])
+            ->addItem(NavItem::make()->label('Inherits')->url('/inherits'))
+            ->render();
+
+        self::assertSame('', $content);
+    }
+
     public function testItemBadgeAndIcon(): void
     {
         $content = Nav::make()

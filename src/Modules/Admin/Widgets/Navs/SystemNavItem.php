@@ -23,7 +23,7 @@ class SystemNavItem extends NavItem
         $this->icon ??= 'cogs';
         $this->order ??= 999;
         $this->url ??= ['/admin/system/index'];
-        $this->roles ??= [User::ROLE_AUTHENTICATED];
+        $this->roles ??= [User::AUTH_ROLE_ADMIN, User::AUTH_ROLE_MANAGER];
         $this->routes = ['admin/system'];
 
         parent::__construct($config);
