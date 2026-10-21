@@ -38,6 +38,9 @@ class RestoreTrail
     {
     }
 
+    /**
+     * A model without an admin page, the configuration having switched it off among others, is not restored.
+     */
     public static function isRestorable(Trail $trail): bool
     {
         return $trail->type === Trail::TYPE_UPDATE
@@ -45,7 +48,8 @@ class RestoreTrail
             && $trail->data !== []
             && ($model = $trail->getModelRecord()) instanceof ActiveRecord
             && $model instanceof TrailModelInterface
-            && !$model instanceof User;
+            && !$model instanceof User
+            && $model->getAdminRoute() !== false;
     }
 
     public function run(): bool
