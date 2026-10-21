@@ -1,4 +1,4 @@
-## Unreleased
+## 3.21.1 (October 21, 2026)
 
 - Fixed the admin error view calling `registerAssetBundle()` on the error handler when it renders a PHP error
 
