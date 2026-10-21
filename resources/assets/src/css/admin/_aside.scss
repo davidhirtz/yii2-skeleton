@@ -293,7 +293,7 @@
   display: none;
 
   @include media-breakpoint-up(md) {
-    display: block;
+    display: inline-flex;
     margin-left: auto;
   }
 }
