@@ -1,21 +1,63 @@
-parameters:
-    dynamicConstantNames:
-        - YII_DEBUG
-        - YII_ENV
-        - YII_ENV_DEV
-        - YII_ENV_PROD
-        - YII_ENV_TEST
+includes:
+    - vendor/mspirkov/yii2-phpstan/extension.neon
 
+parameters:
     level: 7
 
     paths:
         - resources/views
         - src
         - tests
+
+    bootstrapFiles:
+        - vendor/yiisoft/yii2/Yii.php
+
     scanFiles:
-        - Yii.php
         # mb_trim() is native from PHP 8.4 and the polyfill declares it in a file its bootstrap only requires at runtime
-        - %rootDir%/../../../vendor/symfony/polyfill-mbstring/bootstrap80.php
+        - vendor/symfony/polyfill-mbstring/bootstrap80.php
 
     stubFiles:
         - stubs/yii.stub
+
+    mspirkovYii2:
+        enableAllRules: false
+        enableValidationRules: true
+        yiiAppTypes:
+            -
+                paths:
+                    - .
+                type: Hirtz\Skeleton\Console\Application|Hirtz\Skeleton\Web\Application
+                nullable: false
+        aliases:
+            '@skeleton': src
+        viewPaths:
+            'Hirtz\Skeleton\Modules\Admin\Controllers': resources/views/admin
+        modelAttributeLabelsValidation:
+            # These classes define labels for the attributes of the classes that extend them.
+            skippedClasses:
+                -
+                    class: Hirtz\Skeleton\Db\ActiveRecord
+                -
+                    class: Hirtz\Skeleton\Models\Forms\AccountConfirmForm
+                    attributes:
+                        - name
+                -
+                    class: Hirtz\Skeleton\Models\User
+                    attributes:
+                        - password
+
+    ignoreErrors:
+        # TODO: remove after updating Yii2 to 2.0.56.
+        -
+            rawMessage: 'Behavior option "updatedAtAttribute" for Hirtz\Skeleton\Behaviors\TimestampBehavior must be string, false given.'
+            identifier: mspirkovYii2.componentBehaviorsValidation
+        -
+            identifier: mspirkovYii2.baseObjectInstantiationValidation
+            rawMessage: 'Object option "pagination" for yii\data\ActiveDataProvider must be yii\data\Pagination|false, array<string, int> given.'
+
+        # TODO: remove once `empty()` keeps the `yiiAppTypes` type of `Yii::$app`. Probably a PHPStan 2.3 regression:
+        # the narrowing seems to start from the type declared on `BaseYii::$app`, skipping the extension.
+        -
+            message: '#^(Access to an undefined property|Call to an undefined method) yii\\mail\\MailerInterface::#'
+            path: src/Console/Controllers/EmailController.php
+            count: 3

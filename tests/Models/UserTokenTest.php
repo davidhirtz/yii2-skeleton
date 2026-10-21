@@ -76,7 +76,7 @@ class UserTokenTest extends TestCase
         self::assertTrue($this->findByToken(UserToken::TYPE_PASSWORD_RESET, $token));
 
         UserToken::updateAll(
-            ['expires_at' => (new DateTime('-1 second'))->format('Y-m-d H:i:s')],
+            ['expires_at' => new DateTime('-1 second')],
             ['user_id' => $user->id]
         );
 
@@ -136,7 +136,7 @@ class UserTokenTest extends TestCase
         $expired = $user->createVerificationToken();
 
         UserToken::updateAll(
-            ['expires_at' => (new DateTime('-1 hour'))->format('Y-m-d H:i:s')],
+            ['expires_at' => new DateTime('-1 hour')],
             ['type' => UserToken::TYPE_VERIFICATION]
         );
 

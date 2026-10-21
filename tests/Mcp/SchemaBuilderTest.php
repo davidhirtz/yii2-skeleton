@@ -7,6 +7,8 @@ namespace Hirtz\Skeleton\Tests\Mcp;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Db\ActiveQuery;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Db\Date;
+use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Db\I18nActiveQuery;
 use Hirtz\Skeleton\Mcp\Resource;
 use Hirtz\Skeleton\Mcp\SchemaBuilder;
@@ -296,7 +298,24 @@ class SchemaBuilderTest extends TestCase
 /**
  * @property int $id
  * @property int|null $parent_id
+ * @property int $position
+ * @property int $entry_count
  * @property string|null $name
+ * @property string|null $email
+ * @property string|null $website
+ * @property string|null $color
+ * @property string|null $body
+ * @property int|null $amount
+ * @property string|null $price
+ * @property int $is_featured
+ * @property DateTime|null $published_at
+ * @property Date|null $day
+ * @property string|null $size
+ * @property string|null $note
+ * @property int|null $loose
+ * @property int|null $updated_by_user_id
+ * @property DateTime|null $updated_at
+ * @property DateTime|null $created_at
  *
  * @property-read SchemaRecord|null $parent
  */

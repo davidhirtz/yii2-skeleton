@@ -38,6 +38,7 @@ class DashboardController extends Controller
             ...parent::behaviors(),
             'access' => [
                 'class' => AccessControl::class,
+                // @phpstan-ignore mspirkovYii2.controllerBehaviorActionsValidation (The "actionError" method is not present in this class, but we can't remove 'error' because it would break backward compatibility.)
                 'only' => ['index', 'error'],
                 'rules' => [
                     [

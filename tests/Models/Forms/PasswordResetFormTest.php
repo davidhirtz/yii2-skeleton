@@ -57,7 +57,7 @@ class PasswordResetFormTest extends TestCase
         $form = $this->createForm($user);
 
         UserToken::updateAll(
-            ['expires_at' => (new DateTime('-1 hour'))->format('Y-m-d H:i:s')],
+            ['expires_at' => new DateTime('-1 hour')],
             ['user_id' => $user->id]
         );
 
