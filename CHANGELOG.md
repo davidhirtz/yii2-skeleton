@@ -1,3 +1,7 @@
+## Unreleased
+
+- Removed the `.btn-sm` class; every badge is now the same height
+
 ## 3.21.1 (October 21, 2026)
 
 - Fixed the admin error view calling `registerAssetBundle()` on the error handler when it renders a PHP error
