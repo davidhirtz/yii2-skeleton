@@ -1,4 +1,4 @@
-## Unreleased
+## 3.21.0 (October 21, 2026)
 
 - Added `Modules\Admin\Module::getHomeRoute()`: the dashboard, or the account of a user the dashboard does not admit
 - Changed `RestoreTrail::isRestorable()` to refuse a model whose `getAdminRoute()` answers `false`
