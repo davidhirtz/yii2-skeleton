@@ -333,6 +333,7 @@ return [
     'SEARCH_HEADER_TITLE' => 'Search',
     'SEARCH_LABEL' => 'Search',
     'SEARCH_PLACEHOLDER' => 'Search …',
+    'SELECT_FIELD_REMOVE' => 'Remove {label}',
     'SENTRY_ALERT_MESSAGE' => 'Errors on this installation are only written to its log file. Configure sentryDsn in config/params.php to report them to Sentry.',
     'SESSION_DELETE_EXPIRED_SESSIONS' => 'Delete expired sessions',
     'SESSION_EXPIRED_SESSIONS' => 'Expired sessions: {count,number}',

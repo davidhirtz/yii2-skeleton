@@ -24,6 +24,9 @@ base (`--btn-primary-border-color: var(--btn-primary-bg)`), and only the globals
 are shared; never one module from another. `_theme-dark.scss` holds only what differs; `[data-theme]` or, without
 one, `prefers-color-scheme`. An SVG in `_images.scss` cannot read a variable: its call takes the hex, updated by hand
 when the palette changes. Never merge two colours that tell a rest, hover, active or selected state apart.
+Bebas Neue is one face, the bold cut registered as `font-weight: normal`: a `700` on it is a faux bold. A
+`SelectField` with `multiple()` is enhanced by `includes/multiselect.ts`; the hidden select stays what is posted
+(`data-locked` keeps an option selected and posted).
 
 ## htmx in the scripts
 

@@ -24,7 +24,6 @@
     --dropdown-btn-bg-color: var(--dropdown-btn-active-bg);
     --dropdown-btn-border-color: var(--dropdown-btn-active-border-color);
     --dropdown-btn-color: var(--dropdown-btn-active-color);
-    font-weight: 700;
   }
 
   &:focus, &:hover, .dropdown:has(:popover-open) & {

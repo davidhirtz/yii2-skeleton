@@ -1,11 +1,12 @@
 .badge {
+  align-items: center;
   background: var(--badge-bg);
   border-radius: .25rem;
   color: var(--badge-color);
-  display: inline-block;
+  display: inline-flex;
   font-family: Bebas Neue, sans-serif;
   font-size: .75rem ;
-  font-weight: 700;
+  gap: .25rem;
   letter-spacing: .0625em;
   line-height: 1;
   padding: 0.25rem .5rem;

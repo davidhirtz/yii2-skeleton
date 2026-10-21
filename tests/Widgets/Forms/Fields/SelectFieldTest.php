@@ -66,6 +66,35 @@ class SelectFieldTest extends TestCase
         self::assertEquals($html, $select->render());
     }
 
+    /**
+     * An unselected option posts nothing, so the hidden input is what empties the list.
+     */
+    public function testMultiple(): void
+    {
+        $select = SelectField::make()
+            ->name('F[languages]')
+            ->items(['de' => 'Deutsch', 'fr' => 'Français'])
+            ->value(['fr'])
+            ->multiple();
+
+        $html = $select->render();
+
+        self::assertStringContainsString('<input type="hidden" name="F[languages]" value=""><select', $html);
+        self::assertStringContainsString('name="F[languages][]" multiple data-multiselect="Remove {label}"', $html);
+        self::assertStringContainsString('<option value="fr" selected>Français</option>', $html);
+    }
+
+    public function testDisabledMultipleHasNoHiddenInput(): void
+    {
+        $select = SelectField::make()
+            ->name('F[languages]')
+            ->items(['de' => 'Deutsch'])
+            ->attribute('disabled', true)
+            ->multiple();
+
+        self::assertStringNotContainsString('type="hidden"', $select->render());
+    }
+
     public function testSingleOption(): void
     {
         $select = SelectField::make()

@@ -91,7 +91,7 @@ class CustomAttributeFieldsTest extends TestCase
         );
 
         self::assertStringContainsString(
-            '<select id="fieldrecord-tags" class="input" name="FieldRecord[tags][]" multiple>',
+            '<input type="hidden" name="FieldRecord[tags]" value=""><select id="fieldrecord-tags" class="input" name="FieldRecord[tags][]" multiple data-multiselect="Remove {label}">',
             $content
         );
 

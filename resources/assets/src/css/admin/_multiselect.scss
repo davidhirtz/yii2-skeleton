@@ -1,0 +1,52 @@
+.multiselect {
+  align-items: center;
+  background-color: var(--input-bg-color);
+  cursor: text;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+  min-height: calc(2.5rem + 2px);
+  padding: .3125rem .5rem;
+
+  &:hover:not(:has(.multiselect-search:disabled)),
+  &:focus-within {
+    --input-bg-color: var(--input-focus-bg-color);
+    --input-border-color: var(--input-focus-border-color);
+    --input-color: var(--input-focus-color);
+  }
+
+  &:has(.multiselect-search:disabled) {
+    --input-bg-color: var(--input-disabled-bg-color);
+    --input-color: var(--input-disabled-color);
+    cursor: default;
+  }
+}
+
+.multiselect-remove {
+  align-items: center;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: .875rem;
+  line-height: 1;
+  opacity: .6;
+  padding: 0 0 0 .125rem;
+
+  &:hover,
+  &:focus-visible {
+    opacity: 1;
+    outline: 0;
+  }
+}
+
+.multiselect-search {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  flex: 1 0 6rem;
+  min-width: 0;
+  outline: 0;
+  padding: .1875rem .5rem;
+}

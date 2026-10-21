@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Hirtz\Skeleton\Models\Definitions\Definition;
 use Override;
 use Stringable;
+use Yii;
 use yii\helpers\Inflector;
 
 class SelectField extends Field
@@ -107,6 +108,7 @@ class SelectField extends Field
         if ($this->multiple) {
             $this->attributes['multiple'] = true;
             $this->attributes['name'] = "{$this->attributes['name']}[]";
+            $this->attributes['data-multiselect'] ??= Yii::t('skeleton', 'SELECT_FIELD_REMOVE');
         }
     }
 
@@ -209,7 +211,17 @@ class SelectField extends Field
             $select->addOption($this->getOption((string)$value, $attributes, $selected));
         }
 
-        return $select;
+        if (!$this->multiple || !empty($this->attributes['disabled'])) {
+            return $select;
+        }
+
+        // An unselected option posts nothing, so without it a list emptied in the form never reaches the model
+        $empty = Input::make()
+            ->type('hidden')
+            ->attribute('name', substr((string)($this->attributes['name'] ?? ''), 0, -2))
+            ->value('');
+
+        return $empty . $select;
     }
 
     /**

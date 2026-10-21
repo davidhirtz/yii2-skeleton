@@ -44,7 +44,7 @@
     }
   }
 
-  &:is(div:not(.ts-wrapper)),
+  &:is(div:not(.multiselect)),
   &:disabled {
     color: var(--input-disabled-color);
     background-color: var(--input-disabled-bg-color);

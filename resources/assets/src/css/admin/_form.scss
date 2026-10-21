@@ -134,10 +134,6 @@
   color: var(--color-label);
   display: inline-block;
 
-  .form-label & {
-    font-weight: 700;
-  }
-
   // The padding lines a column label up with the control beside it, so a label that labels a checkbox is
   // excluded — `.form-checkbox-row` for a single one, `.form-checkbox` for an item of a list. `.upload` is
   // named beside `.input` because an upload field renders a button and a hidden input, neither of which is one, and

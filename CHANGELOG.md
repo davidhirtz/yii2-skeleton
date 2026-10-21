@@ -1,3 +1,8 @@
+## Unreleased
+
+- Added a searchable multi-select for every `SelectField` with `multiple()`; an option with `data-locked` stays selected
+- Fixed a `SelectField` with `multiple()` posting nothing when every option was deselected, which left the old list
+
 ## 3.20.1 (October 20, 2026)
 
 - Changed `Flashes` to collapse repeated messages into one alert with a count and fold those beyond `limit()` into a last alert

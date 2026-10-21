@@ -333,6 +333,7 @@ return [
     'SEARCH_HEADER_TITLE' => 'Recherche',
     'SEARCH_LABEL' => 'Recherche',
     'SEARCH_PLACEHOLDER' => 'Rechercher …',
+    'SELECT_FIELD_REMOVE' => 'Retirer {label}',
     'SENTRY_ALERT_MESSAGE' => 'Les erreurs de cette installation sont uniquement consignées dans son fichier journal. Veuillez configurer sentryDsn dans config/params.php pour les signaler à Sentry.',
     'SESSION_DELETE_EXPIRED_SESSIONS' => 'Supprimer les sessions expirées',
     'SESSION_EXPIRED_SESSIONS' => 'Sessions expirées : {count,number}',
