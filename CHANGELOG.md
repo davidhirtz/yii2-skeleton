@@ -2,6 +2,7 @@
 
 - Added a searchable multi-select for every `SelectField` with `multiple()`; an option with `data-locked` stays selected
 - Fixed a `SelectField` with `multiple()` posting nothing when every option was deselected, which left the old list
+- Fixed "Delete user" on a user's other tabs posting to that tab's controller
 
 ## 3.20.1 (October 20, 2026)
 

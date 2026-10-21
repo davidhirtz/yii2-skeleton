@@ -141,6 +141,20 @@ class CredentialPageTest extends TestCase
         self::assertNull(UserCredential::findOne($record->id));
     }
 
+    public function testTheDeleteUserButtonPostsToTheUserController(): void
+    {
+        $admin = $this->getUserFromFixture('admin');
+        $record = UserCredential::store($admin->id, 'acme', ['key' => 'sk-users-key-wxyz']);
+
+        $this->login();
+        $this->open("admin/credential/view?user=$admin->id");
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorExists("[hx-post=\"/admin/user/delete?id=$admin->id\"]");
+        self::assertSelectorNotExists('[hx-post^="/admin/credential/delete?user="]');
+        self::assertNotNull(UserCredential::findOne($record->id));
+    }
+
     public function testAKeyOfAUserOneCannotManageIsNotFound(): void
     {
         $record = UserCredential::store($this->getUserFromFixture('owner')->id, 'acme', ['key' => 'not-yours']);

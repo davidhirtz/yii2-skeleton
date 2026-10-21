@@ -30,6 +30,9 @@ class UserDeleteButton extends DeleteButton
         $this->property ??= 'email';
         $this->title ??= Yii::t('skeleton', 'USER_CONFIRM_DELETE');
 
+        // `UserHeader` renders on every user tab, where the parent's relative `delete` would be that tab's own
+        $this->url ??= ['/admin/user/delete', 'id' => $this->model->id];
+
         parent::configure();
     }
 }
