@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Controllers;
 
+use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\UserController;
 use Hirtz\Skeleton\Test\TestCase;
@@ -97,6 +98,27 @@ class UserControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
         $this->createUserController()->actionStatus($user->id);
+    }
+
+    public function testAUserTheActorMayNotManageOffersNeitherHistoryNorStatus(): void
+    {
+        $actor = $this->login();
+        $this->assignPermission($actor->id, Trail::AUTH_TRAIL_INDEX);
+        $this->getWebUser()->setIdentity($actor);
+
+        $user = $this->getUserFromFixture('disabled');
+        $this->assignAdminRole($user->id);
+
+        $html = $this->createUserController()->actionUpdate($user->id);
+
+        self::assertIsString($html);
+        self::assertStringNotContainsString('/admin/user-trail/index?id=' . $user->id, $html);
+
+        $html = $this->createUserController()->actionIndex();
+
+        self::assertIsString($html);
+        self::assertStringNotContainsString('/admin/user/status?id=' . $user->id . '"', $html);
+        self::assertStringNotContainsString('/admin/user-login/view?user=' . $user->id . '"', $html);
     }
 
     public function testAFailedOwnershipTransferRedirectsWithTheError(): void

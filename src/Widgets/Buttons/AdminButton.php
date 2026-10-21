@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Svg;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
@@ -130,7 +131,7 @@ class AdminButton extends Widget
 
         return A::make()
             ->content($this->icon, $this->getBadge($environment))
-            ->href(['/admin/dashboard/index'])
+            ->href(Module::current()->getHomeRoute())
             ->class('admin-btn')
             ->target('_blank');
     }

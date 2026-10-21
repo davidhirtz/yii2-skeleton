@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
@@ -82,6 +83,10 @@ class TrailHeader extends Header
 
     protected function addSystemBreadcrumb(): void
     {
+        if (!$this->webuser->can(User::AUTH_ROLE_ADMIN) && !$this->webuser->can(User::AUTH_ROLE_MANAGER)) {
+            return;
+        }
+
         $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_SYSTEM'), ['/admin/system/index']);
     }
 

@@ -35,6 +35,25 @@ class UserAuthControllerTest extends TestCase
         self::assertStringContainsString('user-auth/create', $html);
     }
 
+    public function testAPermissionManagerIsLedToThePermissionsRatherThanTheAccount(): void
+    {
+        $this->loginWithAuthUpdateOnly();
+        $user = $this->getUserFromFixture('disabled');
+
+        $html = Yii::$app->runAction('admin/user-auth/index', ['id' => $user->id]);
+
+        self::assertIsString($html);
+        self::assertStringContainsString('<h1><a href="/admin/user-auth/index?id=' . $user->id . '">', $html);
+        self::assertStringNotContainsString('/admin/user/update', $html);
+
+        $html = Yii::$app->runAction('admin/user/index');
+
+        self::assertIsString($html);
+        self::assertStringContainsString('href="/admin/user-auth/index?id=' . $user->id . '"', $html);
+        self::assertStringNotContainsString('/admin/user/update', $html);
+        self::assertStringNotContainsString('/admin/auth/assign', $html);
+    }
+
     public function testIndexIsForbiddenWithoutThePermission(): void
     {
         $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));

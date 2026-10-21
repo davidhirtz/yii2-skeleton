@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Models\User;
@@ -111,9 +112,12 @@ class AuthItemGridView extends GridView
     protected function getUsersColumnColumn(AuthItem $authItem): Stringable
     {
         $items = array_map(
-            fn (User $user) => A::make()
-                ->text($user->getUsername())
-                ->href(['/admin/user-auth/index', 'id' => $user->id]),
+            fn (User $user) => $this->webuser->can(User::AUTH_USER_ASSIGN, ['user' => $user])
+                ? A::make()
+                    ->text($user->getUsername())
+                    ->href(['/admin/user-auth/index', 'id' => $user->id])
+                : Span::make()
+                    ->text($user->getUsername()),
             $authItem->users
         );
 

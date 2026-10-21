@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `Modules\Admin\Module::getHomeRoute()`: the dashboard, or the account of a user the dashboard does not admit
 - Changed `RestoreTrail::isRestorable()` to refuse a model whose `getAdminRoute()` answers `false`
 - Changed `NavItem` to show an item the user may not open for a sub-item they may, linking to it, instead of merging the sub-items' roles after the visibility check
 - Added a searchable multi-select for every `SelectField` with `multiple()`; an option with `data-locked` stays selected

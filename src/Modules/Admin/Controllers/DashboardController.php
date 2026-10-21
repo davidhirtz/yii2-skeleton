@@ -6,6 +6,8 @@ namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
 use Closure;
 use Hirtz\Skeleton\Helpers\EventHelper;
+use Hirtz\Skeleton\Models\Redirect;
+use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Controller;
@@ -22,6 +24,9 @@ class DashboardController extends Controller
      * @var list<string>
      */
     public array $roles = [
+        Module::AUTH_SYSTEM,
+        Redirect::AUTH_REDIRECT,
+        Trail::AUTH_TRAIL_INDEX,
         User::AUTH_USER,
         User::AUTH_USER_ASSIGN,
     ];

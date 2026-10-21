@@ -68,7 +68,13 @@ class AuthItemGridViewTest extends TestCase
             ->one();
 
         self::assertInstanceOf(AuthItem::class, $item);
+
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('owner'));
         self::assertStringContainsString('/admin/user-auth/index?id=' . $user->id, $this->renderItems($item));
+
+        // A user holding a role the acting one lacks is not theirs to manage
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('disabled'));
+        self::assertStringNotContainsString('/admin/user-auth/index?id=' . $user->id, $this->renderItems($item));
     }
 
     public function testTheUserNameIsEscaped(): void

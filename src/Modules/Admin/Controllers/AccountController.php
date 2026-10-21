@@ -189,7 +189,7 @@ class AccountController extends Controller
             return Application::current()->getResponse()->setHtmxReload();
         }
 
-        return $this->redirect($this->request->getReferrer() ?? ['/admin/dashboard/index']);
+        return $this->redirect($this->request->getReferrer() ?? $this->module->getHomeRoute());
     }
 
     public function actionLogin(): Response|string
@@ -210,7 +210,7 @@ class AccountController extends Controller
                         'name' => $form->user->getUsername(),
                     ]));
 
-                return $this->goBack(['/admin/dashboard/index']);
+                return $this->goBack($this->module->getHomeRoute());
             }
 
             if ($form->isTwoFactorAuthenticationCodeRequired()) {
@@ -531,6 +531,6 @@ class AccountController extends Controller
         $this->errorOrSuccess($user, Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_TIMEZONE'));
         return $this->redirect($redirect !== null && Url::isLocalPath($redirect)
             ? $redirect
-            : ['/admin/dashboard/index']);
+            : $this->module->getHomeRoute());
     }
 }

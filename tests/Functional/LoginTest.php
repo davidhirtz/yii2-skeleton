@@ -44,8 +44,9 @@ class LoginTest extends TestCase
         $this->submitLoginForm('never-signed-up@domain.com', 'password');
         self::assertAnyValidationErrorSame('Your email or password are incorrect.');
 
+        // Without a role the dashboard admits, the login lands on the account
         $this->submitLoginForm($this->getUserFixtureData('owner')['email'], 'password');
-        self::assertResponseStatusCodeSame(403);
+        self::assertCurrentUrlEquals('/admin/account/update');
     }
 
     public function testLoginWithAdminPermission(): void

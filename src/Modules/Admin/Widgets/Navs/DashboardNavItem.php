@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
+use Override;
 use Yii;
 
 class DashboardNavItem extends NavItem
@@ -24,5 +26,11 @@ class DashboardNavItem extends NavItem
         $this->routes(['admin/dashboard/index']);
 
         parent::__construct($config);
+    }
+
+    #[Override]
+    public function isVisible(): bool
+    {
+        return parent::isVisible() && Module::current()->isDashboardAvailable();
     }
 }

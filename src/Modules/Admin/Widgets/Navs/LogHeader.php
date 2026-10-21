@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\LogDataProvider;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
@@ -41,6 +42,10 @@ class LogHeader extends Header
 
     protected function addSystemBreadcrumb(): void
     {
+        if (!$this->webuser->can(User::AUTH_ROLE_ADMIN) && !$this->webuser->can(User::AUTH_ROLE_MANAGER)) {
+            return;
+        }
+
         $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_SYSTEM'), [
             '/admin/system/index',
         ]);

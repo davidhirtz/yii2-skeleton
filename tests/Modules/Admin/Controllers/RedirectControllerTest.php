@@ -30,6 +30,17 @@ class RedirectControllerTest extends TestCase
         self::assertStringContainsString('new-page', $html);
     }
 
+    public function testARedirectManagerReachesTheDashboardButIsNotLedToTheSystemPage(): void
+    {
+        $this->login();
+
+        $html = Yii::$app->runAction('admin/redirect/index');
+
+        self::assertIsString($html);
+        self::assertStringNotContainsString('/admin/system/index', $html);
+        self::assertIsString(Yii::$app->runAction('admin/dashboard/index'));
+    }
+
     public function testIndexFiltersByType(): void
     {
         $this->login();

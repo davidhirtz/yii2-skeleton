@@ -103,7 +103,7 @@ class UserSubmenu extends Submenu
 
     protected function getUserTrailItem(): ?NavItem
     {
-        return $this->webuser->can(Trail::AUTH_TRAIL_INDEX)
+        return $this->webuser->can(Trail::AUTH_TRAIL_INDEX, ['user' => $this->model])
             ? NavItem::make()
                 ->label(Yii::t('skeleton', 'COMMON_HISTORY'))
                 ->icon('history')

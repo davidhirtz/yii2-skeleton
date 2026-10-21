@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\UserCreateButton;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Traits\UserRouteTrait;
 use Hirtz\Skeleton\Widgets\Navs\ModelHeader;
 use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Override;
@@ -23,12 +24,16 @@ class UserHeader extends ModelHeader
      * @use ProviderTrait<ActiveDataProvider|null>
      */
     use ProviderTrait;
+    use UserRouteTrait;
 
     #[Override]
     protected function configure(): void
     {
         if ($this->model) {
             $this->title ??= $this->model->getUsername();
+
+            // An empty URL keeps `ModelHeader` from linking a page the acting user may not open.
+            $this->url ??= $this->getUserRoute($this->model) ?? '';
             $this->addContent($this->getUserActionDropdown());
         }
 

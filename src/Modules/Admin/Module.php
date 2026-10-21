@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Console\Controllers\UserLoginController;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Controllers\DashboardController;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Web\User as WebUser;
@@ -105,6 +106,35 @@ class Module extends \Hirtz\Skeleton\Base\Module
         /** @var self $module */
         $module = Yii::$app->getModule('admin');
         return $module;
+    }
+
+    /**
+     * Where a signed-in user's admin starts: the dashboard, or their account when the dashboard admits none of
+     * their roles, as after a signup.
+     *
+     * @return array<int|string, mixed>
+     */
+    public function getHomeRoute(): array
+    {
+        return $this->isDashboardAvailable() ? ['/admin/dashboard/index'] : ['/admin/account/update'];
+    }
+
+    public function isDashboardAvailable(): bool
+    {
+        $webuser = WebUser::current();
+        $controller = $this->createController('dashboard')[0] ?? null;
+
+        if (!$webuser || $webuser->getIsGuest() || !$controller instanceof DashboardController) {
+            return false;
+        }
+
+        foreach ($controller->roles as $role) {
+            if ($role === User::ROLE_AUTHENTICATED || $webuser->can($role)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     #[Override]

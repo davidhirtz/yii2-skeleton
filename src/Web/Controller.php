@@ -136,13 +136,13 @@ class Controller extends \yii\web\Controller
     }
 
     /**
-     * Inside the admin a signed-in user's home is the dashboard, not the website.
+     * Inside the admin a signed-in user's home is the dashboard (or their account), not the website.
      */
     #[Override]
     public function goHome(): Response
     {
         return !$this->webuser->getIsGuest() && $this->isInAdminModule()
-            ? $this->redirect(['/admin/dashboard/index'])
+            ? $this->redirect(AdminModule::current()->getHomeRoute())
             : parent::goHome();
     }
 

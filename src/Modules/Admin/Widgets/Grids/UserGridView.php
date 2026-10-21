@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\UserActiveDataProvider;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Traits\UserRouteTrait;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
 use Hirtz\Skeleton\Widgets\Grids\Columns\ButtonColumn;
 use Hirtz\Skeleton\Widgets\Grids\Columns\Column;
@@ -28,6 +29,8 @@ use Yii;
  */
 class UserGridView extends GridView
 {
+    use UserRouteTrait;
+
     #[Override]
     protected function configure(): void
     {
@@ -61,7 +64,7 @@ class UserGridView extends GridView
     protected function getStatusColumn(): ?Column
     {
         return StatusIconColumn::make()
-            ->enableUpdate($this->enableStatusUpdate && $this->webuser->can(User::AUTH_USER));
+            ->enableUpdate(fn (User $user): bool => $this->enableStatusUpdate && $this->canUpdateUser($user));
     }
 
     protected function getNameColumn(): Column
@@ -81,7 +84,8 @@ class UserGridView extends GridView
                 ->content(Yii::t('skeleton', 'COMMON_USER'))
                 ->class('text-muted');
 
-        return A::make()->content($name)->href($user->getAdminRoute());
+        $route = $this->getUserRoute($user);
+        return $route ? A::make()->content($name)->href($route) : $name;
     }
 
     protected function getEmailColumn(): Column
@@ -110,7 +114,7 @@ class UserGridView extends GridView
     {
         return RelativeTimeColumn::make()
             ->property('last_login')
-            ->url(fn (User $user) => ['/admin/login/index', 'user' => $user->id]);
+            ->url(fn (User $user) => $this->canUpdateUser($user) ? ['/admin/user-login/view', 'user' => $user->id] : null);
     }
 
     protected function getCreatedAtColumn(): DataColumn
@@ -142,7 +146,7 @@ class UserGridView extends GridView
         if ($this->webuser->can(User::AUTH_USER_ASSIGN, ['user' => $user])) {
             return Button::make()
                 ->primary()
-                ->url(['/admin/auth/assign', 'user' => $user->id])
+                ->url(['/admin/user-auth/index', 'id' => $user->id])
                 ->icon('unlock-alt')
                 ->tooltip(Yii::t('skeleton', 'COMMON_PERMISSIONS'))
                 ->render();

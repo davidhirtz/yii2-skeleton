@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Web;
 
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Web\Controller;
@@ -32,10 +33,21 @@ class ControllerTest extends TestCase
 
     public function testGoHomeLeadsAUserInTheAdminToTheDashboard(): void
     {
-        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
+        $user = $this->getUserFromFixture('admin');
+        $this->assignPermission($user->id, User::AUTH_USER);
+        $this->getWebUser()->setIdentity($user);
+
         $controller = new Controller('test', Yii::$app->getModule('admin'));
 
         self::assertSame('/admin/dashboard/index', $this->getGoHomePath($controller));
+    }
+
+    public function testGoHomeLeadsAUserTheDashboardDoesNotAdmitToTheirAccount(): void
+    {
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));
+        $controller = new Controller('test', Yii::$app->getModule('admin'));
+
+        self::assertSame('/admin/account/update', $this->getGoHomePath($controller));
     }
 
     public function testErrorOrSuccessWithModelHavingErrors(): void
