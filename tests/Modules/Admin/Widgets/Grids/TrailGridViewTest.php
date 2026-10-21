@@ -8,6 +8,7 @@ use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
@@ -260,6 +261,18 @@ class TrailGridViewTest extends TestCase
         self::assertSame([User::class, '9'], explode('@', $route['model']));
     }
 
+    public function testTheParentTrailLinkLeadsToTheTrailIndexFromAUsersTrailTab(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+
+        $trail = Trail::create();
+        $trail->data = ['trail_id' => 987654];
+
+        $grid = TestTrailGridView::make()->provider(new TrailActiveDataProvider(['user' => $user]));
+
+        self::assertSame('<a href="/admin/trail/index?id=987654">(#987654)</a>', $grid->dataTrailLink($trail));
+    }
+
     public function testTheClientIsShownBelowTheUser(): void
     {
         $trail = Trail::create();
@@ -316,6 +329,11 @@ class TestTrailGridView extends TrailGridView
     public function modelContent(Trail $trail): array|string
     {
         return $this->getModelColumnContent($trail);
+    }
+
+    public function dataTrailLink(Trail $trail): string
+    {
+        return $this->renderDataTrailLink($trail);
     }
 
     public function dataContent(Trail $trail): string

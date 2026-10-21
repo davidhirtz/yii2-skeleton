@@ -470,7 +470,7 @@ class TrailGridView extends GridView
     protected function renderDataTrailLink(Trail $trail): string
     {
         if ($trailId = ($trail->data['trail_id'] ?? false)) {
-            $link = isset($this->provider->getModels()[$trailId]) ? Url::current(['#' => 'trail-' . $trailId]) : ['index', 'id' => $trailId];
+            $link = isset($this->provider->getModels()[$trailId]) ? Url::current(['#' => 'trail-' . $trailId]) : ['/admin/trail/index', 'id' => $trailId];
             return Html::a('(#' . $trailId . ')', $link);
         }
 
@@ -550,8 +550,8 @@ class TrailGridView extends GridView
 
     /**
      * {@see \Hirtz\Skeleton\Modules\Admin\Controllers\TrailController::actionIndex()} splits the parameter on
-     * `@`, so a route that joins on anything else filters nothing. The route is absolute because the grid also
-     * renders on a user's trail tab, where a relative `index` resolves to `user-trail/index` and drops its id.
+     * `@`, so a route that joins on anything else filters nothing. Routes are absolute because the grid also
+     * renders on a user's trail tab, where a relative `index` resolves to `user-trail/index` and reads a user id.
      *
      * @return array<int|string, mixed>
      */
