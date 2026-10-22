@@ -315,7 +315,8 @@ class UrlManager extends \yii\web\UrlManager
     protected function setLanguage(Request $request): void
     {
         if ($this->i18nUrl) {
-            $pathInfo = trim($request->getPathInfo(), '/');
+            $originalPathInfo = ltrim($request->getPathInfo(), '/');
+            $pathInfo = rtrim($originalPathInfo, '/');
             $code = explode('/', $pathInfo, 2)[0];
 
             // A whole first segment only: `de-stijl` is a slug, `DE` a URL nothing creates
@@ -325,7 +326,7 @@ class UrlManager extends \yii\web\UrlManager
                 $request->setPathInfo(ltrim(mb_substr($pathInfo, mb_strlen($code)), '/'));
 
                 if ($language === $this->defaultLanguage) {
-                    throw new UrlNormalizerRedirectException($this->getUrlWithoutLanguage($request, $code), 301);
+                    throw new UrlNormalizerRedirectException($this->getUrlWithoutLanguage($request, $originalPathInfo, $code), 301);
                 }
 
                 Yii::$app->language = $language;
@@ -336,12 +337,20 @@ class UrlManager extends \yii\web\UrlManager
         Yii::$app->language = $this->defaultLanguage ?: $request->getPreferredLanguage(array_keys($this->getLanguages()));
     }
 
-    private function getUrlWithoutLanguage(Request $request, string $code): string
+    private function getUrlWithoutLanguage(Request $request, string $pathInfo, string $code): string
     {
         $baseUrl = $request->getBaseUrl();
-        $url = substr($request->getUrl(), strlen($baseUrl) + strlen($code) + 1);
+        [$path, $query] = [...explode('?', $request->getUrl(), 2), ''];
+        $path = ltrim(substr($path, strlen($baseUrl)), '/');
 
-        return $request->getHostInfo() . $baseUrl . (str_starts_with($url, '/') ? '' : '/') . $url;
+        // A path tenant's segments precede the language: what the path info no longer holds
+        $position = strlen(urldecode($path)) - strlen($pathInfo);
+        $prefix = substr($path, 0, $position);
+        $path = ltrim(substr($path, $position + strlen($code)), '/');
+
+        $url = $path === '' ? rtrim($prefix, '/') : $prefix . $path;
+
+        return $request->getHostInfo() . $baseUrl . '/' . $url . ($query !== '' ? "?$query" : '');
     }
 
     protected function getBeforeParseEvent(Request $request): ?UrlManagerEvent
