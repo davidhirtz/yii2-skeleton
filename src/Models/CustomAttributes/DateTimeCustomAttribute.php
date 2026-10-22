@@ -40,7 +40,9 @@ class DateTimeCustomAttribute extends CustomAttribute
     {
         $rules = parent::getRules($owner);
 
-        if (!$owner instanceof BaseActiveRecord || !$this->isVisible($owner) || $this->isDisabled($owner)) {
+        if (!($owner instanceof BaseActiveRecord || $owner instanceof CustomAttributeGroupItem)
+            || !$this->isVisible($owner)
+            || $this->isDisabled($owner)) {
             return $rules;
         }
 
@@ -145,16 +147,22 @@ class DateTimeCustomAttribute extends CustomAttribute
     /**
      * The form shows no seconds and cannot tell the repeated autumn hour apart, so what it showed is the old date.
      */
-    private function keepShownValue(BaseActiveRecord $owner, string $name, mixed $value): mixed
+    private function keepShownValue(BaseActiveRecord|CustomAttributeGroupItem $owner, string $name, mixed $value): mixed
     {
         $old = $owner->getOldAttribute($name);
+        $timeZone = Yii::$app->getTimeZone();
 
-        return is_string($value) && $old instanceof DateTimeInterface && $value === DateTimeField::formatDate($old, Yii::$app->getTimeZone())
+        // A group row has its posted values unserialized before it validates, so it compares the date as shown.
+        $shown = $owner instanceof CustomAttributeGroupItem && $value instanceof DateTimeInterface
+            ? DateTimeField::formatDate($value, $timeZone)
+            : $value;
+
+        return is_string($shown) && $old instanceof DateTimeInterface && $shown === DateTimeField::formatDate($old, $timeZone)
             ? $old
             : $value;
     }
 
-    private function keepOldValue(BaseActiveRecord $owner, string $name, mixed $value): mixed
+    private function keepOldValue(BaseActiveRecord|CustomAttributeGroupItem $owner, string $name, mixed $value): mixed
     {
         $old = $owner->getOldAttribute($name);
 

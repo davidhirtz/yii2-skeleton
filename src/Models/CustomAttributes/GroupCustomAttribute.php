@@ -222,7 +222,7 @@ class GroupCustomAttribute extends CustomAttribute
             : "{$owner->formName()}[$this->name]";
 
         /** @var CustomAttributeGroupItem $item */
-        $item = Yii::createObject($this->itemClass, [$this, $owner, $formName]);
+        $item = Yii::createObject($this->itemClass, [$this, $owner, $formName, $this->multiple ? $index : null]);
 
         foreach ($values as $name => $value) {
             $definition = $item->getCustomAttribute((string)$name);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Models\CustomAttributes;
 
+use DateTimeInterface;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Db\Date;
 use Hirtz\Skeleton\Db\DateTime;
@@ -212,6 +213,32 @@ class DateCustomAttributeTest extends TestCase
 
             self::assertSame($expected, $definition->formatValue($record, $legacy));
             self::assertSame($expected, $definition->formatValue($record, '2026-10-09'));
+        });
+    }
+
+    /**
+     * The form shows no seconds, so a group row saved untouched keeps them like a top-level date does.
+     */
+    public function testAnUntouchedDateInAGroupKeepsItsSeconds(): void
+    {
+        $this->inTimeZone('Europe/Berlin', function (): void {
+            $record = DateRecord::create();
+            $record->starts_at = new DateTime('2026-10-09 20:00:47');
+            $record->dates = [['label' => 'Premiere', 'starts_at' => new DateTime('2026-10-09 20:00:47')]];
+            self::assertTrue($record->save(), implode(' ', $record->getErrorSummary(true)));
+
+            $record = DateRecord::findOne($record->id) ?? self::fail('The record is missing.');
+            $record->load([
+                'starts_at' => '2026-10-09T20:00',
+                'dates' => [['label' => 'Premiere', 'starts_at' => '2026-10-09T20:00']],
+            ], '');
+            self::assertTrue($record->save(), implode(' ', $record->getErrorSummary(true)));
+
+            $record = DateRecord::findOne($record->id) ?? self::fail('The record is missing.');
+            $startsAt = $record->getCustomAttributeItems('dates')[0]->getAttribute('starts_at');
+
+            self::assertInstanceOf(DateTimeInterface::class, $startsAt);
+            self::assertSame('20:00:47', $startsAt->format('H:i:s'));
         });
     }
 

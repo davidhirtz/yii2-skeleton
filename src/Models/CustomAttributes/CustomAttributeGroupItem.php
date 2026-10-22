@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Override;
 use yii\base\Model;
+use yii\db\BaseActiveRecord;
 
 /**
  * One row of a {@see GroupCustomAttribute}. Its form name carries the owner's, so `Html::getInputName()` produces
@@ -31,6 +32,7 @@ class CustomAttributeGroupItem extends Model implements CustomAttributeInterface
         private readonly GroupCustomAttribute $group,
         private readonly Model $owner,
         private readonly string $formName,
+        private readonly ?string $index = null,
         array $config = [],
     ) {
         parent::__construct($config);
@@ -87,6 +89,22 @@ class CustomAttributeGroupItem extends Model implements CustomAttributeInterface
     {
         $this->applyCustomAttributeDefaults();
         return parent::beforeValidate();
+    }
+
+    /**
+     * The row's stored value, so a child can tell what the form showed from what it changed.
+     */
+    public function getOldAttribute(string $name): mixed
+    {
+        $old = $this->owner instanceof BaseActiveRecord || $this->owner instanceof self
+            ? $this->owner->getOldAttribute($this->group->name)
+            : null;
+
+        $row = $this->index !== null && is_array($old) ? ($old[$this->index] ?? null) : $old;
+        $value = is_array($row) ? ($row[$name] ?? null) : null;
+        $definition = $this->getCustomAttribute($name);
+
+        return $definition ? $definition->unserialize($value) : $value;
     }
 
     public function hasAttribute(string $name): bool
