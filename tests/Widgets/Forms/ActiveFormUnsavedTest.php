@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Widgets\Forms;
 
+use Hirtz\Skeleton\Models\Forms\AccountUpdateForm;
 use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Models\Redirect;
+use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Models\Forms\UserForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\AccountActiveForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\LoginActiveForm;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\UserActiveForm;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Yii;
 use yii\base\DynamicModel;
@@ -17,6 +23,8 @@ use yii\base\DynamicModel;
  */
 class ActiveFormUnsavedTest extends TestCase
 {
+    use UserFixtureTrait;
+
     public function testAFormAsksBeforeItsChangesAreLeft(): void
     {
         $html = ActiveForm::make()->model(new DynamicModel(['name' => '']))->render();
@@ -50,6 +58,18 @@ class ActiveFormUnsavedTest extends TestCase
 
         $redirect->addError('url', 'URL is invalid.');
         self::assertStringNotContainsString('data-pristine', ActiveForm::make()->model($redirect)->render());
+    }
+
+    public function testTheUserFormsStartOutPristineForASavedUser(): void
+    {
+        $owner = $this->getUserFromFixture('owner');
+        $this->getWebUser()->login($owner);
+
+        $user = $this->getUserFromFixture('disabled');
+
+        self::assertStringContainsString('data-pristine', UserActiveForm::make()->model(new UserForm($user))->render());
+        self::assertStringNotContainsString('data-pristine', UserActiveForm::make()->model(new UserForm(User::create()))->render());
+        self::assertStringContainsString('data-pristine', AccountActiveForm::make()->model(new AccountUpdateForm($owner))->render());
     }
 
     public function testASignInFormAndAReadOnlyOneDoNot(): void

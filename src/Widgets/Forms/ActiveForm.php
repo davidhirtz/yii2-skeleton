@@ -218,7 +218,7 @@ class ActiveForm extends Widget
             // Rendered with input nobody saved yet: a save that failed, or a reload after a type change.
             if ($this->model?->hasErrors() || Request::current()?->isFormReload()) {
                 $this->attributes['data-dirty'] ??= true;
-            } elseif ($this->model instanceof ActiveRecordInterface && !$this->model->getIsNewRecord()) {
+            } elseif ($this->isSavedRecord()) {
                 // The submit button reads muted until a change, but stays a button: a save may do more than it shows.
                 $this->attributes['data-pristine'] ??= true;
             }
@@ -227,6 +227,14 @@ class ActiveForm extends Widget
         $this->fieldsets = $this->normalizeRows($this->fieldsets ?? $this->getDefaultRows());
 
         parent::configure();
+    }
+
+    /**
+     * A form model editing a record it wraps answers for that record here.
+     */
+    protected function isSavedRecord(): bool
+    {
+        return $this->model instanceof ActiveRecordInterface && !$this->model->getIsNewRecord();
     }
 
     /**

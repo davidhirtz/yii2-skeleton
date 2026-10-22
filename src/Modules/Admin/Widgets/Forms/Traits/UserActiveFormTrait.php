@@ -20,6 +20,11 @@ trait UserActiveFormTrait
     use CustomAttributeFieldsTrait;
     use ModuleTrait;
 
+    protected function isSavedRecord(): bool
+    {
+        return !$this->model->user->getIsNewRecord();
+    }
+
     /**
      * @return list<Field>
      */
