@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `Web\Application::getVisibleStatus()`, the status a record needs to be listed on the website, `null` for the admin and MCP
 - Changed `Connection::restore()` to drop the tables created after the backup
 - Changed `params/cookie` to replace an existing cookie validation key only when asked to, and only interactively
 - Added `Caching\TagDependency`, which invalidates its tags again after the outermost commit

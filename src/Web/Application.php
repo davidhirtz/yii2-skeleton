@@ -8,6 +8,9 @@ use Hirtz\Skeleton\Base\Traits\ApplicationTrait;
 use Hirtz\Skeleton\Controllers\McpController;
 use Hirtz\Skeleton\Controllers\OAuthController;
 use Hirtz\Skeleton\Mcp\Mcp;
+use Hirtz\Skeleton\Models\Interfaces\DraftStatusAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
+use Hirtz\Skeleton\Modules\Admin\Module as AdminModule;
 use Hirtz\Skeleton\Rbac\DbManager;
 use Override;
 use Yii;
@@ -60,6 +63,27 @@ class Application extends \yii\web\Application
         }
 
         return $app;
+    }
+
+    /**
+     * The status a record needs to be listed on the website: published, or a draft on the draft host. `null` for the
+     * admin and MCP, which list every status, and before a controller runs.
+     */
+    public function getVisibleStatus(): ?int
+    {
+        if ($this->controller === null || $this->controller instanceof McpController) {
+            return null;
+        }
+
+        for ($module = $this->controller->module; $module !== null; $module = $module->module) {
+            if ($module instanceof AdminModule) {
+                return null;
+            }
+        }
+
+        return $this->getRequest()->getIsDraft()
+            ? DraftStatusAttributeInterface::STATUS_DRAFT
+            : StatusAttributeInterface::STATUS_ENABLED;
     }
 
     public function getContentSecurityPolicy(): ContentSecurityPolicy
