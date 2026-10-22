@@ -45,6 +45,11 @@ class TrailModelCollection
         $modelClass = explode('::', $modelClass);
         $language = $modelClass[1] ?? Yii::$app->language;
 
+        // An old trail of a model the project has since removed, which is no error, and is asked for per row.
+        if (!class_exists($modelClass[0])) {
+            return null;
+        }
+
         return Yii::$app->getI18n()->callback($language, function () use ($modelClass, $modelId) {
             try {
                 /** @var class-string $class */

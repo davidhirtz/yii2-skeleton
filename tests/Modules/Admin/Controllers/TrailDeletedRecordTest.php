@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
+use yii\log\Logger;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -50,6 +51,28 @@ class TrailDeletedRecordTest extends TestCase
 
         self::assertIsString($html);
         self::assertStringNotContainsString("redirect/update?id=$redirect->id", $html);
+    }
+
+    public function testATrailOfARemovedClassLogsNoError(): void
+    {
+        for ($i = 1; $i <= 3; $i++) {
+            $trail = Trail::create();
+            $trail->type = Trail::TYPE_UPDATE;
+            $trail->model_class = 'App\\Models\\RemovedRecord';
+            $trail->model_id = (string)$i;
+            $trail->data = ['name' => ['old', 'neu – Ä']];
+            self::assertTrue($trail->insert(), print_r($trail->getErrors(), true));
+        }
+
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('owner'));
+
+        $this->logger->isRecording = true;
+        $this->logger->messages = [];
+
+        self::assertIsString(Yii::$app->runAction('admin/trail/index'));
+
+        $errors = array_filter($this->logger->messages, fn (array $message): bool => $message[1] === Logger::LEVEL_ERROR);
+        self::assertSame([], $errors);
     }
 
     /**
