@@ -153,7 +153,7 @@ class TwoFactorAuthenticatorForm extends Model
 
     protected function validatePassword(): void
     {
-        if (!$this->user->validatePassword((string)$this->password)) {
+        if (!$this->user->validatePassword(trim((string)$this->password))) {
             $this->addInvalidAttributeError('password');
         }
     }

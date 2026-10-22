@@ -150,6 +150,22 @@ class UserTwoFactorAuthenticationTest extends TestCase
         self::assertEquals(User::RECOVERY_CODE_COUNT, $user->getTwoFactorAuthenticationRecoveryCodeCount());
     }
 
+    public function testEnablingTrimsThePasswordLikeTheLogin(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+
+        $form = TwoFactorAuthenticatorForm::create([
+            'user' => $user,
+            'config' => ['scenario' => TwoFactorAuthenticatorForm::SCENARIO_ENABLE],
+        ]);
+
+        $auth = new \RobThree\Auth\TwoFactorAuth(new \RobThree\Auth\Providers\Qr\BaconQrCodeProvider());
+        $form->code = $auth->getCode($form->getSecret());
+        $form->password = ' password ';
+
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
+    }
+
     /**
      * The code that turns the second factor off is guessed against the login's attempt limit, so a hijacked session
      * cannot try every code.

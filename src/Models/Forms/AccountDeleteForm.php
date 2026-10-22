@@ -17,7 +17,8 @@ class AccountDeleteForm extends DeleteForm
     #[Override]
     protected function isValidValue(): bool
     {
-        return $this->user->validatePassword((string)$this->value);
+        // Trimmed like the login, which accepted it
+        return $this->user->validatePassword(trim((string)$this->value));
     }
 
     #[Override]

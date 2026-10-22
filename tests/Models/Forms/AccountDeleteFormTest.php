@@ -52,6 +52,14 @@ class AccountDeleteFormTest extends TestCase
         self::assertNull(User::findOne($form->user->id));
     }
 
+    public function testThePasswordIsTrimmedLikeTheLogin(): void
+    {
+        $form = $this->createForm();
+        $form->value = " password\t";
+
+        self::assertTrue($form->delete(), print_r($form->getErrors(), true));
+    }
+
     public function testPasswordIsNotExposedAsExpectedValue(): void
     {
         self::assertNull($this->createForm()->getExpectedValue());

@@ -74,7 +74,8 @@ class UserController extends Controller
             return ExitCode::DATAERR;
         }
 
-        $password = $this->readPassword();
+        // Trimmed like the login, which would never match the untrimmed one
+        $password = trim($this->readPassword());
         $length = mb_strlen($password);
 
         if ($length < $user->passwordMinLength || $length > $user->passwordMaxLength) {
