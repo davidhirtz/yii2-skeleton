@@ -48,6 +48,16 @@ class GridHeaderTest extends TestCase
         self::assertStringContainsString('name="q"', $html);
     }
 
+    /**
+     * The toolbar, the search form and the pager carry the sort, so a sort header redraws them too.
+     */
+    public function testASortHeaderSwapsTheWholeGrid(): void
+    {
+        $html = $this->render([new Model()]);
+
+        self::assertMatchesRegularExpression('/<tr hx-select:inherited="#(\w+)" hx-target:inherited="#\1"/', $html);
+    }
+
     public function testAFruitlessSearchKeepsTheToolbar(): void
     {
         $this->getWebRequest()->setQueryParams(['q' => 'needle']);

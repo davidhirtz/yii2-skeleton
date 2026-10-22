@@ -256,7 +256,8 @@ class GridView extends Widget
         $this->headerAttributes['hx-target:inherited'] ??= $this->headerAttributes['hx-select:inherited'];
         $this->headerAttributes['hx-boost:inherited'] ??= 'true';
 
-        $this->tableHeaderAttributes['hx-select:inherited'] ??= "#{$this->getId()} table";
+        // The whole grid, not the table: the toolbar, the search form and the pager carry the sort too.
+        $this->tableHeaderAttributes['hx-select:inherited'] ??= "#{$this->getId()}";
         $this->tableHeaderAttributes['hx-target:inherited'] ??= $this->tableHeaderAttributes['hx-select:inherited'];
         $this->tableHeaderAttributes['hx-boost:inherited'] ??= 'true';
 
