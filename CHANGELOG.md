@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Removed the `$encode` parameter of `GridSearch::markKeywords()`, which always encodes
 - Added `UrlManager::createCanonicalUrl()`, an absolute URL without a language prefix
 - Renamed drag reordering to "reorder": `GridView::isReorderable()` and `reorderRoute()` (route `reorder`), `ReorderButton`, `ReorderAssetBundle`, `GroupCustomAttribute::reorderable()`, `data-reorder-*`, `.reorder-handle`, `GRID_REORDER_*`; added `GridView::isPicker()`, never reorderable
 - Changed `Html::markKeywords()` to take the raw text and encode it itself

@@ -70,27 +70,9 @@ class GridSearch implements Configurable
         return $this->value;
     }
 
-    public function markKeywords(string $text, bool $encode = true, bool $wordBoundary = false): string
+    public function markKeywords(string $text, bool $wordBoundary = false): string
     {
-        $keywords = array_filter(explode(' ', $this->getValue()));
-
-        if ($encode) {
-            return Html::markKeywords($text, array_values($keywords), $wordBoundary);
-        }
-
-        if ($keywords) {
-            foreach ($keywords as $keyword) {
-                $keyword = preg_quote((string)$keyword);
-
-                if ($wordBoundary) {
-                    $keyword = "\b$keyword";
-                }
-
-                $text = preg_replace("#($keyword)#ui", '<mark>$1</mark>', (string)$text);
-            }
-        }
-
-        return $text;
+        return Html::markKeywords($text, array_values(array_filter(explode(' ', $this->getValue()))), $wordBoundary);
     }
 
     public function getToolbarItem(): void
