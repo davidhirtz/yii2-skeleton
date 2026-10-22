@@ -63,6 +63,10 @@ trait BackupTrait
 
         $filename = $backups[$index];
 
+        foreach (Yii::$app->getDb()->getTablesMissingFromBackup($filename) as $table) {
+            $this->stdout("Dropping $table, created after the backup" . PHP_EOL, Console::FG_YELLOW);
+        }
+
         $this->interactiveStartStdout('Restoring database from backup ...');
 
         $isRestored = Yii::$app->getDb()->restore($filename) !== false;

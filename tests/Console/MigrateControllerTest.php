@@ -136,15 +136,24 @@ class MigrateControllerTest extends TestCase
         // read, `migration` among them since `beforeAction()` reads the history. Without the rollback the
         // restore waits out `Connection::$lockWaitTimeout` and then fails. `tearDown()` notices the ended
         // transaction and unloads the fixtures by hand.
-        Application::current()->getDb()->getTransaction()?->rollBack();
+        $db = Application::current()->getDb();
+        $db->getTransaction()?->rollBack();
 
-        $controller->runAction('restore');
-        $stdout = $controller->flushStdOutBuffer();
+        // A table a failed migration created after the backup must not survive the restore
+        $db->createCommand()->createTable('restore_scratch', ['id' => 'pk'])->execute();
 
-        self::assertStringContainsString(basename((string) $filename), $stdout);
-        self::assertStringContainsString('Restoring database from backup ... done', $stdout);
+        try {
+            $controller->runAction('restore');
+            $stdout = $controller->flushStdOutBuffer();
 
-        unlink($filename);
+            self::assertStringContainsString(basename((string) $filename), $stdout);
+            self::assertStringContainsString('Dropping restore_scratch, created after the backup', $stdout);
+            self::assertStringContainsString('Restoring database from backup ... done', $stdout);
+            self::assertNull($db->getTableSchema('restore_scratch', true));
+        } finally {
+            $db->createCommand('DROP TABLE IF EXISTS [[restore_scratch]]')->execute();
+            unlink($filename);
+        }
     }
 
     public function testTheTemplateRendersAMigration(): void

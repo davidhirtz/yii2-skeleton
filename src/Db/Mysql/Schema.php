@@ -78,6 +78,39 @@ class Schema extends \yii\db\mysql\Schema
         return $command->getExecCommand() . ' < "{file}"';
     }
 
+    /**
+     * @return list<string>
+     */
+    public function getBackupTableNames(string $file): array
+    {
+        $handle = @fopen($file, 'r');
+
+        if ($handle === false) {
+            return [];
+        }
+
+        $names = [];
+
+        while (($line = fgets($handle)) !== false) {
+            if (preg_match('/^CREATE TABLE `((?:[^`]|``)+)`/u', $line, $matches)) {
+                $names[] = str_replace('``', '`', $matches[1]);
+            }
+        }
+
+        fclose($handle);
+
+        return $names;
+    }
+
+    /**
+     * @return list<string> the tables, views left out
+     */
+    public function getBaseTableNames(): array
+    {
+        $names = $this->db->createCommand("SHOW FULL TABLES WHERE [[Table_type]] = 'BASE TABLE'")->queryColumn();
+        return array_values(array_map(strval(...), $names));
+    }
+
     public function getBackupFileExtension(): string
     {
         return 'sql';

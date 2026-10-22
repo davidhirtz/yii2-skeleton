@@ -70,12 +70,50 @@ class Connection extends \yii\db\Connection
         return $this->executeShellCommand($command);
     }
 
+    /**
+     * The dump drops and recreates only the tables it holds, so the ones created after it are dropped here.
+     */
     public function restore(string $filename): bool
     {
         $command = $this->getSchema()->getRestoreCommand();
         $command = $this->parseShellCommandTokens($command, $filename);
 
-        return $this->executeShellCommand($command);
+        if (!$this->executeShellCommand($command)) {
+            return false;
+        }
+
+        $tables = $this->getTablesMissingFromBackup($filename);
+
+        if ($tables) {
+            $this->createCommand('SET FOREIGN_KEY_CHECKS = 0')->execute();
+
+            try {
+                foreach ($tables as $table) {
+                    $this->createCommand()->dropTable($table)->execute();
+                }
+            } finally {
+                $this->createCommand('SET FOREIGN_KEY_CHECKS = 1')->execute();
+            }
+        }
+
+        $this->getSchema()->refresh();
+
+        return true;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getTablesMissingFromBackup(string $filename): array
+    {
+        $names = $this->getSchema()->getBackupTableNames($filename);
+
+        // A dump without any table is not one this method can read, and must not empty the database
+        if (!$names) {
+            return [];
+        }
+
+        return array_values(array_diff($this->getSchema()->getBaseTableNames(), $names));
     }
 
     protected function removeOutdatedBackups(): void
