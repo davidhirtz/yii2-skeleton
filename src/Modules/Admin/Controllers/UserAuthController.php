@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\Traits\UserTrait;
+use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Controller;
 use Override;
 use Yii;
@@ -86,7 +87,7 @@ class UserAuthController extends Controller
             ]));
         }
 
-        return $this->redirect(['/admin/user-auth/index', 'id' => $user->id]);
+        return $this->redirectToGrid($user);
     }
 
     public function actionDelete(int $id, string $name, int $type): Response|string
@@ -107,6 +108,15 @@ class UserAuthController extends Controller
             return $this->redirect(['/admin/account/update']);
         }
 
+        return $this->redirectToGrid($user);
+    }
+
+    /**
+     * The button swaps the grid alone, which keeps the scroll position: the redirect is one it follows itself.
+     */
+    protected function redirectToGrid(User $user): Response
+    {
+        Application::current()->getResponse()->setHtmxRedirectTarget(null);
         return $this->redirect(['/admin/user-auth/index', 'id' => $user->id]);
     }
 

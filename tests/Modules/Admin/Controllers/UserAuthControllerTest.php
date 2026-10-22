@@ -129,6 +129,29 @@ class UserAuthControllerTest extends TestCase
         self::assertEquals($trails, Trail::find()->count());
     }
 
+    /**
+     * The button swaps the grid alone, which keeps the scroll position on a long list.
+     */
+    public function testAssigningSwapsOnlyTheGrid(): void
+    {
+        $this->login();
+        $user = $this->getUserFromFixture('disabled');
+        $this->getWebRequest()->getHeaders()->set('HX-Request', 'true');
+
+        $response = $this->post('admin/user-auth/create', [
+            'id' => $user->id,
+            'name' => User::AUTH_USER,
+            'type' => Item::TYPE_PERMISSION,
+        ]);
+
+        self::assertInstanceOf(Response::class, $response);
+        self::assertNull($response->getHeaders()->get('HX-Location'));
+
+        $html = Yii::$app->runAction('admin/user-auth/index', ['id' => $user->id]);
+        self::assertIsString($html);
+        self::assertStringContainsString('hx-target="#auth-item-grid-view"', $html);
+    }
+
     public function testCreateAssignsARole(): void
     {
         $this->login();

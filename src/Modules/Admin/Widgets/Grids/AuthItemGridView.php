@@ -33,6 +33,9 @@ class AuthItemGridView extends GridView
     #[Override]
     public function configure(): void
     {
+        // Literal: an assign swaps the grid after a redirect, a second request counting ids anew.
+        $this->attributes['id'] ??= 'auth-item-grid-view';
+
         if ($this->user) {
             $this->rowAttributes = fn (AuthItem $authItem) => ($authItem->isAssigned || $authItem->isInherited)
                 ? ['class' => 'is-selected']
