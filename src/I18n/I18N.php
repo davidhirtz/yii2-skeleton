@@ -101,14 +101,17 @@ class I18N extends \yii\i18n\I18N
     }
 
     /**
-     * Returns the translated attribute name for given language. If the language is omitted, the current application
-     * language is used.
+     * The admin can be in a language the content is not kept in, which then reads the source language.
      */
+    public function getContentLanguage(?string $language = null): string
+    {
+        $language ??= (string)Yii::$app->language;
+        return in_array($language, $this->getLanguages(), true) ? $language : (string)Yii::$app->sourceLanguage;
+    }
+
     public function getAttributeName(string $attribute, ?string $language = null): string
     {
-        if (!$language) {
-            $language = Yii::$app->language;
-        }
+        $language = $language ?: $this->getContentLanguage();
 
         return rtrim($attribute . '_' . ($language !== Yii::$app->sourceLanguage ? strtr(mb_strtolower((string)$language, Yii::$app->charset), '-', '_') : ''), '_');
     }

@@ -158,7 +158,7 @@ trait I18nAttributesTrait
                 $name = $i18n->getAttributeName($attribute, $language);
                 $label = parent::getAttributeLabel($attribute);
 
-                if ($language !== Yii::$app->language) {
+                if ($language !== $i18n->getContentLanguage()) {
                     $label = Yii::t('skeleton', 'I18N_ATTRIBUTES_LABEL_LANGUAGE', [
                         'label' => $label,
                         'language' => strtoupper((string)$language),

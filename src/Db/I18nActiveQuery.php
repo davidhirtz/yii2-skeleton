@@ -37,7 +37,7 @@ class I18nActiveQuery extends ActiveQuery
             return "$alias.[[$attribute]]";
         }
 
-        $language ??= Yii::$app->language;
+        $language ??= Yii::$app->getI18n()->getContentLanguage();
 
         if ($language === Yii::$app->sourceLanguage) {
             return "$alias.[[$attribute]]";
@@ -65,7 +65,7 @@ class I18nActiveQuery extends ActiveQuery
             throw new InvalidCallException($instance::class . ' does not store translations.');
         }
 
-        $language ??= Yii::$app->language;
+        $language ??= Yii::$app->getI18n()->getContentLanguage();
         $key = "$attribute/$language";
 
         if (!isset($this->translationJoins[$key])) {

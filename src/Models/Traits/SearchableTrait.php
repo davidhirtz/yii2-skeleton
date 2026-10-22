@@ -133,7 +133,7 @@ trait SearchableTrait
      */
     protected function getSearchDescription(string $title): ?string
     {
-        $content = $this->getSearchContent(Yii::$app->language);
+        $content = $this->getSearchContent(Yii::$app->getI18n()->getContentLanguage());
 
         if ($title !== '' && str_starts_with($content, $title)) {
             $content = ltrim(substr($content, strlen($title)));

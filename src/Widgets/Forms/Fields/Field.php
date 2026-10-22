@@ -57,7 +57,7 @@ abstract class Field extends Widget
     public function __construct(array $config = [])
     {
         // Make protected
-        $this->language = Yii::$app->language;
+        $this->language = Yii::$app->getI18n()->getContentLanguage();
         parent::__construct($config);
     }
 

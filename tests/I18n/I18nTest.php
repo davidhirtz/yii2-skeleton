@@ -40,4 +40,18 @@ class I18nTest extends TestCase
         self::assertSame('de', $i18n->getLanguageCode('de'));
         self::assertSame('en', $i18n->getLanguageCode('en-US'));
     }
+
+    public function testAnAdminLanguageOutsideTheContentLanguagesReadsTheSourceLanguage(): void
+    {
+        $i18n = Yii::$app->getI18n();
+
+        Yii::$app->language = 'de';
+        self::assertSame('de', $i18n->getContentLanguage());
+        self::assertSame('name_de', $i18n->getAttributeName('name'));
+
+        Yii::$app->language = 'fr';
+        self::assertSame('en-US', $i18n->getContentLanguage());
+        self::assertSame('name', $i18n->getAttributeName('name'));
+        self::assertSame('name_fr', $i18n->getAttributeName('name', 'fr'));
+    }
 }
