@@ -44,12 +44,16 @@ class AccountConfirmTest extends TestCase
     {
         $user = $this->getUserFromFixture('admin');
 
-        Yii::$app->runAction('admin/account/confirm', [
+        $response = Yii::$app->runAction('admin/account/confirm', [
             'code' => $user->createVerificationToken(),
         ]);
 
         self::assertFalse(User::findOne($user->id)->isUnconfirmed());
         self::assertTrue($this->getWebUser()->getIsGuest());
+
+        // The login form is where the flow continues, not the website a guest's home is
+        self::assertInstanceOf(Response::class, $response);
+        self::assertStringEndsWith('/admin/account/login', (string)$response->getHeaders()->get('location'));
     }
 
     public function testNobodyIsLoggedInWhileLoginIsDisabled(): void

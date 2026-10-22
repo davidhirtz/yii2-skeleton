@@ -68,6 +68,9 @@ class AccountResendConfirmTest extends TestCase
         $this->submitAccountResendConfirmForm($user->email);
         self::assertNotNull($user->getLatestToken(UserToken::TYPE_VERIFICATION));
 
+        // A guest's home is the website, which may not show the flash
+        self::assertCurrentUrlEquals('/admin/account/login');
+
         $email = $this->mailer->getLastMessage();
 
         self::assertEquals($this->mailer->getLastMessageTo(), $user->email);

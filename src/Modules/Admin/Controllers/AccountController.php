@@ -268,7 +268,9 @@ class AccountController extends Controller
         }
 
         $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_EMAIL_ADDRESS_SUCCESSFULLY'));
-        return $this->goHome();
+
+        // A guest's home is the website, so one the confirmation did not log in continues at the login form.
+        return $this->webuser->getIsGuest() ? $this->redirect(['login']) : $this->goHome();
     }
 
     public function actionResend(): Response|string
@@ -284,7 +286,7 @@ class AccountController extends Controller
                     'email' => $form->email,
                 ]));
 
-                return $this->goBack();
+                return $this->webuser->getIsGuest() ? $this->redirect(['login']) : $this->goBack();
             }
 
             $this->error($form);
