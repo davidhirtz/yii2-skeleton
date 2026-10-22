@@ -29,7 +29,12 @@ trait SearchableTrait
             ? (string)$this->getSearchAttributeValue('name', $language)
             : '';
 
-        return mb_substr(SearchText::normalize($title ?: $this->getAdminName()), 0, 255);
+        // The fallback names the record in the document's language, not in the language of whoever saved it.
+        $title = $title ?: ($language !== null
+            ? Yii::$app->getI18n()->callback($language, fn (): string => $this->getAdminName())
+            : $this->getAdminName());
+
+        return mb_substr(SearchText::normalize($title), 0, 255);
     }
 
     public function getSearchWeight(): float
