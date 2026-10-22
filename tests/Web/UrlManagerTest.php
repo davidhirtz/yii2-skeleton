@@ -231,6 +231,36 @@ class UrlManagerTest extends TestCase
         }
     }
 
+    public function testTheRedirectMapKeepsTheQueryString(): void
+    {
+        $manager = $this->getUrlManager([
+            'redirectMap' => [
+                'old-url' => 'https://www.new-domain.com/new-url',
+                'campaign' => '/landing?ref=campaign',
+                'old/*' => 'temp/',
+            ],
+        ]);
+
+        $redirects = [
+            '/old-url?utm_source=x' => 'https://www.new-domain.com/new-url?utm_source=x',
+            '/campaign?utm_source=x' => '/landing?ref=campaign&utm_source=x',
+            '/old/test?a=1&b=/c' => '/temp/test?a=1&b=/c',
+        ];
+
+        foreach ($redirects as $url => $location) {
+            try {
+                $manager->parseRequest($this->getRequest([
+                    'hostInfo' => 'https://www.test.localhost',
+                    'url' => $url,
+                ]));
+
+                self::fail("$url was not redirected");
+            } catch (UrlNormalizerRedirectException $e) {
+                self::assertSame($location, $e->url, $url);
+            }
+        }
+    }
+
     public function testI18nUrlWithoutDefaultLanguage(): void
     {
         $manager = $this->getUrlManager([

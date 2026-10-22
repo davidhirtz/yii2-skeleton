@@ -263,6 +263,7 @@ class UrlManager extends \yii\web\UrlManager
     {
         if ($redirectMap) {
             $pathInfo = trim($request->getPathInfo(), '/');
+            $query = explode('?', (string)$request->getUrl(), 2)[1] ?? '';
 
             foreach ($redirectMap as $urlset => $location) {
                 $statusCode = 301;
@@ -285,7 +286,7 @@ class UrlManager extends \yii\web\UrlManager
                     $url = trim((string)$url, '/');
 
                     if ($url === $pathInfo) {
-                        throw new UrlNormalizerRedirectException($location, $statusCode);
+                        throw new UrlNormalizerRedirectException($this->appendQuery($location, $query), $statusCode);
                     }
 
                     if (str_contains($url, '*')) {
@@ -293,12 +294,17 @@ class UrlManager extends \yii\web\UrlManager
 
                         if ($prefix !== false && str_starts_with($pathInfo, $prefix)) {
                             $newUrl = $location . substr($pathInfo, strlen($prefix));
-                            throw new UrlNormalizerRedirectException($newUrl, $statusCode);
+                            throw new UrlNormalizerRedirectException($this->appendQuery($newUrl, $query), $statusCode);
                         }
                     }
                 }
             }
         }
+    }
+
+    private function appendQuery(string $url, string $query): string
+    {
+        return $query !== '' ? $url . (str_contains($url, '?') ? '&' : '?') . $query : $url;
     }
 
     /**
