@@ -11,8 +11,10 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\TrailGridView;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Override;
+use yii\base\Module;
 use Stringable;
 use Yii;
 
@@ -271,6 +273,29 @@ class TrailGridViewTest extends TestCase
         $grid = TestTrailGridView::make()->provider(new TrailActiveDataProvider(['user' => $user]));
 
         self::assertSame('<a href="/admin/trail/index?id=987654">(#987654)</a>', $grid->dataTrailLink($trail));
+    }
+
+    public function testTheParentTrailLinkAnchorsOnlyATrailOnThePage(): void
+    {
+        /** @var Controller<Module> $controller */
+        $controller = new Controller('test', Yii::$app);
+        Yii::$app->controller = $controller;
+
+        $onPage = Trail::create();
+        $onPage->id = 5000;
+        $other = Trail::create();
+        $other->id = 7;
+
+        $provider = new TrailActiveDataProvider(['user' => $this->getUserFromFixture('owner')]);
+        $provider->setModels([$other, $onPage]);
+        $grid = TestTrailGridView::make()->provider($provider);
+
+        $trail = Trail::create();
+        $trail->data = ['trail_id' => 5000];
+        self::assertStringContainsString('#trail-5000">(#5000)</a>', $grid->dataTrailLink($trail));
+
+        $trail->data = ['trail_id' => 1];
+        self::assertSame('<a href="/admin/trail/index?id=1">(#1)</a>', $grid->dataTrailLink($trail));
     }
 
     public function testTheClientIsShownBelowTheUser(): void

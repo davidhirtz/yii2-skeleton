@@ -470,7 +470,8 @@ class TrailGridView extends GridView
     protected function renderDataTrailLink(Trail $trail): string
     {
         if ($trailId = ($trail->data['trail_id'] ?? false)) {
-            $link = isset($this->provider->getModels()[$trailId]) ? Url::current(['#' => 'trail-' . $trailId]) : ['/admin/trail/index', 'id' => $trailId];
+            $isOnPage = in_array((int)$trailId, array_map(fn (Trail $model): int => $model->id, $this->provider->getModels()), true);
+            $link = $isOnPage ? Url::current(['#' => 'trail-' . $trailId]) : ['/admin/trail/index', 'id' => $trailId];
             return Html::a('(#' . $trailId . ')', $link);
         }
 
