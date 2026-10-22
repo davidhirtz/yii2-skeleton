@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models;
 
 use DateTimeZone;
+use IntlTimeZone;
 use Hirtz\Skeleton\Behaviors\TimestampBehavior;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
@@ -176,6 +177,11 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             [
                 ['email'],
                 'required',
+            ],
+            [
+                ['timezone'],
+                'filter',
+                'filter' => static::getListedTimezone(...),
             ],
             [
                 ['language', 'timezone'],
@@ -792,6 +798,30 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         }
 
         return $languages;
+    }
+
+    /**
+     * Chromium reports the legacy name of some zones (`Asia/Calcutta`), which PHP reads but does not list.
+     */
+    public static function getListedTimezone(mixed $timezone): mixed
+    {
+        $identifiers = DateTimeZone::listIdentifiers();
+
+        if (!is_string($timezone) || in_array($timezone, $identifiers, true)) {
+            return $timezone;
+        }
+
+        $count = IntlTimeZone::countEquivalentIDs($timezone);
+
+        for ($i = 0; $i < $count; $i++) {
+            $id = IntlTimeZone::getEquivalentID($timezone, $i);
+
+            if (in_array($id, $identifiers, true)) {
+                return $id;
+            }
+        }
+
+        return $timezone;
     }
 
     /**

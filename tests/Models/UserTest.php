@@ -15,6 +15,21 @@ class UserTest extends TestCase
 {
     use UserFixtureTrait;
 
+    public function testTheTimezonesChromeReportsAreStoredByTheirListedName(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+
+        foreach (['Asia/Calcutta' => 'Asia/Kolkata', 'Europe/Kiev' => 'Europe/Kyiv', 'Asia/Saigon' => 'Asia/Ho_Chi_Minh'] as $reported => $listed) {
+            $user->timezone = $reported;
+
+            self::assertTrue($user->validate(['timezone']), "$reported: " . $user->getFirstError('timezone'));
+            self::assertSame($listed, $user->timezone);
+        }
+
+        $user->timezone = 'Mars/Olympus_Mons';
+        self::assertFalse($user->validate(['timezone']));
+    }
+
     public function testTheAuthKeyMatchesItselfOnly(): void
     {
         $user = User::create();
