@@ -67,6 +67,28 @@ class MaintenanceControllerTest extends TestCase
         self::assertMaintenanceModeDisabled($controller);
     }
 
+    public function testActionEnableAppliesNewOptionsWhileEnabled(): void
+    {
+        $controller = $this->createMaintenanceController();
+        $controller->actionEnable();
+        $controller->flushStdOutBuffer();
+
+        $controller->redirect = 'https://status.example.com';
+        $controller->statusCode = 302;
+
+        $controller->actionEnable();
+
+        self::assertEquals('Maintenance mode updated.' . PHP_EOL, $controller->flushStdOutBuffer());
+
+        $contents = file_get_contents(Yii::getAlias(MaintenanceConfigForm::MAINTENANCE_CONFIG));
+        self::assertNotFalse($contents);
+
+        $config = json_decode($contents, true);
+
+        self::assertEquals('https://status.example.com', $config['redirect']);
+        self::assertEquals(302, $config['status']);
+    }
+
     protected function assertMaintenanceModeEnabled(MaintenanceControllerMock $controller): void
     {
         self::assertEquals('Maintenance mode enabled.' . PHP_EOL, $controller->flushStdOutBuffer());

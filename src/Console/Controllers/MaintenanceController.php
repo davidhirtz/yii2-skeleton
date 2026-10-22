@@ -93,7 +93,7 @@ class MaintenanceController extends Controller
      */
     public function actionEnable(): int
     {
-        return $this->isMaintenanceMode() ? ExitCode::OK : $this->enableMaintenanceMode(true);
+        return $this->enableMaintenanceMode(true);
     }
 
     /**
@@ -118,6 +118,7 @@ class MaintenanceController extends Controller
      */
     protected function enableMaintenanceMode(bool $withConfig = false): int
     {
+        $isEnabled = $this->isMaintenanceMode();
         $form = MaintenanceConfigForm::create();
 
         if ($withConfig || !$form->isConfigured()) {
@@ -142,7 +143,7 @@ class MaintenanceController extends Controller
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        $this->stdout('Maintenance mode enabled.' . PHP_EOL, Console::FG_GREEN);
+        $this->stdout(($isEnabled ? 'Maintenance mode updated.' : 'Maintenance mode enabled.') . PHP_EOL, Console::FG_GREEN);
         return ExitCode::OK;
     }
 
