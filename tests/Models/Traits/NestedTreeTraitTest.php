@@ -140,6 +140,26 @@ class NestedTreeTraitTest extends TestCase
         self::assertSame(0, TestNestedTreeActiveRecord::rebuildNestedTree($root, $order));
     }
 
+    public function testAPartialOrderSwapsTheSlotsOfThePostedSiblingsAlone(): void
+    {
+        $root = $this->createRecord('Root');
+        $a = $this->createRecord('A', $root);
+        $this->createRecord('B', $root);
+        $c = $this->createRecord('C', $root);
+        $this->createRecord('D', $root);
+        $root->refresh();
+
+        TestNestedTreeActiveRecord::rebuildNestedTree($root, [$c->id => 0, $a->id => 1]);
+
+        $names = TestNestedTreeActiveRecord::find()
+            ->select('name')
+            ->where(['parent_id' => $root->id])
+            ->orderBy(['lft' => SORT_ASC])
+            ->column();
+
+        self::assertSame(['C', 'B', 'A', 'D'], $names);
+    }
+
     public function testValidateParentIdRefusesAParentThatDoesNotExist(): void
     {
         $record = TestNestedTreeActiveRecord::create();

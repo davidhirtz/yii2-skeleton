@@ -359,8 +359,7 @@ trait NestedTreeTrait
         }
 
         if ($order) {
-            $children = array_flip($tree[$parentId]);
-            $tree[$parentId] = array_flip(array_intersect_key($order, $children) + $children);
+            $tree[$parentId] = self::sortSiblings($tree[$parentId] ?? [], $order);
         }
 
         $lft = $parent ? $parent->getAttribute('lft') + 1 : 1;
@@ -383,6 +382,27 @@ trait NestedTreeTrait
         }
 
         return $totalRowsUpdated;
+    }
+
+    /**
+     * A filtered grid posts some of the siblings: they swap among the slots they held, the others keep theirs.
+     *
+     * @param list<int> $siblings
+     * @param array<int|string, int> $order
+     * @return list<int>
+     */
+    private static function sortSiblings(array $siblings, array $order): array
+    {
+        $posted = array_values(array_filter($siblings, fn (int $id): bool => isset($order[$id])));
+        usort($posted, fn (int $a, int $b): int => $order[$a] <=> $order[$b]);
+
+        foreach ($siblings as $index => $id) {
+            if (isset($order[$id])) {
+                $siblings[$index] = (int)array_shift($posted);
+            }
+        }
+
+        return $siblings;
     }
 
     /**
