@@ -35,6 +35,11 @@ class TrailModelCollection
     private static array $modelAttributes = [];
 
     /**
+     * @var array<class-string, true>
+     */
+    private static array $failedClasses = [];
+
+    /**
      * Finds the model based on the given class string. If a model supports `i18n` tables, the corresponding language
      * will be added to the model, separated by "::" like `\Hirtz\Cms\Models\Entry::en_US`.
      *
@@ -51,12 +56,19 @@ class TrailModelCollection
         }
 
         return Yii::$app->getI18n()->callback($language, function () use ($modelClass, $modelId) {
+            /** @var class-string $class */
+            $class = $modelClass[0];
+
+            // A class the project broke is asked for per row: it is reported once and answers nothing after.
+            if (isset(self::$failedClasses[$class])) {
+                return null;
+            }
+
             try {
-                /** @var class-string $class */
-                $class = $modelClass[0];
                 $instance = Yii::createObject($class);
             } catch (Throwable $e) {
-                Yii::error($e->getMessage(), __METHOD__);
+                Yii::warning($e->getMessage(), __METHOD__);
+                self::$failedClasses[$class] = true;
                 $instance = null;
             }
 
@@ -126,6 +138,7 @@ class TrailModelCollection
     {
         self::$models = [];
         self::$modelAttributes = [];
+        self::$failedClasses = [];
     }
 
     /**

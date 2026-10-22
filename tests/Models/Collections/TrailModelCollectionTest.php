@@ -11,11 +11,29 @@ use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
+use RuntimeException;
 use Yii;
 use yii\base\Model;
+use yii\log\Logger;
 
 class TrailModelCollectionTest extends TestCase
 {
+    public function testAClassThatFailsToBuildWarnsOnce(): void
+    {
+        $this->logger->isRecording = true;
+        $this->logger->messages = [];
+
+        self::assertNull(TrailModelCollection::getModelByClassAndId(TrailModelCollectionTestBroken::class, 1));
+        self::assertNull(TrailModelCollection::getModelByClassAndId(TrailModelCollectionTestBroken::class, 2));
+
+        $levels = array_column(array_filter(
+            $this->logger->messages,
+            fn (array $message): bool => $message[0] === 'Broken by the project.',
+        ), 1);
+
+        self::assertSame([Logger::LEVEL_WARNING], $levels);
+    }
+
     /**
      * The declaration is indexed by offset, so a type whose value is not its own offset was never found.
      */
@@ -94,5 +112,13 @@ class TrailModelCollectionTestModel extends Model
             1 => Status::make(1)->name('Enabled'),
             0 => Status::make(0)->name('Draft'),
         ];
+    }
+}
+
+class TrailModelCollectionTestBroken extends Model
+{
+    public function __construct()
+    {
+        throw new RuntimeException('Broken by the project.');
     }
 }
