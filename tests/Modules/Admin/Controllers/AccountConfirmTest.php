@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Tests\Modules\Admin\Controllers;
 
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
@@ -34,6 +35,25 @@ class AccountConfirmTest extends TestCase
         self::assertSame($user->id, $this->getWebUser()->getId());
         self::assertSame(UserLogin::TYPE_CONFIRM_EMAIL, $this->getWebUser()->loginType);
         self::assertNotEmpty($this->getWebSession()->getFlash('success'));
+    }
+
+    public function testTheFlashIsInTheAccountsLanguage(): void
+    {
+        $module = Yii::$app->getModule('admin');
+        self::assertInstanceOf(Module::class, $module);
+        $module->languages = ['en-US', 'de'];
+
+        $user = $this->getUserFromFixture('admin');
+        $user->setTwoFactorAuthenticationSecret(null);
+        $user->language = 'de';
+        $user->update();
+
+        Yii::$app->runAction('admin/account/confirm', [
+            'code' => $user->createVerificationToken(),
+        ]);
+
+        $expected = Yii::$app->getI18n()->callback('de', fn (): string => Yii::t('skeleton', 'ACCOUNT_SUCCESS_EMAIL_ADDRESS_SUCCESSFULLY'));
+        self::assertSame([$expected], $this->getWebSession()->getFlash('success'));
     }
 
     /**

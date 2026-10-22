@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Models\Forms\PasswordRecoverForm;
 use Hirtz\Skeleton\Models\Forms\PasswordResetForm;
 use Hirtz\Skeleton\Models\Forms\SignupForm;
 use Hirtz\Skeleton\Models\Forms\TwoFactorAuthenticatorForm;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserLogin;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\ModuleTrait;
@@ -206,8 +207,7 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post())) {
             if ($form->login()) {
-                // In the language the next page is rendered in, which the account decides from now on.
-                Yii::$app->language = $this->module->getOfferedLanguage($this->module->getSessionLanguage() ?? $form->user->language);
+                $this->useAccountLanguage($form->user);
 
                 $this->success($form->user->login_count === 1
                     ? Yii::t('skeleton', 'ACCOUNT_SUCCESS_LOGIN_SUCCESSFUL')
@@ -269,6 +269,7 @@ class AccountController extends Controller
             if ($canLogin) {
                 $this->webuser->loginType = UserLogin::TYPE_CONFIRM_EMAIL;
                 $this->webuser->login($form->user);
+                $this->useAccountLanguage($form->user);
             }
         }
 
@@ -349,6 +350,10 @@ class AccountController extends Controller
         }
 
         if ($form->load($this->request->post()) && $form->reset()) {
+            if ($identity = $this->webuser->getIdentity()) {
+                $this->useAccountLanguage($identity);
+            }
+
             $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_PASSWORD'));
 
             // A user who owes a second factor is not logged in by the reset, so the login form is where the
@@ -545,5 +550,13 @@ class AccountController extends Controller
         return $this->redirect($redirect !== null && Url::isLocalPath($redirect)
             ? $redirect
             : $this->module->getHomeRoute());
+    }
+
+    /**
+     * A flash set on logging in is read on the next page, which the account's language renders from now on.
+     */
+    private function useAccountLanguage(User $user): void
+    {
+        Yii::$app->language = $this->module->getOfferedLanguage($this->module->getSessionLanguage() ?? $user->language);
     }
 }
