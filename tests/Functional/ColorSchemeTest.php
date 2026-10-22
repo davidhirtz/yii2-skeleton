@@ -70,7 +70,7 @@ class ColorSchemeTest extends TestCase
 
         $this->submit(
             values: $this->prefixFormValues($this->getUserFromFixture('owner'), [
-                'name' => 'updated',
+                'timezone' => 'America/New_York',
             ]),
             server: ['HTTP_HX_REQUEST' => 'true'],
         );

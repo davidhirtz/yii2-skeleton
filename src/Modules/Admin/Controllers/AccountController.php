@@ -363,6 +363,7 @@ class AccountController extends Controller
         ]);
 
         $colorScheme = static::getModule()->getColorScheme();
+        $navbar = [$form->user->language, $form->user->name];
 
         if ($form->load($this->request->post())) {
             if ($form->save()) {
@@ -374,9 +375,12 @@ class AccountController extends Controller
             }
 
             if (!$form->hasErrors()) {
-                // `data-theme` is on `<html>`, which every swap leaves standing — so a scheme the save changed
-                // only reaches the document on a full load.
-                if ($colorScheme !== $form->user->getColorScheme() && $this->request->isHtmxRequest()) {
+                // `data-theme` and `lang` are on `<html>`, the language and the name in the navbar, which every swap
+                // leaves standing — so what the save changed there only reaches the document on a full load.
+                $isChanged = $colorScheme !== $form->user->getColorScheme()
+                    || $navbar !== [$form->user->language, $form->user->name];
+
+                if ($isChanged && $this->request->isHtmxRequest()) {
                     return Application::current()->getResponse()->setHtmxReload();
                 }
 

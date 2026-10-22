@@ -117,17 +117,22 @@ class UserController extends Controller
         $user = $this->findUser($id);
         $form = UserForm::create(['user' => $user]);
         $colorScheme = $user->getColorScheme();
+        $navbar = [$user->language, $user->name];
 
         if ($this->webuser->can(User::AUTH_USER, ['user' => $user])
             && $form->load($this->request->post())
             && $form->save()) {
             $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED'));
 
-            // An administrator editing their own record changes the document's scheme, see `AccountController`.
-            if ($user->id === $this->webuser->getIdentity()?->id
-                && $colorScheme !== $user->getColorScheme()
-                && $this->request->isHtmxRequest()) {
-                return Application::current()->getResponse()->setHtmxReload();
+            // An administrator editing their own record changes the document, see `AccountController::actionUpdate()`.
+            if ($user->id === $this->webuser->getIdentity()?->id) {
+                if ($navbar[0] !== $user->language) {
+                    $this->module->setSessionLanguage(null);
+                }
+
+                if (($colorScheme !== $user->getColorScheme() || $navbar !== [$user->language, $user->name]) && $this->request->isHtmxRequest()) {
+                    return Application::current()->getResponse()->setHtmxReload();
+                }
             }
 
             return $this->refresh();
