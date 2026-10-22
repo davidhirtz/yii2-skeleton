@@ -49,6 +49,16 @@ class ConsentControllerTest extends TestCase
         self::assertStringNotContainsString(self::OTHER_UUID, $html);
     }
 
+    public function testIndexLeadsBackToTheSystemPage(): void
+    {
+        $this->login();
+
+        $html = Yii::$app->runAction('admin/consent/index');
+
+        self::assertIsString($html);
+        self::assertStringContainsString('href="/admin/system/index">' . Yii::t('skeleton', 'COMMON_SYSTEM') . '</a>', $html);
+    }
+
     public function testIndexIsForbiddenForANonAdmin(): void
     {
         $this->getWebUser()->setIdentity($this->getUserFromFixture('admin'));

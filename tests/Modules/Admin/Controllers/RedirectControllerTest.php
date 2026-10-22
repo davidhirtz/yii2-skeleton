@@ -303,6 +303,17 @@ class RedirectControllerTest extends TestCase
         return Yii::$app->runAction($route, $params);
     }
 
+    public function testCreateLeadsBackToTheRedirects(): void
+    {
+        $user = $this->login();
+        $this->assignAdminRole($user->id);
+
+        $html = Yii::$app->runAction('admin/redirect/create');
+
+        self::assertIsString($html);
+        self::assertStringContainsString('href="/admin/redirect/index">' . Yii::t('skeleton', 'COMMON_REDIRECTS') . '</a>', $html);
+    }
+
     private function login(): User
     {
         $user = $this->getUserFromFixture('admin');

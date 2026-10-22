@@ -41,6 +41,7 @@ class RedirectHeader extends ModelHeader
         }
 
         if (!$this->model && !$this->provider) {
+            $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_REDIRECTS'), ['/admin/redirect/index']);
             $this->title ??= Yii::t('skeleton', 'REDIRECT_HEADER_CREATE_NEW_REDIRECT');
         }
 

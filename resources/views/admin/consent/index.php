@@ -13,10 +13,17 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Grids\ConsentGridView;
 use Hirtz\Skeleton\Modules\Admin\Widgets\HintAlert;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
+use Hirtz\Skeleton\Models\User as Account;
+use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 use yii\data\ActiveDataProvider;
 
+$webuser = User::current();
+
 echo Header::make()
+    ->addBreadcrumb($webuser?->can(Account::AUTH_ROLE_ADMIN) || $webuser?->can(Account::AUTH_ROLE_MANAGER)
+        ? Yii::t('skeleton', 'COMMON_SYSTEM')
+        : null, ['/admin/system/index'])
     ->pagination($provider)
     ->title(Yii::t('skeleton', 'COMMON_CONSENTS'));
 
