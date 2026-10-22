@@ -88,8 +88,9 @@ class UserController extends Controller
         $user->generatePasswordHash($password);
         $user->generateAuthKey();
 
-        if ($user->update() === false) {
-            $this->stdout(Console::errorSummary($user) . PHP_EOL, Console::FG_RED);
+        // Unvalidated: the password was checked above, and a stale value elsewhere must not keep the owner locked out
+        if ($user->update(false) === false) {
+            $this->stderr(Console::errorSummary($user) . PHP_EOL, Console::FG_RED);
             return ExitCode::UNSPECIFIED_ERROR;
         }
 

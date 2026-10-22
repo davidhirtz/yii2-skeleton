@@ -39,6 +39,17 @@ class UserControllerTest extends TestCase
         self::assertTrue($user->validatePassword('a-brand-new-password'));
     }
 
+    public function testAPasswordIsSetForAUserTodaysRulesWouldRefuse(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+        $user->updateAttributes(['name' => 'Not A Valid Name!', 'timezone' => 'Nowhere/Nothing']);
+
+        $controller = $this->createController('a-brand-new-password');
+
+        self::assertSame(ExitCode::OK, $controller->actionPassword($user->email));
+        self::assertTrue(User::findOne($user->id)->validatePassword('a-brand-new-password'));
+    }
+
     public function testTheAddressIsMatchedWithoutRegardToCase(): void
     {
         $user = $this->getUserFromFixture('owner');
