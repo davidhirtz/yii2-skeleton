@@ -101,7 +101,8 @@ class UserActiveForm extends ActiveForm
 
     protected function sendEmailField(): ?Stringable
     {
-        return CheckboxField::make()
-            ->property('sendEmail');
+        return $this->model->isPasswordResetEnabled()
+            ? CheckboxField::make()->property('sendEmail')
+            : null;
     }
 }

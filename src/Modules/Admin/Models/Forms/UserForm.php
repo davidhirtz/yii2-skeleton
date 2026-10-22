@@ -60,6 +60,12 @@ class UserForm extends Model
                 'skipOnEmpty' => true,
             ],
             [
+                ['newPassword'],
+                'required',
+                // Without the password reset nothing else lets a new user in.
+                'when' => fn (self $model): bool => $model->user->getIsNewRecord() && !$this->isPasswordResetEnabled(),
+            ],
+            [
                 ['repeatPassword'],
                 'required',
                 'when' => fn (self $model): bool => (bool)$model->newPassword,
@@ -111,6 +117,11 @@ class UserForm extends Model
         return true;
     }
 
+    public function isPasswordResetEnabled(): bool
+    {
+        return Application::current()->getUser()->isPasswordResetEnabled();
+    }
+
     protected function afterSave(): void
     {
         if ($this->newPassword) {
@@ -127,7 +138,12 @@ class UserForm extends Model
         }
 
         // The credentials email never carries the password, so it needs a reset link whether or not one was set
-        // here — and a user created without a password can only reach the account that way at all.
+        // here — and a user created without a password can only reach the account that way at all. The link
+        // lands on an action that refuses the request when the reset is off, so then there is neither.
+        if (!$this->isPasswordResetEnabled()) {
+            return;
+        }
+
         if ($this->sendEmail || (!$this->newPassword && $this->isNewUser)) {
             $this->passwordResetUrl = $this->user->createPasswordResetUrl();
         }

@@ -125,6 +125,27 @@ class UserFormTest extends TestCase
         self::assertStringContainsString($form->getPasswordResetUrl(), $body);
     }
 
+    public function testWithoutThePasswordResetANewUserNeedsAPasswordAndGetsNoResetLink(): void
+    {
+        $this->getWebUser()->enablePasswordReset = false;
+
+        $form = UserForm::create();
+        $form->user->name = 'test-user';
+        $form->user->email = 'test-user@test.com';
+        $form->sendEmail = true;
+
+        self::assertFalse($form->save());
+        self::assertArrayHasKey('newPassword', $form->getErrors());
+
+        $form->newPassword = 'Str0ngPassphrase-ä';
+        $form->repeatPassword = 'Str0ngPassphrase-ä';
+
+        self::assertTrue($form->save(), print_r($form->getErrors(), true));
+        self::assertNull($form->getPasswordResetUrl());
+        self::assertNull($form->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET));
+        self::assertFalse($this->mailer->hasMessages());
+    }
+
     public function testUpdatePassword(): void
     {
         $form = UserForm::create([
