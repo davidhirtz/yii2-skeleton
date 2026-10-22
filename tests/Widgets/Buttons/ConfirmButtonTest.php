@@ -150,6 +150,7 @@ class ConfirmButtonTest extends TestCase
     public function testTheDeleteButtonAsksForTheValue(): void
     {
         $user = $this->getUserFromFixture('admin');
+        $user->email = 'jane-doe+1@ex.ample.com';
 
         $crawler = $this->render(DeleteButton::make()
             ->model($user)
@@ -161,7 +162,8 @@ class ConfirmButtonTest extends TestCase
         $form = $crawler->filter('.modal-body form');
         self::assertSame("/admin/user/delete?id=$user->id", $form->attr('hx-post'));
         self::assertSame('true', $form->attr('hx-push-url'));
-        self::assertSame('^' . preg_quote($user->email, '/') . '$', $form->filter('input[name="value"]')->attr('pattern'));
+        // Valid with the `v` flag a browser compiles `pattern` with: no escaped `-`.
+        self::assertSame('^jane-doe\\+1@ex\\.ample\\.com$', $form->filter('input[name="value"]')->attr('pattern'));
 
         $confirm = $crawler->filter('.modal-footer [form]');
         self::assertSame($form->attr('id'), $confirm->attr('form'));

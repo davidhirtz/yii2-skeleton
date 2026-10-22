@@ -72,6 +72,14 @@ class DeleteButton extends ConfirmButton
             : parent::getForm();
     }
 
+    /**
+     * A `pattern` is compiled with the `v` flag, which refuses the escapes `preg_quote()` adds to `-`, `:` or `#`.
+     */
+    protected function quotePattern(string $value): string
+    {
+        return (string)preg_replace('/[\\\\^$.*+?()[\]{}|\/]/', '\\\\$0', $value);
+    }
+
     protected function getInput(): TextInput
     {
         $value = $this->model->{$this->property};
@@ -81,7 +89,7 @@ class DeleteButton extends ConfirmButton
             ->class('input')
             ->name('value')
             ->placeholder($this->model->getAttributeLabel($this->property))
-            ->pattern($value ? ('^' . preg_quote($value, '/') . '$') : null)
+            ->pattern($value ? ('^' . $this->quotePattern((string)$value) . '$') : null)
             ->required();
     }
 }
