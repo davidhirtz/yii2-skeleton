@@ -7,10 +7,12 @@ namespace Hirtz\Skeleton\Tests\Console;
 use Hirtz\Skeleton\Console\Application;
 use Hirtz\Skeleton\Console\Controllers\MigrateController;
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Override;
 use Yii;
+use yii\console\Exception;
 use yii\console\ExitCode;
 use yii\db\Migration;
 
@@ -93,6 +95,23 @@ class MigrateControllerTest extends TestCase
         } finally {
             $db->username = $username;
         }
+    }
+
+    public function testFreshBacksUpBeforeDroppingTheTables(): void
+    {
+        $controller = $this->createMigrationController();
+        $controller->skipBackup = false;
+        $controller->confirmFresh = true;
+        $controller->backupExitCode = ExitCode::UNSPECIFIED_ERROR;
+
+        try {
+            $controller->runAction('fresh');
+            self::fail('The tables were dropped without a backup.');
+        } catch (Exception) {
+        }
+
+        self::assertStringContainsString('Pass --skipBackup', $controller->flushStdOutBuffer());
+        self::assertNotNull(Application::current()->getDb()->getTableSchema(User::tableName(), true));
     }
 
     public function testAnUnresolvableMigrationNamespaceIsDropped(): void
@@ -224,6 +243,14 @@ class MigrateControllerMock extends MigrateController
     }
 
     public bool $confirmCreateDbCredentialsPrompt = false;
+    public bool $confirmFresh = false;
+    public ?int $backupExitCode = null;
+
+    #[Override]
+    public function actionBackup(): int
+    {
+        return $this->backupExitCode ?? parent::actionBackup();
+    }
 
     private ?string $dbHost = null;
     private ?string $dbName = null;
@@ -258,6 +285,10 @@ class MigrateControllerMock extends MigrateController
 
             case 'Create owner user account?':
                 return false;
+        }
+
+        if ($this->confirmFresh && str_starts_with($message, 'Are you sure you want to drop all tables')) {
+            return true;
         }
 
         $this->stdout($message);

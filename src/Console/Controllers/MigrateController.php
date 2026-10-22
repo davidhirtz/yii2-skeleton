@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Models\User;
 use Override;
 use Seld\CliPrompt\CliPrompt;
 use Yii;
+use yii\console\Exception;
 use yii\console\ExitCode;
 use yii\helpers\Console;
 
@@ -232,6 +233,16 @@ class MigrateController extends \yii\console\controllers\MigrateController
         }
 
         return $result;
+    }
+
+    #[Override]
+    protected function truncateDatabase(): void
+    {
+        if (!$this->backUpOnce()) {
+            throw new Exception('No table was dropped.');
+        }
+
+        parent::truncateDatabase();
     }
 
     #[Override]
