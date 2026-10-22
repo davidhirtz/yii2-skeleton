@@ -65,7 +65,7 @@ class CredentialPageTest extends TestCase
         $record = UserCredential::findOne(['user_id' => $this->getUserFromFixture('owner')->id]) ?? self::fail('No key');
 
         $this->post("admin/credential/delete?id=$record->id");
-        self::assertAlertSame('The key was removed.', 'success');
+        self::assertAlertSame('The key was deleted.', 'success');
         self::assertNull(UserCredential::findOne($record->id));
     }
 
