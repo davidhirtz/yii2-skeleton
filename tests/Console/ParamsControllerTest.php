@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Tests\Console;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Console\Controllers\ParamsController;
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Hirtz\Skeleton\Helpers\SecretKey;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Yii;
 
@@ -98,6 +99,23 @@ class ParamsControllerTest extends TestCase
         $contents = file_get_contents($filename);
         self::assertNotFalse($contents);
         self::assertStringContainsString(Yii::$app->params['cookieValidationKey'], $contents);
+    }
+
+    public function testActionCookieNeverReplacesTheKeyUnattended(): void
+    {
+        $controller = $this->createParamsController();
+        $controller->interactive = false;
+        $controller->actionCreate('cookieValidationKey', 'current');
+        $controller->flushStdOutBuffer();
+
+        $encrypted = SecretKey::encrypt('two-factor-secret');
+
+        $controller->actionCookie();
+        $controller->actionCookie(true);
+
+        self::assertSame('current', Yii::$app->params['cookieValidationKey']);
+        self::assertSame('two-factor-secret', SecretKey::decrypt($encrypted));
+        self::assertStringNotContainsString('generated', $controller->flushStdOutBuffer());
     }
 
     public function testActionCreate(): void

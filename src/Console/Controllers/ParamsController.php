@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Console\Controllers\Traits\ConfigTrait;
 use Hirtz\Skeleton\Helpers\SecretKey;
 use Yii;
 use yii\console\Controller;
+use yii\helpers\Console;
 
 /**
  * Manages application parameters.
@@ -58,19 +59,40 @@ class ParamsController extends Controller
     /**
      * Generates cookie validation key.
      */
-    public function actionCookie(bool $replace = true): void
+    public function actionCookie(bool $replace = false): void
     {
         $params = $this->getConfig($this->config);
         $found = !empty($params['cookieValidationKey']);
 
-        if (!$found || $replace) {
-            $message = $found ? 'Override existing cookie validation key?' : 'Generate cookie validation key?';
-
-            if (!$this->interactive || $this->confirm($message, !$found)) {
-                $params['cookieValidationKey'] = static::generateCookieValidationKey();
-                $this->setConfig($this->config, $params, 'Cookie validation key generated.');
-            }
+        if ($found && !$replace) {
+            return;
         }
+
+        if ($found && !$this->interactive) {
+            $this->stderr('The cookie validation key is only replaced interactively.' . PHP_EOL, Console::FG_RED);
+            return;
+        }
+
+        if ($this->confirmCookie($found)) {
+            $params['cookieValidationKey'] = static::generateCookieValidationKey();
+            $this->setConfig($this->config, $params, 'Cookie validation key generated.');
+        }
+    }
+
+    /**
+     * Without `secretKey`, the cookie validation key is the secret key ({@see SecretKey::get()}).
+     */
+    private function confirmCookie(bool $found): bool
+    {
+        if ($found) {
+            $message = empty(Yii::$app->params['secretKey'])
+                ? 'Replacing the cookie validation key logs everyone out and, as `secretKey` is not set, invalidates every two-factor secret and token. Continue?'
+                : 'Replacing the cookie validation key logs everyone out. Continue?';
+
+            return $this->confirm($message, false);
+        }
+
+        return !$this->interactive || $this->confirm('Generate cookie validation key?', true);
     }
 
     /**
