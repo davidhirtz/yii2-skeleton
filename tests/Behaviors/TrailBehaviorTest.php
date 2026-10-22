@@ -7,6 +7,9 @@ namespace Hirtz\Skeleton\Tests\Behaviors;
 use Hirtz\Skeleton\Models\Traits\AdminModelTrait;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Db\DateTime;
+use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
+use Hirtz\Skeleton\Models\Actions\RestoreTrail;
+use Hirtz\Skeleton\Db\Date;
 use Hirtz\Skeleton\Validators\DateTimeValidator;
 use Hirtz\Skeleton\Validators\SensitiveAttributeValidator;
 use Hirtz\Skeleton\Behaviors\TrailBehavior;
@@ -49,6 +52,7 @@ class TrailBehaviorTest extends TestCase
             'range' => 'int unsigned',
             'user_id' => 'int unsigned null',
             'datetime' => 'datetime',
+            'day' => 'date null',
         ];
 
         Yii::$app->getDb()->createCommand()
@@ -229,6 +233,40 @@ class TrailBehaviorTest extends TestCase
         self::assertEquals(print_r($data, true), $model->formatTrailAttributeValue('name', $data));
     }
 
+    public function testADayIsKeptAsItsDayInAnotherZone(): void
+    {
+        Yii::$app->setTimeZone('Europe/Berlin');
+
+        try {
+            $model = $this->createTrailActiveRecord();
+            $model->day = '2026-10-09';
+            self::assertTrue($model->insert(), implode(' ', $model->getErrorSummary(true)));
+
+            $model->day = '2026-10-10';
+            self::assertSame(1, $model->update());
+
+            $trail = $this->findLatestTrailForActiveRecord($model);
+            self::assertSame(['2026-10-09', '2026-10-10'], $trail->data['day'] ?? null);
+
+            // A row written before the day was stored as one: midnight in Berlin.
+            $legacy = json_decode(json_encode(new Date('2026-10-09', new \DateTimeZone('Europe/Berlin')), JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
+            $trail->data = ['day' => [$legacy, '2026-10-10']];
+            $trail->model_class = RestorableTrailActiveRecord::class;
+            $trail->updateAttributes(['data', 'model_class']);
+
+            Yii::$app->setTimeZone('America/New_York');
+
+            $expected = Yii::$app->getFormatter()->asDate('2026-10-09', 'medium');
+            self::assertSame($expected, $model->formatTrailAttributeValue('day', $legacy));
+            self::assertSame($expected, $model->formatTrailAttributeValue('day', '2026-10-09'));
+
+            self::assertTrue((new RestoreTrail($trail))->run());
+            self::assertSame('2026-10-09', (string)TrailActiveRecord::findOne($model->id)?->day);
+        } finally {
+            Yii::$app->setTimeZone('UTC');
+        }
+    }
+
     public function testChildTrailResolvesDataModelRecord(): void
     {
         $model = $this->createTrailActiveRecord();
@@ -331,6 +369,7 @@ class TrailBehaviorTest extends TestCase
  * @property int $range
  * @property int $user_id
  * @property DateTime $datetime
+ * @property Date|string|null $day
  *
  * @property-read User $user
  *
@@ -355,6 +394,7 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
     public function behaviors(): array
     {
         return [
+            ...parent::behaviors(),
             'TrailBehavior' => [
                 'class' => TrailBehavior::class,
                 'exclude' => [
@@ -385,6 +425,11 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
             [
                 ['datetime'],
                 DateTimeValidator::class,
+            ],
+            [
+                ['day'],
+                DateTimeValidator::class,
+                'type' => AttributeTypecastBehavior::TYPE_DATE,
             ],
             [
                 ['user_id'],
@@ -438,5 +483,14 @@ class TrailBehaviorMock extends TrailBehavior
         };
 
         parent::insertTrail($trail);
+    }
+}
+
+class RestorableTrailActiveRecord extends TrailActiveRecord
+{
+    #[Override]
+    public function getAdminRoute(): array|false
+    {
+        return ['/admin/test'];
     }
 }

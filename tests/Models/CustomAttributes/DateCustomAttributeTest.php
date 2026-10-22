@@ -200,6 +200,21 @@ class DateCustomAttributeTest extends TestCase
         self::assertNull($definitions['day']->formatValue($record, null));
     }
 
+    public function testATrailDateKeepsItsDayInAnotherZone(): void
+    {
+        // What the trail held after an editor in Berlin saved 2026-10-09, and what it holds now.
+        $legacy = json_decode(json_encode(new Date('2026-10-09', new \DateTimeZone('Europe/Berlin')), JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->inTimeZone('America/New_York', function () use ($legacy): void {
+            $record = DateRecord::create();
+            $definition = $record->getCustomAttributeDefinitions()['day'];
+            $expected = Yii::$app->getFormatter()->asDate('2026-10-09', 'medium');
+
+            self::assertSame($expected, $definition->formatValue($record, $legacy));
+            self::assertSame($expected, $definition->formatValue($record, '2026-10-09'));
+        });
+    }
+
     public function testADateInAGroupRoundTrips(): void
     {
         $this->inTimeZone('Europe/Berlin', function (): void {

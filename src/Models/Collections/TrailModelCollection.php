@@ -23,6 +23,7 @@ class TrailModelCollection
     private const string VALUE_TYPE_BOOLEAN = 'bool';
     private const string VALUE_TYPE_RANGE = 'range';
     private const string VALUE_TYPE_DATETIME = 'datetime';
+    private const string VALUE_TYPE_DATE = 'date';
 
     /**
      * @var ActiveRecord[][]
@@ -139,6 +140,9 @@ class TrailModelCollection
             self::VALUE_TYPE_DATETIME => is_array($value) && isset($value['date'])
                 ? Yii::$app->getFormatter()->asDatetime(new DateTime($value['date'], new DateTimeZone($value['timezone'] ?? Yii::$app->timeZone)), 'medium')
                 : $value,
+            self::VALUE_TYPE_DATE => is_array($value) && is_string($value['date'] ?? null) || is_string($value) && $value !== ''
+                ? Yii::$app->getFormatter()->asDate(substr(is_array($value) ? $value['date'] : $value, 0, 10), 'medium')
+                : $value,
             self::VALUE_TYPE_RANGE => self::formatRangeValue($model, $attribute, $value),
             default => is_array($value) ? print_r($value, true) : (string)$value,
         };
@@ -230,13 +234,14 @@ class TrailModelCollection
                 $columns = $schema->getTableSchema($model::tableName())->columns;
 
                 $dateTypes = [
-                    $schema::TYPE_DATE,
                     $schema::TYPE_DATETIME,
                     $schema::TYPE_TIMESTAMP,
                 ];
 
                 foreach ($columns as $column) {
-                    if (in_array($column->dbType, $dateTypes, true)) {
+                    if ($column->dbType === $schema::TYPE_DATE) {
+                        $attributes[$column->name] = self::VALUE_TYPE_DATE;
+                    } elseif (in_array($column->dbType, $dateTypes, true)) {
                         $attributes[$column->name] = self::VALUE_TYPE_DATETIME;
                     }
                 }

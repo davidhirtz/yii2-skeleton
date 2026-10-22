@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Actions;
 
+use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Db\DateTime;
 use DateTimeZone;
 use Exception;
@@ -74,7 +75,7 @@ class RestoreTrail
                 continue;
             }
 
-            $values[$attribute] = $this->normalize($change[0]);
+            $values[$attribute] = $this->normalize($model, $attribute, $change[0]);
         }
 
         if (!$values) {
@@ -113,11 +114,22 @@ class RestoreTrail
     }
 
     /**
-     * A date went through `json_encode()` into the trail, which wrote PHP's own shape of it.
+     * A date went through `json_encode()` into the trail, which wrote PHP's own shape of it. A custom attribute reads
+     * that itself, and a `date` column is the day it was saved as.
      */
-    protected function normalize(mixed $value): mixed
+    protected function normalize(ActiveRecord $model, string $attribute, mixed $value): mixed
     {
+        if ($model instanceof CustomAttributeInterface && isset($model->getCustomAttributeDefinitions()[$attribute])) {
+            return $value;
+        }
+
         if (is_array($value) && isset($value['date'], $value['timezone']) && is_string($value['date'])) {
+            $behavior = $model->getBehavior('AttributeTypecastBehavior');
+
+            if ($behavior instanceof AttributeTypecastBehavior && ($behavior->getDateAttributes()[$attribute] ?? null) === AttributeTypecastBehavior::TYPE_DATE) {
+                return substr($value['date'], 0, 10);
+            }
+
             try {
                 return new DateTime($value['date'], new DateTimeZone((string)$value['timezone']));
             } catch (Exception) {

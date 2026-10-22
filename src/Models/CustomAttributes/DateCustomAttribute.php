@@ -52,6 +52,11 @@ class DateCustomAttribute extends DateTimeCustomAttribute
     {
         $timeZone = new DateTimeZone(Yii::$app->getTimeZone());
 
+        // The trail kept the day of the zone it was saved in, which is the day.
+        if (is_array($value) && is_string($value['date'] ?? null)) {
+            $value = substr($value['date'], 0, 10);
+        }
+
         if ($value instanceof Date) {
             return $value;
         }

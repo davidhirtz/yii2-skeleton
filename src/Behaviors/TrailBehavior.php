@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Behaviors;
 
+use Hirtz\Skeleton\Db\Date;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Validators\SensitiveAttributeValidator;
@@ -122,7 +123,8 @@ class TrailBehavior extends Behavior
             }
         }
 
-        return $value;
+        // A day is a day wherever the history is read, not the instant its midnight was where it was saved.
+        return $value instanceof Date ? $value->format('Y-m-d') : $value;
     }
 
     protected function onAfterDelete(): void

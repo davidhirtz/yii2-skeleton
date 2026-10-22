@@ -80,17 +80,9 @@ class DateTimeCustomAttribute extends CustomAttribute
         return $this->normalize($value);
     }
 
-    /**
-     * The trail stores a date as the array `json_encode()` makes of it.
-     */
     #[Override]
     public function formatValue(Model $owner, mixed $value): ?string
     {
-        if (is_array($value) && is_string($value['date'] ?? null)) {
-            $timeZone = is_string($value['timezone'] ?? null) ? $value['timezone'] : 'UTC';
-            $value = new DateTime($value['date'], new DateTimeZone($timeZone));
-        }
-
         $value = $this->normalize($value);
 
         return match (true) {
@@ -115,6 +107,15 @@ class DateTimeCustomAttribute extends CustomAttribute
     protected function createDate(mixed $value): ?DateTimeInterface
     {
         $timeZone = new DateTimeZone(Yii::$app->getTimeZone());
+
+        // The trail holds a date in the shape `json_encode()` gave it.
+        if (is_array($value) && is_string($value['date'] ?? null)) {
+            try {
+                $value = new DateTime($value['date'], new DateTimeZone(is_string($value['timezone'] ?? null) ? $value['timezone'] : 'UTC'));
+            } catch (Exception) {
+                return null;
+            }
+        }
 
         if ($value instanceof DateTime) {
             return $value;
