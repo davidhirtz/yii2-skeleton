@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Actions;
 
-use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Hirtz\Skeleton\Web\Request;
 use Yii;
 use yii\db\ActiveRecordInterface;
@@ -16,6 +15,11 @@ use yii\db\ActiveRecordInterface;
 class ReorderActiveRecords
 {
     private int $totalRowsUpdated = 0;
+
+    /**
+     * @var array<int|string, int>|null
+     */
+    private ?array $positions = null;
 
     /**
      * @param TActiveRecord[] $models
@@ -93,8 +97,44 @@ class ReorderActiveRecords
      */
     protected function getNewPosition(array $primaryKey): int
     {
-        $index = $this->index ? $primaryKey[$this->index] : current($primaryKey);
-        return ArrayHelper::getValue($this->order, $index, 0) + 1;
+        $this->positions ??= $this->getNewPositions();
+        return $this->positions[$this->getIndex($primaryKey)] ?? 1;
+    }
+
+    /**
+     * A filtered grid posts some of the rows: they share out the positions they held and the hidden rows keep theirs.
+     * Positions that do not tell the rows apart are numbered from `1` instead.
+     *
+     * @return array<int|string, int>
+     */
+    private function getNewPositions(): array
+    {
+        $indexes = [];
+        $positions = [];
+
+        foreach ($this->models as $model) {
+            $index = $this->getIndex($model->getPrimaryKey(true));
+            $indexes[$index] = $this->order[$index] ?? 0;
+            $positions[] = (int)$model->getAttribute($this->attribute);
+        }
+
+        sort($positions);
+
+        if (count(array_unique($positions)) !== count($positions) || in_array(0, $positions, true)) {
+            $positions = $positions ? range(1, count($positions)) : [];
+        }
+
+        asort($indexes);
+
+        return array_combine(array_keys($indexes), $positions);
+    }
+
+    /**
+     * @param array<string, mixed> $primaryKey
+     */
+    private function getIndex(array $primaryKey): int|string
+    {
+        return $this->index ? $primaryKey[$this->index] : current($primaryKey);
     }
 
     /**
