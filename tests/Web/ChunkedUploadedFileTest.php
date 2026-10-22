@@ -81,6 +81,29 @@ class ChunkedUploadedFileTest extends TestCase
         self::assertSame('abcdefghi', file_get_contents($third->tempName));
     }
 
+    /**
+     * Two uploads of one filename, from two tabs or fields, interleave their chunks.
+     */
+    public function testTwoUploadsOfOneFilenameKeepTheirOwnChunks(): void
+    {
+        $headers = $this->getWebRequest()->getHeaders();
+
+        $headers->set('x-upload-id', 'upload-a-1');
+        $this->createUploadedFile($this->createSourceFile('AAAAA', 'a1'), range: 'bytes 0-4/10');
+
+        $headers->set('x-upload-id', 'upload-b-1');
+        $this->createUploadedFile($this->createSourceFile('BBBBB', 'b1'), range: 'bytes 0-4/10');
+
+        $headers->set('x-upload-id', 'upload-a-1');
+        $a = $this->createUploadedFile($this->createSourceFile('aaaaa', 'a2'), range: 'bytes 5-9/10');
+
+        $headers->set('x-upload-id', 'upload-b-1');
+        $b = $this->createUploadedFile($this->createSourceFile('bbbbb', 'b2'), range: 'bytes 5-9/10');
+
+        self::assertSame('AAAAAaaaaa', file_get_contents($a->tempName));
+        self::assertSame('BBBBBbbbbb', file_get_contents($b->tempName));
+    }
+
     public function testARetriedChunkReplacesItsFirstAttempt(): void
     {
         $this->createUploadedFile($this->createSourceFile('abc', 'a'), range: 'bytes 0-2/9');

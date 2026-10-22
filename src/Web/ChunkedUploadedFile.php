@@ -66,7 +66,7 @@ class ChunkedUploadedFile extends UploadedFile
             throw new BadRequestHttpException();
         }
 
-        $tempName = $this->getPartialUploadPath() . Application::current()->getSession()->getId() . "-$this->name.tmp";
+        $tempName = $this->getPartialUploadPath() . Application::current()->getSession()->getId() . '-' . self::getUploadKey($this->name) . '.tmp';
 
         if ($start === 0 && is_file($tempName)) {
             Yii::debug("Remove previously aborted upload '$tempName'");
@@ -117,6 +117,16 @@ class ChunkedUploadedFile extends UploadedFile
     public static function isUploadStart(): bool
     {
         return (self::getContentRange()[0] ?? 0) === 0;
+    }
+
+    /**
+     * Two uploads of one filename, from two tabs or fields, must not append to each other's chunks: the client names
+     * each upload, and only a client that does not falls back to the filename.
+     */
+    protected static function getUploadKey(string $name): string
+    {
+        $id = (string)Application::current()->getRequest()->getHeaders()->get('x-upload-id');
+        return preg_match('/^[A-Za-z0-9-]{8,64}$/', $id) ? $id : $name;
     }
 
     /**

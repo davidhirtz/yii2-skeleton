@@ -85,6 +85,9 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
             // A bundle's script adds fields to the request completing the file (`yii2-media-video` a frame of the
             // video), prepared while the chunks before it upload.
             const detail: FileUploadPrepareDetail = {file, input: $input, fields: []};
+
+            // Keys the server's partial file, which two uploads of the same filename would otherwise share.
+            const uploadId = Math.random().toString(36).slice(2) + Date.now().toString(36);
             this.dispatchEvent(new CustomEvent('file-upload:prepare', {bubbles: true, detail}));
 
             for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
@@ -97,6 +100,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                     const blob = file.slice(start, end);
                     body.append($input.name, new File([blob], file.name, {type: file.type}));
                     headers.set('Content-Range', `bytes ${start}-${end - 1}/${file.size}`);
+                    headers.set('X-Upload-Id', uploadId);
                 } else {
                     body.append($input.name, file);
                 }
