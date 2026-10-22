@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Controllers;
 
 use Hirtz\Skeleton\Controllers\SitemapController;
-use Hirtz\Skeleton\Filters\PageCache as SkeletonPageCache;
+use Hirtz\Skeleton\Filters\PageCache;
 use Hirtz\Skeleton\Test\TestCase;
 use SimpleXMLElement;
 use Yii;
-use yii\filters\PageCache;
+use yii\base\Event;
 use yii\web\NotFoundHttpException;
 
 class SitemapControllerTest extends TestCase
@@ -112,16 +112,26 @@ class SitemapControllerTest extends TestCase
     public function testTheSitemapCacheFollowsThePageCacheTag(): void
     {
         Yii::$app->sitemap->cache = 'cache';
-        $controller = Yii::createObject(SitemapController::class, ['sitemap', Yii::$app]);
+        $filter = $this->findPageCache();
 
-        foreach ($controller->behaviors() as $behavior) {
-            if (is_array($behavior) && $behavior['class'] === PageCache::class) {
-                self::assertSame([SkeletonPageCache::TAG_DEPENDENCY_KEY], $behavior['dependency']['tags'] ?? null);
-                return;
-            }
+        self::assertIsArray($filter?->dependency);
+        self::assertSame([PageCache::TAG_DEPENDENCY_KEY], $filter->dependency['tags'] ?? null);
+    }
+
+    public function testTheSitemapCacheTriggersThePageCacheConfigureEvent(): void
+    {
+        Yii::$app->sitemap->cache = 'cache';
+
+        Event::on(PageCache::class, PageCache::EVENT_CONFIGURE, $handler = function (Event $event): void {
+            self::assertInstanceOf(PageCache::class, $event->sender);
+            $event->sender->duration = 60;
+        });
+
+        try {
+            self::assertSame(60, $this->findPageCache()?->duration);
+        } finally {
+            Event::off(PageCache::class, PageCache::EVENT_CONFIGURE, $handler);
         }
-
-        self::fail('The sitemap is not cached.');
     }
 
     /**
@@ -208,6 +218,19 @@ class SitemapControllerTest extends TestCase
                 /** @var list<string> $variations */
                 $variations = $behavior['variations'] ?? [];
                 return $variations;
+            }
+        }
+
+        return null;
+    }
+
+    private function findPageCache(): ?PageCache
+    {
+        $controller = Yii::createObject(SitemapController::class, ['sitemap', Yii::$app]);
+
+        foreach ($controller->getBehaviors() as $behavior) {
+            if ($behavior instanceof PageCache) {
+                return $behavior;
             }
         }
 

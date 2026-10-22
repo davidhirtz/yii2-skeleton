@@ -11,9 +11,7 @@ use Hirtz\Skeleton\Web\Controller;
 use Override;
 use XMLWriter;
 use Yii;
-use Hirtz\Skeleton\Filters\PageCache as SkeletonPageCache;
-use yii\caching\TagDependency;
-use yii\filters\PageCache;
+use Hirtz\Skeleton\Filters\PageCache;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\base\Module;
@@ -63,17 +61,16 @@ class SitemapController extends Controller
                 $variations[] = (string)$offset;
             }
 
+            // The filter pages are cached with: every content change invalidates its tag, and a listener may cap
+            // its duration (the cms, at the next scheduled entry).
             $behaviors[] = [
                 'class' => PageCache::class,
                 'only' => ['index'],
                 'cache' => $sitemap->cache,
                 'duration' => $sitemap->duration,
-                // The tag every content change invalidates, which the pages are cached under too.
-                'dependency' => $sitemap->dependency ?? [
-                    'class' => TagDependency::class,
-                    'tags' => [SkeletonPageCache::TAG_DEPENDENCY_KEY],
-                ],
+                'disableForUsers' => false,
                 'variations' => $variations,
+                ...($sitemap->dependency ? ['dependency' => $sitemap->dependency, 'useTagDependency' => false] : []),
             ];
         }
 
