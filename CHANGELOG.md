@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Changed `Html::markKeywords()` to take the raw text and encode it itself
 - Removed the `.btn-sm` class; every badge is now the same height
 - Added the `.badge-success` class
 - Fixed `cache/flush` refusing the names of the caches as unexpected arguments

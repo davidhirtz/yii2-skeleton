@@ -156,7 +156,7 @@ class SearchResultList extends Widget
 
     protected function markKeywords(string $text): string
     {
-        return Html::markKeywords(Html::encode($text), $this->getKeywords());
+        return Html::markKeywords($text, $this->getKeywords());
     }
 
     /**

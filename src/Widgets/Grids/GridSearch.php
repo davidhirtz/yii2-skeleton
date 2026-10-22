@@ -75,7 +75,7 @@ class GridSearch implements Configurable
         $keywords = array_filter(explode(' ', $this->getValue()));
 
         if ($encode) {
-            $text = Html::encode($text);
+            return Html::markKeywords($text, array_values($keywords), $wordBoundary);
         }
 
         if ($keywords) {
