@@ -36,7 +36,7 @@ class RedirectController extends Controller
     public bool $dryRun = false;
 
     /**
-     * @var array<string, Redirect>
+     * @var array<string, Redirect> keyed by {@see self::key()}
      */
     private array $redirects = [];
 
@@ -87,7 +87,7 @@ class RedirectController extends Controller
             } elseif ($this->leadsToCycle($chain)) {
                 $leading[] = $redirect;
             } elseif ($chain) {
-                $chained[$redirect->request_uri] = $this->getChainTarget($redirect, $chain);
+                $chained[$this->key($redirect->request_uri)] = $this->getChainTarget($redirect, $chain);
             }
         }
 
@@ -126,18 +126,18 @@ class RedirectController extends Controller
      */
     protected function follow(Redirect $redirect): array
     {
-        $visited = [$redirect->request_uri => true];
+        $visited = [$this->key($redirect->request_uri) => true];
         $current = $redirect;
         $chain = [];
 
         while ($next = $this->findRedirectFor($current->url, $this->getHost($current))) {
             $chain[] = $next;
 
-            if (isset($visited[$next->request_uri])) {
+            if (isset($visited[$this->key($next->request_uri)])) {
                 break;
             }
 
-            $visited[$next->request_uri] = true;
+            $visited[$this->key($next->request_uri)] = true;
             $current = $next;
         }
 
@@ -167,8 +167,8 @@ class RedirectController extends Controller
         $candidates = $host ? ["$host/$path", $path] : [$path];
 
         foreach ($candidates as $candidate) {
-            if (isset($this->redirects[$candidate])) {
-                return $this->redirects[$candidate];
+            if (isset($this->redirects[$this->key($candidate)])) {
+                return $this->redirects[$this->key($candidate)];
             }
         }
 
@@ -207,7 +207,7 @@ class RedirectController extends Controller
      */
     protected function isCycle(Redirect $redirect, array $chain): bool
     {
-        return $chain && end($chain)->request_uri === $redirect->request_uri;
+        return $chain && $this->key(end($chain)->request_uri) === $this->key($redirect->request_uri);
     }
 
     /**
@@ -215,7 +215,7 @@ class RedirectController extends Controller
      */
     protected function leadsToCycle(array $chain): bool
     {
-        $requestUris = array_map(fn (Redirect $redirect): string => $redirect->request_uri, $chain);
+        $requestUris = array_map(fn (Redirect $redirect): string => $this->key($redirect->request_uri), $chain);
         return count($requestUris) !== count(array_unique($requestUris));
     }
 
@@ -242,14 +242,15 @@ class RedirectController extends Controller
     }
 
     /**
-     * @param array<string, string> $urls the new target per request URI
+     * @param array<string, string> $urls the new target per {@see self::key()}
      */
     protected function flattenRedirects(array $urls): int
     {
         $count = 0;
 
-        foreach ($urls as $requestUri => $url) {
-            $redirect = $this->redirects[$requestUri];
+        foreach ($urls as $key => $url) {
+            $redirect = $this->redirects[$key];
+            $requestUri = $redirect->request_uri;
             $this->stdout("Shortening $requestUri -> $redirect->url to $url" . PHP_EOL);
 
             $redirect->url = $url;
@@ -324,8 +325,16 @@ class RedirectController extends Controller
     protected function loadRedirects(): void
     {
         $this->redirects = Redirect::find()
-            ->indexBy('request_uri')
+            ->indexBy(fn (Redirect $redirect): string => $this->key($redirect->request_uri))
             ->all();
+    }
+
+    /**
+     * The column's collation compares request URIs case-insensitively, and so does the error handler's lookup.
+     */
+    protected function key(string $requestUri): string
+    {
+        return mb_strtolower($requestUri);
     }
 
     protected function warn(string $message): void

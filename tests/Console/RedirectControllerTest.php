@@ -83,6 +83,26 @@ class RedirectControllerTest extends TestCase
         self::assertSame('third', Redirect::findOne(['request_uri' => 'second'])->url);
     }
 
+    public function testACycleDifferingInCaseIsDeleted(): void
+    {
+        $this->insertRedirect('one', 'Two');
+        $this->insertBrokenRedirect('two', 'one');
+
+        $this->createController()->actionClean();
+
+        self::assertSame(0, (int)Redirect::find()->count());
+    }
+
+    public function testAChainDifferingInCaseIsShortened(): void
+    {
+        $this->insertRedirect('old', 'Mid');
+        $this->insertRedirect('mid', 'new');
+
+        $this->createController()->actionClean();
+
+        self::assertSame('new', Redirect::findOne(['request_uri' => 'old'])->url);
+    }
+
     public function testAChainAcrossHostsIsShortenedToAnAbsoluteTarget(): void
     {
         $this->insertRedirect('a.example.com/old', 'https://b.example.com/x');
