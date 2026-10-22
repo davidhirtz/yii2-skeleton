@@ -5,15 +5,29 @@
  * array as the route and its parameters — only the `@return array|bool` docblock is looser than that.
  */
 
-namespace yii\web;
-
-class UrlManager
-{
-    /**
-     * @param mixed $request
-     * @return array{string, array<string, mixed>}|false
-     */
-    public function parseRequest($request)
+namespace yii\web {
+    class UrlManager
     {
+        /**
+         * @param mixed $request
+         * @return array{string, array<string, mixed>}|false
+         */
+        public function parseRequest($request)
+        {
+        }
+    }
+}
+
+/**
+ * The primary model is set for a relational query alone, not `null`-free as the docblock says.
+ */
+
+namespace yii\db {
+    trait ActiveRelationTrait
+    {
+        /**
+         * @var BaseActiveRecord|null
+         */
+        public $primaryModel;
     }
 }

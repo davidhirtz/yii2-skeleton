@@ -164,7 +164,38 @@ class ActiveQuery extends \yii\db\ActiveQuery
             }
         }
 
-        return $models;
+        return $this->sortByViaRecords($models);
+    }
+
+    /**
+     * A lazily read `via()` relation selects by the junction rows it loaded first, but not in their order.
+     *
+     * @param array<int|string, T> $models
+     * @return array<int|string, T>
+     */
+    private function sortByViaRecords(array $models): array
+    {
+        if ($this->orderBy || !$this->primaryModel || !is_array($this->via) || count($this->link) !== 1) {
+            return $models;
+        }
+
+        $viaName = $this->via[0];
+
+        if (!is_string($viaName) || !$this->primaryModel->isRelationPopulated($viaName)) {
+            return $models;
+        }
+
+        $attribute = (string)array_key_first($this->link);
+        $viaAttribute = $this->link[$attribute];
+        $positions = [];
+
+        foreach ((array)$this->primaryModel->getRelatedRecords()[$viaName] as $record) {
+            $positions[$record[$viaAttribute]] ??= count($positions);
+        }
+
+        uasort($models, fn ($a, $b): int => ($positions[$a[$attribute]] ?? PHP_INT_MAX) <=> ($positions[$b[$attribute]] ?? PHP_INT_MAX));
+
+        return $this->indexBy ? $models : array_values($models);
     }
 
     /**
