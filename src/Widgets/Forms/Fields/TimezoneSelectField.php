@@ -28,17 +28,12 @@ class TimezoneSelectField extends SelectField
     protected function getTimezones(): array
     {
         if (null === $this->timezones) {
-            $identifiers = DateTimeZone::listIdentifiers();
             $now = new DateTime('now', new DateTimeZone('GMT'));
             $list = [];
 
-            foreach (DateTimeZone::listAbbreviations() as $timezones) {
-                foreach ($timezones as $tz) {
-                    if (!empty($tz['timezone_id']) && in_array($tz['timezone_id'], $identifiers, true)) {
-                        $timezone = new DateTimeZone($tz['timezone_id']);
-                        $list[$timezone->getOffset($now)][$tz['timezone_id']] = $this->formatTimezoneName($tz['timezone_id']);
-                    }
-                }
+            // Every zone the user record accepts, not only those with an abbreviation (`Europe/Kyiv` has none).
+            foreach (DateTimeZone::listIdentifiers() as $identifier) {
+                $list[(new DateTimeZone($identifier))->getOffset($now)][$identifier] = $this->formatTimezoneName($identifier);
             }
 
             ksort($list);
