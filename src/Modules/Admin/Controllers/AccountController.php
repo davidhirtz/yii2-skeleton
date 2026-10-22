@@ -105,7 +105,9 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post()) && $form->insert()) {
             $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_PLEASE'));
-            return $this->goHome();
+
+            // The insert logs the user in unless the email has to be confirmed first
+            return $this->webuser->getIdentity() === null ? $this->redirect(['login']) : $this->goHome();
         }
 
         return $this->render('create', [
@@ -343,7 +345,7 @@ class AccountController extends Controller
         // `afterValidate()`, so the code is validated before the post rather than beside it.
         if (!$form->validatePasswordResetCode()) {
             $this->error($form);
-            return $this->goHome();
+            return $this->webuser->getIsGuest() ? $this->redirect(['login']) : $this->goHome();
         }
 
         if ($form->load($this->request->post()) && $form->reset()) {

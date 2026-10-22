@@ -28,7 +28,8 @@ class PasswordResetTest extends TestCase
             'code' => 'invalid-code',
         ]);
 
-        self::assertCurrentUrlEquals('');
+        // The website need not show the flash, the login page does
+        self::assertCurrentUrlEquals('admin/account/login');
     }
 
     public function testPasswordResetWithWrongInputs(): void
