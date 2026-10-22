@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Override;
 use Yii;
 use yii\base\InvalidCallException;
+use yii\db\BaseActiveRecord;
 use yii\db\Query;
 
 /**
@@ -164,24 +165,49 @@ class ActiveQuery extends \yii\db\ActiveQuery
             }
         }
 
-        return $this->sortByViaRecords($models);
+        return $this->primaryModel ? $this->sortByViaRecords($models, $this->primaryModel) : $models;
+    }
+
+    /**
+     * An eagerly loaded `via()` relation fills each model's bucket in the order of the second query, not the junction's.
+     *
+     * @param array<array-key, mixed> $primaryModels
+     * @return array<array-key, T>
+     */
+    #[Override]
+    public function populateRelation($name, &$primaryModels): array
+    {
+        $models = parent::populateRelation($name, $primaryModels);
+
+        foreach ($primaryModels as $primaryModel) {
+            if ($primaryModel instanceof BaseActiveRecord && $primaryModel->isRelationPopulated($name)) {
+                $related = $primaryModel->getRelatedRecords()[$name];
+
+                if (is_array($related)) {
+                    $primaryModel->populateRelation($name, $this->sortByViaRecords($related, $primaryModel));
+                }
+            }
+        }
+
+        return $models;
     }
 
     /**
      * A lazily read `via()` relation selects by the junction rows it loaded first, but not in their order.
      *
-     * @param array<int|string, T> $models
-     * @return array<int|string, T>
+     * @template TModel
+     * @param array<int|string, TModel> $models
+     * @return array<int|string, TModel>
      */
-    private function sortByViaRecords(array $models): array
+    private function sortByViaRecords(array $models, BaseActiveRecord $primaryModel): array
     {
-        if ($this->orderBy || !$this->primaryModel || !is_array($this->via) || count($this->link) !== 1) {
+        if ($this->orderBy || !$this->multiple || !is_array($this->via) || count($this->link) !== 1) {
             return $models;
         }
 
         $viaName = $this->via[0];
 
-        if (!is_string($viaName) || !$this->primaryModel->isRelationPopulated($viaName)) {
+        if (!is_string($viaName) || !$primaryModel->isRelationPopulated($viaName)) {
             return $models;
         }
 
@@ -189,7 +215,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
         $viaAttribute = $this->link[$attribute];
         $positions = [];
 
-        foreach ((array)$this->primaryModel->getRelatedRecords()[$viaName] as $record) {
+        foreach ((array)$primaryModel->getRelatedRecords()[$viaName] as $record) {
             $positions[$record[$viaAttribute]] ??= count($positions);
         }
 
