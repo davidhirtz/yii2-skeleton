@@ -449,7 +449,8 @@ class AccountController extends Controller
             $this->webuser->logout();
             $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_DELETED'));
 
-            return $this->goHome();
+            // The login page shows the flash, which the website need not
+            return $this->redirect(['login']);
         }
 
         $this->error($form);

@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Yii;
+use yii\web\Response;
 
 class AccountDeleteControllerTest extends TestCase
 {
@@ -24,9 +25,30 @@ class AccountDeleteControllerTest extends TestCase
         $request = $this->getWebRequest();
         $request->setBodyParams(['value' => 'password', $request->csrfParam => $request->getCsrfToken()]);
 
-        Yii::$app->runAction('admin/account/delete');
+        $response = Yii::$app->runAction('admin/account/delete');
 
         self::assertNull(User::findOne($user->id));
         self::assertSame([Yii::t('skeleton', 'ACCOUNT_SUCCESS_DELETED')], $this->getWebSession()->getFlash('success'));
+
+        self::assertInstanceOf(Response::class, $response);
+        self::assertStringEndsWith('/admin/account/login', (string)$response->getHeaders()->get('location'));
+    }
+
+    public function testDeletingTheOwnUserLeadsToTheLogin(): void
+    {
+        $this->getWebUser()->enableTwoFactorAuthentication = false;
+
+        $user = $this->getUserFromFixture('admin');
+        $this->assignPermission($user->id, User::AUTH_USER);
+        $this->getWebUser()->setIdentity($user);
+
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $request = $this->getWebRequest();
+        $request->setBodyParams(['value' => $user->email, $request->csrfParam => $request->getCsrfToken()]);
+
+        $response = Yii::$app->runAction('admin/user/delete', ['id' => $user->id]);
+
+        self::assertInstanceOf(Response::class, $response);
+        self::assertStringEndsWith('/admin/account/login', (string)$response->getHeaders()->get('location'));
     }
 }

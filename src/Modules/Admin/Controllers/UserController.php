@@ -206,7 +206,7 @@ class UserController extends Controller
 
             if ($user->id === $this->webuser->id) {
                 $this->webuser->logout(false);
-                return $this->goHome();
+                return $this->redirect(['account/login']);
             }
 
             return $this->redirect(['index']);
