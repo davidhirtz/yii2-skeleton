@@ -54,6 +54,24 @@ class UserControllerTest extends TestCase
         self::assertSame($owner->email, User::findOne($owner->id)->email);
     }
 
+    public function testChangingTheOwnPasswordKeepsTheSession(): void
+    {
+        $owner = $this->getUserFromFixture('owner');
+        $this->getWebUser()->login($owner);
+
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $this->getWebRequest()->setBodyParams([
+            'UserForm' => ['newPassword' => 'Neues-Passwort-ü-1', 'repeatPassword' => 'Neues-Passwort-ü-1'],
+        ]);
+
+        $this->createUserController()->actionUpdate($owner->id);
+        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
+
+        $authKey = User::findOne($owner->id)?->auth_key;
+        self::assertNotSame($owner->auth_key, $authKey);
+        self::assertSame($authKey, $this->getWebSession()->get($this->getWebUser()->authKeyParam));
+    }
+
     public function testStatusCyclesTheUserThroughItsStatuses(): void
     {
         $this->login();

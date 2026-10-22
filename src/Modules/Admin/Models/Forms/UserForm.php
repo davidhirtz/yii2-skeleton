@@ -114,8 +114,16 @@ class UserForm extends Model
     protected function afterSave(): void
     {
         if ($this->newPassword) {
+            $webuser = Application::current()->getUser();
+
             $this->user->afterPasswordChange();
-            Application::current()->getUser()->destroyOtherSessions($this->user);
+            $webuser->destroyOtherSessions($this->user);
+
+            // The own session keeps the auth key it was opened with, which the new password replaced.
+            if ((int)$webuser->getId() === $this->user->id) {
+                $webuser->setIdentity($this->user);
+                $webuser->resendIdentityCookie();
+            }
         }
 
         // The credentials email never carries the password, so it needs a reset link whether or not one was set
