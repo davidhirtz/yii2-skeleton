@@ -78,6 +78,7 @@ class UpgradePasswordsTest extends TestCase
 
     public function testTheLinkIsSentInTheUsersLanguage(): void
     {
+        Yii::$app->getI18n()->setLanguages(['en-US', 'de']);
         $user = $this->getUserFromFixture('admin');
         $user->updateAttributes(['password_hash' => null, 'language' => 'de', 'login_count' => 1]);
 

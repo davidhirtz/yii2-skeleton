@@ -93,6 +93,17 @@ class RecoverPasswordTest extends TestCase
         self::assertSelectorNotExists('.form-error');
     }
 
+    public function testTheMailIsInAnOfferedLanguageWhenTheAccountKeepsAnotherOne(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $user->updateAttributes(['language' => 'xx']);
+
+        $this->open('admin/account/recover');
+        $this->submitPasswordRecoverForm($user->email);
+
+        self::assertStringNotContainsString('USER_', (string)$this->mailer->getLastMessage()?->getSubject());
+    }
+
     public function testAFailedEmailReportsTheSameSuccessAndLetsTheRetryThrough(): void
     {
         $user = $this->getUserFromFixture('admin');

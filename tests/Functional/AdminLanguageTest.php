@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Hirtz\Skeleton\Web\UrlManager;
 use Override;
 use Yii;
 
@@ -54,6 +55,21 @@ class AdminLanguageTest extends TestCase
 
         self::assertResponseStatusCodeSame(400);
         self::assertNull(self::getAdminModule()->getSessionLanguage());
+    }
+
+    public function testAGuestOnlyGetsAnOfferedLanguage(): void
+    {
+        Yii::$app->getI18n()->setLanguages(['en-US', 'de', 'fr']);
+        self::getAdminModule()->languages = ['en-US', 'de'];
+
+        $manager = Yii::$app->getUrlManager();
+        self::assertInstanceOf(UrlManager::class, $manager);
+        $manager->defaultLanguage = 'fr';
+
+        $this->open('admin/account/login');
+
+        self::assertResponseIsSuccessful();
+        self::assertLanguageSame('en');
     }
 
     /**

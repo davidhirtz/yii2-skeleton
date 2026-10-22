@@ -117,7 +117,7 @@ class PasswordRecoverForm extends Model
                 ->send();
         };
 
-        return Yii::$app->getI18n()->callback($this->user->language, $send) === true;
+        return Yii::$app->getI18n()->callback($this->user::getModule()->getOfferedLanguage($this->user->language), $send) === true;
     }
 
     public function isAlreadySent(): bool

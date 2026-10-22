@@ -143,7 +143,7 @@ class UserForm extends Model
             ->setTo($this->user->email)
             ->send();
 
-        return Yii::$app->getI18n()->callback($this->user->language, $send) === true;
+        return Yii::$app->getI18n()->callback($this->user::getModule()->getOfferedLanguage($this->user->language), $send) === true;
     }
 
     public function getLoginUrl(): string

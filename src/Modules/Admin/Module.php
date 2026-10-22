@@ -183,19 +183,21 @@ class Module extends \Hirtz\Skeleton\Base\Module
 
     protected function setLanguage(): void
     {
-        $languages = $this->getLanguages();
-
-        if (count($languages) === 1) {
-            Yii::$app->language = reset($languages);
-            return;
-        }
-
         $identity = WebUser::current()?->getIdentity();
         $language = $this->getSessionLanguage() ?? $identity?->language;
 
-        if ($language && $this->hasLanguage($language)) {
-            Yii::$app->language = $language;
-        }
+        Yii::$app->language = $language && $this->hasLanguage($language)
+            ? $language
+            : $this->getOfferedLanguage(Yii::$app->language);
+    }
+
+    /**
+     * The URL manager resolves a content language, and an account may keep one the admin no longer offers.
+     */
+    public function getOfferedLanguage(?string $language): string
+    {
+        $languages = $this->getLanguages();
+        return $language !== null && $this->hasLanguage($language) ? $language : (string)reset($languages);
     }
 
     /**
