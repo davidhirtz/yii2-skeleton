@@ -230,6 +230,24 @@ trait I18nAttributesTrait
     }
 
     /**
+     * A required attribute left empty in a translation takes the source language's value.
+     */
+    protected function ensureRequiredI18nAttributes(): void
+    {
+        foreach ($this->getI18nAttributes() as $attribute) {
+            if (!$this->isAttributeRequired($attribute)) {
+                continue;
+            }
+
+            foreach ($this->getI18nAttributeNames($attribute) as $i18nAttributeName) {
+                if (!$this->$i18nAttributeName) {
+                    $this->$i18nAttributeName = $this->$attribute;
+                }
+            }
+        }
+    }
+
+    /**
      * The languages lacking a translation: one a visible attribute is empty in while the source language has it.
      * An attribute left empty in the source is not expected anywhere else.
      *
