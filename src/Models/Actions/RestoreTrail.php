@@ -48,6 +48,8 @@ class RestoreTrail
             && is_array($trail->data)
             && $trail->data !== []
             && ($model = $trail->getModelRecord()) instanceof ActiveRecord
+            // A deleted record comes back as a new one with its id, which a save would insert.
+            && !$model->getIsNewRecord()
             && $model instanceof TrailModelInterface
             && !$model instanceof User
             && $model->getAdminRoute() !== false;

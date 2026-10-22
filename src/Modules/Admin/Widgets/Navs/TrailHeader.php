@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Navs;
 
+use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\TrailModelInterface;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Data\TrailActiveDataProvider;
@@ -71,7 +72,8 @@ class TrailHeader extends Header
      */
     protected function getTrailModelAdminRoute(): ?array
     {
-        if (!$this->model instanceof TrailModelInterface) {
+        // A deleted record comes back as a new one with its id, whose page is a 404.
+        if (!$this->model instanceof TrailModelInterface || ($this->model instanceof ActiveRecord && $this->model->getIsNewRecord())) {
             return null;
         }
 
