@@ -115,6 +115,22 @@ class DateCustomAttributeTest extends TestCase
         self::assertSame(['starts_at', 'day'], array_keys($record->getDirtyAttributes(['starts_at', 'day'])));
     }
 
+    public function testTheShownValuePostedBackKeepsTheSecondsAndTheRepeatedHour(): void
+    {
+        $this->inTimeZone('Europe/Berlin', function (): void {
+            foreach (['2026-06-15T12:30:47+00:00' => '2026-06-15T14:30', '2024-10-27T00:30:00+00:00' => '2024-10-27T02:30'] as $stored => $shown) {
+                $record = $this->createRecord(['starts_at' => $stored]);
+                $record = DateRecord::findOne($record->id);
+                self::assertNotNull($record);
+
+                $record->starts_at = $shown;
+
+                self::assertTrue($record->validate());
+                self::assertSame([], $record->getDirtyAttributes(['starts_at']), $stored);
+            }
+        });
+    }
+
     public function testAValueThatIsNoDateIsRefusedAndKept(): void
     {
         foreach (['2024-02-31', 'not a date', 'Mu' . "\u{308}" . 'ller', '🗓️'] as $value) {

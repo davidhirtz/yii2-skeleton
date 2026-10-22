@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Db\Date;
 use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Widgets\Forms\Fields\DateTimeField;
 use Hirtz\Skeleton\Validators\DateTimeValidator;
 use Override;
 use Yii;
@@ -136,6 +137,16 @@ class AttributeTypecastBehaviorDateTest extends TestCase
         self::assertSame([], $model->getDirtyAttributes());
     }
 
+    public function testAnUntouchedFormKeepsTheSeconds(): void
+    {
+        $this->assertFieldRoundTrip('2024-06-15 12:30:47');
+    }
+
+    public function testAnUntouchedFormKeepsTheRepeatedHour(): void
+    {
+        $this->assertFieldRoundTrip('2024-10-27 00:30:00');
+    }
+
     public function testAnotherDateIsConverted(): void
     {
         $model = new AttributeTypecastDateActiveRecord();
@@ -182,6 +193,18 @@ class AttributeTypecastBehaviorDateTest extends TestCase
         self::assertNull($model->day);
         self::assertTrue($model->save(), print_r($model->getErrors(), true));
         self::assertNull($this->queryColumn('published_at'));
+    }
+
+    private function assertFieldRoundTrip(string $utc): void
+    {
+        $model = $this->findRecord($utc, null);
+
+        $html = (string)DateTimeField::make()->model($model)->property('published_at')->render();
+        preg_match('/value="([^"]+)"/', $html, $matches);
+
+        $model->load(['published_at' => $matches[1] ?? self::fail('The field shows no value.')], '');
+
+        self::assertSame([], $model->getDirtyAttributes());
     }
 
     private function findRecord(?string $publishedAt, ?string $day): AttributeTypecastDateActiveRecord

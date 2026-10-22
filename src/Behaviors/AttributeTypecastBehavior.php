@@ -10,6 +10,7 @@ use Exception;
 use Hirtz\Skeleton\Db\ActiveRecord as SkeletonActiveRecord;
 use Hirtz\Skeleton\Db\Date;
 use Hirtz\Skeleton\Db\DateTime;
+use Hirtz\Skeleton\Widgets\Forms\Fields\DateTimeField;
 use Hirtz\Skeleton\Validators\DynamicRangeValidator;
 use Hirtz\Skeleton\Validators\Interfaces\AttributeTypeInterface;
 use yii\base\Behavior;
@@ -209,13 +210,18 @@ class AttributeTypecastBehavior extends Behavior
      */
     protected function typecastDate(string $attributeName, mixed $value, bool $isDate): mixed
     {
+        $oldValue = $this->owner instanceof BaseActiveRecord ? $this->owner->getOldAttribute($attributeName) : null;
+
+        // The form shows no seconds and cannot tell the repeated autumn hour apart, so what it showed is the old date.
+        if (!$isDate && $oldValue instanceof DateTime && is_string($value) && $value === DateTimeField::formatDate($oldValue, Yii::$app->getTimeZone())) {
+            return $oldValue;
+        }
+
         $date = $this->createDate($value, $isDate);
 
         if ($date === null) {
             return $value;
         }
-
-        $oldValue = $this->owner instanceof BaseActiveRecord ? $this->owner->getOldAttribute($attributeName) : null;
 
         return $oldValue instanceof $date && (string)$oldValue === (string)$date ? $oldValue : $date;
     }

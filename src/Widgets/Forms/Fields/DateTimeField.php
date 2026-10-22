@@ -27,6 +27,15 @@ class DateTimeField extends Field
         return $this;
     }
 
+    /**
+     * Without seconds and without an offset: a model reading this back unchanged keeps the date it had.
+     */
+    public static function formatDate(DateTimeInterface $date, string|DateTimeZone $timeZone): string
+    {
+        $timeZone = is_string($timeZone) ? new DateTimeZone($timeZone) : $timeZone;
+        return DateTimeImmutable::createFromInterface($date)->setTimezone($timeZone)->format('Y-m-d\TH:i');
+    }
+
     #[\Override]
     protected function configure(): void
     {
@@ -41,7 +50,7 @@ class DateTimeField extends Field
 
         if ($this->attributes['value'] instanceof DateTimeInterface) {
             $this->date = DateTimeImmutable::createFromInterface($this->attributes['value'])->setTimezone($this->timeZone);
-            $this->attributes['value'] = $this->date->format('Y-m-d\TH:i');
+            $this->attributes['value'] = static::formatDate($this->date, $this->timeZone);
         }
 
         parent::configure();

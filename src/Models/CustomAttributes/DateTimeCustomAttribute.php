@@ -44,11 +44,14 @@ class DateTimeCustomAttribute extends CustomAttribute
             return $rules;
         }
 
+        $shownRules = [];
+
         foreach ($this->getAttributeNames($owner) as $name) {
+            $shownRules[] = [$name, 'filter', 'filter' => fn (mixed $value): mixed => $this->keepShownValue($owner, $name, $value)];
             $rules[] = [$name, 'filter', 'filter' => fn (mixed $value): mixed => $this->keepOldValue($owner, $name, $value)];
         }
 
-        return $rules;
+        return [...$shownRules, ...$rules];
     }
 
     #[Override]
@@ -136,6 +139,18 @@ class DateTimeCustomAttribute extends CustomAttribute
         }
 
         return DateTime::getLastErrors() ? null : $date->setTimezone($timeZone);
+    }
+
+    /**
+     * The form shows no seconds and cannot tell the repeated autumn hour apart, so what it showed is the old date.
+     */
+    private function keepShownValue(BaseActiveRecord $owner, string $name, mixed $value): mixed
+    {
+        $old = $owner->getOldAttribute($name);
+
+        return is_string($value) && $old instanceof DateTimeInterface && $value === DateTimeField::formatDate($old, Yii::$app->getTimeZone())
+            ? $old
+            : $value;
     }
 
     private function keepOldValue(BaseActiveRecord $owner, string $name, mixed $value): mixed
