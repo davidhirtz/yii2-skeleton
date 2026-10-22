@@ -146,18 +146,23 @@ class UpgradeController extends Controller
         $count = 0;
 
         foreach ($query->each() as $row) {
-            $modelClass = $this->getNewNamespace($row['model_class']);
-            $data = $row['data'] !== null ? json_decode($row['data'], true) : [];
+            $modelClass = $row['model_class'] !== null ? $this->getNewNamespace($row['model_class']) : null;
+            $attributes = $modelClass !== $row['model_class'] ? ['model_class' => $modelClass] : [];
 
-            if (array_key_exists('model_class', $data)) {
-                $data['model_class'] = $this->getNewNamespace($data['model_class']);
+            $data = is_string($row['data']) ? json_decode($row['data'], true) : $row['data'];
+
+            if (is_array($data) && is_string($data['model_class'] ?? null)) {
+                $newClass = $this->getNewNamespace($data['model_class']);
+
+                if ($newClass !== $data['model_class']) {
+                    // The column typecasts on write, so it takes the array
+                    $attributes['data'] = [...$data, 'model_class' => $newClass];
+                }
             }
 
-            $data = json_encode($data);
-
-            if ($modelClass !== $row['model_class'] || $data !== $row['data']) {
+            if ($attributes) {
                 $count += Yii::$app->getDb()->createCommand()
-                    ->update(Trail::tableName(), ['model_class' => $modelClass, 'data' => $data], ['id' => $row['id']])
+                    ->update(Trail::tableName(), $attributes, ['id' => $row['id']])
                     ->execute();
             }
         }
@@ -171,7 +176,13 @@ class UpgradeController extends Controller
 
     private function getNewNamespace(string $class): string
     {
-        $class = str_replace(['davidhirtz\\yii2\\', 'app\\'], ['Hirtz\\', 'App\\'], $class);
-        return implode('\\', array_map(ucfirst(...), explode('\\', $class)));
+        foreach (['davidhirtz\\yii2\\' => 'Hirtz\\', 'app\\' => 'App\\'] as $old => $new) {
+            if (str_starts_with($class, $old)) {
+                $class = $new . substr($class, strlen($old));
+                return implode('\\', array_map(ucfirst(...), explode('\\', $class)));
+            }
+        }
+
+        return $class;
     }
 }
