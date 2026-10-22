@@ -184,6 +184,31 @@ class UrlManagerTest extends TestCase
         }
     }
 
+    public function testTheDefaultLanguageRedirectKeepsAnyEscapedPath(): void
+    {
+        $manager = $this->getUrlManager([
+            'i18nUrl' => true,
+            'defaultLanguage' => 'en-US',
+            'languages' => [
+                'en-US' => 'en',
+                'de' => 'de',
+            ],
+        ]);
+
+        foreach (['m%C3%BCller', 'a+b', 'm%E4rz', 'm%E4rz/%C5%81%D0%B4', 'x%F0%9F%98%80/Mu%CC%88ller'] as $path) {
+            try {
+                $manager->parseRequest($this->getRequest([
+                    'hostInfo' => 'https://www.test.localhost',
+                    'url' => "/en/$path",
+                ]));
+
+                self::fail("/en/$path was not redirected");
+            } catch (UrlNormalizerRedirectException $e) {
+                self::assertSame("https://www.test.localhost/$path", $e->url, $path);
+            }
+        }
+    }
+
     public function testRedirectMap(): void
     {
         $manager = $this->getUrlManager([

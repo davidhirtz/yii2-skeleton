@@ -349,10 +349,12 @@ class UrlManager extends \yii\web\UrlManager
         [$path, $query] = [...explode('?', $request->getUrl(), 2), ''];
         $path = ltrim(substr($path, strlen($baseUrl)), '/');
 
-        // A path tenant's segments precede the language: what the path info no longer holds
-        $position = strlen(urldecode($path)) - strlen($pathInfo);
-        $prefix = substr($path, 0, $position);
-        $path = ltrim(substr($path, $position + strlen($code)), '/');
+        // A path tenant's segments precede the language: what the path info no longer holds. Counted in segments, as
+        // Yii re-encodes a path info that is not UTF-8
+        $segments = explode('/', $path);
+        $count = substr_count(urldecode($path), '/') - substr_count($pathInfo, '/');
+        $prefix = $count > 0 ? implode('/', array_slice($segments, 0, $count)) . '/' : '';
+        $path = ltrim(substr(implode('/', array_slice($segments, $count)), strlen($code)), '/');
 
         $url = $path === '' ? rtrim($prefix, '/') : $prefix . $path;
 
