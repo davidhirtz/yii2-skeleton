@@ -436,9 +436,10 @@ class AccountController extends Controller
         ]);
 
         if ($form->load($this->request->post()) && $form->delete()) {
+            // After the logout, which destroys the session and a flash in it.
+            $this->webuser->logout();
             $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_DELETED'));
 
-            $this->webuser->logout();
             return $this->goHome();
         }
 
