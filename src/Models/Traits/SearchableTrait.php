@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Models\AdminModelChain;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Search\SearchDocument;
 use Hirtz\Skeleton\Search\SearchResult;
@@ -181,10 +182,15 @@ trait SearchableTrait
     /**
      * Read through the magic getter, so a searchable name is any readable property: a column, a translated or
      * custom attribute, or a getter such as the media `File::getFilename()`. A custom attribute only some types or
-     * some projects declare is absent rather than empty, which is why a name the record cannot read is skipped.
+     * some projects declare is absent rather than empty, which is why a name the record cannot read is skipped, as is
+     * one its type hides.
      */
     protected function getSearchAttributeValue(string $attribute, ?string $language = null): mixed
     {
+        if ($this instanceof VisibleAttributeInterface && !$this->isAttributeVisible($attribute)) {
+            return null;
+        }
+
         $name = $this instanceof I18nAttributeInterface
             ? $this->getI18nAttributeName($attribute, $language, fallback: true)
             : $attribute;
