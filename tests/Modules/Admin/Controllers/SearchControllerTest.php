@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Search\Search as SearchComponent;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Override;
+use Hirtz\Skeleton\Search\SearchRequest;
 use Yii;
 use yii\base\InlineAction;
 use yii\web\NotFoundHttpException;
@@ -123,6 +124,30 @@ class SearchControllerTest extends TestCase
         self::assertStringContainsString('hx-select-oob=""', $html);
         self::assertStringContainsString('hx-select="#' . SearchController::LIST_ID . '"', $html);
         self::assertStringContainsString('hx-swap="innerHTML"', $html);
+    }
+
+    /**
+     * The pager counts in SQL, so the classes the user cannot see are left out there rather than after the fetch.
+     */
+    public function testTheRequestNamesOnlyTheClassesTheUserSees(): void
+    {
+        $module = Yii::$app->getModule('admin');
+        self::assertInstanceOf(Module::class, $module);
+
+        $controller = new class ('search', $module) extends SearchController {
+            public function getRequest(string $q): ?SearchRequest
+            {
+                return $this->createRequest($q, 10);
+            }
+        };
+
+        $this->loginUser();
+        self::assertNull($controller->getRequest('x'));
+
+        $this->loginUser(User::AUTH_USER);
+        $request = $controller->getRequest('y');
+        self::assertNotNull($request);
+        self::assertContains(User::class, $request->models);
     }
 
     public function testTheActionsAreGoneWhileTheSearchIsDisabled(): void

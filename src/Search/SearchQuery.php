@@ -111,6 +111,7 @@ class SearchQuery extends ActiveQuery
     {
         return $this->orderBy([
             self::SCORE => SORT_DESC,
+            $this->getTableAlias() . '.[[model_class]]' => SORT_ASC,
             $this->getTableAlias() . '.[[model_id]]' => SORT_ASC,
         ]);
     }

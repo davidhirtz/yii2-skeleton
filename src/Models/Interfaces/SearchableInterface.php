@@ -32,6 +32,11 @@ interface SearchableInterface extends AdminModelInterface
     public function isSearchable(): bool;
 
     /**
+     * Whether the current user sees the class's hits at all, so the search can count only those.
+     */
+    public static function isSearchResultClassVisible(): bool;
+
+    /**
      * @return SearchResult|null `null` hides the hit from the current user
      */
     public function getSearchResult(): ?SearchResult;

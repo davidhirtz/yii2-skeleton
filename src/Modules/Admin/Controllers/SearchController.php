@@ -89,9 +89,11 @@ class SearchController extends Controller
     {
         $q = trim((string)$q);
 
+        $request = $q !== '' ? $this->createRequest($q, 1) : null;
+
         $pagination = new Pagination([
             'pageSize' => $this->pageSize,
-            'totalCount' => $q !== '' ? Search::getComponent()->count($this->createRequest($q, 1)) : 0,
+            'totalCount' => $request ? Search::getComponent()->count($request) : 0,
         ]);
 
         return $this->render('index', [
@@ -106,18 +108,28 @@ class SearchController extends Controller
      */
     protected function getResults(string $q, int $limit, int $offset = 0, bool $fill = true): array
     {
-        if ($q === '') {
+        $request = $q !== '' ? $this->createRequest($q, $limit, $offset) : null;
+
+        if (!$request) {
             return [];
         }
 
         /** @var SearchResultBuilder $builder */
         $builder = Yii::createObject(SearchResultBuilder::class, [Search::getComponent()]);
 
-        return $builder->build($this->createRequest($q, $limit, $offset), $fill);
+        return $builder->build($request, $fill);
     }
 
-    protected function createRequest(string $q, int $limit, int $offset = 0): SearchRequest
+    /**
+     * Limited to the classes the user sees, so the pager counts only hits a page can show; `null` when there are none.
+     */
+    protected function createRequest(string $q, int $limit, int $offset = 0): ?SearchRequest
     {
-        return new SearchRequest(query: $q, limit: $limit, offset: $offset);
+        $models = array_values(array_filter(
+            Search::getComponent()->getModelClasses(),
+            fn (string $class): bool => $class::isSearchResultClassVisible(),
+        ));
+
+        return $models ? new SearchRequest(query: $q, models: $models, limit: $limit, offset: $offset) : null;
     }
 }

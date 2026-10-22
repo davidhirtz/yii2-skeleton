@@ -96,6 +96,13 @@ trait SearchableTrait
         return static::find();
     }
 
+    public static function isSearchResultClassVisible(): bool
+    {
+        /** @var static $model */
+        $model = Yii::createObject(static::class);
+        return $model->isSearchResultVisible();
+    }
+
     public function getSearchResult(): ?SearchResult
     {
         return $this->isSearchResultVisible() ? $this->createSearchResult() : null;
