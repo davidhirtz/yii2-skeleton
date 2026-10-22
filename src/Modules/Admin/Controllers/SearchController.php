@@ -97,14 +97,14 @@ class SearchController extends Controller
         return $this->render('index', [
             'pagination' => $pagination,
             'query' => $q,
-            'results' => $this->getResults($q, $pagination->getLimit(), $pagination->getOffset()),
+            'results' => $this->getResults($q, $pagination->getLimit(), $pagination->getOffset(), false),
         ]);
     }
 
     /**
      * @return list<SearchResult>
      */
-    protected function getResults(string $q, int $limit, int $offset = 0): array
+    protected function getResults(string $q, int $limit, int $offset = 0, bool $fill = true): array
     {
         if ($q === '') {
             return [];
@@ -113,7 +113,7 @@ class SearchController extends Controller
         /** @var SearchResultBuilder $builder */
         $builder = Yii::createObject(SearchResultBuilder::class, [Search::getComponent()]);
 
-        return $builder->build($this->createRequest($q, $limit, $offset));
+        return $builder->build($this->createRequest($q, $limit, $offset), $fill);
     }
 
     protected function createRequest(string $q, int $limit, int $offset = 0): SearchRequest

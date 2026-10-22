@@ -20,10 +20,17 @@ class SearchResultBuilder
     }
 
     /**
+     * A page takes the window of hits its pager counted, so no hit shows on two pages: one losing hidden hits comes
+     * out shorter. Suggestions, which have no pager, are filled up to their limit instead.
+     *
      * @return list<SearchResult>
      */
-    public function build(SearchRequest $request): array
+    public function build(SearchRequest $request, bool $fill = true): array
     {
+        if (!$fill) {
+            return $this->hydrate($this->search->search($request)->hits);
+        }
+
         $limit = max(1, $request->limit * $this->overFetch);
         $offset = $request->offset;
         $results = [];
