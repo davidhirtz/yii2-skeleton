@@ -1,6 +1,6 @@
 import htmx from 'htmx.org';
 
-import sortableOrder from './sortableOrder';
+import reorderValues from './reorderValues';
 
 /**
  * Each move posts the whole order. htmx's default sync keeps one request in flight and one queued and drops the
@@ -11,10 +11,10 @@ export default ($el: HTMLElement) => {
 
     // Let htmx issue the request so it inherits the CSRF header from #wrap
     // and processes the out-of-band flash messages returned by the action.
-    return htmx.ajax('POST', $el.dataset.sortUrl!, {
+    return htmx.ajax('POST', $el.dataset.reorderUrl!, {
         source: $el,
         target: $el,
         swap: 'none',
-        values: sortableOrder($el),
+        values: reorderValues($el),
     });
 };

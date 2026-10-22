@@ -1,5 +1,5 @@
 /**
- * The posted order of a sortable list. Row ids are `${camel2id(formName)}-${primaryKey}`, so the model name may
+ * The posted order of a reorderable list. Row ids are `${camel2id(formName)}-${primaryKey}`, so the model name may
  * itself contain dashes (e.g. `hotspot-asset-5`); the primary key is the last segment.
  *
  * Indexed, never `name[]` with an array: htmx 4 appends each value once, so an array arrives as one comma-joined

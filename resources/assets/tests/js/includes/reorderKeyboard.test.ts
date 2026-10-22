@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it} from 'vitest';
-import {moveRowByKey} from '../../../src/js/includes/sortableKeyboard';
+import {moveRowByKey} from '../../../src/js/includes/reorderKeyboard';
 
-const row = (id: string) => `<tr id="entry-${id}"><td><button class="sortable-handle" id="handle-${id}"></button></td></tr>`;
+const row = (id: string) => `<tr id="entry-${id}"><td><button class="reorder-handle" id="handle-${id}"></button></td></tr>`;
 
 const press = (key: string, id: string, $list: HTMLElement) => {
     const $handle = document.getElementById(`handle-${id}`)!;
@@ -17,7 +17,7 @@ describe('moveRowByKey', () => {
     let $list: HTMLElement;
 
     beforeEach(() => {
-        document.body.innerHTML = '<table><tbody data-sort-announcement="Position {position} of {count}">'
+        document.body.innerHTML = '<table><tbody data-reorder-announcement="Position {position} of {count}">'
             + row('1') + row('2') + row('3') + '</tbody></table>';
         $list = document.querySelector('tbody')!;
     });
@@ -29,7 +29,7 @@ describe('moveRowByKey', () => {
 
         expect(order()).toEqual(['entry-2', 'entry-1', 'entry-3']);
         expect(document.activeElement?.id).toBe('handle-1');
-        expect(document.getElementById('sort-announcement')?.textContent).toBe('Position 2 of 3');
+        expect(document.getElementById('reorder-announcement')?.textContent).toBe('Position 2 of 3');
     });
 
     it('moves the row up', () => {

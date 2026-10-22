@@ -4,6 +4,22 @@ Class names below are relative to `Hirtz\Skeleton\` (v3) and `davidhirtz\yii2\sk
 namespace. The v2 → v3 database migrations do not ship with the bundle: `davidhirtz/yii2-upgrade` generates them into the
 project (see *Data and schema*), and the bundle itself carries one baseline migration for a fresh install.
 
+## 3.22 — Drag reordering is "reorder"
+
+"Sort" is left to column sorting (`yii\data\Sort`, a provider's `getSort()`). A project overriding or calling the
+drag's names renames them, and a grid posting to its own controller names that action `actionReorder()`:
+
+| 3.21 | 3.22 |
+|---|---|
+| `GridView::isSortable()` | `isReorderable()`, `false` for a picker grid (`isPicker()`, new) |
+| `GridView::$orderRoute`, `orderRoute()`, default `['order']` | `$reorderRoute`, `reorderRoute()`, default `['reorder']` |
+| `Widgets\Buttons\DraggableSortButton` | `Widgets\Buttons\ReorderButton` |
+| `Assets\SortableAssetBundle` (`js/sortable.js`) | `Assets\ReorderAssetBundle` (`js/reorder.js`) |
+| `GroupCustomAttribute::sortable()`, `isSortable()` | `reorderable()`, `isReorderable()` |
+| `data-sort-url`, `data-sort-announcement`, `data-group-sortable` | `data-reorder-url`, `data-reorder-announcement`, `data-group-reorderable` |
+| `.sortable-handle` | `.reorder-handle` |
+| `GRID_SORT_ANNOUNCEMENT`, `GRID_SORT_HANDLE_LABEL` | `GRID_REORDER_ANNOUNCEMENT`, `GRID_REORDER_HANDLE_LABEL` |
+
 ## Requirements
 
 - PHP `^8.3` with `ext-fileinfo` (new), `ext-intl` (new), `ext-json`, `ext-openssl`, `ext-pdo_mysql`, `ext-simplexml` and
@@ -99,7 +115,7 @@ project (see *Data and schema*), and the bundle itself carries one baseline migr
 | `ModelTrait::getTraitNames()`, `getTraitRules()`, `getTraitAttributeLabels()` | removed; the using class spreads the trait's methods itself |
 | `ArrayHelper::cacheStringToArray()`, `createCacheString()`, `MaterializedTreeTrait::getIdsFromPath()`, `getPathFromIds()` | removed; `path` is a JSON `int[]` column |
 | `Html::buttonList()`, `Html::buttons()` | removed; `Widgets\Buttons\ButtonGroup` |
-| `GridView::isSortedByPosition()` | `isSortable()` |
+| `GridView::isSortedByPosition()` | `isReorderable()` |
 | `GridView::getUpdateButton()`, `getDeleteButton()`, `getSortableButton()`, `renderSelectionForm()` | removed; `Widgets\Grids\Columns\ButtonColumn`, `Widgets\Grids\Traits\SelectionTrait` |
 | `Web\Controller::error()`, `success()`, `errorOrSuccess()` returning `bool` / `void` | return `static`, take `string\|Stringable` and encode a plain string; `warning()` added |
 | `Modules\Admin\Module::getDashboardPanels()`, `setDashboardPanels()`, `getNavBarItems()`, `setNavBarItems()` | `Module::dashboard(Dashboard)`, `ModuleInterface::aside(Nav)`, `Widget::EVENT_CONFIGURE` on `Modules\Admin\Widgets\Navs\NavBar` |

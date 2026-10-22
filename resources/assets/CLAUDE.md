@@ -47,7 +47,7 @@ carry `detail.ctx`; a container listener must check `event.target`; no history c
 - An error response (`>= 400`) never swaps: `admin.ts` cancels `htmx:after:request`, the last event before the swap
   and the history push, and shows the response in a modal instead.
 - `htmx.ajax()`'s `values` appends each value once: an array arrives as one comma-joined string, so a list is sent
-  with indexed keys (`entry[0]`, `entry[1]`; `sortable.ts`).
+  with indexed keys (`entry[0]`, `entry[1]`; `reorderValues.ts`).
 - `hx-vars` is gone (`hx-vals`, read at request time); an `hx-vals` `js:` value sees neither element nor event
   (`autocomplete.ts` rewrites `ctx.request.body` on `htmx:config:request`).
 - `tooltips.ts` moves `title` into its own element. Every id outside `#wrap` is a **literal** (`Html::getId()`

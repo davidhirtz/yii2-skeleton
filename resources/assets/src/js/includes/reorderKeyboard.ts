@@ -2,14 +2,14 @@
  * Dragging is the only way to reorder a grid with a pointer, which leaves a keyboard out entirely. On a focused
  * handle, the up and down arrows move its row one place and the caller posts the new order, exactly as a drop
  * does. The new position is announced through a polite live region, worded by the server
- * (`data-sort-announcement`, holding `{position}` and `{count}`), since a script has no translations.
+ * (`data-reorder-announcement`, holding `{position}` and `{count}`), since a script has no translations.
  */
 export const moveRowByKey = (event: KeyboardEvent, $list: HTMLElement): boolean => {
     if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') {
         return false;
     }
 
-    const $handle = (event.target as HTMLElement | null)?.closest<HTMLElement>('.sortable-handle');
+    const $handle = (event.target as HTMLElement | null)?.closest<HTMLElement>('.reorder-handle');
     const $row = $handle ? [...$list.children].find(($child) => $child.contains($handle)) : undefined;
 
     if (!$handle || !$row) {
@@ -40,17 +40,17 @@ export const moveRowByKey = (event: KeyboardEvent, $list: HTMLElement): boolean 
 };
 
 const announce = ($list: HTMLElement, position: number, count: number): void => {
-    const template = $list.dataset.sortAnnouncement;
+    const template = $list.dataset.reorderAnnouncement;
 
     if (!template) {
         return;
     }
 
-    let $region = document.getElementById('sort-announcement');
+    let $region = document.getElementById('reorder-announcement');
 
     if (!$region) {
         $region = document.createElement('div');
-        $region.id = 'sort-announcement';
+        $region.id = 'reorder-announcement';
         $region.className = 'visually-hidden';
         $region.setAttribute('aria-live', 'polite');
         document.body.append($region);

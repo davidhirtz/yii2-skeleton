@@ -3,7 +3,7 @@ import htmx from "htmx.org";
 
 import onLoad from './includes/onLoad';
 import Sortable from './includes/sortable';
-import {moveRowByKey} from './includes/sortableKeyboard';
+import {moveRowByKey} from './includes/reorderKeyboard';
 
 // Matches `Widgets\Forms\Fields\GroupField::POSITION_PLACEHOLDER`.
 const POSITION_PLACEHOLDER = '__POSITION__';
@@ -98,7 +98,7 @@ onLoad(($node) => {
                 $remove.hidden = count <= min;
             });
 
-            $items.querySelectorAll<HTMLElement>('.sortable-handle').forEach(($handle) => {
+            $items.querySelectorAll<HTMLElement>('.reorder-handle').forEach(($handle) => {
                 $handle.hidden = count < 2;
             });
 
@@ -168,11 +168,11 @@ onLoad(($node) => {
             }
         }, true);
 
-        if ($group.dataset.groupSortable !== undefined) {
+        if ($group.dataset.groupReorderable !== undefined) {
             // The input names are reindexed from the request order on save, so only the numbers on screen
             // have to follow a move.
             new Sortable($items, {
-                handle: '.sortable-handle',
+                handle: '.reorder-handle',
                 direction: 'vertical',
                 animation: 150,
                 onEnd: () => {

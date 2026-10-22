@@ -11,7 +11,7 @@ describe('selectLink', () => {
             + '<select data-select-link><option value=""></option>'
             + '<option value="9" data-url="/admin/media/file/update?id=9">Москва.jpg</option></select>'
             + '<a href="#" hidden data-select-link-target>Open</a>'
-            + '<a href="#" class="sortable-handle">Move</a>'
+            + '<a href="#" class="reorder-handle">Move</a>'
             + '</div>';
 
         $select = document.querySelector('select')!;
@@ -26,7 +26,7 @@ describe('selectLink', () => {
 
         expect($link.getAttribute('href')).toBe('/admin/media/file/update?id=9');
         expect($link.hidden).toBe(false);
-        expect(document.querySelector('.sortable-handle')?.getAttribute('href')).toBe('#');
+        expect(document.querySelector('.reorder-handle')?.getAttribute('href')).toBe('#');
     });
 
     it('hides the link for the prompt', () => {

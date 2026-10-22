@@ -15,7 +15,7 @@ use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
 use Hirtz\Skeleton\Models\CustomAttributes\GroupCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
-use Hirtz\Skeleton\Widgets\Buttons\DraggableSortButton;
+use Hirtz\Skeleton\Widgets\Buttons\ReorderButton;
 use Hirtz\Skeleton\Widgets\Forms\Fieldset;
 use Hirtz\Skeleton\Widgets\Forms\InputGroup;
 use Hirtz\Skeleton\Widgets\Icon;
@@ -152,9 +152,9 @@ class GroupField extends Field
                     ->addClass('custom-attribute-group-items')
                     ->attribute('data-group-items', true)
                     ->attribute(
-                        'data-sort-announcement',
-                        $this->group->isSortable()
-                        ? Yii::t('skeleton', 'GRID_SORT_ANNOUNCEMENT', ['position' => '{position}', 'count' => '{count}'])
+                        'data-reorder-announcement',
+                        $this->group->isReorderable()
+                        ? Yii::t('skeleton', 'GRID_REORDER_ANNOUNCEMENT', ['position' => '{position}', 'count' => '{count}'])
                         : null
                     )
                     ->content(...$this->getItemElements($items))
@@ -173,8 +173,8 @@ class GroupField extends Field
             ->attribute('data-group-placeholder', self::TEMPLATE_INDEX)
             ->attribute('data-group-placeholder-id', Html::getInputIdByName(self::TEMPLATE_INDEX));
 
-        if ($this->group->isSortable()) {
-            $container->attribute('data-group-sortable', true);
+        if ($this->group->isReorderable()) {
+            $container->attribute('data-group-reorderable', true);
         }
 
         $this->view->registerAssetBundle(CustomAttributesAssetBundle::class);
@@ -224,16 +224,16 @@ class GroupField extends Field
     protected function getItemElements(array $items): array
     {
         $elements = [];
-        $sortable = count($items) > 1;
+        $reorderable = count($items) > 1;
 
         // The first row's control is what the label points at, and the template is deliberately not one of
         // these: its ids carry the placeholder and its inputs are not in the document.
         foreach ($items as $index => $item) {
-            $control = $this->getItemControl($item, $sortable);
+            $control = $this->getItemControl($item, $reorderable);
             $this->firstControl ??= $control;
             $this->firstToggleId ??= $this->collapsible ? $this->getItemId($item) . '-toggle' : null;
 
-            $elements[] = $this->getItem($item, $control, $index + 1, $item->hasErrors(), $sortable);
+            $elements[] = $this->getItem($item, $control, $index + 1, $item->hasErrors(), $reorderable);
         }
 
         return $elements;
@@ -248,7 +248,7 @@ class GroupField extends Field
         Field|Fieldset $control,
         int|string $position,
         bool $expanded,
-        bool $sortable,
+        bool $reorderable,
     ): Stringable {
         $element = Div::make()
             ->addClass('custom-attribute-group-item')
@@ -262,7 +262,7 @@ class GroupField extends Field
 
         return $element->content(
             InputGroup::make()
-                ->append(...$this->getItemButtons($sortable))
+                ->append(...$this->getItemButtons($reorderable))
                 ->content($this->getToggleButton($item, $position, $id, $expanded)),
             Div::make()
                 ->addClass('custom-attribute-group-item-body')
@@ -282,16 +282,16 @@ class GroupField extends Field
         return Html::getInputIdByName($item->formName());
     }
 
-    protected function getItemControl(CustomAttributeGroupItem $item, bool $sortable): Field|Fieldset
+    protected function getItemControl(CustomAttributeGroupItem $item, bool $reorderable): Field|Fieldset
     {
-        return ($this->single ? $this->getField($item, $sortable) : null) ?? $this->getFieldset($item);
+        return ($this->single ? $this->getField($item, $reorderable) : null) ?? $this->getFieldset($item);
     }
 
     /**
      * The group's own label names the one field, so the field drops its own and is laid out by the row rather
      * than by a form row of its own.
      */
-    protected function getField(CustomAttributeGroupItem $item, bool $sortable): ?Field
+    protected function getField(CustomAttributeGroupItem $item, bool $reorderable): ?Field
     {
         foreach ($item->getCustomAttributeDefinitions() as $definition) {
             if ($definition->isVisible($item)) {
@@ -299,7 +299,7 @@ class GroupField extends Field
                     ->form($this->form)
                     ->label('')
                     ->showRow(false)
-                    ->append(...$this->getItemButtons($sortable));
+                    ->append(...$this->getItemButtons($reorderable));
             }
         }
 
@@ -388,7 +388,7 @@ class GroupField extends Field
     /**
      * @return list<Stringable>
      */
-    protected function getItemButtons(bool $sortable): array
+    protected function getItemButtons(bool $reorderable): array
     {
         if (!$this->group->isMultiple()) {
             return [];
@@ -396,10 +396,10 @@ class GroupField extends Field
 
         return array_values(array_filter([
             // One row has nowhere to move to; the script hides it again as rows come and go.
-            $this->group->isSortable()
-                ? DraggableSortButton::make()
+            $this->group->isReorderable()
+                ? ReorderButton::make()
                 ->class('btn')
-                ->attribute('hidden', $sortable ? null : true)
+                ->attribute('hidden', $reorderable ? null : true)
                 : null,
             $this->getRemoveButton(),
         ]));

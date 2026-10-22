@@ -22,7 +22,7 @@ class GroupCustomAttribute extends CustomAttribute
     protected bool $multiple = false;
     protected int $minCount = 0;
     protected ?int $maxCount = null;
-    protected bool $sortable = true;
+    protected bool $reorderable = true;
     protected ?string $titleAttribute = null;
     protected ?string $addButtonLabel = null;
 
@@ -58,9 +58,9 @@ class GroupCustomAttribute extends CustomAttribute
         return $this;
     }
 
-    public function sortable(bool $sortable = true): static
+    public function reorderable(bool $reorderable = true): static
     {
-        $this->sortable = $sortable;
+        $this->reorderable = $reorderable;
         return $this;
     }
 
@@ -115,9 +115,9 @@ class GroupCustomAttribute extends CustomAttribute
         return $this->maxCount;
     }
 
-    public function isSortable(): bool
+    public function isReorderable(): bool
     {
-        return $this->sortable;
+        return $this->reorderable;
     }
 
     public function getAddButtonLabel(): ?string

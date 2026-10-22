@@ -7,11 +7,11 @@ vi.stubGlobal('XPathEvaluator', class {
     }
 });
 
-const {default: postOrder} = await import('../../../src/js/includes/postOrder');
+const {default: postReorder} = await import('../../../src/js/includes/postReorder');
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
 
-describe('postOrder', () => {
+describe('postReorder', () => {
     afterEach(() => {
         vi.unstubAllGlobals();
         document.body.innerHTML = '';
@@ -26,7 +26,7 @@ describe('postOrder', () => {
             return new Promise((resolve) => pending.push(() => resolve(new Response('', {status: 200}))));
         }));
 
-        document.body.innerHTML = '<table><tbody data-sort-url="/admin/entry/order">'
+        document.body.innerHTML = '<table><tbody data-reorder-url="/admin/entry/reorder">'
             + '<tr id="entry-1"></tr><tr id="entry-2"></tr><tr id="entry-3"></tr></tbody></table>';
 
         const $list = document.querySelector('tbody')!;
@@ -34,7 +34,7 @@ describe('postOrder', () => {
 
         const requests = [1, 2, 3].map(() => {
             move();
-            return postOrder($list);
+            return postReorder($list);
         });
 
         while (pending.length || bodies.length < 2) {

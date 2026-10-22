@@ -9,7 +9,7 @@ use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Yii;
 
-class DraggableSortButton extends Widget
+class ReorderButton extends Widget
 {
     use IconTrait;
     use TagAttributesTrait;
@@ -17,11 +17,11 @@ class DraggableSortButton extends Widget
     protected function renderContent(): string
     {
         $this->attributes['class'] ??= 'btn btn-secondary';
-        $this->attributes['aria-label'] ??= Yii::t('skeleton', 'GRID_SORT_HANDLE_LABEL');
+        $this->attributes['aria-label'] ??= Yii::t('skeleton', 'GRID_REORDER_HANDLE_LABEL');
 
         return Button::make()
             ->attributes($this->attributes)
-            ->addClass('sortable-handle')
+            ->addClass('reorder-handle')
             ->icon($this->icon ?? 'arrows-alt')
             ->render();
     }

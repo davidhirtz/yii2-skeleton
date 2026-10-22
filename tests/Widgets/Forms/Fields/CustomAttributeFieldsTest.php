@@ -119,7 +119,7 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertStringContainsString('data-group="links"', $content);
         self::assertStringContainsString('<input type="hidden" name="FieldRecord[links]" value="">', $content);
         self::assertStringContainsString('data-group-max="2"', $content);
-        self::assertStringContainsString('data-group-sortable', $content);
+        self::assertStringContainsString('data-group-reorderable', $content);
 
         self::assertStringContainsString(
             '<input type="text" id="fieldrecord-links-0-label" class="input" name="FieldRecord[links][0][label]" value="Label" maxlength="255" data-group-title-input>',
@@ -130,7 +130,7 @@ class CustomAttributeFieldsTest extends TestCase
         self::assertStringContainsString('name="FieldRecord[links][0][url]"', $content);
 
         self::assertStringContainsString('data-group-remove', $content);
-        self::assertStringContainsString('sortable-handle', $content);
+        self::assertStringContainsString('reorder-handle', $content);
 
         // The template carries the placeholder index, lowercased in the ids.
         self::assertStringContainsString('data-group-template', $content);
@@ -442,7 +442,7 @@ class CustomAttributeFieldsTest extends TestCase
      * A lone row has nowhere to move to. The script hides the handle again as rows come and go, so the server
      * only has to get the first paint right.
      */
-    public function testTheSortHandleIsHiddenWhileThereIsOneRow(): void
+    public function testTheReorderHandleIsHiddenWhileThereIsOneRow(): void
     {
         $model = $this->createRecord();
         $model->type = FieldRecord::TYPE_LINKS;
@@ -453,10 +453,10 @@ class CustomAttributeFieldsTest extends TestCase
             ->rows(['links'])
             ->render();
 
-        self::assertStringContainsString('class="btn sortable-handle" hidden aria-label=', $content);
+        self::assertStringContainsString('class="btn reorder-handle" hidden aria-label=', $content);
 
         // Not in the template: the row it stands for is never the only one.
-        self::assertSame(1, substr_count($content, 'sortable-handle" hidden'));
+        self::assertSame(1, substr_count($content, 'reorder-handle" hidden'));
 
         $model->links = [
             ['label' => 'One', 'url' => 'https://one.example.com'],
@@ -468,7 +468,7 @@ class CustomAttributeFieldsTest extends TestCase
             ->rows(['links'])
             ->render();
 
-        self::assertStringNotContainsString('sortable-handle" hidden', $content);
+        self::assertStringNotContainsString('reorder-handle" hidden', $content);
     }
 
     /**

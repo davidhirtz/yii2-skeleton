@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Grids;
 
 use Closure;
-use Hirtz\Skeleton\Assets\SortableAssetBundle;
+use Hirtz\Skeleton\Assets\ReorderAssetBundle;
 use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\ArrayHelper;
@@ -119,7 +119,7 @@ class GridView extends Widget
     /**
      * @var array<int|string, mixed>|null
      */
-    protected ?array $orderRoute = ['order'];
+    protected ?array $reorderRoute = ['reorder'];
 
     protected GridSearch $search;
 
@@ -187,11 +187,11 @@ class GridView extends Widget
     }
 
     /**
-     * @param array<int|string, mixed>|null $orderRoute
+     * @param array<int|string, mixed>|null $reorderRoute
      */
-    public function orderRoute(?array $orderRoute): static
+    public function reorderRoute(?array $reorderRoute): static
     {
-        $this->orderRoute = $orderRoute;
+        $this->reorderRoute = $reorderRoute;
         return $this;
     }
 
@@ -468,15 +468,16 @@ class GridView extends Widget
 
     protected function getTableBody(): Tbody
     {
-        if ($this->isSortable()) {
-            $this->tableBodyAttributes['data-sort-url'] ??= Url::to($this->orderRoute);
+        if ($this->isReorderable()) {
+            $this->tableBodyAttributes['data-reorder-url'] ??= Url::to($this->reorderRoute);
 
-            // A pattern for `sortable.ts`, which announces where a row moved by keyboard landed.
-            $this->tableBodyAttributes['data-sort-announcement'] ??= Yii::t('skeleton', 'GRID_SORT_ANNOUNCEMENT', [
-                'position' => '{position}',
-                'count' => '{count}',
-            ]);
-            Yii::$app->getView()->registerAssetBundle(SortableAssetBundle::class);
+            // A pattern for `reorder.ts`, which announces where a row moved by keyboard landed.
+            $this->tableBodyAttributes['data-reorder-announcement'] ??= Yii::t(
+                'skeleton',
+                'GRID_REORDER_ANNOUNCEMENT',
+                ['position' => '{position}', 'count' => '{count}'],
+            );
+            Yii::$app->getView()->registerAssetBundle(ReorderAssetBundle::class);
         }
 
         $tbody = Tbody::make()
@@ -537,12 +538,18 @@ class GridView extends Widget
             : $this->footer;
     }
 
-    protected function isSortable(): bool
+    protected function isPicker(): bool
+    {
+        return false;
+    }
+
+    protected function isReorderable(): bool
     {
         return $this->provider->getSort() === false
             && $this->provider->getPagination() === false
             && $this->provider->getCount() > 1
             && !$this->search->getValue()
-            && $this->orderRoute !== null;
+            && !$this->isPicker()
+            && $this->reorderRoute !== null;
     }
 }
