@@ -106,6 +106,18 @@ class AdminLanguageTest extends TestCase
         self::assertSame('de', $user->language);
     }
 
+    public function testTheLoginFlashIsInTheAccountsLanguage(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+        $user->updateAttributes(['language' => 'de']);
+
+        $this->login();
+
+        self::assertLanguageSame('de');
+        self::assertStringNotContainsString('Login successful', self::$crawler->filter('#flashes')->text(''));
+        self::assertStringNotContainsString('Welcome back', self::$crawler->filter('#flashes')->text(''));
+    }
+
     public function testThePickedLanguageOutlivesTheRequestThatSetIt(): void
     {
         $this->login();

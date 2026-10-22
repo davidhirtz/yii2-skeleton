@@ -204,6 +204,9 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post())) {
             if ($form->login()) {
+                // In the language the next page is rendered in, which the account decides from now on.
+                Yii::$app->language = $this->module->getOfferedLanguage($this->module->getSessionLanguage() ?? $form->user->language);
+
                 $this->success($form->user->login_count === 1
                     ? Yii::t('skeleton', 'ACCOUNT_SUCCESS_LOGIN_SUCCESSFUL')
                     : Yii::t('skeleton', 'ACCOUNT_WELCOME_BACK', [
