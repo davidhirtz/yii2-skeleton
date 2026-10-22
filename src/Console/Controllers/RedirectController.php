@@ -87,7 +87,7 @@ class RedirectController extends Controller
             } elseif ($this->leadsToCycle($chain)) {
                 $leading[] = $redirect;
             } elseif ($chain) {
-                $chained[$redirect->request_uri] = end($chain)->url;
+                $chained[$redirect->request_uri] = $this->getChainTarget($redirect, $chain);
             }
         }
 
@@ -173,6 +173,33 @@ class RedirectController extends Controller
         }
 
         return null;
+    }
+
+    /**
+     * A relative target resolves on the host its redirect was reached on, so one reached on another host gets it spelled out.
+     *
+     * @param non-empty-list<Redirect> $chain
+     */
+    protected function getChainTarget(Redirect $redirect, array $chain): string
+    {
+        $host = $this->getHost($redirect);
+        $scheme = null;
+        $url = $redirect->url;
+
+        foreach ($chain as $next) {
+            if ($nextHost = parse_url($url, PHP_URL_HOST)) {
+                $host = $nextHost;
+                $scheme = parse_url($url, PHP_URL_SCHEME);
+            }
+
+            $url = $next->url;
+        }
+
+        if (parse_url($url, PHP_URL_HOST) || $host === $this->getHost($redirect)) {
+            return $url;
+        }
+
+        return ($scheme ?: 'https') . "://$host/" . ltrim($url, '/');
     }
 
     /**

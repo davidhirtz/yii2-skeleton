@@ -83,6 +83,29 @@ class RedirectControllerTest extends TestCase
         self::assertSame('third', Redirect::findOne(['request_uri' => 'second'])->url);
     }
 
+    public function testAChainAcrossHostsIsShortenedToAnAbsoluteTarget(): void
+    {
+        $this->insertRedirect('a.example.com/old', 'https://b.example.com/x');
+        $this->insertRedirect('b.example.com/x', 'y');
+
+        $this->createController('a.example.com,b.example.com')->actionClean();
+
+        self::assertSame('https://b.example.com/y', Redirect::findOne(['request_uri' => 'a.example.com/old'])->url);
+        self::assertSame('y', Redirect::findOne(['request_uri' => 'b.example.com/x'])->url);
+    }
+
+    public function testAChainBackToTheOwnHostStaysRelative(): void
+    {
+        $this->insertRedirect('a.example.com/old', 'https://b.example.com/x');
+        $this->insertRedirect('b.example.com/x', 'https://a.example.com/mid');
+        $this->insertRedirect('a.example.com/mid', 'new');
+
+        $this->createController('a.example.com,b.example.com')->actionClean();
+
+        self::assertSame('new', Redirect::findOne(['request_uri' => 'a.example.com/old'])->url);
+        self::assertSame('https://a.example.com/new', Redirect::findOne(['request_uri' => 'b.example.com/x'])->url);
+    }
+
     public function testAHealthyRedirectIsLeftAlone(): void
     {
         $this->insertRedirect('old', 'new');
