@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Widgets\Forms;
 
 use Hirtz\Skeleton\Models\Forms\LoginForm;
+use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\LoginActiveForm;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
@@ -34,6 +35,21 @@ class ActiveFormUnsavedTest extends TestCase
         $this->getWebRequest()->getHeaders()->set('X-Form-Reload', '1');
 
         self::assertStringContainsString('data-dirty', ActiveForm::make()->model(new DynamicModel(['name' => '']))->render());
+    }
+
+    public function testOnlyASavedRecordsFormStartsOutPristine(): void
+    {
+        $redirect = Redirect::create();
+        $redirect->request_uri = 'old-page';
+        $redirect->url = 'new-page';
+
+        self::assertStringNotContainsString('data-pristine', ActiveForm::make()->model($redirect)->render());
+
+        self::assertTrue($redirect->insert(), print_r($redirect->getErrors(), true));
+        self::assertStringContainsString('data-pristine', ActiveForm::make()->model($redirect)->render());
+
+        $redirect->addError('url', 'URL is invalid.');
+        self::assertStringNotContainsString('data-pristine', ActiveForm::make()->model($redirect)->render());
     }
 
     public function testASignInFormAndAReadOnlyOneDoNot(): void

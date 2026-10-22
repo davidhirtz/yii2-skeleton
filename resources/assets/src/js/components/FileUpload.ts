@@ -132,7 +132,10 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                     const html = await response.text();
                     const $target = this.getTarget();
 
-                    void htmx.swap({
+                    // A field swapped in by an upload changes its form without an `input` or `change` of its own.
+                    const $form = $target.closest('form');
+
+                    void Promise.resolve(htmx.swap({
                         text: html,
                         target: $target,
                         swap: isOnScreen($target) ? 'outerHTML' : 'outerHTML show:top',
@@ -142,7 +145,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                         selectOOB: ['#flashes:beforeend', this.dataset.selectOob]
                             .filter(Boolean)
                             .join(','),
-                    });
+                    })).then(() => $form?.dispatchEvent(new Event('change', {bubbles: true})));
                 } else if (!response.ok) {
                     alert(getErrorMessage(response));
                     break;

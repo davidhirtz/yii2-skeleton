@@ -25,6 +25,9 @@ onLoad(($node) => {
 
         const getRows = () => Array.from($items.children) as HTMLElement[];
 
+        // Adding, removing or moving a row changes the form as much as typing does, see `includes/unsaved.ts`.
+        const changed = () => $group.dispatchEvent(new Event('change', {bubbles: true}));
+
         // What a collapsed row is previewed by: the value as it reads on screen, so a select is its option
         // rather than its value. A checkbox says nothing about the row, so it counts as nothing typed.
         const getTitle = ($row: HTMLElement): string => {
@@ -120,6 +123,7 @@ onLoad(($node) => {
             }
 
             update();
+            changed();
         };
 
         $add?.addEventListener('click', add);
@@ -133,6 +137,7 @@ onLoad(($node) => {
             if ($remove && $group.contains($remove)) {
                 $remove.closest('[data-group-item]')?.remove();
                 update();
+                changed();
                 return;
             }
 
@@ -170,12 +175,16 @@ onLoad(($node) => {
                 handle: '.sortable-handle',
                 direction: 'vertical',
                 animation: 150,
-                onEnd: renumber,
+                onEnd: () => {
+                    renumber();
+                    changed();
+                },
             } as SortableOptions);
 
             $items.addEventListener('keydown', (event: KeyboardEvent) => {
                 if (moveRowByKey(event, $items)) {
                     renumber();
+                    changed();
                 }
             });
         }

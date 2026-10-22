@@ -2,12 +2,16 @@
  * A long form lost to a stray click: htmx swaps `#wrap` on every navigation without asking. A form carrying
  * `data-unsaved` (the question, worded by the server) is dirty after its first input or change, or from the start
  * when the server rendered it with unsaved input (`data-dirty`: a failed save, a form reload). Leaving the page —
- * an htmx navigation of `#wrap` or the browser's own — asks while one is; submitting the form clears it.
+ * an htmx navigation of `#wrap` or the browser's own — asks while one is; submitting the form clears it. A form of
+ * a saved record arrives `data-pristine`, which mutes its submit button until the first change.
  */
 const dirty = new Set<HTMLFormElement>();
 
 export const trackUnsavedForm = ($form: HTMLFormElement): void => {
-    const mark = () => dirty.add($form);
+    const mark = () => {
+        dirty.add($form);
+        $form.removeAttribute('data-pristine');
+    };
 
     if ($form.dataset.dirty !== undefined) {
         mark();

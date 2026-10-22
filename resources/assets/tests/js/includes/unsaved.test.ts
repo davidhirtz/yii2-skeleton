@@ -44,6 +44,16 @@ describe('unsaved', () => {
         expect(hasUnsavedChanges()).toBe(false);
     });
 
+    it('unmutes a saved record\'s submit button on its first change', () => {
+        const $form = render('data-pristine');
+
+        expect($form.hasAttribute('data-pristine')).toBe(true);
+
+        $form.querySelector('input')!.dispatchEvent(new Event('change', {bubbles: true}));
+
+        expect($form.hasAttribute('data-pristine')).toBe(false);
+    });
+
     it('treats a form the server marked as changed from the start', () => {
         render('data-dirty');
 

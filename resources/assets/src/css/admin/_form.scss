@@ -96,6 +96,11 @@
   color: var(--muted-color);
 }
 
+// A saved record's form before its first change, see `includes/unsaved.ts`. Muted, not disabled: it still saves.
+form[data-pristine] [type="submit"] {
+  opacity: .5;
+}
+
 .form-buttons {
   border-top: 1px solid var(--form-footer-border-color);
 
