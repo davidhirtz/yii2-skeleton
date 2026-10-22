@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Models\Traits\TranslationTrait;
 use Hirtz\Skeleton\Models\Translation;
 use Hirtz\Skeleton\Test\TestCase;
 use Override;
+use RuntimeException;
 use Yii;
 use yii\db\Migration;
 use yii\db\Query;
@@ -86,6 +87,24 @@ class MigrationTraitTranslationsTest extends TestCase
 
         // an empty translation is no translation, so no row is written for it
         self::assertSame(0, (int)Translation::find()->where(['model_id' => $empty])->count());
+    }
+
+    public function testAColumnInALanguageNoLongerConfiguredIsRefused(): void
+    {
+        Yii::$app->getI18n()->setLanguages(['en-US']);
+        $this->insertRow('Name', 'Name DE');
+
+        $migration = $this->createMigration();
+
+        try {
+            $migration->moveI18nColumnsToTranslations(TranslatedMigrationRecord::tableName(), TranslatedMigrationRecord::class);
+            self::fail('A translated column was left behind.');
+        } catch (RuntimeException $exception) {
+            self::assertStringContainsString('name_de', $exception->getMessage());
+        }
+
+        self::assertTrue($migration->hasColumn(TranslatedMigrationRecord::tableName(), 'name_de'));
+        self::assertSame(0, (int)Translation::find()->where(['model_class' => TranslatedMigrationRecord::class])->count());
     }
 
     /**

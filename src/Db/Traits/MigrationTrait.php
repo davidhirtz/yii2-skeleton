@@ -482,8 +482,11 @@ trait MigrationTrait
         $translations = $this->getQuotedTableName(Translation::tableName());
         $model = $this->getTranslationModelColumn();
         $class = $db->quoteValue($modelClass);
+        $columns = $this->getI18nColumns($table);
 
-        foreach ($this->getI18nColumns($table) as $column => [$attribute, $language]) {
+        $this->assertNoI18nColumnLeftBehind($table, array_keys($columns));
+
+        foreach ($columns as $column => [$attribute, $language]) {
             $this->execute("
                 INSERT INTO $translations ([[$model]], [[model_id]], [[language]], [[attribute]], [[value]])
                 SELECT $class, [[id]], {$db->quoteValue($language)}, {$db->quoteValue($attribute)}, [[$column]]
@@ -493,6 +496,39 @@ trait MigrationTrait
 
             $this->dropIndexesContainingColumn($table, $column);
             $this->dropColumn($table, $column);
+        }
+    }
+
+    /**
+     * A `<attribute>_<xx>` beside its attribute is a v2 translation, and one in a language the configuration no
+     * longer has would stay behind as a column with its values.
+     *
+     * @param list<string> $moved
+     */
+    private function assertNoI18nColumnLeftBehind(string $table, array $moved): void
+    {
+        $names = $this->getTableSchema($table)->getColumnNames();
+        $left = [];
+
+        foreach ($names as $name) {
+            foreach ($names as $attribute) {
+                $suffix = substr($name, strlen($attribute) + 1);
+
+                if (
+                    str_starts_with($name, "{$attribute}_")
+                    && $suffix !== 'id'
+                    && preg_match('/^[a-z]{2}(_[a-z]{2,4})?$/', $suffix) === 1
+                    && !in_array($name, $moved, true)
+                ) {
+                    $left[] = $name;
+                    break;
+                }
+            }
+        }
+
+        if ($left) {
+            throw new RuntimeException("No configured language reads the columns " . implode(', ', $left)
+                . " of $table: add each language to i18n.languages before migrating.");
         }
     }
 
