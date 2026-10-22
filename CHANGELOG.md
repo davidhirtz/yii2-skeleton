@@ -1,4 +1,4 @@
-## Unreleased
+## 3.22.0 (October 22, 2026)
 
 - Added `M261022120000RbacTimestamps`: the RBAC timestamps `bigint` on a database upgraded from v2
 - Added `Web\Application::getVisibleStatus()`, the status a record needs to be listed on the website, `null` for the admin and MCP
