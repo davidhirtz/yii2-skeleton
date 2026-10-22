@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Override;
+use Yii;
 
 /**
  * Two editors on one record: the one saving second is told, instead of overwriting the first.
@@ -35,8 +36,16 @@ class StaleSaveTraitTest extends TestCase
         $second->name = 'secondeditor';
         $second->loadedAt = time() - 5;
 
+        Yii::$app->language = 'de';
+
         self::assertFalse($second->save());
-        self::assertArrayHasKey('loadedAt', $second->getErrors());
+
+        $trail = $second->findUpdateTrailSince();
+        self::assertNotNull($trail);
+
+        $formatter = Yii::$app->getFormatter();
+        $time = "am {$formatter->asDate($trail->created_at, 'short')} um {$formatter->asTime($trail->created_at, 'short')} geändert";
+        self::assertStringContainsString($time, (string)$second->getFirstError('loadedAt'));
 
         $second->loadedAt = null;
 

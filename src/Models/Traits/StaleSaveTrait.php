@@ -78,7 +78,8 @@ trait StaleSaveTrait
 
         $this->addError('loadedAt', Yii::t('skeleton', 'COMMON_STALE_SAVE_ERROR', [
             'user' => $user instanceof User ? $user->getUsername() : '',
-            'time' => Yii::$app->getFormatter()->asDatetime($trail->created_at, 'short'),
+            'date' => Yii::$app->getFormatter()->asDate($trail->created_at, 'short'),
+            'time' => Yii::$app->getFormatter()->asTime($trail->created_at, 'short'),
         ]));
     }
 
