@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Controllers;
 
 use Hirtz\Skeleton\Controllers\SitemapController;
+use Hirtz\Skeleton\Filters\PageCache as SkeletonPageCache;
 use Hirtz\Skeleton\Test\TestCase;
 use SimpleXMLElement;
 use Yii;
@@ -103,6 +104,24 @@ class SitemapControllerTest extends TestCase
         $_GET = ['key' => 'urls', 'offset' => 'one'];
 
         self::assertNull($this->findPageCacheVariations());
+    }
+
+    /**
+     * Every content change invalidates the page-cache tag, which is what clears the sitemap too.
+     */
+    public function testTheSitemapCacheFollowsThePageCacheTag(): void
+    {
+        Yii::$app->sitemap->cache = 'cache';
+        $controller = Yii::createObject(SitemapController::class, ['sitemap', Yii::$app]);
+
+        foreach ($controller->behaviors() as $behavior) {
+            if (is_array($behavior) && $behavior['class'] === PageCache::class) {
+                self::assertSame([SkeletonPageCache::TAG_DEPENDENCY_KEY], $behavior['dependency']['tags'] ?? null);
+                return;
+            }
+        }
+
+        self::fail('The sitemap is not cached.');
     }
 
     /**

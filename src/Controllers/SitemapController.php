@@ -11,6 +11,8 @@ use Hirtz\Skeleton\Web\Controller;
 use Override;
 use XMLWriter;
 use Yii;
+use Hirtz\Skeleton\Filters\PageCache as SkeletonPageCache;
+use yii\caching\TagDependency;
 use yii\filters\PageCache;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -66,7 +68,11 @@ class SitemapController extends Controller
                 'only' => ['index'],
                 'cache' => $sitemap->cache,
                 'duration' => $sitemap->duration,
-                'dependency' => $sitemap->dependency,
+                // The tag every content change invalidates, which the pages are cached under too.
+                'dependency' => $sitemap->dependency ?? [
+                    'class' => TagDependency::class,
+                    'tags' => [SkeletonPageCache::TAG_DEPENDENCY_KEY],
+                ],
                 'variations' => $variations,
             ];
         }
