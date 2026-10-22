@@ -357,6 +357,14 @@ class GridView extends Widget
      */
     protected function isFiltered(): bool
     {
+        return $this->hasFilterValue();
+    }
+
+    /**
+     * Whether the request narrows the rows, by the search or a filter dropdown of the toolbar.
+     */
+    public function hasFilterValue(): bool
+    {
         if ($this->search->getValue()) {
             return true;
         }

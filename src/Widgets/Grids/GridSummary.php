@@ -139,24 +139,25 @@ class GridSummary extends Widget
             return Yii::$app->getI18n()->format($this->message, $params, Yii::$app->language);
         }
 
-        if ($this->emptyMessage && !$count && !$this->grid->getSearch()->getValue()) {
+        if ($this->emptyMessage && !$count && !$this->grid->hasFilterValue()) {
             return Yii::$app->getI18n()->format($this->emptyMessage, $params, Yii::$app->language)
                 . $this->getEmptyLink();
         }
 
+        // "The only one" is of all of them: a last page holding one record is no such thing.
         if ($this->grid->getSearch()->getValue()) {
-            return match ($count) {
-                1 => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ONLY', $params),
-                0 => Yii::t('skeleton', 'GRID_SUMMARY_NO_RESULTS_SEARCH', $params),
-                $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RESULTS_MATCHING', $params),
+            return match (true) {
+                $totalCount === 1 => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ONLY', $params),
+                $count === 0 => Yii::t('skeleton', 'GRID_SUMMARY_NO_RESULTS_SEARCH', $params),
+                $count === $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RESULTS_MATCHING', $params),
                 default => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RESULTS_MATCHING', $params),
             };
         }
 
-        return match ($count) {
-            1 => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_THE_ONLY_RECORD', $params),
-            0 => Yii::t('skeleton', 'GRID_SUMMARY_NO_RESULTS', $params),
-            $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RECORDS', $params),
+        return match (true) {
+            $totalCount === 1 => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_THE_ONLY_RECORD', $params),
+            $count === 0 => Yii::t('skeleton', 'GRID_SUMMARY_NO_RESULTS', $params),
+            $count === $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RECORDS', $params),
             default => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RECORDS', $params),
         };
     }

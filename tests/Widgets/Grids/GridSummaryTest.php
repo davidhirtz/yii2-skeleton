@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Widgets\Grids\GridSummary;
 use Hirtz\Skeleton\Widgets\Grids\GridView;
+use Hirtz\Skeleton\Widgets\Grids\Toolbars\FilterDropdown;
 use Yii;
 use yii\base\Model;
 use yii\base\Module;
@@ -47,6 +48,33 @@ class GridSummaryTest extends TestCase
 
         self::assertStringNotContainsString(self::EMPTY_MESSAGE, $html);
         self::assertStringContainsString('needle', $html);
+    }
+
+    public function testALastPageWithOneRecordIsNotTheOnlyRecord(): void
+    {
+        $this->getWebRequest()->setQueryParams(['page' => 2]);
+
+        $grid = GridSummaryTestGridView::make()->provider(new ArrayDataProvider([
+            'allModels' => array_fill(0, 21, new Model()),
+            'pagination' => ['pageSize' => 20],
+        ]));
+
+        self::assertStringNotContainsString('the only record', (string)GridSummary::make()->grid($grid));
+    }
+
+    public function testTheEmptyMessageIsNotRenderedForAFilterThatEmptiedTheGrid(): void
+    {
+        /** @var Controller<Module> $controller */
+        $controller = new Controller('test', Yii::$app);
+        Yii::$app->controller = $controller;
+
+        $this->getWebRequest()->setQueryParams(['colour' => 'green']);
+
+        $grid = GridSummaryTestGridView::make()
+            ->header([FilterDropdown::make()->paramName('colour')->items(['green' => 'Grün'])])
+            ->provider(new ArrayDataProvider(['allModels' => []]));
+
+        self::assertStringNotContainsString(self::EMPTY_MESSAGE, (string)GridSummary::make()->grid($grid)->emptyMessage(self::EMPTY_MESSAGE));
     }
 
     /**
