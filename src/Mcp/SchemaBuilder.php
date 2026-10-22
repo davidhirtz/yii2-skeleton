@@ -13,6 +13,7 @@ use Hirtz\Skeleton\Models\CustomAttributes\SelectCustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\UploadCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Validators\DateTimeValidator;
 use Hirtz\Skeleton\Validators\HexColorValidator;
@@ -68,15 +69,16 @@ class SchemaBuilder
      */
     public function getWritableAttributes(ActiveRecord $record): array
     {
-        $excluded = [
-            ...$this->excludedAttributes,
-            ...$record::primaryKey(),
-            ...$record instanceof TypeAttributeInterface ? $record->getType()?->getHiddenFields() ?? [] : [],
-        ];
+        $hidden = $record instanceof TypeAttributeInterface ? $record->getType()?->getHiddenFields() ?? [] : [];
+        $excluded = [...$this->excludedAttributes, ...$record::primaryKey(), ...$hidden];
+
+        // A hidden field is hidden in every language, as the admin form hides it.
+        $translated = $record instanceof TranslationInterface ? $record->getTranslatedAttributeNames() : [];
 
         $attributes = array_filter(
             $record->safeAttributes(),
             fn (string $name): bool => !in_array($name, $excluded, true)
+                && !in_array($translated[$name][0] ?? null, $hidden, true)
                 && !str_ends_with($name, '_count')
                 && !$this->findCustomAttribute($record, $name) instanceof UploadCustomAttribute,
         );
