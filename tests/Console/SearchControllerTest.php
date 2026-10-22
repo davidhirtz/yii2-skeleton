@@ -84,6 +84,24 @@ class SearchControllerTest extends TestCase
         self::assertEmpty(Search::find()->where(['model_class' => User::class])->all());
     }
 
+    public function testAContainerSubclassIsIndexedUnderTheRegisteredClass(): void
+    {
+        Yii::$container->set(User::class, SearchControllerUser::class);
+        Search::deleteAll();
+
+        $controller = $this->createSearchController();
+        $controller->actionRebuild('SearchControllerUser');
+
+        self::assertStringContainsString('Indexing ' . User::class, $controller->flushStdOutBuffer());
+        self::assertEmpty(Search::find()->where(['model_class' => SearchControllerUser::class])->all());
+
+        $user = $this->getUserFromFixture('admin');
+        self::assertNotNull(Search::findOne(['model_class' => User::class, 'model_id' => $user->id]));
+
+        $controller->actionClear('User');
+        self::assertEmpty(Search::find()->where(['model_class' => User::class])->all());
+    }
+
     public function testTheCommandsRefuseToRunWhileTheSearchIsDisabled(): void
     {
         /** @var Module $module */
@@ -107,4 +125,8 @@ class SearchControllerTest extends TestCase
 class SearchControllerMock extends SearchController
 {
     use StdOutBufferControllerTrait;
+}
+
+class SearchControllerUser extends User
+{
 }

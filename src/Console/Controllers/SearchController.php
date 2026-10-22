@@ -41,13 +41,13 @@ class SearchController extends Controller
 
         $driver = $this->getSearch()->getDriver();
 
-        foreach ($this->getModelClasses($models) as $modelClass) {
+        foreach ($this->getModelClasses($models) as $modelClass => $queryClass) {
             $this->interactiveStartStdout("Indexing $modelClass ... ");
             $driver->clear($modelClass);
 
             $count = 0;
 
-            foreach ($modelClass::findSearchable()->batch($this->batchSize) as $records) {
+            foreach ($queryClass::findSearchable()->batch($this->batchSize) as $records) {
                 $documents = [];
 
                 foreach ($records as $record) {
@@ -90,7 +90,7 @@ class SearchController extends Controller
             return ExitCode::OK;
         }
 
-        foreach ($this->getModelClasses($models) as $modelClass) {
+        foreach (array_keys($this->getModelClasses($models)) as $modelClass) {
             $this->interactiveStartStdout("Clearing $modelClass ... ");
             $driver->clear($modelClass);
             $this->interactiveDoneStdout();
@@ -110,8 +110,9 @@ class SearchController extends Controller
     }
 
     /**
-     * @return list<class-string<ActiveRecord&SearchableInterface>> the registered classes, resolved through the
-     * container so they match what the behavior writes
+     * Rows are written under the registered class, the records are read through the container's.
+     *
+     * @return array<class-string<SearchableInterface>, class-string<ActiveRecord&SearchableInterface>>
      */
     protected function getModelClasses(?string $models): array
     {
@@ -122,12 +123,12 @@ class SearchController extends Controller
             /** @var ActiveRecord&SearchableInterface $model */
             $model = Yii::createObject($modelClass);
 
-            if (!$names || $this->matchesName($model::class, $names)) {
-                $classes[] = $model::class;
+            if (!$names || $this->matchesName($modelClass, $names) || $this->matchesName($model::class, $names)) {
+                $classes[$modelClass] = $model::class;
             }
         }
 
-        return array_values(array_unique($classes));
+        return $classes;
     }
 
     /**
