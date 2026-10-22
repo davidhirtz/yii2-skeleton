@@ -11,7 +11,7 @@ class ConsoleSignupForm extends AbstractSignupForm
     {
         return [
             [
-                ['email', 'name'],
+                ['email', 'name', 'password'],
                 'trim',
             ],
             [

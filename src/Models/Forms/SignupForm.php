@@ -54,7 +54,8 @@ class SignupForm extends AbstractSignupForm
     {
         return [
             [
-                ['email', 'name', 'token'],
+                // Trimmed like every form a password is later typed into, the login first.
+                ['email', 'name', 'password', 'token'],
                 'trim',
             ],
             [

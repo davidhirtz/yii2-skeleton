@@ -24,4 +24,15 @@ class ConsoleSignupFormTest extends TestCase
         self::assertTrue($form->user->isOwner());
         self::assertEquals(Yii::$app->language, $form->user->language);
     }
+
+    public function testThePasswordIsTrimmedLikeAtTheLogin(): void
+    {
+        $form = ConsoleSignupForm::create();
+        $form->name = 'Testname';
+        $form->email = 'test@test.de';
+        $form->password = ' my passphrase ü ';
+
+        self::assertTrue($form->insert(), print_r($form->getErrors(), true));
+        self::assertTrue($form->user->validatePassword('my passphrase ü'));
+    }
 }
