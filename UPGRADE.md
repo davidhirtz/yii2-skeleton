@@ -20,6 +20,34 @@ drag's names renames them, and a grid posting to its own controller names that a
 | `.sortable-handle` | `.reorder-handle` |
 | `GRID_SORT_ANNOUNCEMENT`, `GRID_SORT_HANDLE_LABEL` | `GRID_REORDER_ANNOUNCEMENT`, `GRID_REORDER_HANDLE_LABEL` |
 
+## 3.22 — Signatures a project follows
+
+A class implementing or overriding one of these with the 3.21 signature fatals:
+
+| 3.21 | 3.22 |
+|---|---|
+| `SearchableInterface` | adds `static isSearchResultClassVisible(): bool` (`SearchableTrait` implements it) |
+| `Models\Actions\RestoreTrail::normalize(mixed $value)` | `normalize(ActiveRecord $model, string $attribute, mixed $value)` |
+| `Modules\Admin\Controllers\SearchController::getResults($q, $limit, $offset)` | `getResults($q, $limit, $offset, bool $fill = true)` |
+| `Modules\Admin\Controllers\SearchController::createRequest(): SearchRequest` | `createRequest(): ?SearchRequest` |
+| `CustomAttributeGroupItem::__construct($group, $owner, $formName, $config)` | `__construct($group, $owner, $formName, ?string $index, $config)` |
+| `Console\Controllers\SearchController::getModelClasses()`: a list | registered class => container class |
+
+## 3.22 — Behaviour a project sees
+
+- Content is read in the content language (`I18N::getContentLanguage()`), no longer `Yii::$app->language`, when the
+  admin language is not one: `I18nActiveQuery`, `I18N::getAttributeName()`, `Field::$language`, the i18n labels.
+- A `via()` relation without `orderBy()` reads in the junction's order, lazily and eagerly.
+- A reorder of a filtered grid or nested tree keeps the positions of the rows it did not post.
+- The admin form of a saved record starts out `data-pristine`: a project script writing an input dispatches `change`,
+  or the submit button stays muted. The stale-save hidden input is `loadedVersion`, no longer `loadedAt`.
+- A chunked upload is keyed by the client's `X-Upload-Id` header; a client without it falls back to the filename.
+- A grid's sort links swap the whole grid, not the table.
+- `User` replaces a language the admin no longer offers on validation instead of refusing the save.
+- `migrate/fresh` backs up first; `maintenance/enable` applies its options when already enabled.
+- The sitemap is cached through `Filters\PageCache`, for logged-in users too.
+- `TrailBehavior` stores a `date` column as `Y-m-d`.
+
 ## Requirements
 
 - PHP `^8.3` with `ext-fileinfo` (new), `ext-intl` (new), `ext-json`, `ext-openssl`, `ext-pdo_mysql`, `ext-simplexml` and

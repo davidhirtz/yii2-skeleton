@@ -13,6 +13,30 @@
 - Removed the `.btn-sm` class; every badge is now the same height
 - Added the `.badge-success` class
 - Fixed `cache/flush` refusing the names of the caches as unexpected arguments
+- Added `SearchableInterface::isSearchResultClassVisible()`
+- Changed `RestoreTrail::normalize()` to take the model and the attribute before the value
+- Added the `$fill` parameter to the admin `SearchController::getResults()` and `SearchResultBuilder::build()`; `createRequest()` answers `?SearchRequest`
+- Added the `$index` parameter to `CustomAttributeGroupItem::__construct()` before `$config`, and `getOldAttribute()`
+- Changed the console `SearchController::getModelClasses()` to answer registered class => container class
+- Added `I18N::getContentLanguage()`; `I18nActiveQuery`, `I18N::getAttributeName()`, `Field::$language` and the i18n labels default to it
+- Moved `ensureRequiredI18nAttributes()` from the cms `Entry` to `I18nAttributesTrait`
+- Added `Modules\Admin\Module::getOfferedLanguage()`; `User` replaces a language the admin no longer offers on validation
+- Added `GridView::hasFilterValue()`
+- Added `User::getListedTimezone()`; the timezone select lists every identifier
+- Added `UserForm::isPasswordResetEnabled()`
+- Added `Connection::getTablesMissingFromBackup()`, `Schema::getBackupTableNames()` and `getBaseTableNames()`
+- Added `DateTimeField::formatDate()`
+- Added `ActiveForm::isSavedRecord()`, which `UserActiveFormTrait` answers for the form's user
+- Changed `TinyMceField` to follow the admin language
+- Changed `via()` relations without `orderBy()` to read in the junction's order
+- Changed `ReorderActiveRecords` and `NestedTreeTrait::rebuildNestedTree()` to keep the slots of rows the posted order leaves out
+- Changed the admin form of a saved record to start out `data-pristine` with a muted submit button
+- Renamed the stale-save hidden input `loadedAt` to `loadedVersion`
+- Changed `ChunkedUploadedFile` to key a partial file by the `X-Upload-Id` header
+- Changed a grid's sort links to swap the whole grid
+- Changed `migrate/fresh` to back up first and `maintenance/enable` to apply its options when already enabled
+- Changed the sitemap to be cached through `Filters\PageCache`, logged-in users included
+- Changed `TrailBehavior` to store a `date` column as `Y-m-d`
 
 ## 3.21.1 (October 21, 2026)
 
