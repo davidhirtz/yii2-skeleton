@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `Caching\TagDependency`, which invalidates its tags again after the outermost commit
 - Added `StaleSaveInterface::getLoadedVersion()` and `getStaleSaveVersion()`: the admin form and MCP's `version` compare the newest update trail id instead of the second the record was read in
 - Removed the `$encode` parameter of `GridSearch::markKeywords()`, which always encodes
 - Added `UrlManager::createCanonicalUrl()`, an absolute URL without a language prefix
