@@ -231,14 +231,16 @@ class TinyMceField extends Field
         $this->clientOptions['convert_urls'] ??= false;
         $this->clientOptions['license_key'] ??= 'gpl';
 
-        // The editor's own language is English, whatever the application's source language is.
-        if (!str_starts_with($this->language, 'en')) {
-            $this->clientOptions['language'] ??= match ($this->language) {
+        // The editor speaks the admin language, not the content language of a translated field; its own is English.
+        $language = (string)Yii::$app->language;
+
+        if (!str_starts_with($language, 'en')) {
+            $this->clientOptions['language'] ??= match ($language) {
                 'fr' => 'fr_FR',
                 'pt' => 'pt_BR',
-                'zh-CN' => 'zh_Hans',
-                'zh-TW' => 'zh_Hant',
-                default => $this->language,
+                'zh-CN' => 'zh-Hans',
+                'zh-TW' => 'zh-Hant',
+                default => $language,
             };
 
             $this->clientOptions['language_url'] ??= "$this->languageUrl/{$this->clientOptions['language']}.js";

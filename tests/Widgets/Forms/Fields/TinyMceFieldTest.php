@@ -36,6 +36,19 @@ class TinyMceFieldTest extends TestCase
         self::assertStringEndsWith('/de.js', $config['language_url'] ?? '');
     }
 
+    public function testTheChineseLanguagesLoadTheShippedFiles(): void
+    {
+        Yii::$app->language = 'zh-CN';
+        $config = $this->getEditorConfig();
+
+        self::assertSame('zh-Hans', $config['language'] ?? null);
+        self::assertFileExists(dirname(__DIR__, 4) . '/resources/assets/vendor/tinymce/langs/zh-Hans.js');
+        self::assertStringEndsWith('/zh-Hans.js', $config['language_url'] ?? '');
+
+        Yii::$app->language = 'zh-TW';
+        self::assertStringEndsWith('/zh-Hant.js', $this->getEditorConfig()['language_url'] ?? '');
+    }
+
     public function testTheEditorKeepsItsOwnLanguageForEnglish(): void
     {
         Yii::$app->language = 'en-US';
