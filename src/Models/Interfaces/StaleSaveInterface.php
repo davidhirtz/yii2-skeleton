@@ -12,4 +12,8 @@ namespace Hirtz\Skeleton\Models\Interfaces;
 interface StaleSaveInterface extends TrailModelInterface
 {
     public function getLoadedAt(): ?int;
+
+    public function getLoadedVersion(): ?int;
+
+    public function getStaleSaveVersion(): int;
 }

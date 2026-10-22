@@ -311,7 +311,7 @@ class Mcp extends Component
             $readOnly
                 ? 'This connection is read-only.'
                 : 'Every write is saved at once and shown on the website when the record\'s status is enabled, so '
-                . 'create records as drafts unless asked to publish. Pass the updated_at that get_record answered '
+                . 'create records as drafts unless asked to publish. Pass the version that get_record answered '
                 . 'to update_record, which then refuses to overwrite an edit made since.',
         ];
 

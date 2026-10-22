@@ -319,9 +319,9 @@ class ActiveForm extends Widget
     }
 
     /**
-     * When the form was rendered, posted back for {@see \Hirtz\Skeleton\Models\Traits\StaleSaveTrait}.
-     * A conflict it reported starts the clock again, so saving once more overwrites knowingly; any other error keeps
-     * the time the form was opened.
+     * The record's version when the form was rendered, posted back for {@see \Hirtz\Skeleton\Models\Traits\StaleSaveTrait}.
+     * A conflict it reported takes the current version, so saving once more overwrites knowingly; any other error
+     * keeps the version the form was opened at.
      */
     protected function getStaleSaveInput(): string
     {
@@ -329,10 +329,10 @@ class ActiveForm extends Widget
             return '';
         }
 
-        $loadedAt = $this->model->getLoadedAt();
-        $value = $loadedAt && !$this->model->hasErrors('loadedAt') ? $loadedAt : time();
+        $loaded = $this->model->getLoadedVersion();
+        $value = $loaded !== null && !$this->model->hasErrors('loadedAt') ? $loaded : $this->model->getStaleSaveVersion();
 
-        return Html::hiddenInput(Html::getInputName($this->model, 'loadedAt'), (string)$value);
+        return Html::hiddenInput(Html::getInputName($this->model, 'loadedVersion'), (string)$value);
     }
 
     /**

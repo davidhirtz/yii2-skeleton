@@ -35,8 +35,8 @@ class UpdateRecordTool extends ResourceTool
     public function getDescription(): string
     {
         return 'Updates the given attributes of a record and returns it as get_record does, or the validation errors '
-            . 'per attribute. Pass the "updated_at" get_record answered to refuse the save when someone else has '
-            . 'edited the record since.';
+            . 'per attribute. Pass the "version" get_record answered (or else its "updated_at") to refuse the save '
+            . 'when someone else has edited the record since.';
     }
 
     #[Override]
@@ -58,6 +58,7 @@ class UpdateRecordTool extends ResourceTool
                 'id' => ['type' => ['integer', 'string']],
                 'attributes' => ['type' => 'object'],
                 'updated_at' => ['type' => 'string', 'format' => 'date-time'],
+                'version' => ['type' => 'integer'],
             ],
             'required' => ['resource', 'id', 'attributes'],
             'additionalProperties' => false,
@@ -80,7 +81,9 @@ class UpdateRecordTool extends ResourceTool
         $attributes = $arguments['attributes'];
         $this->loadAttributes($resource, $record, $attributes);
 
-        if ($record instanceof StaleSaveInterface && is_string($arguments['updated_at'] ?? null)) {
+        if ($record instanceof StaleSaveInterface && is_int($arguments['version'] ?? null)) {
+            $record->setAttributes(['loadedVersion' => $arguments['version']]);
+        } elseif ($record instanceof StaleSaveInterface && is_string($arguments['updated_at'] ?? null)) {
             $loadedAt = $this->getTimestamp($arguments['updated_at']);
             $updatedAt = $record->getAttribute('updated_at');
 
@@ -94,6 +97,7 @@ class UpdateRecordTool extends ResourceTool
             throw new ToolException('The record was not saved.', array_filter([
                 'errors' => $record->getErrors(),
                 'updated_at' => $record->hasErrors('loadedAt') ? $this->formatValue($record->getAttribute('updated_at')) : null,
+                'version' => $record instanceof StaleSaveInterface && $record->hasErrors('loadedAt') ? $record->getStaleSaveVersion() : null,
             ]));
         }
 

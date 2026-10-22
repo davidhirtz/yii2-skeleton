@@ -329,6 +329,38 @@ class ResourceToolsTest extends TestCase
         self::assertSame('Mine', $result['attributes']['name'] ?? null);
     }
 
+    /**
+     * The version tells apart a save within the second the record was read in, which `updated_at` cannot.
+     */
+    public function testAStaleVersionIsRefusedWithinTheSameSecond(): void
+    {
+        $record = $this->insertRecord('Ärger');
+        $version = $this->callTool('get_record', ['resource' => 'scratch', 'id' => $record->id])['version'] ?? null;
+        self::assertIsInt($version);
+
+        $record->name = 'Changed by someone else';
+        $record->update();
+
+        $result = $this->callTool('update_record', [
+            'resource' => 'scratch',
+            'id' => $record->id,
+            'attributes' => ['name' => 'Mine'],
+            'version' => $version,
+        ], true);
+
+        self::assertArrayHasKey('loadedAt', $result['errors'] ?? []);
+        self::assertGreaterThan($version, $result['version'] ?? 0);
+
+        $result = $this->callTool('update_record', [
+            'resource' => 'scratch',
+            'id' => $record->id,
+            'attributes' => ['name' => 'Mine'],
+            'version' => $result['version'],
+        ]);
+
+        self::assertSame('Mine', $result['attributes']['name'] ?? null);
+    }
+
     public function testSetStatus(): void
     {
         $record = $this->insertRecord('Ärger');

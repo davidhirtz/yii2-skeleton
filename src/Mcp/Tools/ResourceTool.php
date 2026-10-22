@@ -14,6 +14,7 @@ use Hirtz\Skeleton\Mcp\SchemaBuilder;
 use Hirtz\Skeleton\Models\CustomAttributes\UploadCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\StaleSaveInterface;
 use Hirtz\Skeleton\Models\Interfaces\StatusAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 use Hirtz\Skeleton\Web\Application as WebApplication;
@@ -232,6 +233,7 @@ abstract class ResourceTool implements ToolInterface
             'attributes' => array_map($this->formatValue(...), $attributes),
             'admin_url' => $this->getAbsoluteUrl($record->getAdminRoute()),
             'url' => $this->getAbsoluteUrl($resource->getUrl($record)),
+            'version' => $record instanceof StaleSaveInterface ? $record->getStaleSaveVersion() : null,
         ], fn (mixed $value): bool => $value !== null && $value !== '');
     }
 

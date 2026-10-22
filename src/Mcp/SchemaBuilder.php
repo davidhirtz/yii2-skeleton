@@ -45,6 +45,7 @@ class SchemaBuilder
         'created_by_user_id',
         'updated_by_user_id',
         'loadedAt',
+        'loadedVersion',
         'position',
         'type',
     ];
