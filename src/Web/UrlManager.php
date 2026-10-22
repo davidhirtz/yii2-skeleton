@@ -145,6 +145,22 @@ class UrlManager extends \yii\web\UrlManager
     }
 
     /**
+     * An address the same for every request, for a service that stores it: no language prefix.
+     *
+     * @param array<int|string, mixed>|string $params
+     */
+    public function createCanonicalUrl(array|string $params): string
+    {
+        $params = (array)$params;
+
+        if ($this->i18nUrl) {
+            $params[Request::current()->languageParam ?? 'language'] = false;
+        }
+
+        return $this->createAbsoluteUrl($params);
+    }
+
+    /**
      * A host set in the configuration is the canonical one: the request's never replaces it.
      *
      * @param string|null $value

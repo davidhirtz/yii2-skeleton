@@ -256,6 +256,22 @@ class UrlManagerTest extends TestCase
         self::assertEquals('https://www.test.localhost/en/test', $url);
     }
 
+    public function testTheCanonicalUrlHasNoLanguagePrefix(): void
+    {
+        $manager = $this->getUrlManager([
+            'i18nUrl' => true,
+            'languages' => [
+                'en-US' => 'en',
+                'de' => 'de',
+            ],
+        ]);
+
+        Yii::$app->language = 'de';
+
+        self::assertSame('https://www.test.localhost/de/test', $manager->createAbsoluteUrl(['test']));
+        self::assertSame('https://www.test.localhost/test', $manager->createCanonicalUrl(['test']));
+    }
+
     public function testLanguageFromBrowser(): void
     {
         $manager = $this->getUrlManager([
