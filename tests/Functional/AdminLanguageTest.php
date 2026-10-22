@@ -89,6 +89,23 @@ class AdminLanguageTest extends TestCase
         self::assertSelectorNotExists('select[name$="[language]"]');
     }
 
+    public function testAnAccountWithALanguageNoLongerOfferedStillSaves(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+        $user->updateAttributes(['language' => 'en-US']);
+        self::getAdminModule()->languages = ['de'];
+
+        $this->login();
+        $this->open('admin/account/update');
+        self::assertSelectorNotExists('select[name$="[language]"]');
+
+        $this->submit(values: $this->prefixFormValues($user, ['name' => 'Changed']));
+
+        $user = User::findOne($user->id);
+        self::assertSame('Changed', $user?->name);
+        self::assertSame('de', $user->language);
+    }
+
     public function testThePickedLanguageOutlivesTheRequestThatSetIt(): void
     {
         $this->login();

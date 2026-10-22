@@ -95,7 +95,7 @@ class UserController extends Controller
         $identity = $this->webuser->getIdentity();
         $form = UserForm::create();
 
-        $form->user->language = $identity->language;
+        $form->user->language = User::getModule()->getOfferedLanguage($identity->language);
         $form->user->timezone = $identity->timezone;
 
         if ($form->load($this->request->post()) && $form->save()) {

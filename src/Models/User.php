@@ -267,6 +267,19 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             ]);
     }
 
+    /**
+     * A language the admin stopped offering is replaced rather than refused: with one language the field is hidden.
+     */
+    #[Override]
+    public function beforeValidate(): bool
+    {
+        if (!$this->isAttributeChanged('language')) {
+            $this->language = static::getModule()->getOfferedLanguage($this->language);
+        }
+
+        return parent::beforeValidate();
+    }
+
     #[Override]
     public function beforeSave($insert): bool
     {
