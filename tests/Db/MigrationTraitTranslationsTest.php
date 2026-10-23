@@ -247,6 +247,12 @@ class TestTranslationsMigration extends Migration
     }
 }
 
+/**
+ * @property int $id
+ * @property int|null $parent_id
+ * @property string|null $name
+ * @property string|null $name_de
+ */
 class TranslatedMigrationRecord extends ActiveRecord implements TranslationInterface
 {
     use I18nAttributesTrait;

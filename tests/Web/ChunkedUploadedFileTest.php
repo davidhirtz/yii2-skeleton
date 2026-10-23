@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Web;
 
 use Hirtz\Skeleton\Helpers\FileHelper;
-use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Test\Models\UploadRecord;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Web\ChunkedUploadedFile;
@@ -281,20 +281,20 @@ class ChunkedUploadedFileTest extends TestCase
     {
         $source = $this->createSourceFile('abc');
 
-        $_FILES[User::instance()->formName()] = [
-            'error' => ['upload' => UPLOAD_ERR_OK],
-            'full_path' => ['upload' => 'folder/test.txt'],
-            'name' => ['upload' => 'test.txt'],
-            'size' => ['upload' => 3],
-            'tmp_name' => ['upload' => $source],
-            'type' => ['upload' => 'text/plain'],
+        $_FILES[UploadRecord::instance()->formName()] = [
+            'error' => ['attachment' => UPLOAD_ERR_OK],
+            'full_path' => ['attachment' => 'folder/test.txt'],
+            'name' => ['attachment' => 'test.txt'],
+            'size' => ['attachment' => 3],
+            'tmp_name' => ['attachment' => $source],
+            'type' => ['attachment' => 'text/plain'],
         ];
 
-        $file = ChunkedUploadedFile::getInstance(User::instance(), 'upload');
+        $file = ChunkedUploadedFile::getInstance(UploadRecord::instance(), 'attachment');
 
         self::assertSame('test.txt', $file?->name);
         self::assertSame('text/plain', $file->type);
-        self::assertNull(ChunkedUploadedFile::getInstance(User::instance(), 'missing'));
+        self::assertNull(ChunkedUploadedFile::getInstance(UploadRecord::instance(), 'track'));
     }
 
     public function testGetInstanceByNameReadsAFlatFile(): void
@@ -317,7 +317,7 @@ class ChunkedUploadedFileTest extends TestCase
     public function testMultipleFilesAreRefused(): void
     {
         $this->expectException(InvalidCallException::class);
-        ChunkedUploadedFile::getInstances(User::instance(), 'upload');
+        ChunkedUploadedFile::getInstances(UploadRecord::instance(), 'attachment');
     }
 
     public function testMultipleFilesByNameAreRefused(): void

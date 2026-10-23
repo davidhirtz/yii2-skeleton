@@ -40,7 +40,8 @@
     "symfony/css-selector": "^7.4",
     "symfony/http-client": "^7.4 || ^8.0",
     "symfony/resend-mailer": "^7.4 || ^8.0",
-    "yiisoft/yii2-debug": "^2.1"
+    "yiisoft/yii2-debug": "^2.1",
+    "mspirkov/yii2-phpstan": "^0.16"
   },
   "suggest": {
     "components/jquery": "The Yii debugger's panels register their grid filters as jQuery, which the skeleton does not ship"
