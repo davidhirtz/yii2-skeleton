@@ -366,7 +366,7 @@ class ActiveForm extends Widget
                     ->text(Yii::t('skeleton', 'FORM_TRANSLATION_ALL_FIELDS'))),
         ];
 
-        foreach ($i18n->getLanguages() as $language) {
+        foreach ($this->model->getI18nLanguages() as $language) {
             $isMissing = in_array($language, $missing, true);
 
             $button = Button::make()
@@ -414,7 +414,7 @@ class ActiveForm extends Widget
         return Yii::$app->getModule('admin') instanceof AdminModule
             && $this->model instanceof I18nAttributeInterface
             && $this->model->getI18nAttributes()
-            && count(Yii::$app->getI18n()->getLanguages()) > 1;
+            && count($this->model->getI18nLanguages()) > 1;
     }
 
     protected function getErrors(): string|Stringable

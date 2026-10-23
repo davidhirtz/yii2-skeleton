@@ -12,6 +12,13 @@ interface I18nAttributeInterface
     public function getI18nAttributes(): array;
 
     /**
+     * The languages the admin offers, the application's unless the record narrows them.
+     *
+     * @return list<string>
+     */
+    public function getI18nLanguages(): array;
+
+    /**
      * @return list<string>
      */
     public function getMissingTranslationLanguages(): array;

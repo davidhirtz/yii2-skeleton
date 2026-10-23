@@ -44,6 +44,14 @@ trait I18nAttributesTrait
         return [...$this->i18nAttributes, ...$this->getTranslatableCustomAttributeNames()];
     }
 
+    /**
+     * @return list<string>
+     */
+    public function getI18nLanguages(): array
+    {
+        return Yii::$app->getI18n()->getLanguages();
+    }
+
     public function getI18nAttribute(string $attribute, ?string $language = null, bool $fallback = false): mixed
     {
         $attribute = $this->getI18nAttributeName($attribute, $language, $fallback);
@@ -256,6 +264,7 @@ trait I18nAttributesTrait
     public function getMissingTranslationLanguages(): array
     {
         $i18n = Yii::$app->getI18n();
+        $languages = $this->getI18nLanguages();
         $missing = [];
 
         foreach ($this->getI18nAttributes() as $attribute) {
@@ -267,7 +276,7 @@ trait I18nAttributesTrait
                 continue;
             }
 
-            foreach ($i18n->getLanguages() as $language) {
+            foreach ($languages as $language) {
                 $name = $i18n->getAttributeName($attribute, $language);
 
                 if ($name !== $attribute && ($this->$name === null || $this->$name === '')) {

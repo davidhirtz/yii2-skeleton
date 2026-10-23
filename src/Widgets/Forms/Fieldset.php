@@ -107,7 +107,7 @@ class Fieldset extends Widget
             // Only a translated attribute is a language's row: every other one comes back once, in the app's language.
             $isTranslated = $this->model->isI18nAttribute($attribute);
 
-            foreach ($this->model->getI18nAttributeNames($attribute) as $language => $property) {
+            foreach ($this->model->getI18nAttributeNames($attribute, $this->model->getI18nLanguages()) as $language => $property) {
                 $clone = (clone $field)
                     ->language($language)
                     ->property($property);

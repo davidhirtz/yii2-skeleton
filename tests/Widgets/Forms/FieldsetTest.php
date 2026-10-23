@@ -114,6 +114,31 @@ class FieldsetTest extends TestCase
         self::assertStringNotContainsString('data-translation-toolbar', ActiveForm::make()->model($model)->rows(['name'])->render());
     }
 
+    public function testAFormOffersOnlyTheLanguagesOfItsRecord(): void
+    {
+        Yii::$app->getI18n()->setLanguages(['en-US', 'de', 'fr']);
+
+        $model = TestActiveRecord::findOne(1);
+        self::assertInstanceOf(TestActiveRecord::class, $model);
+        $model->i18nLanguages = ['en-US', 'de'];
+
+        self::assertSame([], $model->getMissingTranslationLanguages(), 'A language the record does not offer is not missing.');
+
+        $html = ActiveForm::make()->model($model)->rows(['name'])->render();
+
+        self::assertStringContainsString('name="TestActiveRecord[name_de]"', $html);
+        self::assertStringNotContainsString('name_fr', $html);
+        self::assertStringContainsString('data-translation-language="de"', $html);
+        self::assertStringNotContainsString('data-translation-language="fr"', $html);
+
+        $model->i18nLanguages = ['en-US'];
+
+        $html = ActiveForm::make()->model($model)->rows(['name'])->render();
+
+        self::assertStringNotContainsString('name_de', $html);
+        self::assertStringNotContainsString('data-translation-toolbar', $html);
+    }
+
     public function testATranslatedEditorSpeaksTheAdminLanguage(): void
     {
         Yii::$app->language = 'en-US';
@@ -261,6 +286,11 @@ class TestActiveRecord extends ActiveRecord implements I18nAttributeInterface, T
     use I18nAttributesTrait;
     use TranslationTrait;
 
+    /**
+     * @var list<string>|null
+     */
+    public ?array $i18nLanguages = null;
+
     #[Override]
     public function init(): void
     {
@@ -271,6 +301,14 @@ class TestActiveRecord extends ActiveRecord implements I18nAttributeInterface, T
     public function getTranslationModelClass(): string
     {
         return self::class;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getI18nLanguages(): array
+    {
+        return $this->i18nLanguages ?? Yii::$app->getI18n()->getLanguages();
     }
 
     /**
