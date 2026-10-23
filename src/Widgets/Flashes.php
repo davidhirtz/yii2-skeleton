@@ -43,7 +43,17 @@ class Flashes extends Widget
             $content->addContent($this->getAlerts($status, $alerts));
         }
 
-        return $content . $this->renderNetworkErrorTemplate();
+        return $content . $this->renderNetworkErrorTemplate() . $this->renderErrorTemplate();
+    }
+
+    /**
+     * `includes/errorFlash.ts` fills it with a message the server answered outside a page, such as a refused upload.
+     */
+    protected function renderErrorTemplate(): string
+    {
+        return Html::tag('template', (string)$this->getAlerts('danger', ''), [
+            'id' => 'error-flash',
+        ]);
     }
 
     /**

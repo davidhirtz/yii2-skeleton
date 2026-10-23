@@ -18,6 +18,7 @@ describe('file-upload', () => {
     beforeEach(() => {
         document.body.innerHTML = '<div id="flashes"></div>'
             + '<template id="network-error-flash"><div class="alert">Not saved</div></template>'
+            + '<template id="error-flash"><flash-alert><div class="alert"><div class="alert-content"></div></div></flash-alert></template>'
             + '<div id="wrap" hx-headers:inherited=\'{"X-CSRF-Token":"token"}\'></div>';
 
         const $upload = document.createElement('file-upload');
@@ -44,9 +45,7 @@ describe('file-upload', () => {
         }
     };
 
-    it('shows the message the server sends in its header, which HTTP/2 needs', async () => {
-        const alert = vi.fn();
-        vi.stubGlobal('alert', alert);
+    it('flashes the message the server sends in its header, which HTTP/2 needs', async () => {
         vi.stubGlobal('fetch', vi.fn(async () => new Response('', {
             status: 400,
             headers: {'X-Upload-Error': encodeURIComponent('Datei „Å😀.exe“ ist nicht erlaubt')},
@@ -54,7 +53,7 @@ describe('file-upload', () => {
 
         await upload();
 
-        expect(alert).toHaveBeenCalledWith('Datei „Å😀.exe“ ist nicht erlaubt');
+        expect(document.querySelector('#flashes .alert-content')?.textContent).toBe('Datei „Å😀.exe“ ist nicht erlaubt');
         expect(values).toEqual(['']);
         expect(document.body.inert).toBe(false);
     });

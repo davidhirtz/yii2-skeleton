@@ -48,6 +48,14 @@ class FlashesTest extends TestCase
         self::assertStringContainsString('data-alert="danger"', $html);
     }
 
+    public function testAnErrorWaitsInATemplateWithoutContent(): void
+    {
+        $html = (string)Flashes::make();
+
+        self::assertStringContainsString('<template id="error-flash"><flash-alert><div class="alert" role="alert" data-alert="danger">', $html);
+        self::assertStringContainsString('<div class="alert-content"></div>', $html);
+    }
+
     public function testRepeatedMessagesCollapseIntoOneAlert(): void
     {
         foreach (range(1, 50) as $i) {

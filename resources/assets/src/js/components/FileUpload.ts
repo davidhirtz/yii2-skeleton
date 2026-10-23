@@ -1,6 +1,7 @@
 import htmx from "htmx.org"
 
 import {startBusy, stopBusy} from "../includes/busy";
+import {showErrorFlash} from "../includes/errorFlash";
 import {showNetworkError} from "../includes/networkError";
 
 // The upload was started from a button the user could see, so the target it refreshes almost always is on screen
@@ -151,7 +152,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
                             .join(','),
                     })).then(() => $form?.dispatchEvent(new Event('change', {bubbles: true})));
                 } else if (!response.ok) {
-                    alert(getErrorMessage(response));
+                    showErrorFlash(getErrorMessage(response));
                     break;
                 }
 
