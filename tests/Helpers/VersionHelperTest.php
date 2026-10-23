@@ -62,6 +62,17 @@ class VersionHelperTest extends TestCase
         self::assertSame(substr($reference, 0, 8), VersionHelper::getApplicationReference());
     }
 
+    public function testTheBranchIsReadFromTheCheckout(): void
+    {
+        $head = @file_get_contents(Yii::getAlias('@root') . '/.git/HEAD');
+
+        if (!is_string($head) || !str_starts_with($head, 'ref: refs/heads/')) {
+            self::markTestSkipped('The repository is not on a branch.');
+        }
+
+        self::assertSame(trim(substr($head, 16)), VersionHelper::getApplicationBranch());
+    }
+
     public function testTheInstalledExtensionsAreSortedAndVersioned(): void
     {
         $extensions = VersionHelper::getExtensions();

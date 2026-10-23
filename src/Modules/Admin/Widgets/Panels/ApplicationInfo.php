@@ -40,8 +40,9 @@ class ApplicationInfo extends InfoList
     }
 
     /**
-     * The repository the installation was built from, the schema it runs against and everything reachable through
-     * `phpinfo()` are infrastructure rather than content, so a manager is shown the platform without them.
+     * The repository and branch the installation was built from, the schema it runs against and everything
+     * reachable through `phpinfo()` are infrastructure rather than content, so a manager is shown the platform
+     * without them.
      */
     protected function canReadSystem(): bool
     {
@@ -51,12 +52,14 @@ class ApplicationInfo extends InfoList
     protected function addApplicationRow(): void
     {
         $reference = VersionHelper::getApplicationReference();
+        $branch = $this->canReadSystem() ? VersionHelper::getApplicationBranch() : null;
 
         $this->addRow(
             Yii::t('skeleton', 'SYSTEM_APPLICATION'),
             $this->getValue(Yii::$app->name, trim(($this->canReadSystem() ? VersionHelper::getApplicationName() : '')
                 . ' ' . VersionHelper::getApplicationVersion()
-                . ($reference !== null ? " ($reference)" : ''))),
+                . ($reference !== null ? " ($reference)" : '')
+                . ($branch !== null ? " · $branch" : ''))),
         );
     }
 

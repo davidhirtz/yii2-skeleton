@@ -51,6 +51,17 @@ class ApplicationInfoTest extends TestCase
         );
     }
 
+    public function testTheBranchIsShownBesideTheCommit(): void
+    {
+        $branch = VersionHelper::getApplicationBranch() ?? self::markTestSkipped('The repository is not on a branch.');
+        $this->loginAdmin();
+
+        self::assertStringContainsString(
+            htmlspecialchars('(' . VersionHelper::getApplicationReference() . ") · $branch", ENT_QUOTES),
+            ApplicationInfo::make()->render(),
+        );
+    }
+
     public function testTheLastAppliedMigrationIsReported(): void
     {
         // the base row ties with the first real migration on `apply_time` when both landed in the same second
@@ -113,7 +124,8 @@ class ApplicationInfoTest extends TestCase
             $html,
         );
 
-        // the repository, the schema, `phpinfo()` and the versions a maintainer reads do not
+        // the repository, its branch, the schema, `phpinfo()` and the versions a maintainer reads do not
+        self::assertStringNotContainsString(') · ', $html);
         self::assertStringNotContainsString(VersionHelper::getApplicationName(), $html);
         self::assertStringNotContainsString(Dsn::fromString($db->dsn)->database, $html);
         self::assertStringNotContainsString('system/php-info', $html);

@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added `VersionHelper::getApplicationBranch()`; the system page shows the branch beside the commit
+
 ## 3.22.0 (October 22, 2026)
 
 - Added `M261022120000RbacTimestamps`: the RBAC timestamps `bigint` on a database upgraded from v2

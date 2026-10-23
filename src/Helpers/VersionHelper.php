@@ -58,6 +58,19 @@ class VersionHelper
     }
 
     /**
+     * The checked out branch, `null` without a `.git` directory or on a detached HEAD.
+     */
+    public static function getApplicationBranch(): ?string
+    {
+        $path = self::getGitPath();
+        $head = $path === null ? false : @file_get_contents("$path/HEAD");
+
+        return is_string($head) && preg_match('#^ref:\s*refs/heads/(.+)$#', trim($head), $matches)
+            ? $matches[1]
+            : null;
+    }
+
+    /**
      * The time the application was last deployed: the commit's checkout time, or the last `composer install`.
      */
     public static function getApplicationUpdatedAt(): ?int
