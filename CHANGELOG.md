@@ -1,4 +1,4 @@
-## Unreleased
+## 3.23.0 (October 24, 2026)
 
 - Added `I18nAttributeInterface::getI18nLanguages()`, the languages the admin form and the missing translations offer
 - Added `VersionHelper::getApplicationBranch()`; the system page shows the branch beside the commit
