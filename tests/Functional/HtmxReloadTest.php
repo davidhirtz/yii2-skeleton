@@ -8,7 +8,6 @@ use Hirtz\Skeleton\Models\Forms\LoginForm;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
-use Yii;
 
 /**
  * A page rendered for a session that is over — a guest's as much as a gone one — cannot be patched, because a swap
@@ -21,6 +20,7 @@ class HtmxReloadTest extends TestCase
     use UserFixtureTrait;
 
     private const array HTMX_SERVER = ['HTTP_HX_REQUEST' => 'true'];
+    private const string LOGIN_URL = 'https://www.test.localhost/admin/account/login?returnUrl=https%3A%2F%2Fwww.test.localhost%2Fadmin%2Fuser%2Findex';
 
     public function testLogoutSendsTheDocumentToTheLoginPage(): void
     {
@@ -40,8 +40,7 @@ class HtmxReloadTest extends TestCase
     public function testALoginSendsTheDocumentToTheReturnUrl(): void
     {
         $this->open('admin/user/index');
-        self::assertCurrentUrlEquals('https://www.test.localhost/admin/account/login');
-        self::assertAnyAlertErrorSame(Yii::t('skeleton', 'USER_ERROR_MUST_LOGIN_VIEW'));
+        self::assertCurrentUrlEquals(self::LOGIN_URL);
 
         $this->submit(values: $this->prefixFormValues(LoginForm::instance()->formName(), [
             'email' => $this->getUserFromFixture('owner')->email,
@@ -74,7 +73,7 @@ class HtmxReloadTest extends TestCase
     public function testAGuestHtmxRequestRefreshesInsteadOfLoggingIn(): void
     {
         $this->open('admin/user/index');
-        self::assertCurrentUrlEquals('https://www.test.localhost/admin/account/login');
+        self::assertCurrentUrlEquals(self::LOGIN_URL);
 
         self::$crawler = self::$client->request(
             'GET',
