@@ -1,3 +1,7 @@
+## Unreleased
+
+- Changed `DbSession` and `CacheSession` to start a session only to write one, reads answer the default without it; added `isStarted()`
+
 ## 3.23.0 (October 24, 2026)
 
 - Added `I18nAttributeInterface::getI18nLanguages()`, the languages the admin form and the missing translations offer
