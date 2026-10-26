@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Web;
 use Hirtz\Skeleton\Caching\CacheCounter;
 use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Helpers\CookieHelper;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Models\UserLogin;
 use Override;
 use Yii;
@@ -80,6 +81,12 @@ class User extends \yii\web\User
      * @var string|null the IP address of the user
      */
     public ?string $ipAddress = null;
+
+    /**
+     * @var string the query parameter carrying the return URL to the login of a request without a session, which
+     * {@see loginRequired()} does not start.
+     */
+    public string $returnUrlQueryParam = 'returnUrl';
 
     /**
      * @var int how many failed logins an email address or an IP may accumulate before both are locked out, `0`
@@ -197,9 +204,10 @@ class User extends \yii\web\User
     public function loginRequired($checkAjax = true, $checkAcceptHeader = true): ?Response
     {
         $request = Application::current()->getRequest();
+        $hasSession = Application::current()->getSession()->isStarted();
 
-        // Set flash message for required logins.
-        if (!$checkAjax || !$request->getIsAjax()) {
+        // A flash or a return URL in the session would write a session row for every bot asking for the admin.
+        if ($hasSession && (!$checkAjax || !$request->getIsAjax())) {
             Application::current()->getSession()->addFlash('error', Yii::t('skeleton', 'USER_ERROR_MUST_LOGIN_VIEW'));
         }
 
@@ -207,7 +215,40 @@ class User extends \yii\web\User
             return Application::current()->getResponse()->setHtmxReload();
         }
 
-        return parent::loginRequired($checkAjax, $checkAcceptHeader);
+        if ($hasSession || !$this->enableSession || !$request->getIsGet() || ($checkAjax && $request->getIsAjax())) {
+            return parent::loginRequired($checkAjax, $checkAcceptHeader);
+        }
+
+        $loginUrl = $this->loginUrl;
+
+        if (is_array($loginUrl)) {
+            $this->loginUrl = [...$loginUrl, $this->returnUrlQueryParam => $request->getAbsoluteUrl()];
+        }
+
+        $this->enableSession = false;
+
+        try {
+            return parent::loginRequired($checkAjax, $checkAcceptHeader);
+        } finally {
+            $this->enableSession = true;
+            $this->loginUrl = $loginUrl;
+        }
+    }
+
+    /**
+     * A URL on this host or its draft host only, so the parameter cannot send a login anywhere else.
+     */
+    public function isReturnUrl(string $url): bool
+    {
+        if (str_contains($url, '\\') || preg_match('/[\x00-\x1f]/', $url)) {
+            return false;
+        }
+
+        $manager = Yii::$app->getUrlManager();
+
+        return Url::isLocalPath($url)
+            || str_starts_with($url, $manager->getHostInfo() . '/')
+            || str_starts_with($url, $manager->getDraftHostInfo() . '/');
     }
 
     /**

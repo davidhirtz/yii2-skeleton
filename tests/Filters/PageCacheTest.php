@@ -39,13 +39,30 @@ class PageCacheTest extends TestCase
         self::assertTrue($this->createPageCache(['disableForPostRequests' => false])->enabled);
     }
 
-    public function testTheNoCacheParamSkipsTheCache(): void
+    public function testTheNoCacheParamSkipsTheCacheInDebugMode(): void
     {
         $_GET['nocache'] = '1';
 
-        self::assertFalse($this->createPageCache()->enabled);
-        self::assertTrue($this->createPageCache(['noCacheParam' => false])->enabled);
-        self::assertTrue($this->createPageCache(['noCacheParam' => 'other'])->enabled);
+        self::assertFalse($this->createPageCache(['debug' => true])->enabled);
+        self::assertTrue($this->createPageCache(['debug' => true, 'noCacheParam' => false])->enabled);
+        self::assertTrue($this->createPageCache(['debug' => true, 'noCacheParam' => 'other'])->enabled);
+        self::assertFalse($this->getWebSession()->getIsActive());
+    }
+
+    public function testTheNoCacheParamSkipsTheCacheWithASession(): void
+    {
+        $_GET['nocache'] = '1';
+        $this->getWebSession()->set('started', true);
+
+        self::assertFalse($this->createPageCache(['debug' => false])->enabled);
+    }
+
+    public function testTheNoCacheParamIsIgnoredWithoutDebugModeOrASession(): void
+    {
+        $_GET['nocache'] = '1';
+
+        self::assertTrue($this->createPageCache(['debug' => false])->enabled);
+        self::assertFalse($this->getWebSession()->getIsActive());
     }
 
     /**

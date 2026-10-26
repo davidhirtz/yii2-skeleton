@@ -32,9 +32,12 @@ class PageCache extends \yii\filters\PageCache
     public bool $disableForPostRequests = true;
 
     /**
-     * @var string|false GET param name to disable caching, set to `false` to disable cache skipping
+     * @var string|false GET param name to disable caching, set to `false` to disable cache skipping. Honoured only
+     * with {@see $debug} or a session the request brought, so a visitor cannot make every request a full render.
      */
     public string|false $noCacheParam = 'nocache';
+
+    public bool $debug = YII_DEBUG;
 
     /**
      * @var list<string>
@@ -63,7 +66,7 @@ class PageCache extends \yii\filters\PageCache
             $this->enabled = (!$this->disableForPostRequests || $request->getIsGet())
                 && !$request->getIsDraft()
                 && (!$this->disableForUsers || Application::current()->getUser()->getIsGuest())
-                && (!$this->noCacheParam || !$request->get($this->noCacheParam));
+                && !$this->isNoCacheRequest();
         }
 
         if ($this->useTagDependency) {
@@ -95,6 +98,13 @@ class PageCache extends \yii\filters\PageCache
         }
 
         parent::init();
+    }
+
+    protected function isNoCacheRequest(): bool
+    {
+        return $this->noCacheParam
+            && Application::current()->getRequest()->get($this->noCacheParam)
+            && ($this->debug || Application::current()->getSession()->isStarted());
     }
 
     /**

@@ -215,6 +215,12 @@ class AccountController extends Controller
                         'name' => $form->user->getUsername(),
                     ]));
 
+                $returnUrl = $this->request->get($this->webuser->returnUrlQueryParam);
+
+                if (is_string($returnUrl) && $this->webuser->isReturnUrl($returnUrl)) {
+                    $this->webuser->setReturnUrl($returnUrl);
+                }
+
                 return $this->goBack($this->module->getHomeRoute());
             }
 

@@ -1,6 +1,8 @@
 ## Unreleased
 
 - Changed `DbSession` and `CacheSession` to start a session only to write one, reads answer the default without it; added `isStarted()`
+- Changed `Web\User::loginRequired()` to start no session for a request without one: the return URL rides in the login URL's `returnUrl` query, checked by `isReturnUrl()`
+- Changed `PageCache::$noCacheParam` to be honoured only with `PageCache::$debug` (`YII_DEBUG`) or a session the request brought
 
 ## 3.23.0 (October 24, 2026)
 
