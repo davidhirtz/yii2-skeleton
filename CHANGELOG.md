@@ -1,4 +1,4 @@
-## Unreleased
+## 3.24.0 (October 26, 2026)
 
 - Added `Web\AssetManager`, which publishes a package's assets anew after an update of the package
 - Changed `DbSession` and `CacheSession` to start a session only to write one, reads answer the default without it; added `isStarted()`
