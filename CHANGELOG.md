@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added `Web\AssetManager`, which publishes a package's assets anew after an update of the package
+
 ## 3.23.0 (October 24, 2026)
 
 - Added `I18nAttributeInterface::getI18nLanguages()`, the languages the admin form and the missing translations offer
