@@ -38,7 +38,7 @@ class DashboardController extends Controller
             ...parent::behaviors(),
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index', 'error'],
+                'only' => ['index'],
                 'rules' => [
                     [
                         'allow' => true,
