@@ -64,3 +64,6 @@ carry `detail.ctx`; a container listener must check `event.target`; no history c
   `.header-subtitle-item` (named after the record) carry a `view-transition-name`; each must render at most once
   and none may be painted over. Direction comes from `Web\View::$depth` on `#wrap`; a swap narrower than `#wrap` is
   `none`. Chrome skips transitions in a hidden tab; slow them down to see artefacts.
+- Scroll restoration is `manual`: `includes/historyScroll.ts` keeps `scrollY` in the entry's `history.state` beside
+  htmx's `htmx: true` (a state without it is never restored) and sets it inside the restore's view transition; the
+  browser's own restore comes only after the transition (#733). Never `replaceState()` a state without spreading it.

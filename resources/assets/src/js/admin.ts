@@ -24,6 +24,7 @@ import timezone from "./includes/timezone.ts";
 import tooltip from './includes/tooltips';
 import networkError from './includes/networkError';
 import {rememberFocus, restoreFocus} from './includes/focus';
+import historyScroll, {cancelRestore, isRestore, prepareRestore, restoreScroll, saveScroll} from './includes/historyScroll';
 import {confirmLeaving, hasUnsavedChanges, trackUnsavedForm} from './includes/unsaved';
 import translationLayout, {initTranslationTabs} from './includes/translationLayout';
 import staleSave from './includes/staleSave';
@@ -133,7 +134,37 @@ window.addEventListener('beforeunload', (event: BeforeUnloadEvent) => {
 });
 
 htmx.on('htmx:after:swap', (event: Event) => {
-    restoreFocus((event as CustomEvent).detail.ctx);
+    const {ctx} = (event as CustomEvent).detail;
+
+    if (isRestore(ctx)) {
+        restoreScroll();
+    }
+
+    restoreFocus(ctx);
+});
+
+// The push follows this event, so the page being left still holds its own entry.
+htmx.on('htmx:before:history:update', saveScroll);
+htmx.on('htmx:before:history:restore', prepareRestore);
+
+// The offset is set inside the transition's update, so the new page is captured where it was left.
+htmx.on('htmx:before:viewTransition', (event: Event) => {
+    const detail = (event as CustomEvent).detail;
+
+    if (isRestore(detail.ctx)) {
+        const task = detail.task;
+
+        detail.task = async () => {
+            await task();
+            restoreScroll();
+        };
+    }
+});
+
+htmx.on('htmx:finally:request', (event: Event) => {
+    if (isRestore((event as CustomEvent).detail.ctx)) {
+        cancelRestore();
+    }
 });
 
 // `hx-include` serializes the form without firing `submit`, which is when TinyMCE writes to its textarea. htmx
@@ -193,3 +224,4 @@ htmx.on('htmx:before:swap', (event: Event) => {
 });
 
 configureHtmx(htmx.config);
+historyScroll();

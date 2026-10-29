@@ -86,6 +86,11 @@ export const jump = ($target: Element): void => {
     updateWithoutTransition();
 };
 
+export const jumpTo = (top: number): void => {
+    window.scrollTo({top, behavior: 'instant'});
+    updateWithoutTransition();
+};
+
 export default ($el: HTMLElement): void => {
     items.add($el);
     measure($el);
