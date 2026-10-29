@@ -147,9 +147,12 @@ class Module extends \Hirtz\Skeleton\Base\Module
 
             //  Redirects draft URLs for the backend, but only if it's not an AJAX to prevent breaking frontend
             // implementations or REST APIs that use admin endpoints.
+            // The request URL already carries a tenant's path, which `createAbsoluteUrl()` would prepend again.
             if ($request->isDraftRequest() && !$request->getIsAjax()) {
-                $url = Yii::$app->getUrlManager()->createAbsoluteUrl($request->getUrl());
-                Application::current()->getResponse()->redirect($url)->send();
+                $url = Yii::$app->getUrlManager()->getHostInfo() . $request->getUrl();
+                Application::current()->getResponse()->redirect($url);
+
+                return false;
             }
         }
 

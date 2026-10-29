@@ -16,6 +16,6 @@ class AdminTest extends TestCase
         $this->open('https://draft.test.localhost/admin');
 
         self::assertCurrentUrlEquals('https://test.localhost/admin/account/login?returnUrl='
-            . urlencode('https://draft.test.localhost/admin'));
+            . urlencode('https://test.localhost/admin'));
     }
 }
