@@ -31,6 +31,7 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Rbac\DbManager;
 use Hirtz\Skeleton\Search\Search;
+use Hirtz\Skeleton\Setup\Setup;
 use Hirtz\Skeleton\Sitemap\Sitemap;
 use Hirtz\Skeleton\Upload\Upload;
 use Hirtz\Skeleton\Web\AssetManager;
@@ -49,6 +50,7 @@ use yii\web\JqueryAsset;
  * @property Credentials $credentials
  * @property Mcp $mcp
  * @property Search $search
+ * @property Setup $setup
  * @property Sitemap $sitemap
  * @property Upload $upload
  * @property UrlManager $urlManager
@@ -217,6 +219,9 @@ trait ApplicationTrait
                     'models' => [
                         User::class,
                     ],
+                ],
+                'setup' => [
+                    'class' => Setup::class,
                 ],
                 'session' => [
                     'class' => DbSession::class,

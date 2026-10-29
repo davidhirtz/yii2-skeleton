@@ -17,6 +17,7 @@ use Hirtz\Skeleton\Console\Controllers\ParamsController;
 use Hirtz\Skeleton\Console\Controllers\RedirectController;
 use Hirtz\Skeleton\Console\Controllers\RegistryController;
 use Hirtz\Skeleton\Console\Controllers\SearchController;
+use Hirtz\Skeleton\Console\Controllers\SetupController;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UpgradeController;
 use Hirtz\Skeleton\Console\Controllers\UserController;
@@ -129,6 +130,7 @@ class Application extends \yii\console\Application
             'redirect' => RedirectController::class,
             'registry' => RegistryController::class,
             'search' => SearchController::class,
+            'setup' => SetupController::class,
             'trail' => TrailController::class,
             'upload' => UploadController::class,
             'user' => UserController::class,

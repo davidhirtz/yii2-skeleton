@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added the `setup` command and component, running the seeders bundles register in `setup.seeders`
 - Changed every message key to the `{DOMAIN}_{SUBJECT}_{KIND}` scheme; the `COMMON_*` keys are gone
 - Added `MigrationTrait::renameMessageKeys()` for message pointers stored in `trail` and `auth_item`
 - Added `Test\Traits\MessageKeysTrait`, which asserts a category's keys

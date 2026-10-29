@@ -322,8 +322,31 @@ attribute through `Validators\Interfaces\JsonSchemaInterface`; an attribute no v
 | `maintenance/enable`, `maintenance/disable`, `maintenance` | the pre-rendered maintenance page (`runtime/maintenance.php`); `enable` takes `--redirect`, `--retry`, `--refresh`, `--statusCode`, `--viewFile` |
 | `mcp/serve`, `mcp/token`, `mcp/tokens`, `mcp/revoke [id]` | the MCP server over stdio and the tokens of its HTTP endpoint; `--user`, `--read-only`, `--expires` (days) |
 | `registry/push`, `registry/show` | report the installation to a version registry; `--url`, `--strict` |
+| `setup` | insert the first content of an installation from `config/setup.php`; `--file`, `--user` |
 | `upgrade` | the v2 → v3 upgrade steps the bundle runs itself |
 | `asset/clear`, `email/test <address>`, `message` | published assets, the mailer, message extraction |
+
+### Setup
+
+`./yii setup` hands each key of `config/setup.php` to the seeder registered under it in `setup.seeders`; a key no seeder
+reads is refused before anything is inserted. Every seeder runs, in a transaction of its own, also when the file does not
+name its key (it then inserts its defaults, or nothing); a seeder inserts only while its table is empty. A value may be a
+closure, called just before its seeder runs. The records are attributed to `--user` (an email address), the owner by
+default; `--file` reads another file. A bundle registers a `Setup\Seeder` in `getDefaultConfig()`, naming the keys it
+runs after:
+
+```php
+'components' => [
+    'setup' => [
+        'seeders' => [
+            'entries' => ['class' => EntrySeeder::class, 'dependencies' => ['categories']],
+        ],
+    ],
+],
+```
+
+A project replaces a seeder by its key or drops it with `null`. `Seeder::insert()` keeps a record that fails validation
+for the report, so one invalid declaration does not cost the rest.
 
 ## The admin module
 
