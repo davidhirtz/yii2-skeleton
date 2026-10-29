@@ -246,6 +246,7 @@ return [
     'NAV_ADMIN_LABEL' => 'Administration',
     'NAV_BACK_LABEL' => 'Retour',
     'NAV_HOMEPAGE_LABEL' => 'Ouvrir la page d’accueil',
+    'NAV_OPEN_NEW_TAB_TOOLTIP' => 'Ouvrir dans un nouvel onglet',
     'PANEL_OPERATIONS_TITLE' => 'Opérations',
     'PASSWORD_CREATE_TEXT' => 'Saisissez un mot de passe ci-dessous pour finaliser votre compte.',
     'PASSWORD_CREATE_TITLE' => 'Créer un mot de passe',

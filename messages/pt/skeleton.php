@@ -246,6 +246,7 @@ return [
     'NAV_ADMIN_LABEL' => 'Administração',
     'NAV_BACK_LABEL' => 'Voltar',
     'NAV_HOMEPAGE_LABEL' => 'Abrir a página inicial',
+    'NAV_OPEN_NEW_TAB_TOOLTIP' => 'Abrir num novo separador',
     'PANEL_OPERATIONS_TITLE' => 'Operações',
     'PASSWORD_CREATE_TEXT' => 'Introduza uma palavra-passe abaixo para concluir a sua conta.',
     'PASSWORD_CREATE_TITLE' => 'Criar palavra-passe',

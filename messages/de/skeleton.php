@@ -246,6 +246,7 @@ return [
     'NAV_ADMIN_LABEL' => 'Admin',
     'NAV_BACK_LABEL' => 'Zurück',
     'NAV_HOMEPAGE_LABEL' => 'Startseite öffnen',
+    'NAV_OPEN_NEW_TAB_TOOLTIP' => 'In neuem Tab öffnen',
     'PANEL_OPERATIONS_TITLE' => 'Operationen',
     'PASSWORD_CREATE_TEXT' => 'Bitte wählen Sie ein neues Passwort, um Ihren Account zu vervollständigen.',
     'PASSWORD_CREATE_TITLE' => 'Passwort erstellen',

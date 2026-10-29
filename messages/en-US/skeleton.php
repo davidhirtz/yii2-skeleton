@@ -246,6 +246,7 @@ return [
     'NAV_ADMIN_LABEL' => 'Admin',
     'NAV_BACK_LABEL' => 'Back',
     'NAV_HOMEPAGE_LABEL' => 'Open Homepage',
+    'NAV_OPEN_NEW_TAB_TOOLTIP' => 'Open in a new tab',
     'PANEL_OPERATIONS_TITLE' => 'Operations',
     'PASSWORD_CREATE_TEXT' => 'Please enter a password below to complete your account.',
     'PASSWORD_CREATE_TITLE' => 'Create Password',
