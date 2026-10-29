@@ -42,8 +42,18 @@ window.addEventListener('error', (event: ErrorEvent) => {
     });
 });
 
+// htmx awaits only a view transition's `finished`, so Chrome's rejection of its `ready` — a swap in a hidden tab, or
+// one transition interrupting another — reaches this listener although the swap itself went through.
+const isSkippedTransition = (reason: unknown) => reason instanceof DOMException
+    && ['AbortError', 'InvalidStateError'].includes(reason.name)
+    && reason.message.startsWith('Transition was');
+
 window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
     const {reason} = event;
+
+    if (isSkippedTransition(reason)) {
+        return;
+    }
 
     reportScriptError({
         message: `Unhandled rejection: ${reason instanceof Error ? reason.message : String(reason)}`,

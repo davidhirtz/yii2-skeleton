@@ -49,6 +49,24 @@ describe('scriptError', () => {
         expect(sendBeacon.mock.calls[0][1].get('message')).toBe('Unhandled rejection: Ünïcødé 🙂 failed');
     });
 
+    it('ignores a skipped view transition', () => {
+        for (const reason of [
+            new DOMException('Transition was aborted because of invalid state. Document hidden', 'InvalidStateError'),
+            new DOMException('Transition was skipped', 'AbortError'),
+        ]) {
+            window.dispatchEvent(Object.assign(new Event('unhandledrejection'), {reason}));
+        }
+
+        expect(sendBeacon).not.toHaveBeenCalled();
+    });
+
+    it('sends any other DOM exception', () => {
+        const reason = new DOMException('The operation was aborted.', 'AbortError');
+        window.dispatchEvent(Object.assign(new Event('unhandledrejection'), {reason}));
+
+        expect(sendBeacon).toHaveBeenCalledOnce();
+    });
+
     it('sends the same error once', () => {
         raise('repeated');
         raise('repeated');
