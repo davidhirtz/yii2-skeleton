@@ -80,9 +80,9 @@ class UserAuthController extends Controller
         $role = $this->getAuthItem($name, $type);
 
         if (Yii::$app->getAuthManager()->assign($role, $user->id)) {
-            $this->success(Yii::t('skeleton', 'USER_AUTH_SUCCESS_ASSIGNED'));
+            $this->success(Yii::t('skeleton', 'USER_AUTH_ASSIGN_SUCCESS'));
         } else {
-            $this->error(Yii::t('skeleton', 'USER_AUTH_PERMISSION_ALREADY', [
+            $this->error(Yii::t('skeleton', 'USER_AUTH_ASSIGN_ERROR', [
                 'name' => $user->getUsername(),
             ]));
         }
@@ -96,9 +96,9 @@ class UserAuthController extends Controller
         $role = $this->getAuthItem($name, $type);
 
         if (Yii::$app->getAuthManager()->revoke($role, $user->id)) {
-            $this->success(Yii::t('skeleton', 'USER_AUTH_SUCCESS_REMOVED'));
+            $this->success(Yii::t('skeleton', 'USER_AUTH_REVOKE_SUCCESS'));
         } else {
-            $this->error(Yii::t('skeleton', 'USER_AUTH_PERMISSION_NOT', [
+            $this->error(Yii::t('skeleton', 'USER_AUTH_REVOKE_ERROR', [
                 'name' => $user->getUsername(),
             ]));
         }

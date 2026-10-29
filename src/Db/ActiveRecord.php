@@ -517,12 +517,12 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         return [
             ...$this instanceof CustomAttributeInterface ? $this->getCustomAttributeLabels() : [],
-            'id' => Yii::t('skeleton', 'COMMON_ID_LABEL'),
-            'status' => Yii::t('skeleton', 'COMMON_STATUS_LABEL'),
-            'type' => Yii::t('skeleton', 'COMMON_TYPE_LABEL'),
-            'updated_by_user_id' => Yii::t('skeleton', 'COMMON_UPDATED_BY_USER_ID_LABEL'),
-            'updated_at' => Yii::t('skeleton', 'COMMON_UPDATED_AT_LABEL'),
-            'created_at' => Yii::t('skeleton', 'COMMON_CREATED_AT_LABEL'),
+            'id' => Yii::t('skeleton', 'MODEL_ID_LABEL'),
+            'status' => Yii::t('skeleton', 'MODEL_STATUS_LABEL'),
+            'type' => Yii::t('skeleton', 'MODEL_TYPE_LABEL'),
+            'updated_by_user_id' => Yii::t('skeleton', 'MODEL_UPDATED_BY_USER_ID_LABEL'),
+            'updated_at' => Yii::t('skeleton', 'MODEL_UPDATED_AT_LABEL'),
+            'created_at' => Yii::t('skeleton', 'MODEL_CREATED_AT_LABEL'),
         ];
     }
 }

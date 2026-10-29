@@ -45,7 +45,7 @@ class CreatedAtFooterItem implements Stringable
         return $this->value
             ? Li::make()
                 ->class('form-footer-item')
-                ->content(Yii::t('skeleton', 'COMMON_CREATED_AT', [
+                ->content(Yii::t('skeleton', 'MODEL_CREATED_AT_TEXT', [
                     'timestamp' => RelativeTime::make()->value($this->value),
                 ]))
             : null;

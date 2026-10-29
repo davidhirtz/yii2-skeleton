@@ -157,7 +157,7 @@ class GrantController extends Controller
         }
 
         if ($grant->delete()) {
-            $this->success(Yii::t('skeleton', 'GRANT_SUCCESS_REVOKED'));
+            $this->success(Yii::t('skeleton', 'GRANT_REVOKE_SUCCESS'));
         }
 
         return $this->redirect($isOwn ? ['index'] : ['view', 'user' => $grant->user_id]);

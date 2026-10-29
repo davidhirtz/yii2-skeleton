@@ -47,7 +47,7 @@ class SignupActiveForm extends ActiveForm
         $this->attributes['id'] ??= 'signup-form';
         $this->attributes['data-id'] = 'signup';
 
-        $this->submitButtonText ??= Yii::t('skeleton', 'SIGNUP_ACTIVE_CREATE_ACCOUNT');
+        $this->submitButtonText ??= Yii::t('skeleton', 'SIGNUP_SUBMIT_BUTTON');
 
         parent::configure();
     }

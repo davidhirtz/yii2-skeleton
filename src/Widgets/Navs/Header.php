@@ -51,7 +51,7 @@ class Header extends Widget
         }
 
         return $page > 1
-            ? Yii::t('skeleton', 'HEADER_PAGE', ['page' => $page])
+            ? Yii::t('skeleton', 'HEADER_PAGE_FORMAT', ['page' => $page])
             : null;
     }
 

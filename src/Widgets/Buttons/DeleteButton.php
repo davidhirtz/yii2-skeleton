@@ -52,7 +52,7 @@ class DeleteButton extends ConfirmButton
         $this->title ??= Yii::t('yii', 'Are you sure you want to delete this item?');
 
         if ($this->property) {
-            $this->message ??= Yii::t('skeleton', 'COMMON_TYPE_EXACT', [
+            $this->message ??= Yii::t('skeleton', 'MODEL_DELETE_TEXT', [
                 'attribute' => $this->model->getAttributeLabel($this->property),
             ]);
         }

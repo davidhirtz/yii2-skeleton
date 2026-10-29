@@ -39,7 +39,7 @@ class AsidePinButtonTest extends TestCase
         self::assertStringContainsString('data-aside-pin', $button);
         self::assertStringContainsString('aria-pressed="true"', $button);
         self::assertStringContainsString('fa-thumbtack"', $button);
-        self::assertStringContainsString('aria-label="' . Yii::t('skeleton', 'ASIDE_UNPIN') . '"', $button);
+        self::assertStringContainsString('aria-label="' . Yii::t('skeleton', 'ASIDE_UNPIN_BUTTON') . '"', $button);
     }
 
     /**
@@ -56,7 +56,7 @@ class AsidePinButtonTest extends TestCase
         self::assertTrue($this->getAdminModule()->isAsideCollapsed());
         self::assertStringContainsString('aria-pressed="false"', $button);
         self::assertStringContainsString('fa-thumbtack-slash', $button);
-        self::assertStringContainsString('aria-label="' . Yii::t('skeleton', 'ASIDE_PIN') . '"', $button);
+        self::assertStringContainsString('aria-label="' . Yii::t('skeleton', 'ASIDE_PIN_BUTTON') . '"', $button);
     }
 
     public function testAnUnknownCookieValueLeavesTheAsideExpanded(): void

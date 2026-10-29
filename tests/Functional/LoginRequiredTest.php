@@ -54,7 +54,7 @@ final class LoginRequiredTest extends TestCase
         $this->open('admin/user/index');
 
         self::assertCurrentUrlEquals('https://www.test.localhost/admin/account/login');
-        self::assertAnyAlertErrorSame(Yii::t('skeleton', 'USER_ERROR_MUST_LOGIN_VIEW'));
+        self::assertAnyAlertErrorSame(Yii::t('skeleton', 'LOGIN_REQUIRED_ERROR'));
         self::assertSame('https://www.test.localhost/admin/user/index', $this->getWebUser()->getReturnUrl());
     }
 

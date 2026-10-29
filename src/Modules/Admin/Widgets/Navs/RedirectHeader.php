@@ -33,7 +33,7 @@ class RedirectHeader extends ModelHeader
         }
 
         if ($this->provider) {
-            $this->title ??= Yii::t('skeleton', 'COMMON_REDIRECTS');
+            $this->title ??= Yii::t('skeleton', 'REDIRECT_PLURAL');
             $this->subtitle ??= $this->getPaginationSubtitle($this->provider);
             $this->url ??= ['/admin/redirect/index'];
 
@@ -41,8 +41,8 @@ class RedirectHeader extends ModelHeader
         }
 
         if (!$this->model && !$this->provider) {
-            $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_REDIRECTS'), ['/admin/redirect/index']);
-            $this->title ??= Yii::t('skeleton', 'REDIRECT_HEADER_CREATE_NEW_REDIRECT');
+            $this->addBreadcrumb(Yii::t('skeleton', 'REDIRECT_PLURAL'), ['/admin/redirect/index']);
+            $this->title ??= Yii::t('skeleton', 'REDIRECT_CREATE_TITLE');
         }
 
         parent::configure();
@@ -57,7 +57,7 @@ class RedirectHeader extends ModelHeader
     protected function getCreateButton(): ?Stringable
     {
         return CreateButton::make()
-            ->label(Yii::t('skeleton', 'COMMON_NEW_REDIRECT'))
+            ->label(Yii::t('skeleton', 'REDIRECT_CREATE_BUTTON'))
             ->url(['/admin/redirect/create']);
     }
 
@@ -67,6 +67,6 @@ class RedirectHeader extends ModelHeader
             return;
         }
 
-        $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_SYSTEM'), ['/admin/system/index']);
+        $this->addBreadcrumb(Yii::t('skeleton', 'SYSTEM_TITLE'), ['/admin/system/index']);
     }
 }

@@ -81,7 +81,7 @@ class UserGridView extends GridView
                 ->content($this->search->markKeywords($name))
                 ->class('strong')
             : Div::make()
-                ->content(Yii::t('skeleton', 'COMMON_USER'))
+                ->content(Yii::t('skeleton', 'USER_SINGULAR'))
                 ->class('text-muted');
 
         $route = $this->getUserRoute($user);
@@ -103,7 +103,7 @@ class UserGridView extends GridView
             ->mailto($user->email);
 
         if ($user->isUnconfirmed()) {
-            $link->tooltip(Yii::t('skeleton', 'USER_UNCONFIRMED_EMAIL'))
+            $link->tooltip(Yii::t('skeleton', 'USER_EMAIL_UNCONFIRMED_TOOLTIP'))
                 ->addClass('text-muted');
         }
 
@@ -148,7 +148,7 @@ class UserGridView extends GridView
                 ->primary()
                 ->url(['/admin/user-auth/index', 'id' => $user->id])
                 ->icon('unlock-alt')
-                ->tooltip(Yii::t('skeleton', 'COMMON_PERMISSIONS'))
+                ->tooltip(Yii::t('skeleton', 'AUTH_ITEM_PLURAL'))
                 ->render();
         }
 

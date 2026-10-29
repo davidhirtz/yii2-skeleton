@@ -28,10 +28,10 @@ class AccountDeleteButton extends DeleteButton
     protected function configure(): void
     {
         $this->url ??= ['/admin/account/delete'];
-        $this->label ??= Yii::t('skeleton', 'ACCOUNT_BUTTON_DELETE');
+        $this->label ??= Yii::t('skeleton', 'ACCOUNT_DELETE_BUTTON');
         $this->property ??= 'password';
-        $this->message ??= Yii::t('skeleton', 'ACCOUNT_DELETE_TYPE_PASSWORD');
-        $this->title ??= Yii::t('skeleton', 'ACCOUNT_CONFIRM_DELETE');
+        $this->message ??= Yii::t('skeleton', 'ACCOUNT_DELETE_TEXT');
+        $this->title ??= Yii::t('skeleton', 'ACCOUNT_DELETE_CONFIRM');
 
         parent::configure();
     }

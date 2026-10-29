@@ -17,13 +17,13 @@ use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
 
-$this->title(Yii::t('skeleton', 'ACCOUNT_CREATE_TITLE'));
+$this->title(Yii::t('skeleton', 'SIGNUP_TITLE'));
 
 echo Noscript::make()
     ->content(Container::make()
         ->content(Alert::make()
             ->danger()
-            ->content(Yii::t('skeleton', 'ACCOUNT_WARNING_NOSCRIPT'))));
+            ->content(Yii::t('skeleton', 'SIGNUP_NOSCRIPT_WARNING'))));
 
 echo Container::make()
     ->centered()
@@ -34,7 +34,7 @@ echo Container::make()
                 ->model($form)),
         Stack::make()
             ->addItem(StackItem::make()
-                ->label(Yii::t('skeleton', 'ACCOUNT_BACK_TO_LOGIN'))
+                ->label(Yii::t('skeleton', 'LOGIN_BACK_BUTTON'))
                 ->url(['login'])
                 ->icon('sign-in-alt'))
     );

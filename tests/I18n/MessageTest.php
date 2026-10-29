@@ -33,7 +33,7 @@ class MessageTest extends TestCase
 
     public function testParamsRoundTripAndAreFormatted(): void
     {
-        $message = Message::make('skeleton', 'TRAIL_WAS_DELETED', ['model' => 'Entry']);
+        $message = Message::make('skeleton', 'TRAIL_DELETE_TEXT', ['model' => 'Entry']);
         $decoded = Message::fromJson($message->toJson());
 
         self::assertSame(['model' => 'Entry'], $decoded->params);
@@ -42,7 +42,7 @@ class MessageTest extends TestCase
 
     public function testWithParamsLeavesTheOriginalAlone(): void
     {
-        $message = Message::make('skeleton', 'TRAIL_WAS_DELETED');
+        $message = Message::make('skeleton', 'TRAIL_DELETE_TEXT');
 
         self::assertSame('Entry was deleted', (string)$message->withParams(['model' => 'Entry']));
         self::assertSame([], $message->params);

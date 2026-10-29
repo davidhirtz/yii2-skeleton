@@ -17,7 +17,7 @@ class YouTube extends Service
     {
         $this->name = 'YouTube';
         $this->provider = 'Google Ireland Limited';
-        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_YOUTUBE_PURPOSE');
+        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_YOUTUBE_TEXT');
         $this->privacyUrl = 'https://policies.google.com/privacy';
         $this->cookies = [
             Cookie::make()->name('YSC')->thirdParty(),

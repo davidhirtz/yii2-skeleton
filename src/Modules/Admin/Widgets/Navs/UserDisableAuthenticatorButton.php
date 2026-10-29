@@ -34,11 +34,11 @@ class UserDisableAuthenticatorButton extends ConfirmButton
     protected function configure(): void
     {
         $this->icon ??= 'shield-halved';
-        $this->label ??= Yii::t('skeleton', 'USER_DISABLE_AUTHENTICATOR_LABEL');
+        $this->label ??= Yii::t('skeleton', 'USER_TWO_FACTOR_DISABLE_BUTTON');
         $this->style ??= 'danger';
         $this->url ??= ['/admin/user/disable-authenticator', 'id' => $this->model->id];
 
-        $this->addContent(P::make()->text(Yii::t('skeleton', 'USER_CONFIRM_DISABLE_AUTHENTICATOR')));
+        $this->addContent(P::make()->text(Yii::t('skeleton', 'USER_TWO_FACTOR_DISABLE_CONFIRM')));
 
         parent::configure();
     }

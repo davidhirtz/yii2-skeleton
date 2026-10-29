@@ -35,7 +35,7 @@ class PasswordResetActiveForm extends ActiveForm
     {
         $this->attributes['id'] ??= 'password-reset-form';
 
-        $this->submitButtonText = Yii::t('skeleton', 'PASSWORD_RESET_ACTIVE_SAVE_NEW_PASSWORD');
+        $this->submitButtonText = Yii::t('skeleton', 'PASSWORD_RESET_SUBMIT_BUTTON');
 
         parent::configure();
     }
@@ -55,8 +55,8 @@ class PasswordResetActiveForm extends ActiveForm
     {
         return Div::make()
             ->content($this->model->user->password_hash
-                ? Yii::t('skeleton', 'PASSWORD_RESET_ACTIVE_ENTER_PLEASE')
-                : Yii::t('skeleton', 'PASSWORD_RESET_ACTIVE_ENTER_BELOW'));
+                ? Yii::t('skeleton', 'PASSWORD_RESET_TEXT')
+                : Yii::t('skeleton', 'PASSWORD_CREATE_TEXT'));
     }
 
     /**

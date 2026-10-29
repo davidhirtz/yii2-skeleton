@@ -97,7 +97,7 @@ trait UserActiveFormTrait
         return SelectField::make()
             ->model($this->model->user)
             ->property('color_scheme')
-            ->prompt(Yii::t('skeleton', 'USER_COLOR_SCHEME_AUTO'));
+            ->prompt(Yii::t('skeleton', 'USER_COLOR_SCHEME_PROMPT'));
     }
 
     /**

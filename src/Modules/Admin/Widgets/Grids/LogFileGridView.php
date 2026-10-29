@@ -53,14 +53,14 @@ class LogFileGridView extends GridView
     {
         return $this->getItems() ?? Alert::make()
             ->success()
-            ->text(Yii::t('skeleton', 'LOG_FILE_EMPTY'));
+            ->text(Yii::t('skeleton', 'LOG_FILE_GRID_EMPTY'));
     }
 
     protected function getNameColumn(): LinkColumn
     {
         return LinkColumn::make()
             ->property('name')
-            ->title(Yii::t('skeleton', 'COMMON_NAME'))
+            ->title(Yii::t('skeleton', 'LOG_FILE_NAME_LABEL'))
             ->url(fn (LogFile $file): array => $this->getLogFileUrl($file))
             ->body(fn (Td $td) => $td->addClass('strong'));
     }
@@ -69,7 +69,7 @@ class LogFileGridView extends GridView
     {
         return DataColumn::make()
             ->property('size')
-            ->title(Yii::t('skeleton', 'LOG_FILE_FILE_SIZE'))
+            ->title(Yii::t('skeleton', 'LOG_FILE_SIZE_LABEL'))
             ->format('shortSize');
     }
 
@@ -77,7 +77,7 @@ class LogFileGridView extends GridView
     {
         return RelativeTimeColumn::make()
             ->property('updated_at')
-            ->title(Yii::t('skeleton', 'COMMON_UPDATED_AT_LABEL'));
+            ->title(Yii::t('skeleton', 'MODEL_UPDATED_AT_LABEL'));
     }
 
     protected function getButtonColumn(): ?Column
@@ -96,8 +96,8 @@ class LogFileGridView extends GridView
                 ->url($this->getLogFileUrl($file, raw: true))
                 ->icon('file'),
             DeleteGridButton::make()
-                ->label(Yii::t('skeleton', 'LOG_FILE_BUTTON_DELETE'))
-                ->title(Yii::t('skeleton', 'LOG_FILE_CONFIRM_DELETE'))
+                ->label(Yii::t('skeleton', 'LOG_FILE_DELETE_BUTTON'))
+                ->title(Yii::t('skeleton', 'LOG_FILE_DELETE_CONFIRM'))
                 ->url($this->getLogFileUrl($file, 'delete')),
         ];
     }

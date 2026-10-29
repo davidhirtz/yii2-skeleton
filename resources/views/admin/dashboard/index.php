@@ -16,7 +16,7 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\SentryAlert;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 
-$this->title(Yii::t('skeleton', 'DASHBOARD_NAV_ITEM_LABEL'));
+$this->title(Yii::t('skeleton', 'DASHBOARD_LABEL'));
 
 echo DashboardHeader::make();
 echo MigrationAlert::make();

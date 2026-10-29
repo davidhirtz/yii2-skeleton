@@ -26,7 +26,7 @@ class CreateButton extends Widget
     public function __construct(array $config = [])
     {
         $this->icon ??= 'plus';
-        $this->label ??= Yii::t('skeleton', 'COMMON_CREATE');
+        $this->label ??= Yii::t('skeleton', 'FORM_CREATE_BUTTON');
         $this->url ??= ['create'];
 
         parent::__construct($config);

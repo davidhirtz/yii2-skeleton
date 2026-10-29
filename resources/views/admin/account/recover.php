@@ -18,7 +18,7 @@ use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
 
-$this->title(Yii::t('skeleton', 'ACCOUNT_RECOVER_TITLE'));
+$this->title(Yii::t('skeleton', 'PASSWORD_RECOVER_TITLE'));
 
 echo Container::make()
     ->centered()
@@ -30,7 +30,7 @@ echo Container::make()
         Stack::make()
             ->addItem(
                 StackItem::make()
-                    ->label(Yii::t('skeleton', 'ACCOUNT_BACK_TO_LOGIN'))
+                    ->label(Yii::t('skeleton', 'LOGIN_BACK_BUTTON'))
                     ->icon('sign-in-alt')
                     ->url(Url::to(['login']))
                     ->visible(Application::current()->getUser()->getIsGuest())

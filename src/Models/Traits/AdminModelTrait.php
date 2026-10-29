@@ -31,7 +31,7 @@ trait AdminModelTrait
             return $this->getAdminType();
         }
 
-        return $this->getAdminNameAttributeValue() ?: Yii::t('skeleton', 'COMMON_MODEL_ID', [
+        return $this->getAdminNameAttributeValue() ?: Yii::t('skeleton', 'MODEL_ID_FORMAT', [
             'model' => $this->getAdminType(),
             'id' => $id,
         ]);
@@ -67,7 +67,7 @@ trait AdminModelTrait
         $position = $this instanceof ActiveRecordInterface ? $this->getAttribute('position') : null;
 
         if ($total && is_numeric($position) && $position > 0 && $position <= $total) {
-            return Yii::t('skeleton', 'COMMON_MODEL_POSITION_TOTAL', [
+            return Yii::t('skeleton', 'MODEL_POSITION_FORMAT', [
                 'model' => $type,
                 'position' => (int)$position,
                 'total' => $total,
@@ -77,7 +77,7 @@ trait AdminModelTrait
         $position ??= $this->getAdminId();
 
         return is_scalar($position)
-            ? Yii::t('skeleton', 'COMMON_MODEL_ID', ['model' => $type, 'id' => $position])
+            ? Yii::t('skeleton', 'MODEL_ID_FORMAT', ['model' => $type, 'id' => $position])
             : $type;
     }
 

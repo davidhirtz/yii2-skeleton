@@ -21,7 +21,7 @@ trait IdentityTrait
             ->one();
 
         if (null === $this->user) {
-            $this->addIdentityError(Yii::t('skeleton', 'IDENTITY_YOUR_EMAIL_WAS_NOT_FOUND'));
+            $this->addIdentityError(Yii::t('skeleton', 'USER_EMAIL_NOT_FOUND_ERROR'));
         }
 
         return !$this->hasErrors('email');
@@ -30,7 +30,7 @@ trait IdentityTrait
     protected function validateUserStatus(): void
     {
         if ($this->user->isDisabled() && !$this->user->isOwner()) {
-            $this->addIdentityError(Yii::t('skeleton', 'COMMON_ACCOUNT_CURRENTLY_DISABLED'));
+            $this->addIdentityError(Yii::t('skeleton', 'USER_DISABLED_ERROR'));
         }
     }
 
@@ -47,7 +47,7 @@ trait IdentityTrait
         }
 
         $this->addError('email', WebUser::current()?->enableUserEnumerationProtection
-            ? Yii::t('skeleton', 'USER_EMAIL_PASSWORD_INCORRECT')
+            ? Yii::t('skeleton', 'LOGIN_CREDENTIALS_ERROR')
             : $message);
     }
 

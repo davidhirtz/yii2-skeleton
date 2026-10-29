@@ -72,14 +72,14 @@ class AccountResendConfirmForm extends Model
     protected function validateUserConfirmationCode(): void
     {
         if (!$this->user->isUnconfirmed()) {
-            $this->addIdentityError(Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_ACCOUNT'));
+            $this->addIdentityError(Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRMED_ERROR'));
         }
     }
 
     protected function validateSpamProtection(): void
     {
         if ($this->isAlreadySent()) {
-            $this->addIdentityError(Yii::t('skeleton', 'ACCOUNT_ERROR_RESEND_ALREADY_SENT', [
+            $this->addIdentityError(Yii::t('skeleton', 'ACCOUNT_RESEND_ALREADY_SENT_ERROR', [
                 'email' => $this->user->email,
             ]));
         }
@@ -96,7 +96,7 @@ class AccountResendConfirmForm extends Model
         if ($this->user && !$this->sendConfirmEmail()) {
             // Without the token of the failed attempt the spam protection lets a retry through.
             $this->user->getLatestToken(UserToken::TYPE_VERIFICATION)?->delete();
-            $this->addIdentityError(Yii::t('skeleton', 'COMMON_ERROR_EMAIL_NOT_SENT', [
+            $this->addIdentityError(Yii::t('skeleton', 'MAIL_SEND_ERROR', [
                 'email' => $this->user->email,
             ]));
         }
@@ -110,7 +110,7 @@ class AccountResendConfirmForm extends Model
             'user' => $this->user,
             'url' => $this->user->createEmailConfirmationUrl(),
         ])
-            ->setSubject(Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_CONFIRM_YOUR_ACCOUNT'))
+            ->setSubject(Yii::t('skeleton', 'ACCOUNT_RESEND_SUBJECT'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->user->email)
             ->send();
@@ -132,7 +132,7 @@ class AccountResendConfirmForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'email' => Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_EMAIL_LABEL'),
+            'email' => Yii::t('skeleton', 'USER_EMAIL_LABEL'),
         ];
     }
 }

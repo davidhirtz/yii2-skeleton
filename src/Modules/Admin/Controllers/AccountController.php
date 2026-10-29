@@ -97,7 +97,7 @@ class AccountController extends Controller
     public function actionCreate(): Response|string
     {
         if (!$this->webuser->getIsGuest()) {
-            $this->error(Yii::t('skeleton', 'ACCOUNT_ERROR_LOGOUT_BEFORE_CREATING'));
+            $this->error(Yii::t('skeleton', 'SIGNUP_LOGGED_IN_ERROR'));
             return $this->goHome();
         }
 
@@ -105,7 +105,7 @@ class AccountController extends Controller
         $form->email = $this->request->get('email', Application::current()->getSession()->get('email'));
 
         if ($form->load($this->request->post()) && $form->insert()) {
-            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SIGN_UP_COMPLETED_PLEASE'));
+            $this->success(Yii::t('skeleton', 'SIGNUP_SUCCESS'));
 
             // The insert logs the user in unless the email has to be confirmed first
             return $this->webuser->getIdentity() === null ? $this->redirect(['login']) : $this->goHome();
@@ -170,7 +170,7 @@ class AccountController extends Controller
             return $this->goHome();
         }
 
-        $this->error(Yii::t('skeleton', 'ACCOUNT_ERROR_PAGE_EXPIRED'));
+        $this->error(Yii::t('skeleton', 'ACCOUNT_PAGE_EXPIRED_ERROR'));
 
         // The language is posted from whatever page the navbar is on and never renders one itself.
         if ($actionId === 'language') {
@@ -198,7 +198,7 @@ class AccountController extends Controller
     public function actionLogin(): Response|string
     {
         if (!$this->webuser->getIsGuest()) {
-            $this->error(Yii::t('skeleton', 'ACCOUNT_ERROR_LOGOUT_BEFORE_LOGIN'));
+            $this->error(Yii::t('skeleton', 'LOGIN_LOGGED_IN_ERROR'));
             return $this->goHome();
         }
 
@@ -210,8 +210,8 @@ class AccountController extends Controller
                 $this->useAccountLanguage($form->user);
 
                 $this->success($form->user->login_count === 1
-                    ? Yii::t('skeleton', 'ACCOUNT_SUCCESS_LOGIN_SUCCESSFUL')
-                    : Yii::t('skeleton', 'ACCOUNT_WELCOME_BACK', [
+                    ? Yii::t('skeleton', 'LOGIN_SUCCESS')
+                    : Yii::t('skeleton', 'LOGIN_WELCOME_BACK_SUCCESS', [
                         'name' => $form->user->getUsername(),
                     ]));
 
@@ -241,7 +241,7 @@ class AccountController extends Controller
     public function actionLogout(): Response|string
     {
         if ($this->webuser->logout()) {
-            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_NOW_LOGGED_OUT'));
+            $this->success(Yii::t('skeleton', 'ACCOUNT_LOGOUT_SUCCESS'));
         }
 
         return $this->redirect(['login']);
@@ -252,8 +252,8 @@ class AccountController extends Controller
         $count = $this->webuser->revokeOtherSessions();
 
         $this->success($count
-            ? Yii::t('skeleton', 'ACCOUNT_SUCCESS_OTHER_SESSIONS_ENDED', ['count' => $count])
-            : Yii::t('skeleton', 'ACCOUNT_SUCCESS_NO_OTHER_SESSIONS'));
+            ? Yii::t('skeleton', 'ACCOUNT_LOGOUT_OTHER_SESSIONS_SUCCESS', ['count' => $count])
+            : Yii::t('skeleton', 'ACCOUNT_LOGOUT_OTHER_SESSIONS_NONE_SUCCESS'));
 
         return $this->redirect(['credentials']);
     }
@@ -279,7 +279,7 @@ class AccountController extends Controller
             }
         }
 
-        $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_EMAIL_ADDRESS_SUCCESSFULLY'));
+        $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_CONFIRM_SUCCESS'));
 
         // A guest's home is the website, so one the confirmation did not log in continues at the login form.
         return $this->webuser->getIsGuest() ? $this->redirect(['login']) : $this->goHome();
@@ -294,7 +294,7 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post())) {
             if ($form->resend()) {
-                $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SENT_ANOTHER', [
+                $this->success(Yii::t('skeleton', 'ACCOUNT_RESEND_SUCCESS', [
                     'email' => $form->email,
                 ]));
 
@@ -322,7 +322,7 @@ class AccountController extends Controller
             Application::current()->getSession()->set('email', $form->email);
 
             if ($form->recover()) {
-                $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_SENT_EMAIL', [
+                $this->success(Yii::t('skeleton', 'PASSWORD_RECOVER_SUCCESS', [
                     'email' => $form->email,
                 ]));
 
@@ -360,7 +360,7 @@ class AccountController extends Controller
                 $this->useAccountLanguage($identity);
             }
 
-            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_PASSWORD'));
+            $this->success(Yii::t('skeleton', 'PASSWORD_UPDATE_SUCCESS'));
 
             // A user who owes a second factor is not logged in by the reset, so the login form is where the
             // flow has to continue.
@@ -389,7 +389,7 @@ class AccountController extends Controller
                 static::getModule()->setSessionLanguage(null);
                 Yii::$app->language = $form->user->language;
 
-                $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
+                $this->success(Yii::t('skeleton', 'ACCOUNT_UPDATE_SUCCESS'));
             }
 
             if (!$form->hasErrors()) {
@@ -419,7 +419,7 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post())) {
             if ($form->save()) {
-                $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_PROFILE_UPDATED'));
+                $this->success(Yii::t('skeleton', 'ACCOUNT_UPDATE_SUCCESS'));
             }
 
             // A new email logs out until it is confirmed, unless unconfirmed emails may log in.
@@ -460,7 +460,7 @@ class AccountController extends Controller
         if ($form->load($this->request->post()) && $form->delete()) {
             // After the logout, which destroys the session and a flash in it.
             $this->webuser->logout();
-            $this->success(Yii::t('skeleton', 'ACCOUNT_SUCCESS_DELETED'));
+            $this->success(Yii::t('skeleton', 'ACCOUNT_DELETE_SUCCESS'));
 
             // The login page shows the flash, which the website need not
             return $this->redirect(['login']);
@@ -485,7 +485,7 @@ class AccountController extends Controller
             }
 
             $this->setRecoveryCodesFlash($form);
-            $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_ENABLED'));
+            $this->errorOrSuccess($form, Yii::t('skeleton', 'TWO_FACTOR_ENABLE_SUCCESS'));
         }
 
         return $this->redirect(['security']);
@@ -509,7 +509,7 @@ class AccountController extends Controller
 
         if ($form->load($this->request->post())) {
             $form->delete();
-            $this->errorOrSuccess($form, Yii::t('skeleton', 'ACCOUNT_SUCCESS_TWO_FACTOR_AUTHENTICATION_DISABLED'));
+            $this->errorOrSuccess($form, Yii::t('skeleton', 'TWO_FACTOR_DISABLE_SUCCESS'));
         }
 
         return $this->redirect(['security']);
@@ -552,7 +552,7 @@ class AccountController extends Controller
         $user->timezone = $timezone;
         $user->update();
 
-        $this->errorOrSuccess($user, Yii::t('skeleton', 'ACCOUNT_SUCCESS_UPDATED_TIMEZONE'));
+        $this->errorOrSuccess($user, Yii::t('skeleton', 'TIMEZONE_UPDATE_SUCCESS'));
         return $this->redirect($redirect !== null && Url::isLocalPath($redirect)
             ? $redirect
             : $this->module->getHomeRoute());

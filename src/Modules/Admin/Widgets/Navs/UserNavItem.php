@@ -16,7 +16,7 @@ class UserNavItem extends NavItem
      */
     public function __construct(array $config = [])
     {
-        $this->label ??= Yii::t('skeleton', 'COMMON_USERS');
+        $this->label ??= Yii::t('skeleton', 'USER_PLURAL');
         $this->icon ??= 'users';
         $this->order ??= 100;
         $this->url ??= ['/admin/user/index'];
@@ -55,7 +55,7 @@ class UserNavItem extends NavItem
     {
         return NavItem::make()
             //->icon('balance-scale-right')
-            ->label(Yii::t('skeleton', 'COMMON_PERMISSIONS'))
+            ->label(Yii::t('skeleton', 'AUTH_ITEM_PLURAL'))
             ->url(['/admin/auth/index'])
             ->order(20)
             ->roles([User::AUTH_USER_ASSIGN])
@@ -66,7 +66,7 @@ class UserNavItem extends NavItem
     {
         return NavItem::make()
             //->icon('sign-in-alt')
-            ->label(Yii::t('skeleton', 'COMMON_USER_LOGINS'))
+            ->label(Yii::t('skeleton', 'USER_LOGIN_PLURAL'))
             ->url(['/admin/user-login/index'])
             ->order(40)
             ->roles([User::AUTH_USER])

@@ -27,11 +27,11 @@ class AccountLogoutOtherSessionsButton extends ConfirmButton
     protected function configure(): void
     {
         $this->icon ??= 'right-from-bracket';
-        $this->label ??= Yii::t('skeleton', 'ACCOUNT_LOGOUT_OTHER_SESSIONS');
+        $this->label ??= Yii::t('skeleton', 'ACCOUNT_LOGOUT_OTHER_SESSIONS_BUTTON');
         $this->style ??= 'danger';
         $this->url ??= ['/admin/account/logout-other-sessions'];
 
-        $this->addContent(P::make()->text(Yii::t('skeleton', 'ACCOUNT_CONFIRM_LOGOUT_OTHER_SESSIONS')));
+        $this->addContent(P::make()->text(Yii::t('skeleton', 'ACCOUNT_LOGOUT_OTHER_SESSIONS_CONFIRM')));
 
         parent::configure();
     }

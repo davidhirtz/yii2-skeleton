@@ -32,7 +32,7 @@ class EnvironmentAlert extends Widget
             $this->icon ??= 'exclamation-triangle';
 
             if (!$this->content) {
-                $this->addText(Yii::t('skeleton', 'ENVIRONMENT_ALERT_MESSAGE', [
+                $this->addText(Yii::t('skeleton', 'SYSTEM_ENVIRONMENT_WARNING', [
                     'environment' => $request->getEnvironmentName(),
                     'host' => $request->getHostName(),
                 ]));

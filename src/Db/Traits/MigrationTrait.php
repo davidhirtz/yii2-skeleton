@@ -10,6 +10,7 @@ use RuntimeException;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\ConstraintFinderInterface;
+use yii\db\Expression;
 use yii\db\IndexConstraint;
 use yii\db\Query;
 use yii\db\TableSchema;
@@ -167,6 +168,40 @@ trait MigrationTrait
         $this->execute("DELETE FROM $itemTable WHERE [[name]] = $item");
 
         $auth->invalidateCache();
+    }
+
+    /**
+     * Matches the prefix {@see Message::toJson()} writes, so the closing quote of the key keeps `FOO` from matching
+     * `FOO_BAR`.
+     *
+     * @param array<string, string> $keys
+     */
+    protected function renameMessageKeys(string $category, array $keys): void
+    {
+        $columns = [
+            '{{%trail}}' => 'message',
+            $this->getAuthManager()->itemTable => 'description',
+        ];
+
+        foreach ($columns as $table => $column) {
+            foreach ($keys as $old => $new) {
+                $prefix = json_encode(['category' => $category, 'key' => $old], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+                $prefix = substr($prefix, 0, -1);
+
+                $replacement = json_encode(['category' => $category, 'key' => $new], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+                $replacement = substr($replacement, 0, -1);
+
+                $this->update($table, [
+                    $column => new Expression("CONCAT(:replacement, SUBSTRING([[$column]], :offset))", [
+                        'replacement' => $replacement,
+                        'offset' => strlen($prefix) + 1,
+                    ]),
+                ], "LEFT([[$column]], :length) = :prefix", [
+                    'length' => strlen($prefix),
+                    'prefix' => $prefix,
+                ]);
+            }
+        }
     }
 
     protected function getTableOptions(): ?string

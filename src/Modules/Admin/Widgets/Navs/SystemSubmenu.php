@@ -30,7 +30,7 @@ class SystemSubmenu extends Submenu
     protected function getApplicationItem(): NavItem
     {
         return NavItem::make()
-            ->label(Yii::t('skeleton', 'SYSTEM_APPLICATION'))
+            ->label(Yii::t('skeleton', 'SYSTEM_APPLICATION_LABEL'))
             ->url(['/admin/system/index'])
             ->icon('circle-info');
     }
@@ -41,7 +41,7 @@ class SystemSubmenu extends Submenu
     protected function getServerItem(): NavItem
     {
         return NavItem::make()
-            ->label(Yii::t('skeleton', 'SYSTEM_SERVER'))
+            ->label(Yii::t('skeleton', 'SYSTEM_SERVER_LABEL'))
             ->url(['/admin/system/server'])
             ->icon('server');
     }
@@ -52,7 +52,7 @@ class SystemSubmenu extends Submenu
     protected function getMaintenanceItem(): NavItem
     {
         return NavItem::make()
-            ->label(Yii::t('skeleton', 'SYSTEM_MAINTENANCE'))
+            ->label(Yii::t('skeleton', 'SYSTEM_MAINTENANCE_LABEL'))
             ->url(['/admin/system/maintenance'])
             ->icon('screwdriver-wrench');
     }

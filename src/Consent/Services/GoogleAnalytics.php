@@ -17,7 +17,7 @@ class GoogleAnalytics extends Service
     {
         $this->name = 'Google Analytics';
         $this->provider = 'Google Ireland Limited';
-        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_GOOGLE_ANALYTICS_PURPOSE');
+        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_GOOGLE_ANALYTICS_TEXT');
         $this->privacyUrl = 'https://policies.google.com/privacy';
         $this->cookies = [
             Cookie::make()->name('_ga')->duration('P2Y'),

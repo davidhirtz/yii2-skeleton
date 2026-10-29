@@ -33,7 +33,7 @@ class StatusAttributeTraitTest extends TestCase
         $model->status = $model::STATUS_ENABLED;
 
         self::assertInstanceOf(Status::class, $model->getStatus());
-        self::assertSame(Yii::t('skeleton', 'COMMON_ENABLED'), $model->getStatusName());
+        self::assertSame(Yii::t('skeleton', 'STATUS_ENABLED_NAME'), $model->getStatusName());
         self::assertSame('globe', $model->getStatusIcon());
     }
 
@@ -52,7 +52,7 @@ class StatusAttributeTraitTest extends TestCase
         $user = User::create();
         $user->status = User::STATUS_ENABLED;
 
-        self::assertSame(Yii::t('skeleton', 'COMMON_ENABLED'), $user->getStatusName());
+        self::assertSame(Yii::t('skeleton', 'STATUS_ENABLED_NAME'), $user->getStatusName());
         self::assertSame('user', $user->getStatusIcon());
     }
 

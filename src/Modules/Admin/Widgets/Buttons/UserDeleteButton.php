@@ -25,10 +25,10 @@ class UserDeleteButton extends DeleteButton
     #[Override]
     protected function configure(): void
     {
-        $this->label ??= Yii::t('skeleton', 'USER_BUTTON_DELETE');
-        $this->message ??= Yii::t('skeleton', 'USER_DELETE_TYPE_USER');
+        $this->label ??= Yii::t('skeleton', 'USER_DELETE_BUTTON');
+        $this->message ??= Yii::t('skeleton', 'USER_DELETE_TEXT');
         $this->property ??= 'email';
-        $this->title ??= Yii::t('skeleton', 'USER_CONFIRM_DELETE');
+        $this->title ??= Yii::t('skeleton', 'USER_DELETE_CONFIRM');
 
         // `UserHeader` renders on every user tab, where the parent's relative `delete` would be that tab's own
         $this->url ??= ['/admin/user/delete', 'id' => $this->model->id];

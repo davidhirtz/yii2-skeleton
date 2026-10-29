@@ -73,7 +73,7 @@ class UserCredentialForm extends Model implements CustomAttributeInterface
 
         if ($provider && !$this->hasErrors() && !$provider->isValid($this->getValues())) {
             $names = $this->getCustomAttributeNames();
-            $this->addError((string)end($names), Yii::t('skeleton', 'CREDENTIAL_ERROR_INVALID'));
+            $this->addError((string)end($names), Yii::t('skeleton', 'CREDENTIAL_SECRET_ERROR'));
         }
     }
 
@@ -140,7 +140,7 @@ class UserCredentialForm extends Model implements CustomAttributeInterface
 
         return [
             ...array_filter($this->getCustomAttributeHints(), fn (?string $hint): bool => $hint !== null),
-            ...$url ? [(string)end($names) => Yii::t('skeleton', 'CREDENTIAL_GET_KEY') . " $url"] : [],
+            ...$url ? [(string)end($names) => Yii::t('skeleton', 'CREDENTIAL_SECRET_HINT') . " $url"] : [],
         ];
     }
 

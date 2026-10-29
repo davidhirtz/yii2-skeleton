@@ -89,7 +89,7 @@ class SystemController extends Controller
             FileHelper::removeDirectory($asset);
         }
 
-        $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_REFRESHED'));
+        $this->success(Yii::t('skeleton', 'SYSTEM_ASSETS_REFRESH_SUCCESS'));
         return $this->redirect(['maintenance']);
     }
 
@@ -107,7 +107,7 @@ class SystemController extends Controller
 
         $component->flush();
 
-        $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_FLUSHED'));
+        $this->success(Yii::t('skeleton', 'SYSTEM_CACHE_FLUSH_SUCCESS'));
         return $this->redirect(['maintenance']);
     }
 
@@ -121,14 +121,14 @@ class SystemController extends Controller
 
         $connection->getSchema()->refresh();
 
-        $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_REFRESHED_SCHEMA'));
+        $this->success(Yii::t('skeleton', 'SYSTEM_SCHEMA_REFRESH_SUCCESS'));
         return $this->redirect(['maintenance']);
     }
 
     public function actionSessionGc(): Response|string
     {
         Application::current()->getSession()->gcSession(0);
-        $this->success(Yii::t('skeleton', 'SYSTEM_SUCCESS_DELETED'));
+        $this->success(Yii::t('skeleton', 'SYSTEM_SESSIONS_DELETE_SUCCESS'));
         return $this->redirect(['maintenance']);
     }
 }

@@ -41,7 +41,7 @@ class UserSubmenu extends Submenu
     {
         return $this->webuser->can(User::AUTH_USER)
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'COMMON_ACCOUNT'))
+                ->label(Yii::t('skeleton', 'USER_ACCOUNT_LABEL'))
                 ->url(['/admin/user/update', 'id' => $this->model->id])
                 ->icon('user')
             : null;
@@ -51,7 +51,7 @@ class UserSubmenu extends Submenu
     {
         return $this->webuser->can(User::AUTH_USER_ASSIGN, ['user' => $this->model])
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'COMMON_PERMISSIONS'))
+                ->label(Yii::t('skeleton', 'AUTH_ITEM_PLURAL'))
                 ->url(['/admin/user-auth/index', 'id' => $this->model->id])
                 ->icon('unlock-alt')
             : null;
@@ -61,7 +61,7 @@ class UserSubmenu extends Submenu
     {
         return $this->webuser->can(User::AUTH_USER, ['user' => $this->model])
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'COMMON_USER_LOGINS'))
+                ->label(Yii::t('skeleton', 'USER_LOGIN_PLURAL'))
                 ->icon('bars')
                 ->url(['/admin/user-login/view', 'user' => $this->model->id])
                 ->routes(['admin/user-login/view'])
@@ -72,7 +72,7 @@ class UserSubmenu extends Submenu
     {
         return Mcp::getComponent()->isOAuthEnabled() && $this->webuser->can(User::AUTH_USER, ['user' => $this->model])
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'GRANT_CONNECTED_APPS'))
+                ->label(Yii::t('skeleton', 'GRANT_PLURAL'))
                 ->icon('plug')
                 ->url(['/admin/grant/view', 'user' => $this->model->id])
                 ->routes(['admin/grant/view'])
@@ -83,7 +83,7 @@ class UserSubmenu extends Submenu
     {
         return Mcp::getComponent()->enableHttp && $this->webuser->can(User::AUTH_USER, ['user' => $this->model])
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'MCP_TOKENS_TITLE'))
+                ->label(Yii::t('skeleton', 'MCP_TOKEN_PLURAL'))
                 ->icon('key')
                 ->url(['/admin/mcp-token/view', 'user' => $this->model->id])
                 ->routes(['admin/mcp-token/view'])
@@ -94,7 +94,7 @@ class UserSubmenu extends Submenu
     {
         return Credentials::getComponent()->getProviders() && $this->webuser->can(User::AUTH_USER, ['user' => $this->model])
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'CREDENTIALS_TITLE'))
+                ->label(Yii::t('skeleton', 'CREDENTIAL_PLURAL'))
                 ->icon('lock')
                 ->url(['/admin/credential/view', 'user' => $this->model->id])
                 ->routes(['admin/credential/view'])
@@ -105,7 +105,7 @@ class UserSubmenu extends Submenu
     {
         return $this->webuser->can(Trail::AUTH_TRAIL_INDEX, ['user' => $this->model])
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'COMMON_HISTORY'))
+                ->label(Yii::t('skeleton', 'TRAIL_TITLE'))
                 ->icon('history')
                 ->url(['/admin/user-trail/index', 'id' => $this->model->id])
                 ->routes(['admin/user-trail/index'])

@@ -55,10 +55,10 @@ trait StatusAttributeTrait
     {
         return [
             Status::make(static::STATUS_ENABLED)
-                ->name(Yii::t('skeleton', 'COMMON_ENABLED'))
+                ->name(Yii::t('skeleton', 'STATUS_ENABLED_NAME'))
                 ->icon('globe'),
             Status::make(static::STATUS_DISABLED)
-                ->name(Yii::t('skeleton', 'COMMON_DISABLED'))
+                ->name(Yii::t('skeleton', 'STATUS_DISABLED_NAME'))
                 ->icon('exclamation-triangle'),
         ];
     }

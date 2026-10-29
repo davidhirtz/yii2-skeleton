@@ -40,9 +40,9 @@ class StatusIconColumnTest extends TestCase
         // accessible name, since "Disabled" alone reads as a state rather than an action.
         self::assertStringNotContainsString('aria-label', $html);
         self::assertStringContainsString(
-            'title="' . Yii::t('skeleton', 'COMMON_STATUS_BUTTON_TOOLTIP', [
-                'status' => Yii::t('skeleton', 'COMMON_ENABLED'),
-                'next' => Yii::t('skeleton', 'COMMON_DISABLED'),
+            'title="' . Yii::t('skeleton', 'MODEL_STATUS_TOOLTIP', [
+                'status' => Yii::t('skeleton', 'STATUS_ENABLED_NAME'),
+                'next' => Yii::t('skeleton', 'STATUS_DISABLED_NAME'),
             ]) . '"',
             $html,
         );

@@ -19,7 +19,7 @@ use Hirtz\Skeleton\Widgets\Buttons\CreateButton;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
-$this->title(Yii::t('skeleton', 'CREDENTIALS_TITLE'));
+$this->title(Yii::t('skeleton', 'CREDENTIAL_PLURAL'));
 
 echo AccountHeader::make()
     ->model($user)

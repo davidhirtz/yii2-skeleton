@@ -54,8 +54,8 @@ class GrantGridView extends GridView
         return DataColumn::make()
             ->property('scope')
             ->content(fn (OAuthGrant $grant): string => $grant->isReadOnly()
-                ? Yii::t('skeleton', 'GRANT_SCOPE_READ')
-                : Yii::t('skeleton', 'GRANT_SCOPE_WRITE'));
+                ? Yii::t('skeleton', 'GRANT_SCOPE_READ_NAME')
+                : Yii::t('skeleton', 'GRANT_SCOPE_WRITE_NAME'));
     }
 
     protected function getLastUsedAtColumn(): ?Column
@@ -80,8 +80,8 @@ class GrantGridView extends GridView
         return ButtonColumn::make()
             ->content(fn (OAuthGrant $grant): array => [
                 DeleteGridButton::make()
-                    ->label(Yii::t('skeleton', 'GRANT_BUTTON_REVOKE'))
-                    ->title(Yii::t('skeleton', 'GRANT_CONFIRM_REVOKE'))
+                    ->label(Yii::t('skeleton', 'GRANT_REVOKE_BUTTON'))
+                    ->title(Yii::t('skeleton', 'GRANT_REVOKE_CONFIRM'))
                     ->url(['/admin/grant/revoke', 'id' => $grant->id]),
             ]);
     }

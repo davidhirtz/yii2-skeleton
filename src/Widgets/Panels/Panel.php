@@ -38,7 +38,7 @@ class Panel extends Widget
      */
     public function __construct(array $config = [])
     {
-        $this->title ??= Yii::t('skeleton', 'PANEL_OPERATIONS');
+        $this->title ??= Yii::t('skeleton', 'PANEL_OPERATIONS_TITLE');
         parent::__construct($config);
     }
 

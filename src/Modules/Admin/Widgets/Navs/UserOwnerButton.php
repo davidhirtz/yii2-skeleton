@@ -32,12 +32,12 @@ class UserOwnerButton extends ConfirmButton
     protected function configure(): void
     {
         $this->icon ??= 'star';
-        $this->label ??= Yii::t('skeleton', 'USER_OWNER_MAKE_SITE_OWNER');
-        $this->confirmLabel ??= Yii::t('skeleton', 'USER_OWNER_TRANSFER_OWNERSHIP');
+        $this->label ??= Yii::t('skeleton', 'USER_OWNER_BUTTON');
+        $this->confirmLabel ??= Yii::t('skeleton', 'USER_OWNER_SUBMIT_BUTTON');
         $this->style ??= 'danger';
         $this->url ??= ['/admin/user/ownership', 'id' => $this->model->id];
 
-        $this->addContent(P::make()->text(Yii::t('skeleton', 'USER_CONFIRM_TRANSFER_OWNERSHIP')));
+        $this->addContent(P::make()->text(Yii::t('skeleton', 'USER_OWNER_CONFIRM')));
 
         parent::configure();
     }

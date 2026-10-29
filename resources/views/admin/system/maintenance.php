@@ -13,10 +13,10 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\MaintenanceInfo;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 
-$this->title(Yii::t('skeleton', 'SYSTEM_MAINTENANCE'));
+$this->title(Yii::t('skeleton', 'SYSTEM_MAINTENANCE_LABEL'));
 
 echo Header::make()
-    ->title(Yii::t('skeleton', 'COMMON_SYSTEM'));
+    ->title(Yii::t('skeleton', 'SYSTEM_TITLE'));
 
 echo SystemSubmenu::make();
 echo MaintenanceInfo::make();

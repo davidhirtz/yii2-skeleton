@@ -290,13 +290,13 @@ class Module extends \Hirtz\Skeleton\Base\Module
         $dashboard->addItem(
             DashboardItem::make()
                 ->icon('user-plus')
-                ->label(Yii::t('skeleton', 'DASHBOARD_ACTION_USER_CREATE'))
+                ->label(Yii::t('skeleton', 'USER_CREATE_BUTTON'))
                 ->order(60)
                 ->roles([User::AUTH_USER])
                 ->url(['/admin/user/create']),
             DashboardItem::make()
                 ->icon('globe')
-                ->label(Yii::t('skeleton', 'MODULE_OPEN_HOMEPAGE'))
+                ->label(Yii::t('skeleton', 'NAV_HOMEPAGE_LABEL'))
                 ->link(fn (A $link) => $link->target('_blank'))
                 ->order(100)
                 ->url('/'),

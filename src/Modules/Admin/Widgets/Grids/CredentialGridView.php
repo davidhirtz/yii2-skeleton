@@ -79,7 +79,7 @@ class CredentialGridView extends GridView
     {
         return parent::getSummary()
             ?->emptyMessage(Yii::t('skeleton', 'CREDENTIAL_GRID_EMPTY'))
-            ->emptyLink(Yii::t('skeleton', 'CREDENTIAL_GRID_EMPTY_LINK'), $this->isOwn ? ['/admin/credential/create'] : null)
+            ->emptyLink(Yii::t('skeleton', 'CREDENTIAL_GRID_CREATE_TEXT'), $this->isOwn ? ['/admin/credential/create'] : null)
             ->visible(fn (): bool => $this->provider->getCount() === 0);
     }
 
@@ -91,8 +91,8 @@ class CredentialGridView extends GridView
         return ButtonColumn::make()
             ->content(fn (UserCredential $credential): array => [
                 DeleteGridButton::make()
-                    ->label(Yii::t('skeleton', 'CREDENTIAL_BUTTON_DELETE'))
-                    ->title(Yii::t('skeleton', 'CREDENTIAL_CONFIRM_DELETE'))
+                    ->label(Yii::t('skeleton', 'CREDENTIAL_DELETE_BUTTON'))
+                    ->title(Yii::t('skeleton', 'CREDENTIAL_DELETE_CONFIRM'))
                     ->url(['/admin/credential/delete', 'id' => $credential->id]),
             ]);
     }

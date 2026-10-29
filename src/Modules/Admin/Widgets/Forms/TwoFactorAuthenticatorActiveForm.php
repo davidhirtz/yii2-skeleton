@@ -49,7 +49,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
         ]);
 
         $this->action ??= $enabled ? ['account/disable-authenticator'] : ['account/enable-authenticator'];
-        $this->submitButtonText ??= $enabled ? Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_DISABLE') : Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ENABLE');
+        $this->submitButtonText ??= $enabled ? Yii::t('skeleton', 'TWO_FACTOR_DISABLE_BUTTON') : Yii::t('skeleton', 'TWO_FACTOR_ENABLE_BUTTON');
         $this->footer ??= false;
 
         parent::configure();
@@ -70,7 +70,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     {
         return [
             FormRow::make()
-                ->content(Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_RECOVERY_CODES', [
+                ->content(Yii::t('skeleton', 'TWO_FACTOR_RECOVERY_CODES_COUNT_TEXT', [
                     'count' => $this->model->getTwoFactorAuthenticationRecoveryCodeCount(),
                 ])),
             $this->getInputField(),
@@ -113,7 +113,7 @@ class TwoFactorAuthenticatorActiveForm extends ActiveForm
     {
         return Img::make()
             ->src($this->authenticator->getQrImageUrl($this->qrCodeSize))
-            ->alt(Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_CODE'))
+            ->alt(Yii::t('skeleton', 'TWO_FACTOR_QR_CODE_LABEL'))
             ->addStyle([
                 'width' => "{$this->qrCodeSize}px",
                 'height' => "{$this->qrCodeSize}px",

@@ -14,10 +14,10 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\ServerInfo;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 
-$this->title(Yii::t('skeleton', 'SYSTEM_SERVER'));
+$this->title(Yii::t('skeleton', 'SYSTEM_SERVER_LABEL'));
 
 echo Header::make()
-    ->title(Yii::t('skeleton', 'COMMON_SYSTEM'));
+    ->title(Yii::t('skeleton', 'SYSTEM_TITLE'));
 
 echo SystemSubmenu::make();
 echo DirectoryAlert::make();

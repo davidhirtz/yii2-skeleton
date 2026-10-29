@@ -53,6 +53,6 @@ class MissingTranslationsColumn extends Column
         return Icon::make()
             ->name('exclamation-triangle')
             ->addClass('text-warning')
-            ->tooltip(Yii::t('skeleton', 'GRID_MISSING_TRANSLATIONS', ['languages' => StringHelper::enumerate($codes)]));
+            ->tooltip(Yii::t('skeleton', 'GRID_MISSING_TRANSLATIONS_TOOLTIP', ['languages' => StringHelper::enumerate($codes)]));
     }
 }

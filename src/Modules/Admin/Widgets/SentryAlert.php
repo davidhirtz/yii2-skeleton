@@ -41,7 +41,7 @@ class SentryAlert extends Widget
             $this->icon ??= 'exclamation-triangle';
 
             if (!$this->content) {
-                $this->addText(Yii::t('skeleton', 'SENTRY_ALERT_MESSAGE'));
+                $this->addText(Yii::t('skeleton', 'SYSTEM_SENTRY_WARNING'));
             }
         }
 

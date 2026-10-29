@@ -1,3 +1,9 @@
+## Unreleased
+
+- Changed every message key to the `{DOMAIN}_{SUBJECT}_{KIND}` scheme; the `COMMON_*` keys are gone
+- Added `MigrationTrait::renameMessageKeys()` for message pointers stored in `trail` and `auth_item`
+- Added `Test\Traits\MessageKeysTrait`, which asserts a category's keys
+
 ## 3.24.0 (October 26, 2026)
 
 - Added `Web\AssetManager`, which publishes a package's assets anew after an update of the package

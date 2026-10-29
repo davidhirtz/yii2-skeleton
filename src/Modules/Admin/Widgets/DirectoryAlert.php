@@ -56,7 +56,7 @@ class DirectoryAlert extends Widget
             $this->icon ??= 'exclamation-triangle';
 
             if (!$this->content) {
-                $this->addText(Yii::t('skeleton', 'DIRECTORY_ALERT_MESSAGE', [
+                $this->addText(Yii::t('skeleton', 'SYSTEM_DIRECTORY_WARNING', [
                     'count' => count($this->unwritable),
                     'directories' => implode(', ', $this->unwritable),
                 ]));

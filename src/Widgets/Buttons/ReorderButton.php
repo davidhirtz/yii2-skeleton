@@ -17,7 +17,7 @@ class ReorderButton extends Widget
     protected function renderContent(): string
     {
         $this->attributes['class'] ??= 'btn btn-secondary';
-        $this->attributes['aria-label'] ??= Yii::t('skeleton', 'GRID_REORDER_HANDLE_LABEL');
+        $this->attributes['aria-label'] ??= Yii::t('skeleton', 'GRID_REORDER_LABEL');
 
         return Button::make()
             ->attributes($this->attributes)

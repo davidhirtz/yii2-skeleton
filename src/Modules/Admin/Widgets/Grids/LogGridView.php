@@ -43,7 +43,7 @@ class LogGridView extends GridView
     protected function getDateColumn(): Column
     {
         return Column::make()
-            ->title(Yii::t('skeleton', 'LOG_DATE'))
+            ->title(Yii::t('skeleton', 'LOG_DATE_LABEL'))
             ->content($this->getDateColumnContent(...))
             ->nowrap()
             ->width(150);
@@ -70,7 +70,7 @@ class LogGridView extends GridView
     protected function getLevelColumn(): Column
     {
         return Column::make()
-            ->title(Yii::t('skeleton', 'LOG_LEVEL'))
+            ->title(Yii::t('skeleton', 'LOG_LEVEL_LABEL'))
             ->content($this->getLevelColumnContent(...))
             ->width(100);
     }
@@ -85,7 +85,7 @@ class LogGridView extends GridView
     protected function getMessageColumn(): Column
     {
         return Column::make()
-            ->title(Yii::t('skeleton', 'LOG_ERROR'))
+            ->title(Yii::t('skeleton', 'LOG_ERROR_LABEL'))
             ->content($this->getMessageColumnContent(...));
     }
 

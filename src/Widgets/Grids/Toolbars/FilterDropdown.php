@@ -111,8 +111,8 @@ class FilterDropdown extends Widget
             return '';
         }
 
-        $this->default ??= Yii::t('skeleton', 'FILTER_DROPDOWN_SHOW_ALL');
-        $this->placeholder ??= Yii::t('skeleton', 'FILTER_DROPDOWN_FILTER');
+        $this->default ??= Yii::t('skeleton', 'GRID_FILTER_PROMPT');
+        $this->placeholder ??= Yii::t('skeleton', 'GRID_FILTER_PLACEHOLDER');
         $this->value ??= Application::current()->getRequest()->get($this->paramName);
 
         if ($this->showFilterThreshold !== false) {

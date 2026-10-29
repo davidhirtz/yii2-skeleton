@@ -23,7 +23,7 @@ class StatusFilterDropdown extends FilterDropdown
     #[Override]
     protected function configure(): void
     {
-        $this->label ??= Yii::t('skeleton', 'COMMON_STATUS');
+        $this->label ??= Yii::t('skeleton', 'MODEL_STATUS_LABEL');
 
         if ($this->model instanceof StatusAttributeInterface) {
             $this->items = array_map(

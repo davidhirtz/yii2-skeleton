@@ -22,13 +22,13 @@ use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Panels\Stack;
 use Hirtz\Skeleton\Widgets\Panels\StackItem;
 
-$this->title(Yii::t('skeleton', 'COMMON_LOGIN'));
+$this->title(Yii::t('skeleton', 'USER_LOGIN_TYPE_LOGIN_NAME'));
 
 echo Noscript::make()
     ->content(Container::make()
         ->content(Alert::make()
             ->danger()
-            ->content(Yii::t('skeleton', 'ACCOUNT_WARNING_NOSCRIPT'))));
+            ->content(Yii::t('skeleton', 'SIGNUP_NOSCRIPT_WARNING'))));
 
 echo Container::make()
     ->centered()
@@ -39,17 +39,17 @@ echo Container::make()
                 ->model($form)),
         Stack::make()
             ->addItem(StackItem::make()
-                ->label(Yii::t('skeleton', 'ACCOUNT_LOGIN_CREATE_ACCOUNT'))
+                ->label(Yii::t('skeleton', 'SIGNUP_BUTTON'))
                 ->icon('user')
                 ->url(['create'])
                 ->visible(Application::current()->getUser()->isSignupEnabled()))
             ->addItem(StackItem::make()
-                ->label(Yii::t('skeleton', 'ACCOUNT_LOGIN_RESEND_CONFIRMATION'))
+                ->label(Yii::t('skeleton', 'ACCOUNT_RESEND_BUTTON'))
                 ->icon('envelope')
                 ->url(['resend'])
                 ->visible(!Application::current()->getUser()->isUnconfirmedEmailLoginEnabled()))
             ->addItem(StackItem::make()
-                ->label(Yii::t('skeleton', 'ACCOUNT_LOGIN_RECOVER_PASSWORD'))
+                ->label(Yii::t('skeleton', 'PASSWORD_RECOVER_BUTTON'))
                 ->icon('key')
                 ->url(['recover'])
                 ->visible(Application::current()->getUser()->isPasswordResetEnabled()))

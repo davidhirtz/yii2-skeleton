@@ -59,12 +59,12 @@ class TrailHeader extends Header
         }
 
         if ($this->provider->trailId) {
-            return Yii::t('skeleton', 'COMMON_MODEL_ID', [
-                'model' => Yii::t('skeleton', 'COMMON_HISTORY'),
+            return Yii::t('skeleton', 'MODEL_ID_FORMAT', [
+                'model' => Yii::t('skeleton', 'TRAIL_TITLE'),
                 'id' => $this->provider->trailId,
             ]);
         }
-        return Yii::t('skeleton', 'COMMON_HISTORY');
+        return Yii::t('skeleton', 'TRAIL_TITLE');
     }
 
     /**
@@ -89,11 +89,11 @@ class TrailHeader extends Header
             return;
         }
 
-        $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_SYSTEM'), ['/admin/system/index']);
+        $this->addBreadcrumb(Yii::t('skeleton', 'SYSTEM_TITLE'), ['/admin/system/index']);
     }
 
     protected function addTrailBreadcrumb(): void
     {
-        $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_HISTORY'), ['/admin/trail/index']);
+        $this->addBreadcrumb(Yii::t('skeleton', 'TRAIL_TITLE'), ['/admin/trail/index']);
     }
 }

@@ -23,11 +23,11 @@ class OwnershipForm extends Model
     public function beforeValidate(): bool
     {
         if ($this->user->isDisabled()) {
-            $this->addError('name', Yii::t('skeleton', 'OWNERSHIP_USER_CURRENTLY_DISABLED'));
+            $this->addError('name', Yii::t('skeleton', 'USER_OWNER_DISABLED_ERROR'));
         }
 
         if ($this->user->isOwner()) {
-            $this->addError('name', Yii::t('skeleton', 'OWNERSHIP_USER_ALREADY_OWNER'));
+            $this->addError('name', Yii::t('skeleton', 'USER_OWNER_ALREADY_ERROR'));
         }
 
         return parent::beforeValidate();

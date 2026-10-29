@@ -82,7 +82,7 @@ class UserTest extends TestCase
         $user = User::create();
         $user->id = 3;
 
-        self::assertSame(Yii::t('skeleton', 'COMMON_MODEL_ID', [
+        self::assertSame(Yii::t('skeleton', 'MODEL_ID_FORMAT', [
             'model' => $user->getAdminType(),
             'id' => 3,
         ]), $user->getAdminName());

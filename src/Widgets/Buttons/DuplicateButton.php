@@ -34,7 +34,7 @@ class DuplicateButton extends Widget
     protected function configure(): void
     {
         $this->icon ??= 'copy';
-        $this->label ??= Yii::t('skeleton', 'DUPLICATE_DUPLICATE');
+        $this->label ??= Yii::t('skeleton', 'MODEL_DUPLICATE_BUTTON');
         $this->url ??= Url::toRoute(['duplicate', 'id' => $this->model->getPrimaryKey()]);
 
         parent::configure();

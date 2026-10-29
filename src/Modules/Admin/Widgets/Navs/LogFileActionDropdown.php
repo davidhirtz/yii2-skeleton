@@ -25,7 +25,7 @@ class LogFileActionDropdown extends ActionDropdown
         return Button::make()
             ->primary()
             ->icon('file-alt')
-            ->text(Yii::t('skeleton', 'LOG_FILE_ACTION_DROPDOWN_OPEN_FILE'))
+            ->text(Yii::t('skeleton', 'LOG_FILE_OPEN_BUTTON'))
             ->url(["/admin/log/view", 'log' => $this->file, 'raw' => 1])
             ->target('_blank');
     }
@@ -33,8 +33,8 @@ class LogFileActionDropdown extends ActionDropdown
     protected function getDeleteFileButton(): ?Stringable
     {
         return DeleteButton::make()
-            ->label(Yii::t('skeleton', 'LOG_FILE_BUTTON_DELETE'))
-            ->title(Yii::t('skeleton', 'LOG_FILE_CONFIRM_DELETE'))
+            ->label(Yii::t('skeleton', 'LOG_FILE_DELETE_BUTTON'))
+            ->title(Yii::t('skeleton', 'LOG_FILE_DELETE_CONFIRM'))
             ->url(["/admin/log/delete", 'log' => $this->file]);
     }
 }

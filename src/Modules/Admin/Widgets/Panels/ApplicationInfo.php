@@ -55,7 +55,7 @@ class ApplicationInfo extends InfoList
         $branch = $this->canReadSystem() ? VersionHelper::getApplicationBranch() : null;
 
         $this->addRow(
-            Yii::t('skeleton', 'SYSTEM_APPLICATION'),
+            Yii::t('skeleton', 'SYSTEM_APPLICATION_LABEL'),
             $this->getValue(Yii::$app->name, trim(($this->canReadSystem() ? VersionHelper::getApplicationName() : '')
                 . ' ' . VersionHelper::getApplicationVersion()
                 . ($reference !== null ? " ($reference)" : '')
@@ -69,7 +69,7 @@ class ApplicationInfo extends InfoList
 
         if ($timestamp !== null) {
             $this->addRow(
-                Yii::t('skeleton', 'SYSTEM_LAST_UPDATED'),
+                Yii::t('skeleton', 'SYSTEM_LAST_UPDATED_LABEL'),
                 $this->getValue(
                     RelativeTime::make()->value($timestamp),
                     Yii::$app->getFormatter()->asDatetime($timestamp),
@@ -83,9 +83,9 @@ class ApplicationInfo extends InfoList
         $request = Application::current()->getRequest();
 
         $this->addRow(
-            Yii::t('skeleton', 'SYSTEM_ENVIRONMENT'),
+            Yii::t('skeleton', 'SYSTEM_ENVIRONMENT_LABEL'),
             $this->getValue(
-                $request->getEnvironmentName() ?? Yii::t('skeleton', 'REQUEST_ENVIRONMENT_PRODUCTION'),
+                $request->getEnvironmentName() ?? Yii::t('skeleton', 'REQUEST_ENVIRONMENT_PRODUCTION_NAME'),
                 $request->getHostName(),
             ),
         );
@@ -96,7 +96,7 @@ class ApplicationInfo extends InfoList
         $db = Yii::$app->getDb();
 
         $this->addRow(
-            Yii::t('skeleton', 'SYSTEM_DATABASE'),
+            Yii::t('skeleton', 'SYSTEM_DATABASE_LABEL'),
             $this->getValue(
                 $db->getServerVersion() ?? ucfirst($db->getDriverName()),
                 $this->canReadSystem()
@@ -114,7 +114,7 @@ class ApplicationInfo extends InfoList
 
         if ($migration !== null) {
             $this->addRow(
-                Yii::t('skeleton', 'SYSTEM_LAST_MIGRATION'),
+                Yii::t('skeleton', 'SYSTEM_LAST_MIGRATION_LABEL'),
                 $this->getValue(
                     RelativeTime::make()->value($migration['applyTime']),
                     $migration['version'],
@@ -129,7 +129,7 @@ class ApplicationInfo extends InfoList
     protected function addPhpRow(): void
     {
         $this->addRow(
-            Yii::t('skeleton', 'SYSTEM_PHP'),
+            Yii::t('skeleton', 'SYSTEM_PHP_LABEL'),
             $this->getValue(
                 $this->getPhpVersion(),
                 implode(' · ', [
@@ -151,13 +151,13 @@ class ApplicationInfo extends InfoList
             ->href(['/admin/system/php-info'])
             ->target('_blank')
             ->attribute('hx-boost', 'false')
-            ->addAttributes(['data-tooltip' => '', 'title' => Yii::t('skeleton', 'SYSTEM_PHP_INFO')])
+            ->addAttributes(['data-tooltip' => '', 'title' => Yii::t('skeleton', 'SYSTEM_PHP_INFO_TOOLTIP')])
             ->text(PHP_VERSION);
     }
 
     protected function addYiiRow(): void
     {
-        $this->addRow(Yii::t('skeleton', 'SYSTEM_YII'), Yii::getVersion());
+        $this->addRow(Yii::t('skeleton', 'SYSTEM_YII_LABEL'), Yii::getVersion());
     }
 
     protected function addExtensionsRow(): void
@@ -165,7 +165,7 @@ class ApplicationInfo extends InfoList
         $extensions = ExtensionVersions::make();
 
         if ($extensions->render() !== '') {
-            $this->addRow(Yii::t('skeleton', 'SYSTEM_EXTENSIONS'), $extensions);
+            $this->addRow(Yii::t('skeleton', 'SYSTEM_EXTENSIONS_LABEL'), $extensions);
         }
     }
 }

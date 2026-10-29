@@ -21,7 +21,7 @@ class LogHeader extends Header
     #[\Override]
     protected function configure(): void
     {
-        $this->title ??= Yii::t('skeleton', 'COMMON_ERROR_LOGS');
+        $this->title ??= Yii::t('skeleton', 'LOG_TITLE');
         $this->url ??= ['/admin/log/index'];
 
         if ($this->provider) {
@@ -46,7 +46,7 @@ class LogHeader extends Header
             return;
         }
 
-        $this->addBreadcrumb(Yii::t('skeleton', 'COMMON_SYSTEM'), [
+        $this->addBreadcrumb(Yii::t('skeleton', 'SYSTEM_TITLE'), [
             '/admin/system/index',
         ]);
     }

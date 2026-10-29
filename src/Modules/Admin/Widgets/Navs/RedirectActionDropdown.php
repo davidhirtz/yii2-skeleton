@@ -30,14 +30,14 @@ class RedirectActionDropdown extends ActionDropdown
     protected function getCreateButton(): ?Stringable
     {
         return CreateButton::make()
-            ->label(Yii::t('skeleton', 'COMMON_NEW_REDIRECT'));
+            ->label(Yii::t('skeleton', 'REDIRECT_CREATE_BUTTON'));
     }
 
     protected function getDeleteButton(): ?Stringable
     {
         return DeleteButton::make()
-            ->label(Yii::t('skeleton', 'REDIRECT_BUTTON_DELETE'))
-            ->title(Yii::t('skeleton', 'REDIRECT_CONFIRM_DELETE'))
+            ->label(Yii::t('skeleton', 'REDIRECT_DELETE_BUTTON'))
+            ->title(Yii::t('skeleton', 'REDIRECT_DELETE_CONFIRM'))
             ->model($this->model);
     }
 }

@@ -22,13 +22,13 @@ trait DraftStatusAttributeTrait
     {
         return [
             Status::make(static::STATUS_ENABLED)
-                ->name(Yii::t('skeleton', 'COMMON_ENABLED'))
+                ->name(Yii::t('skeleton', 'STATUS_ENABLED_NAME'))
                 ->icon('globe'),
             Status::make(static::STATUS_DRAFT)
-                ->name(Yii::t('skeleton', 'COMMON_STATUS_ATTRIBUTE_DRAFT'))
+                ->name(Yii::t('skeleton', 'STATUS_DRAFT_NAME'))
                 ->icon('edit'),
             Status::make(static::STATUS_DISABLED)
-                ->name(Yii::t('skeleton', 'COMMON_DISABLED'))
+                ->name(Yii::t('skeleton', 'STATUS_DISABLED_NAME'))
                 ->icon('exclamation-triangle'),
         ];
     }

@@ -15,13 +15,13 @@ use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_TITLE');
 ?>
-<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_GREETING', ['name' => Html::encode($user->getUsername())]); ?></p>
+<p><?= Yii::t('skeleton', 'MAIL_GREETING_TEXT', ['name' => Html::encode($user->getUsername())]); ?></p>
 <p>
     <?= Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_TEXT'); ?>
-    <?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_IGNORE'); ?>
+    <?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_IGNORE_TEXT'); ?>
 </p>
 <p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_PASSWORD_RESET_TEXT'); ?></p>
-<p><?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_THANK_YOU'); ?></p>
+<p><?php echo Yii::t('skeleton', 'MAIL_THANK_YOU_TEXT'); ?></p>
 <div class="btn-wrap">
     <a href="<?= Html::encode($url); ?>"
        class="btn btn-primary"><?= Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_TITLE'); ?></a>

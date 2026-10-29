@@ -70,7 +70,7 @@ class AdminModelTraitTest extends TestCase
     {
         $model = $this->createRecord();
 
-        self::assertEquals(Yii::t('skeleton', 'COMMON_MODEL_ID', [
+        self::assertEquals(Yii::t('skeleton', 'MODEL_ID_FORMAT', [
             'model' => $model->getAdminType(),
             'id' => $model->id,
         ]), $model->getAdminName());

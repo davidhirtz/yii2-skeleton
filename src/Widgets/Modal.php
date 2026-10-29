@@ -59,14 +59,14 @@ class Modal extends Widget
 
             if (false !== $this->dismiss) {
                 $header->addContent(Button::make()
-                    ->attribute('aria-label', $this->dismiss ?? Yii::t('skeleton', 'MODAL_CLOSE'))
+                    ->attribute('aria-label', $this->dismiss ?? Yii::t('skeleton', 'MODAL_CLOSE_LABEL'))
                     ->attribute('data-modal', '')
                     ->class('btn-icon icon')
                     ->icon('xmark'));
 
                 array_unshift($this->footer, Button::make()
                     ->secondary()
-                    ->text(Yii::t('skeleton', 'MODAL_CANCEL'))
+                    ->text(Yii::t('skeleton', 'MODAL_CANCEL_BUTTON'))
                     ->attribute('data-modal', '')
                     ->attribute('autofocus', true));
             }

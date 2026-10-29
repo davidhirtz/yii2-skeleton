@@ -61,13 +61,13 @@ class TimezoneModal extends Widget
 
     protected function getModalTitle(): string
     {
-        return Yii::t('skeleton', 'TIMEZONE_MODAL_TIMEZONE_CHANGE_DETECTED');
+        return Yii::t('skeleton', 'TIMEZONE_CHANGE_TITLE');
     }
 
     protected function getModalContent(): string|Stringable
     {
         return P::make()
-            ->content(Yii::t('skeleton', 'TIMEZONE_MODAL_WE_DETECTED', [
+            ->content(Yii::t('skeleton', 'TIMEZONE_CHANGE_TEXT', [
                 'timezone' => Span::make()
                     ->text(Yii::$app->getTimeZone())
                     ->class('strong'),
@@ -84,7 +84,7 @@ class TimezoneModal extends Widget
     {
         return Button::make()
             ->primary()
-            ->content(Yii::t('skeleton', 'TIMEZONE_MODAL_UPDATE_TIMEZONE'))
+            ->content(Yii::t('skeleton', 'TIMEZONE_UPDATE_BUTTON'))
             ->post(['/admin/account/timezone', 'redirect' => Application::current()->getRequest()->getUrl()])
             ->attribute('data-timezone-button', '');
     }

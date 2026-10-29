@@ -34,10 +34,10 @@ class UserPasswordResetButton extends ConfirmButton
     protected function configure(): void
     {
         $this->icon ??= 'key';
-        $this->label ??= Yii::t('skeleton', 'USER_PASSWORD_RESET_LABEL');
+        $this->label ??= Yii::t('skeleton', 'USER_PASSWORD_RESET_BUTTON');
         $this->url ??= ['/admin/user/reset', 'id' => $this->model->id];
 
-        $this->addContent(P::make()->text(Yii::t('skeleton', 'USER_CONFIRM_PASSWORD_RESET', [
+        $this->addContent(P::make()->text(Yii::t('skeleton', 'USER_PASSWORD_RESET_CONFIRM', [
             'email' => $this->model->email,
         ])));
 

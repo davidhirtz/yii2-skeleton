@@ -15,7 +15,7 @@ use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_CREDENTIALS_TITLE');
 ?>
-<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_GREETING', ['name' => Html::encode($user->getUsername())]); ?></p>
+<p><?= Yii::t('skeleton', 'MAIL_GREETING_TEXT', ['name' => Html::encode($user->getUsername())]); ?></p>
 <p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_CREDENTIALS_TEXT', ['name' => Html::encode(Yii::$app->name)]); ?></p>
 <table>
     <tbody>
@@ -27,4 +27,4 @@ $this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_CREDENTIALS_TITLE');
 </table>
 <p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_PASSWORD_RESET_TEXT'); ?></p>
 <p><a href="<?= Html::encode($url); ?>"><?= Html::encode($url); ?></a></p>
-<p><?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_THANK_YOU'); ?></p>
+<p><?php echo Yii::t('skeleton', 'MAIL_THANK_YOU_TEXT'); ?></p>

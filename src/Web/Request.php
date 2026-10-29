@@ -203,8 +203,8 @@ class Request extends \yii\web\Request
     public function getEnvironmentName(): ?string
     {
         return match ($environment = $this->getEnvironment()) {
-            self::ENVIRONMENT_LOCAL => Yii::t('skeleton', 'REQUEST_ENVIRONMENT_LOCAL'),
-            self::ENVIRONMENT_STAGE => Yii::t('skeleton', 'REQUEST_ENVIRONMENT_STAGE'),
+            self::ENVIRONMENT_LOCAL => Yii::t('skeleton', 'REQUEST_ENVIRONMENT_LOCAL_NAME'),
+            self::ENVIRONMENT_STAGE => Yii::t('skeleton', 'REQUEST_ENVIRONMENT_STAGE_NAME'),
             default => $environment,
         };
     }

@@ -117,7 +117,7 @@ class TrailGridViewTest extends TestCase
     {
         $trail = Trail::create();
         $trail->type = Trail::TYPE_ORDER;
-        $trail->message = Message::make('skeleton', 'TRAIL_ORDERED')->toJson();
+        $trail->message = Message::make('skeleton', 'TRAIL_ORDER_NAME')->toJson();
 
         self::assertSame('Ordered', TestTrailGridView::make()->dataContent($trail));
 

@@ -24,12 +24,12 @@ use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
-$this->title(Yii::t('skeleton', 'MCP_TOKENS_TITLE'));
+$this->title(Yii::t('skeleton', 'MCP_TOKEN_PLURAL'));
 
 echo AccountHeader::make()
     ->model($user)
     ->addContent(CreateButton::make()
-        ->label(Yii::t('skeleton', 'MCP_TOKEN_BUTTON_NEW'))
+        ->label(Yii::t('skeleton', 'MCP_TOKEN_CREATE_BUTTON'))
         ->url(['/admin/mcp-token/create']));
 
 echo AccountSubmenu::make();
@@ -39,7 +39,7 @@ if ($token) {
         ->content(Alert::make()
             ->warning()
             ->content(
-                P::make()->text(Yii::t('skeleton', 'MCP_TOKEN_SHOWN_ONCE')),
+                P::make()->text(Yii::t('skeleton', 'MCP_TOKEN_SECRET_TEXT')),
                 Pre::make()->attribute('id', 'mcp-token')->text($token),
             ));
 }

@@ -83,7 +83,7 @@ class AuthItemGridView extends GridView
     protected function getDescriptionColumn(): Column
     {
         return Column::make()
-            ->title(Yii::t('skeleton', 'AUTH_ITEM_INHERITED_PERMISSIONS'))
+            ->title(Yii::t('skeleton', 'AUTH_ITEM_INHERITED_LABEL'))
             ->content($this->getDescriptionColumnContent(...))
             ->hiddenForSmallDevices();
     }
@@ -105,7 +105,7 @@ class AuthItemGridView extends GridView
     protected function getUsersColumn(): Column
     {
         return Column::make()
-            ->title(Yii::t('skeleton', 'COMMON_USERS'))
+            ->title(Yii::t('skeleton', 'USER_PLURAL'))
             ->content($this->getUsersColumnColumn(...));
     }
 
@@ -156,8 +156,8 @@ class AuthItemGridView extends GridView
         ];
 
         $tooltip = $authItem->isAssigned
-            ? Yii::t('skeleton', 'AUTH_ITEM_REVOKE', ['auth' => $authItem->getTypeName()])
-            : Yii::t('skeleton', 'AUTH_ITEM_ASSIGN', ['auth' => $authItem->getTypeName()]);
+            ? Yii::t('skeleton', 'AUTH_ITEM_REVOKE_BUTTON', ['auth' => $authItem->getTypeName()])
+            : Yii::t('skeleton', 'AUTH_ITEM_ASSIGN_BUTTON', ['auth' => $authItem->getTypeName()]);
 
         return Button::make()
             ->primary()

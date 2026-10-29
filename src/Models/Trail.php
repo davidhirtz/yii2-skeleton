@@ -270,48 +270,48 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     {
         return [
             TrailType::make(static::TYPE_DEFAULT)
-                ->name(Yii::t('skeleton', 'TRAIL_MESSAGE'))
+                ->name(Yii::t('skeleton', 'TRAIL_DEFAULT_NAME'))
                 ->icon('info-circle'),
             TrailType::make(static::TYPE_CREATE)
-                ->name(Yii::t('skeleton', 'COMMON_CREATED'))
+                ->name(Yii::t('skeleton', 'TRAIL_CREATE_NAME'))
                 ->parentType(static::TYPE_CHILD_CREATE)
                 ->icon('plus'),
             TrailType::make(static::TYPE_UPDATE)
-                ->name(Yii::t('skeleton', 'COMMON_UPDATED'))
+                ->name(Yii::t('skeleton', 'TRAIL_UPDATE_NAME'))
                 ->parentType(static::TYPE_CHILD_UPDATE)
                 ->icon('pencil-alt'),
             TrailType::make(static::TYPE_DELETE)
-                ->name(Yii::t('skeleton', 'COMMON_DELETED'))
-                ->message(Message::make('skeleton', 'TRAIL_WAS_DELETED'))
+                ->name(Yii::t('skeleton', 'TRAIL_DELETE_NAME'))
+                ->message(Message::make('skeleton', 'TRAIL_DELETE_TEXT'))
                 ->parentType(static::TYPE_CHILD_DELETE)
                 ->icon('trash-alt'),
             TrailType::make(static::TYPE_ASSIGN)
-                ->name(Yii::t('skeleton', 'TRAIL_PERMISSION_ASSIGNED'))
+                ->name(Yii::t('skeleton', 'TRAIL_ASSIGN_NAME'))
                 ->icon('user-plus'),
             TrailType::make(static::TYPE_REVOKE)
-                ->name(Yii::t('skeleton', 'TRAIL_PERMISSION_REVOKED'))
+                ->name(Yii::t('skeleton', 'TRAIL_REVOKE_NAME'))
                 ->icon('user-minus'),
             TrailType::make(static::TYPE_CHILD_CREATE)
-                ->name(Yii::t('skeleton', 'COMMON_CREATED'))
-                ->message(Message::make('skeleton', 'TRAIL_CREATED'))
+                ->name(Yii::t('skeleton', 'TRAIL_CREATE_NAME'))
+                ->message(Message::make('skeleton', 'TRAIL_CHILD_CREATE_TEXT'))
                 ->hasDataModel()
                 ->icon('plus'),
             TrailType::make(static::TYPE_CHILD_UPDATE)
-                ->name(Yii::t('skeleton', 'COMMON_UPDATED'))
-                ->message(Message::make('skeleton', 'TRAIL_UPDATED'))
+                ->name(Yii::t('skeleton', 'TRAIL_UPDATE_NAME'))
+                ->message(Message::make('skeleton', 'TRAIL_CHILD_UPDATE_TEXT'))
                 ->hasDataModel()
                 ->icon('pencil-alt'),
             TrailType::make(static::TYPE_CHILD_DELETE)
-                ->name(Yii::t('skeleton', 'COMMON_DELETED'))
-                ->message(Message::make('skeleton', 'TRAIL_DELETED'))
+                ->name(Yii::t('skeleton', 'TRAIL_DELETE_NAME'))
+                ->message(Message::make('skeleton', 'TRAIL_CHILD_DELETE_TEXT'))
                 ->hasDataModel()
                 ->icon('trash-alt'),
             TrailType::make(static::TYPE_ORDER)
-                ->name(Yii::t('skeleton', 'TRAIL_ORDERED'))
+                ->name(Yii::t('skeleton', 'TRAIL_ORDER_NAME'))
                 ->icon('sort-amount-down'),
             TrailType::make(static::TYPE_PASSWORD)
-                ->name(Yii::t('skeleton', 'TRAIL_PASSWORD_CHANGED'))
-                ->message(Message::make('skeleton', 'TRAIL_THE_PASSWORD_WAS_CHANGED'))
+                ->name(Yii::t('skeleton', 'TRAIL_PASSWORD_NAME'))
+                ->message(Message::make('skeleton', 'TRAIL_PASSWORD_TEXT'))
                 ->icon('key'),
         ];
     }

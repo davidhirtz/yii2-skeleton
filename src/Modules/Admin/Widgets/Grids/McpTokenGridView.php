@@ -52,8 +52,8 @@ class McpTokenGridView extends GridView
             ->property('type')
             ->title(Yii::t('skeleton', 'GRANT_SCOPE_LABEL'))
             ->content(fn (UserToken $token): string => $token->type === UserToken::TYPE_MCP_READ
-                ? Yii::t('skeleton', 'GRANT_SCOPE_READ')
-                : Yii::t('skeleton', 'GRANT_SCOPE_WRITE'));
+                ? Yii::t('skeleton', 'GRANT_SCOPE_READ_NAME')
+                : Yii::t('skeleton', 'GRANT_SCOPE_WRITE_NAME'));
     }
 
     protected function getExpiresAtColumn(): ?Column
@@ -63,7 +63,7 @@ class McpTokenGridView extends GridView
             ->title(Yii::t('skeleton', 'MCP_TOKEN_EXPIRES_AT_LABEL'))
             ->content(fn (UserToken $token): string => $token->expires_at
                 ? Yii::$app->getFormatter()->asDate($token->expires_at)
-                : Yii::t('skeleton', 'MCP_TOKEN_EXPIRES_NEVER'));
+                : Yii::t('skeleton', 'MCP_TOKEN_EXPIRES_AT_PROMPT'));
     }
 
     protected function getLastUsedAtColumn(): ?Column
@@ -77,7 +77,7 @@ class McpTokenGridView extends GridView
     {
         return RelativeTimeColumn::make()
             ->property('created_at')
-            ->title(Yii::t('skeleton', 'MCP_TOKEN_CREATED_AT_LABEL'))
+            ->title(Yii::t('skeleton', 'MODEL_CREATED_AT_LABEL'))
             ->hiddenForSmallDevices();
     }
 
@@ -86,7 +86,7 @@ class McpTokenGridView extends GridView
     {
         return parent::getSummary()
             ?->emptyMessage(Yii::t('skeleton', 'MCP_TOKEN_GRID_EMPTY'))
-            ->emptyLink(Yii::t('skeleton', 'MCP_TOKEN_GRID_EMPTY_LINK'), $this->isOwn ? ['/admin/mcp-token/create'] : null)
+            ->emptyLink(Yii::t('skeleton', 'MCP_TOKEN_GRID_CREATE_TEXT'), $this->isOwn ? ['/admin/mcp-token/create'] : null)
             ->visible(fn (): bool => $this->provider->getCount() === 0);
     }
 
@@ -98,8 +98,8 @@ class McpTokenGridView extends GridView
         return ButtonColumn::make()
             ->content(fn (UserToken $token): array => [
                 DeleteGridButton::make()
-                    ->label(Yii::t('skeleton', 'GRANT_BUTTON_REVOKE'))
-                    ->title(Yii::t('skeleton', 'MCP_TOKEN_CONFIRM_REVOKE'))
+                    ->label(Yii::t('skeleton', 'GRANT_REVOKE_BUTTON'))
+                    ->title(Yii::t('skeleton', 'MCP_TOKEN_REVOKE_CONFIRM'))
                     ->url(['/admin/mcp-token/revoke', 'id' => $token->id]),
             ]);
     }

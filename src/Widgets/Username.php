@@ -30,7 +30,7 @@ class Username extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $text = $this->user?->getUsername() ?? Yii::t('skeleton', 'COMMON_DELETED');
+        $text = $this->user?->getUsername() ?? Yii::t('skeleton', 'TRAIL_DELETE_NAME');
 
         if (!$this->user) {
             $this->addClass('text-invalid');

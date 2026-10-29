@@ -13,7 +13,7 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\TwoFactorAuthenticationLoginActiv
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Panels\Card;
 
-$this->title(Yii::t('skeleton', 'ACCOUNT_AUTHENTICATION_TITLE'));
+$this->title(Yii::t('skeleton', 'TWO_FACTOR_TITLE'));
 
 echo Container::make()
     ->centered()

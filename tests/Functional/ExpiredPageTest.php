@@ -42,6 +42,6 @@ class ExpiredPageTest extends TestCase
 
         self::assertResponseHeaderSame('hx-redirect', "https://www.test.localhost$url");
         self::assertSame('stale@domain.com', $this->getWebSession()->get('email'));
-        self::assertSame([Yii::t('skeleton', 'ACCOUNT_ERROR_PAGE_EXPIRED')], $this->getWebSession()->getFlash('danger'));
+        self::assertSame([Yii::t('skeleton', 'ACCOUNT_PAGE_EXPIRED_ERROR')], $this->getWebSession()->getFlash('danger'));
     }
 }

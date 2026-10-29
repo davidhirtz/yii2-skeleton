@@ -89,12 +89,12 @@ class LoginForm extends Model
         $webuser = Application::current()->getUser();
 
         if (!$webuser->isLoginEnabled()) {
-            $this->addError('email', Yii::t('skeleton', 'USER_SORRY_LOGGING_CURRENTLY'));
+            $this->addError('email', Yii::t('skeleton', 'LOGIN_DISABLED_ERROR'));
             return false;
         }
 
         if ($webuser->isLoginAttemptLimitReached($this->email)) {
-            $this->addError('email', Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS'));
+            $this->addError('email', Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS_ERROR'));
             return false;
         }
 
@@ -123,14 +123,14 @@ class LoginForm extends Model
         }
 
         if (!$this->user->validatePassword((string)$this->password)) {
-            $this->addError('email', Yii::t('skeleton', 'USER_EMAIL_PASSWORD_INCORRECT'));
+            $this->addError('email', Yii::t('skeleton', 'LOGIN_CREDENTIALS_ERROR'));
         }
     }
 
     protected function validateLoginStatus(): void
     {
         if ($this->user->isUnconfirmed() && !Application::current()->getUser()->isUnconfirmedEmailLoginEnabled()) {
-            $this->addError('status', Yii::t('skeleton', 'USER_EMAIL_ADDRESS_NOT'));
+            $this->addError('status', Yii::t('skeleton', 'LOGIN_UNCONFIRMED_ERROR'));
         }
     }
 
@@ -177,7 +177,7 @@ class LoginForm extends Model
 
         // The second step posts the code alone: the password stays out of the page it would have to be written into.
         if ($this->password === null && $this->code !== null && !$this->resumePendingLogin()) {
-            $this->addError('email', Yii::t('skeleton', 'LOGIN_TWO_FACTOR_EXPIRED'));
+            $this->addError('email', Yii::t('skeleton', 'LOGIN_TWO_FACTOR_EXPIRED_ERROR'));
             return false;
         }
 
@@ -290,8 +290,8 @@ class LoginForm extends Model
         return [
             'email' => Yii::t('skeleton', 'USER_EMAIL_LABEL'),
             'password' => Yii::t('skeleton', 'USER_PASSWORD_LABEL'),
-            'code' => Yii::t('skeleton', 'USER_CODE_LABEL'),
-            'rememberMe' => Yii::t('skeleton', 'USER_REMEMBERME_LABEL'),
+            'code' => Yii::t('skeleton', 'LOGIN_CODE_LABEL'),
+            'rememberMe' => Yii::t('skeleton', 'LOGIN_REMEMBER_ME_LABEL'),
         ];
     }
 }

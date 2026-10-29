@@ -154,7 +154,7 @@ class GroupField extends Field
                     ->attribute(
                         'data-reorder-announcement',
                         $this->group->isReorderable()
-                        ? Yii::t('skeleton', 'GRID_REORDER_ANNOUNCEMENT', ['position' => '{position}', 'count' => '{count}'])
+                        ? Yii::t('skeleton', 'GRID_REORDER_TEXT', ['position' => '{position}', 'count' => '{count}'])
                         : null
                     )
                     ->content(...$this->getItemElements($items))
@@ -361,8 +361,8 @@ class GroupField extends Field
         $placeholder = $this->group->getPlaceholder();
 
         return $placeholder === null
-            ? Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ITEM_POSITION', ['position' => $position])
-            : Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ITEM_PLACEHOLDER_POSITION', [
+            ? Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ITEM_FORMAT', ['position' => $position])
+            : Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ITEM_PLACEHOLDER_FORMAT', [
                 'placeholder' => $placeholder,
                 'position' => $position,
             ]);
@@ -407,7 +407,7 @@ class GroupField extends Field
 
     protected function getRemoveButton(): Button
     {
-        $label = Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_REMOVE');
+        $label = Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_REMOVE_BUTTON');
 
         return Button::make()
             ->class('btn')
@@ -452,8 +452,8 @@ class GroupField extends Field
         $placeholder = $this->group->getPlaceholder();
 
         $label = $this->group->getAddButtonLabel() ?? ($placeholder === null
-            ? Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_ADD_EMPTY')
-            : Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_ADD_PLACEHOLDER', ['placeholder' => $placeholder]));
+            ? Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ADD_EMPTY_BUTTON')
+            : Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ADD_PLACEHOLDER_BUTTON', ['placeholder' => $placeholder]));
 
         $button = Button::make()
             ->secondary()
@@ -471,12 +471,12 @@ class GroupField extends Field
         $max = $this->group->getMaxCount();
 
         $text = match (true) {
-            $min > 0 && $max !== null => Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_HINT_MIN_MAX_COUNT', [
+            $min > 0 && $max !== null => Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_MIN_MAX_COUNT_HINT', [
                 'min' => $min,
                 'max' => $max,
             ]),
-            $min > 0 => Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_HINT_MIN_COUNT', ['min' => $min]),
-            $max !== null => Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_HINT_MAX_COUNT', ['max' => $max]),
+            $min > 0 => Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_MIN_COUNT_HINT', ['min' => $min]),
+            $max !== null => Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_MAX_COUNT_HINT', ['max' => $max]),
             default => null,
         };
 
@@ -489,7 +489,7 @@ class GroupField extends Field
     protected function getAddButton(int $count): Stringable
     {
         $max = $this->group->getMaxCount();
-        $label = Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_BUTTON_ADD');
+        $label = Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ADD_BUTTON');
 
         $button = Button::make()
             ->secondary()

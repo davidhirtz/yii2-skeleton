@@ -81,7 +81,7 @@ class AccountMenu extends Widget
                 ->content(Button::make()
                     ->content(
                         Icon::make()->name('sign-out-alt')->addClass('nav-link-icon'),
-                        Span::make()->class('nav-link-label')->text(Yii::t('skeleton', 'ACCOUNT_MENU_LOGOUT')),
+                        Span::make()->class('nav-link-label')->text(Yii::t('skeleton', 'ACCOUNT_LOGOUT_BUTTON')),
                     )
                     ->modal($this->getLogoutModal())
                     ->class('nav-link nav-logout-link'))
@@ -92,7 +92,7 @@ class AccountMenu extends Widget
     {
         $button = Button::make()
             ->danger()
-            ->text(Yii::t('skeleton', 'ACCOUNT_MENU_LOGOUT'))
+            ->text(Yii::t('skeleton', 'ACCOUNT_LOGOUT_BUTTON'))
             ->addAttributes([
                 'hx-post' => Url::toRoute(['/admin/account/logout']),
                 'hx-push-url' => 'true',
@@ -100,7 +100,7 @@ class AccountMenu extends Widget
             ]);
 
         return Modal::make()
-            ->title(Yii::t('skeleton', 'ACCOUNT_CONFIRM_LOGOUT'))
+            ->title(Yii::t('skeleton', 'ACCOUNT_LOGOUT_CONFIRM'))
             ->footer($button);
     }
 }

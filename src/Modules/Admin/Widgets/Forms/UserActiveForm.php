@@ -30,8 +30,8 @@ class UserActiveForm extends ActiveForm
         $this->readonly = !$this->webuser->can(User::AUTH_USER, ['user' => $this->model->user]);
 
         $this->submitButtonText ??= $this->model->user->getIsNewRecord()
-            ? Yii::t('skeleton', 'COMMON_CREATE')
-            : Yii::t('skeleton', 'COMMON_UPDATE');
+            ? Yii::t('skeleton', 'FORM_CREATE_BUTTON')
+            : Yii::t('skeleton', 'FORM_UPDATE_BUTTON');
 
         $this->footer ??= [
             $this->getUpdatedAtFooterItem(),
@@ -84,13 +84,13 @@ class UserActiveForm extends ActiveForm
         $created = $this->model->user->created;
 
         $content = $created
-            ? Yii::t('skeleton', 'USER_ACTIVE_CREATED_BY', [
+            ? Yii::t('skeleton', 'USER_CREATED_BY_TEXT', [
                 'timestamp' => RelativeTime::make()->value($this->model->user->created_at),
                 'user' => Username::make()
                     ->user($created)
                     ->clickable(),
             ])
-            : Yii::t('skeleton', 'USER_ACTIVE_SIGNED_UP', [
+            : Yii::t('skeleton', 'USER_SIGNED_UP_TEXT', [
                 'timestamp' => RelativeTime::make()->value($this->model->user->created_at),
             ]);
 

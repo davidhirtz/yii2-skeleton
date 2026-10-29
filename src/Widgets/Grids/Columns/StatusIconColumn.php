@@ -80,7 +80,7 @@ class StatusIconColumn extends LinkColumn
         return Button::make()
             ->class('btn-icon icon')
             ->icon($model->getStatusIcon())
-            ->tooltip(Yii::t('skeleton', 'COMMON_STATUS_BUTTON_TOOLTIP', [
+            ->tooltip(Yii::t('skeleton', 'MODEL_STATUS_TOOLTIP', [
                 'status' => $model->getStatusName(),
                 'next' => $next->getName(),
             ]))

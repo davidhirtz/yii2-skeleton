@@ -174,7 +174,7 @@ class AdminLanguageTest extends TestCase
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('hx-refresh', 'true');
         self::assertNull(self::getAdminModule()->getSessionLanguage());
-        self::assertSame([Yii::t('skeleton', 'ACCOUNT_ERROR_PAGE_EXPIRED')], $this->getWebSession()->getFlash('danger'));
+        self::assertSame([Yii::t('skeleton', 'ACCOUNT_PAGE_EXPIRED_ERROR')], $this->getWebSession()->getFlash('danger'));
     }
 
     public function testAStalePlainRequestRedirectsToTheReferrerWithoutSwitching(): void

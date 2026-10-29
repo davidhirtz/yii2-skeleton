@@ -99,7 +99,7 @@ class UserController extends Controller
         $form->user->timezone = $identity->timezone;
 
         if ($form->load($this->request->post()) && $form->save()) {
-            $this->success(Yii::t('skeleton', 'USER_SUCCESS_CREATED'));
+            $this->success(Yii::t('skeleton', 'USER_CREATE_SUCCESS'));
             return $this->redirect(['update', 'id' => $form->user->id]);
         }
 
@@ -121,7 +121,7 @@ class UserController extends Controller
 
         if ($this->webuser->can(User::AUTH_USER, ['user' => $user]) && $form->load($this->request->post())) {
             if ($form->save()) {
-                $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED'));
+                $this->success(Yii::t('skeleton', 'USER_UPDATE_SUCCESS'));
 
                 // An administrator editing their own record changes the document, see `AccountController::actionUpdate()`.
                 if ($user->id === $this->webuser->getIdentity()?->id) {
@@ -156,7 +156,7 @@ class UserController extends Controller
         if ($user->update()) {
             // A session opened behind the second factor must not outlive it.
             $this->webuser->revokeOtherSessions($user);
-            $this->success(Yii::t('skeleton', 'USER_SUCCESS_UPDATED'));
+            $this->success(Yii::t('skeleton', 'USER_UPDATE_SUCCESS'));
         }
 
         return $this->redirect(['update', 'id' => $user->id]);
@@ -177,13 +177,13 @@ class UserController extends Controller
         $form->email = $user->email;
 
         if ($form->sendPasswordResetEmail()) {
-            $this->success(Yii::t('skeleton', 'USER_SUCCESS_SENT_PASSWORD_RESET', [
+            $this->success(Yii::t('skeleton', 'USER_PASSWORD_RESET_SUCCESS', [
                 'email' => $user->email,
             ]));
         } else {
             $user->getLatestToken(UserToken::TYPE_PASSWORD_RESET)?->delete();
 
-            $this->error(Yii::t('skeleton', 'COMMON_ERROR_EMAIL_NOT_SENT', [
+            $this->error(Yii::t('skeleton', 'MAIL_SEND_ERROR', [
                 'email' => $user->email,
             ]));
         }
@@ -207,7 +207,7 @@ class UserController extends Controller
         ]);
 
         if ($form->load($this->request->post()) && $form->delete()) {
-            $this->success(Yii::t('skeleton', 'USER_SUCCESS_DELETED'));
+            $this->success(Yii::t('skeleton', 'USER_DELETE_SUCCESS'));
 
             if ($user->id === $this->webuser->id) {
                 $this->webuser->logout(false);
@@ -240,7 +240,7 @@ class UserController extends Controller
         ]);
 
         if ($form->update()) {
-            $this->success(Yii::t('skeleton', 'USER_SUCCESS_WEBSITE_OWNERSHIP_SUCCESSFUL'));
+            $this->success(Yii::t('skeleton', 'USER_OWNER_SUCCESS'));
             return $this->goHome();
         }
 

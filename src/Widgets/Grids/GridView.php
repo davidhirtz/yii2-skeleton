@@ -474,7 +474,7 @@ class GridView extends Widget
             // A pattern for `reorder.ts`, which announces where a row moved by keyboard landed.
             $this->tableBodyAttributes['data-reorder-announcement'] ??= Yii::t(
                 'skeleton',
-                'GRID_REORDER_ANNOUNCEMENT',
+                'GRID_REORDER_TEXT',
                 ['position' => '{position}', 'count' => '{count}'],
             );
             Yii::$app->getView()->registerAssetBundle(ReorderAssetBundle::class);

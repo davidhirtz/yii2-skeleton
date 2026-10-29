@@ -17,7 +17,7 @@ class ConsentCookie extends Service
     {
         $this->name = Yii::t('skeleton', 'CONSENT_SERVICE_CONSENT_NAME');
         $this->provider = Yii::$app->name;
-        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_CONSENT_PURPOSE');
+        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_CONSENT_TEXT');
         $this->cookies = [
             Cookie::make()->name('_cc')->duration('P1Y'),
         ];

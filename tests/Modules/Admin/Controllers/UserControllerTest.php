@@ -82,9 +82,9 @@ class UserControllerTest extends TestCase
         $this->createUserController()->actionStatus($user->id);
         self::assertSame(User::STATUS_ENABLED, User::findOne($user->id)->status);
 
-        self::assertSame([Yii::t('skeleton', 'COMMON_STATUS_SUCCESS_UPDATED', [
+        self::assertSame([Yii::t('skeleton', 'MODEL_STATUS_UPDATE_SUCCESS', [
             'name' => $user->getAdminName(),
-            'status' => Yii::t('skeleton', 'COMMON_ENABLED'),
+            'status' => Yii::t('skeleton', 'STATUS_ENABLED_NAME'),
         ])], $this->getWebSession()->getFlash('success'));
 
         // And back around, the list having only the two.
@@ -149,7 +149,7 @@ class UserControllerTest extends TestCase
         $response = $this->createUserController()->actionOwnership($user->id);
 
         self::assertSame(302, $response->getStatusCode());
-        self::assertSame([['name' => Yii::t('skeleton', 'OWNERSHIP_USER_CURRENTLY_DISABLED')]], $this->getWebSession()->getFlash('danger'));
+        self::assertSame([['name' => Yii::t('skeleton', 'USER_OWNER_DISABLED_ERROR')]], $this->getWebSession()->getFlash('danger'));
         self::assertFalse(User::findOne($user->id)->isOwner());
     }
 

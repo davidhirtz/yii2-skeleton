@@ -163,7 +163,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
             return true;
         }
 
-        $this->stdout(Yii::t('skeleton', 'MIGRATE_UNRESOLVED_MESSAGE', [
+        $this->stdout(Yii::t('skeleton', 'MIGRATE_UNRESOLVED_TEXT', [
             'count' => count($unresolved),
         ]) . PHP_EOL, Console::FG_YELLOW);
 
@@ -194,7 +194,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
             return false;
         }
 
-        $this->stdout(Yii::t('skeleton', 'MIGRATE_UPGRADE_MESSAGE', ['file' => $file]) . PHP_EOL);
+        $this->stdout(Yii::t('skeleton', 'MIGRATE_UPGRADE_TEXT', ['file' => $file]) . PHP_EOL);
 
         passthru(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($file), $status);
 

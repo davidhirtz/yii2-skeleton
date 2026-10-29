@@ -119,7 +119,7 @@ class LoginTest extends TestCase
 
         $this->submitLoginForm(code: '000000');
 
-        self::assertAnyValidationErrorSame(Yii::t('skeleton', 'LOGIN_TWO_FACTOR_EXPIRED'));
+        self::assertAnyValidationErrorSame(Yii::t('skeleton', 'LOGIN_TWO_FACTOR_EXPIRED_ERROR'));
         self::assertSelectorExists('input[name="Login[password]"]');
     }
 
@@ -135,7 +135,7 @@ class LoginTest extends TestCase
 
         $this->submitLoginForm(code: '000000');
 
-        self::assertAnyValidationErrorSame(Yii::t('skeleton', 'LOGIN_TWO_FACTOR_EXPIRED'));
+        self::assertAnyValidationErrorSame(Yii::t('skeleton', 'LOGIN_TWO_FACTOR_EXPIRED_ERROR'));
     }
 
     public function testDisabledAccountNamesItsReasonWithoutEnumerationProtection(): void
@@ -196,7 +196,7 @@ class LoginTest extends TestCase
         ]);
 
         self::assertCurrentUrlEquals('admin/account/login');
-        self::assertAlertSame(Yii::t('skeleton', 'ACCOUNT_ERROR_PAGE_EXPIRED'), 'danger');
+        self::assertAlertSame(Yii::t('skeleton', 'ACCOUNT_PAGE_EXPIRED_ERROR'), 'danger');
         self::assertInputValueSame('Login[email]', $user->email);
         self::assertTrue($this->getWebUser()->getIsGuest());
 

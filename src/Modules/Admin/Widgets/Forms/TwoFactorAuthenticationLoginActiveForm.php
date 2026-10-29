@@ -34,7 +34,7 @@ class TwoFactorAuthenticationLoginActiveForm extends ActiveForm
     {
         $this->attributes['id'] ??= 'authentication-form';
 
-        $this->submitButtonText ??= Yii::t('skeleton', 'COMMON_LOGIN');
+        $this->submitButtonText ??= Yii::t('skeleton', 'USER_LOGIN_TYPE_LOGIN_NAME');
 
         parent::configure();
     }

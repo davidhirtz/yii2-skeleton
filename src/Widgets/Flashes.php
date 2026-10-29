@@ -62,7 +62,7 @@ class Flashes extends Widget
      */
     protected function renderNetworkErrorTemplate(): string
     {
-        return Html::tag('template', (string)$this->getAlerts('danger', Yii::t('skeleton', 'COMMON_NETWORK_ERROR')), [
+        return Html::tag('template', (string)$this->getAlerts('danger', Yii::t('skeleton', 'FLASH_NETWORK_ERROR')), [
             'id' => 'network-error-flash',
         ]);
     }
@@ -83,7 +83,7 @@ class Flashes extends Widget
             : [];
 
         if ($folded) {
-            $alerts[] = Html::tag('details', Html::tag('summary', Yii::t('skeleton', 'FLASHES_MORE', [
+            $alerts[] = Html::tag('details', Html::tag('summary', Yii::t('skeleton', 'FLASH_MORE_TEXT', [
                 'count' => count($folded),
             ])) . Html::tag('ul', implode('', array_map(fn (string $message): string => Html::tag('li', $message), $folded))));
         }

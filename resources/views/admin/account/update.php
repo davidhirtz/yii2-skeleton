@@ -21,7 +21,7 @@ use Hirtz\Skeleton\Widgets\Alert;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Forms\FormContainer;
 
-$this->title(Yii::t('skeleton', 'COMMON_SETTINGS'));
+$this->title(Yii::t('skeleton', 'ACCOUNT_SETTINGS_LABEL'));
 
 echo AccountHeader::make()
     ->model($form->user)
@@ -34,10 +34,10 @@ if ($form->user->isUnconfirmed()) {
     echo Container::make()
         ->content(Alert::make()
             ->warning()
-            ->content(Yii::t('skeleton', 'ACCOUNT_UPDATE_UNCONFIRMED_EMAIL', [
+            ->content(Yii::t('skeleton', 'ACCOUNT_EMAIL_UNCONFIRMED_WARNING', [
                 'email' => $form->user->email,
                 'here' => A::make()
-                    ->text(Yii::t('skeleton', 'ACCOUNT_UPDATE_UNCONFIRMED_EMAIL_LINK'))
+                    ->text(Yii::t('skeleton', 'ACCOUNT_EMAIL_UNCONFIRMED_LINK'))
                     ->href(['resend']),
             ])));
 }

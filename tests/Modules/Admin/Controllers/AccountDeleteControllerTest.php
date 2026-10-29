@@ -28,7 +28,7 @@ class AccountDeleteControllerTest extends TestCase
         $response = Yii::$app->runAction('admin/account/delete');
 
         self::assertNull(User::findOne($user->id));
-        self::assertSame([Yii::t('skeleton', 'ACCOUNT_SUCCESS_DELETED')], $this->getWebSession()->getFlash('success'));
+        self::assertSame([Yii::t('skeleton', 'ACCOUNT_DELETE_SUCCESS')], $this->getWebSession()->getFlash('success'));
 
         self::assertInstanceOf(Response::class, $response);
         self::assertStringEndsWith('/admin/account/login', (string)$response->getHeaders()->get('location'));

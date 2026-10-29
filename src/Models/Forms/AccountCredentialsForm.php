@@ -51,12 +51,12 @@ class AccountCredentialsForm extends Model
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
-                'message' => Yii::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'),
+                'message' => Yii::t('skeleton', 'USER_REPEAT_PASSWORD_ERROR'),
             ],
             [
                 ['oldPassword'],
                 'required',
-                'message' => Yii::t('skeleton', 'ACCOUNT_UPDATE_CURRENT_PASSWORD'),
+                'message' => Yii::t('skeleton', 'ACCOUNT_OLD_PASSWORD_ERROR'),
                 'when' => fn (self $model): bool => $model->isOldPasswordRequired(),
             ],
             [
@@ -113,11 +113,11 @@ class AccountCredentialsForm extends Model
             if (!$webuser->isUnconfirmedEmailLoginEnabled()) {
                 $webuser->logout(false);
 
-                $session->addFlash('success', Yii::t('skeleton', 'ACCOUNT_UPDATE_SUCCESS_CHECK_EMAILS_CONFIRM'));
+                $session->addFlash('success', Yii::t('skeleton', 'ACCOUNT_EMAIL_SUCCESS'));
             }
 
             if (!$this->sendEmailConfirmationEmail()) {
-                $session->addFlash('warning', Yii::t('skeleton', 'COMMON_ERROR_EMAIL_NOT_SENT', [
+                $session->addFlash('warning', Yii::t('skeleton', 'MAIL_SEND_ERROR', [
                     'email' => $this->user->email,
                 ]));
             }
@@ -139,7 +139,7 @@ class AccountCredentialsForm extends Model
             'form' => $this,
             'url' => $this->user->createEmailConfirmationUrl(),
         ])
-            ->setSubject(Yii::t('skeleton', 'ACCOUNT_UPDATE_PLEASE_CONFIRM_YOUR_NEW_EMAIL_ADDRESS_CONFIRM_TITLE'))
+            ->setSubject(Yii::t('skeleton', 'ACCOUNT_EMAIL_SUBJECT'))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->user->email)
             ->send();
@@ -149,9 +149,9 @@ class AccountCredentialsForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'newPassword' => Yii::t('skeleton', 'ACCOUNT_UPDATE_NEWPASSWORD_LABEL'),
-            'repeatPassword' => Yii::t('skeleton', 'ACCOUNT_UPDATE_REPEATPASSWORD_LABEL'),
-            'oldPassword' => Yii::t('skeleton', 'ACCOUNT_UPDATE_OLDPASSWORD_LABEL'),
+            'newPassword' => Yii::t('skeleton', 'USER_NEW_PASSWORD_LABEL'),
+            'repeatPassword' => Yii::t('skeleton', 'USER_REPEAT_PASSWORD_LABEL'),
+            'oldPassword' => Yii::t('skeleton', 'USER_OLD_PASSWORD_LABEL'),
         ];
     }
 }

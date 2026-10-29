@@ -17,7 +17,7 @@ class Vimeo extends Service
     {
         $this->name = 'Vimeo';
         $this->provider = 'Vimeo.com, Inc.';
-        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_VIMEO_PURPOSE');
+        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_VIMEO_TEXT');
         $this->privacyUrl = 'https://vimeo.com/privacy';
         $this->cookies = [
             Cookie::make()->name('vuid')->duration('P2Y')->thirdParty(),

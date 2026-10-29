@@ -16,7 +16,7 @@ class GoogleTagManager extends Service
     {
         $this->name = 'Google Tag Manager';
         $this->provider = 'Google Ireland Limited';
-        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_GOOGLE_TAG_MANAGER_PURPOSE');
+        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_GOOGLE_TAG_MANAGER_TEXT');
         $this->privacyUrl = 'https://policies.google.com/privacy';
 
         parent::__construct($config);

@@ -68,7 +68,7 @@ class PasswordRecoverForm extends Model
     public function validateSpamProtection(): void
     {
         if ($this->isAlreadySent()) {
-            $this->addIdentityError(Yii::t('skeleton', 'PASSWORD_RECOVER_WE_JUST', [
+            $this->addIdentityError(Yii::t('skeleton', 'PASSWORD_RECOVER_ALREADY_SENT_ERROR', [
                 'email' => $this->user->email,
             ]));
         }
@@ -85,7 +85,7 @@ class PasswordRecoverForm extends Model
         if ($this->user && !$this->sendPasswordResetEmail()) {
             // Without the token of the failed attempt the spam protection lets a retry through.
             $this->user->getLatestToken(UserToken::TYPE_PASSWORD_RESET)?->delete();
-            $this->addIdentityError(Yii::t('skeleton', 'COMMON_ERROR_EMAIL_NOT_SENT', [
+            $this->addIdentityError(Yii::t('skeleton', 'MAIL_SEND_ERROR', [
                 'email' => $this->user->email,
             ]));
         }
@@ -107,9 +107,9 @@ class PasswordRecoverForm extends Model
 
             $message = $this->user->login_count
                 ? Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/recover', $params)
-                    ->setSubject(Yii::t('skeleton', 'PASSWORD_RECOVER_RESET_YOUR_PASSWORD'))
+                    ->setSubject(Yii::t('skeleton', 'PASSWORD_RECOVER_SUBJECT'))
                 : Yii::$app->getMailer()->compose('@skeleton/../resources/mail/account/credentials', $params)
-                    ->setSubject(Yii::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]));
+                    ->setSubject(Yii::t('skeleton', 'USER_CREDENTIALS_SUBJECT', ['name' => Yii::$app->name]));
 
             return $message
                 ->setFrom(Yii::$app->params['email'])
@@ -136,7 +136,7 @@ class PasswordRecoverForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'email' => Yii::t('skeleton', 'PASSWORD_RECOVER_EMAIL_LABEL'),
+            'email' => Yii::t('skeleton', 'USER_EMAIL_LABEL'),
         ];
     }
 }

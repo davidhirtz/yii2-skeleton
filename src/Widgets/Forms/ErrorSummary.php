@@ -76,8 +76,8 @@ class ErrorSummary extends Widget
     {
         if ($model instanceof ActiveRecord) {
             $this->title ??= $model->getIsNewRecord()
-                ? Yii::t('skeleton', 'ERROR_SUMMARY_RECORD_COULD_NOT')
-                : Yii::t('skeleton', 'ERROR_SUMMARY_RECORD_COULD_UPDATED');
+                ? Yii::t('skeleton', 'FORM_CREATE_ERROR')
+                : Yii::t('skeleton', 'FORM_UPDATE_ERROR');
         }
 
         $this->models = is_array($model) ? $model : [$model];

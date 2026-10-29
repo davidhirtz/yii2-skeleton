@@ -108,7 +108,7 @@ class SelectField extends Field
         if ($this->multiple) {
             $this->attributes['multiple'] = true;
             $this->attributes['name'] = "{$this->attributes['name']}[]";
-            $this->attributes['data-multiselect'] ??= Yii::t('skeleton', 'SELECT_FIELD_REMOVE');
+            $this->attributes['data-multiselect'] ??= Yii::t('skeleton', 'FORM_SELECT_REMOVE_LABEL');
         }
     }
 

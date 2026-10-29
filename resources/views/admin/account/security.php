@@ -34,7 +34,7 @@ if ($recoveryCodes) {
         ->content(Alert::make()
             ->warning()
             ->content(
-                P::make()->text(Yii::t('skeleton', 'ACCOUNT_SECURITY_RECOVERY_CODES_ONCE')),
+                P::make()->text(Yii::t('skeleton', 'TWO_FACTOR_RECOVERY_CODES_TEXT')),
                 Ul::make()->content(...array_map(
                     fn (string $code): Li => Li::make()->text($code),
                     $recoveryCodes
@@ -45,8 +45,8 @@ if ($recoveryCodes) {
 // How it works, which a user who turned the hints off already knows
 echo HintAlert::make()
     ->text($user->hasTwoFactorAuthentication()
-        ? Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_AUTHENTICATION')
-        : Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_ACTIVE_ACTIVATE'));
+        ? Yii::t('skeleton', 'TWO_FACTOR_DISABLE_TEXT')
+        : Yii::t('skeleton', 'TWO_FACTOR_ENABLE_TEXT'));
 
 echo FormContainer::make()
     ->form(TwoFactorAuthenticatorActiveForm::make()

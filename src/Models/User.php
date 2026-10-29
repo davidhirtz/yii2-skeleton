@@ -212,14 +212,14 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
                 ['name'],
                 'match',
                 'pattern' => $this->namePattern,
-                'message' => Yii::t('skeleton', 'USER_USERNAME_MUST_ONLY'),
+                'message' => Yii::t('skeleton', 'USER_NAME_FORMAT_ERROR'),
                 'skipOnError' => true,
                 'when' => fn () => $this->namePattern !== false,
             ],
             [
                 ['name'],
                 UniqueValidator::class,
-                'message' => Yii::t('skeleton', 'USER_USERNAME_ALREADY_USED'),
+                'message' => Yii::t('skeleton', 'USER_NAME_UNIQUE_ERROR'),
             ],
             [
                 ['email'],
@@ -234,7 +234,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             [
                 ['email'],
                 'unique',
-                'message' => Yii::t('skeleton', 'USER_EMAIL_ADDRESS_ALREADY'),
+                'message' => Yii::t('skeleton', 'USER_EMAIL_UNIQUE_ERROR'),
                 'skipOnError' => true,
                 'when' => fn () => $this->isAttributeChanged('email')
             ],
@@ -323,8 +323,8 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     {
         if (!$this->isDeletable()) {
             $this->addError('id', $this->isOwner()
-                ? Yii::t('skeleton', 'USER_USER_WEBSITE_OWNER')
-                : Yii::t('skeleton', 'USER_THE_USER_CANNOT_BE_DELETED'));
+                ? Yii::t('skeleton', 'USER_DELETE_OWNER_ERROR')
+                : Yii::t('skeleton', 'USER_DELETE_ERROR'));
 
             return false;
         }
@@ -586,7 +586,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     public function getAdminIndexBreadcrumb(): Breadcrumb
     {
-        return new Breadcrumb(Yii::t('skeleton', 'COMMON_USERS'), ['/admin/user/index']);
+        return new Breadcrumb(Yii::t('skeleton', 'USER_PLURAL'), ['/admin/user/index']);
     }
 
     public function getPermissionName(): string
@@ -672,10 +672,10 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     {
         return [
             Status::make(static::STATUS_DISABLED)
-                ->name(Yii::t('skeleton', 'COMMON_DISABLED'))
+                ->name(Yii::t('skeleton', 'STATUS_DISABLED_NAME'))
                 ->icon('exclamation-triangle'),
             Status::make(static::STATUS_ENABLED)
-                ->name(Yii::t('skeleton', 'COMMON_ENABLED'))
+                ->name(Yii::t('skeleton', 'STATUS_ENABLED_NAME'))
                 ->icon('user'),
         ];
     }
@@ -683,7 +683,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     public function getStatusName(): string
     {
         if ($this->isOwner()) {
-            return Yii::t('skeleton', 'USER_SITE_OWNER');
+            return Yii::t('skeleton', 'USER_OWNER_TEXT');
         }
 
         return $this->getStatus()?->getName() ?? '';
@@ -732,7 +732,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     public function getAdminType(): string
     {
-        return Yii::t('skeleton', 'COMMON_USER');
+        return Yii::t('skeleton', 'USER_SINGULAR');
     }
 
     protected function getDefaultAdminIcon(): ?string
@@ -773,8 +773,8 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     public static function getColorSchemes(): array
     {
         return [
-            self::COLOR_SCHEME_LIGHT => Yii::t('skeleton', 'USER_COLOR_SCHEME_LIGHT'),
-            self::COLOR_SCHEME_DARK => Yii::t('skeleton', 'USER_COLOR_SCHEME_DARK'),
+            self::COLOR_SCHEME_LIGHT => Yii::t('skeleton', 'USER_COLOR_SCHEME_LIGHT_NAME'),
+            self::COLOR_SCHEME_DARK => Yii::t('skeleton', 'USER_COLOR_SCHEME_DARK_NAME'),
         ];
     }
 
@@ -848,7 +848,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     {
         return [
             ...parent::attributeLabels(),
-            'id' => Yii::t('skeleton', 'USER_ID_LABEL'),
+            'id' => Yii::t('skeleton', 'MODEL_ID_LABEL'),
             'name' => Yii::t('skeleton', 'USER_NAME_LABEL'),
             'email' => Yii::t('skeleton', 'USER_EMAIL_LABEL'),
             'password' => Yii::t('skeleton', 'USER_PASSWORD_LABEL'),
@@ -859,8 +859,8 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             'login_count' => Yii::t('skeleton', 'USER_LOGIN_COUNT_LABEL'),
             'last_login' => Yii::t('skeleton', 'USER_LAST_LOGIN_LABEL'),
             'is_owner' => Yii::t('skeleton', 'USER_IS_OWNER_LABEL'),
-            'updated_at' => Yii::t('skeleton', 'USER_UPDATED_AT_LABEL'),
-            'created_at' => Yii::t('skeleton', 'USER_CREATED_AT_LABEL'),
+            'updated_at' => Yii::t('skeleton', 'MODEL_UPDATED_AT_LABEL'),
+            'created_at' => Yii::t('skeleton', 'MODEL_CREATED_AT_LABEL'),
         ];
     }
 

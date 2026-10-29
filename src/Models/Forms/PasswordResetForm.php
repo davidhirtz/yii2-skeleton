@@ -55,7 +55,7 @@ class PasswordResetForm extends Model
         }
 
         if (!$this->hasErrors() && $this->user->isDisabled() && !$this->user->isOwner()) {
-            $this->addError('id', Yii::t('skeleton', 'COMMON_ACCOUNT_CURRENTLY_DISABLED'));
+            $this->addError('id', Yii::t('skeleton', 'USER_DISABLED_ERROR'));
         }
 
         parent::afterValidate();
@@ -64,7 +64,7 @@ class PasswordResetForm extends Model
     protected function validateRepeatPassword(): void
     {
         if ($this->repeatPassword !== $this->newPassword) {
-            $this->addError('repeatPassword', Yii::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'));
+            $this->addError('repeatPassword', Yii::t('skeleton', 'USER_REPEAT_PASSWORD_ERROR'));
         }
     }
 
@@ -79,7 +79,7 @@ class PasswordResetForm extends Model
             ->one()?->user;
 
         if (!$this->user) {
-            $this->addError('id', Yii::t('skeleton', 'PASSWORD_RESET_PASSWORD_RECOVERY'));
+            $this->addError('id', Yii::t('skeleton', 'PASSWORD_RESET_INVALID_ERROR'));
         }
 
         return !$this->hasErrors();
@@ -120,9 +120,9 @@ class PasswordResetForm extends Model
     {
         return [
             'newPassword' => $this->user?->login_count
-                ? Yii::t('skeleton', 'COMMON_NEW_PASSWORD')
-                : Yii::t('skeleton', 'COMMON_PASSWORD'),
-            'repeatPassword' => Yii::t('skeleton', 'PASSWORD_RESET_REPEATPASSWORD_LABEL'),
+                ? Yii::t('skeleton', 'USER_NEW_PASSWORD_LABEL')
+                : Yii::t('skeleton', 'USER_PASSWORD_LABEL'),
+            'repeatPassword' => Yii::t('skeleton', 'USER_REPEAT_PASSWORD_LABEL'),
         ];
     }
 }

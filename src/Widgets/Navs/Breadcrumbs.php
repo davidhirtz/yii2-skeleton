@@ -119,7 +119,7 @@ class Breadcrumbs extends Widget
     {
         $this->breadcrumbs = [
             new Breadcrumb(
-                Yii::t('skeleton', 'BREADCRUMBS_ADMIN'),
+                Yii::t('skeleton', 'NAV_ADMIN_LABEL'),
                 !$this->webuser->getIsGuest() ? Module::current()->getHomeRoute() : null
             ),
             ...$this->breadcrumbs,

@@ -58,11 +58,11 @@ class UpdatedAtFooterItem implements Stringable
         $timestamp = RelativeTime::make()->value($this->value);
 
         $content = $updated
-            ? Yii::t('skeleton', 'COMMON_UPDATED_AT_BY_USER', [
+            ? Yii::t('skeleton', 'MODEL_UPDATED_AT_BY_USER_TEXT', [
                 'user' => Username::make()->user($updated),
                 'timestamp' => $timestamp,
             ])
-            : Yii::t('skeleton', 'COMMON_UPDATED_AT', [
+            : Yii::t('skeleton', 'MODEL_UPDATED_AT_TEXT', [
                 'timestamp' => $timestamp,
             ]);
 

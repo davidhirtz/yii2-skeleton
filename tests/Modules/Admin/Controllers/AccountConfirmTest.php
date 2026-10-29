@@ -52,7 +52,7 @@ class AccountConfirmTest extends TestCase
             'code' => $user->createVerificationToken(),
         ]);
 
-        $expected = Yii::$app->getI18n()->callback('de', fn (): string => Yii::t('skeleton', 'ACCOUNT_SUCCESS_EMAIL_ADDRESS_SUCCESSFULLY'));
+        $expected = Yii::$app->getI18n()->callback('de', fn (): string => Yii::t('skeleton', 'ACCOUNT_CONFIRM_SUCCESS'));
         self::assertSame([$expected], $this->getWebSession()->getFlash('success'));
     }
 

@@ -143,7 +143,7 @@ class GridSearchForm extends Widget
         $input = TextInput::make()
             ->class('input')
             ->type('search')
-            ->placeholder(Yii::t('skeleton', 'GRID_SEARCH_SEARCH'))
+            ->placeholder(Yii::t('skeleton', 'GRID_SEARCH_PLACEHOLDER'))
             ->name($this->grid->getSearch()->getParamName())
             ->value($this->grid->getSearch()->getValue());
 

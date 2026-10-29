@@ -311,7 +311,7 @@ class RedirectControllerTest extends TestCase
         $html = Yii::$app->runAction('admin/redirect/create');
 
         self::assertIsString($html);
-        self::assertStringContainsString('href="/admin/redirect/index">' . Yii::t('skeleton', 'COMMON_REDIRECTS') . '</a>', $html);
+        self::assertStringContainsString('href="/admin/redirect/index">' . Yii::t('skeleton', 'REDIRECT_PLURAL') . '</a>', $html);
     }
 
     private function login(): User

@@ -95,7 +95,7 @@ trait SelectionTrait
         $dropdown = Dropdown::make()
             ->button(Button::make()
                 ->primary()
-                ->text(Yii::t('skeleton', 'COMMON_STATUS_SELECTED'))
+                ->text(Yii::t('skeleton', 'GRID_STATUS_SELECTED_BUTTON'))
                 ->icon('toggle-on'))
             ->dropup();
 
@@ -150,7 +150,7 @@ trait SelectionTrait
 
     protected function getDeleteSelectionMessage(): string
     {
-        return Yii::t('skeleton', 'COMMON_CONFIRM_DELETE_SELECTED');
+        return Yii::t('skeleton', 'GRID_DELETE_SELECTED_CONFIRM');
     }
 
     protected function getDeleteSelectionLabel(): string

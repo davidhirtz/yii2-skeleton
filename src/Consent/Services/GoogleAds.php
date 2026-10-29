@@ -17,7 +17,7 @@ class GoogleAds extends Service
     {
         $this->name = 'Google Ads';
         $this->provider = 'Google Ireland Limited';
-        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_GOOGLE_ADS_PURPOSE');
+        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_GOOGLE_ADS_TEXT');
         $this->privacyUrl = 'https://policies.google.com/privacy';
         $this->cookies = [
             Cookie::make()->name('_gcl_au')->duration('P3M'),

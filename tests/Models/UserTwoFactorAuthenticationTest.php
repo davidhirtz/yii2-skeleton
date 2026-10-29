@@ -187,7 +187,7 @@ class UserTwoFactorAuthenticationTest extends TestCase
         $form->code = $auth->getCode((string)$user->getTwoFactorAuthenticationSecret());
 
         self::assertFalse($form->delete());
-        self::assertSame(Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS'), $form->getFirstError('code'));
+        self::assertSame(Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS_ERROR'), $form->getFirstError('code'));
         self::assertTrue(User::findOne($user->id)->hasTwoFactorAuthentication());
     }
 

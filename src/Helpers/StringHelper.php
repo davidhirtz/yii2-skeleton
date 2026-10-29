@@ -19,7 +19,7 @@ class StringHelper extends BaseStringHelper
         $last = array_pop($items);
 
         return $items
-            ? Yii::t('skeleton', 'COMMON_ENUMERATION', ['items' => implode(', ', $items), 'last' => $last])
+            ? Yii::t('skeleton', 'STRING_ENUMERATION_FORMAT', ['items' => implode(', ', $items), 'last' => $last])
             : (string)$last;
     }
 

@@ -44,7 +44,7 @@ class FlashesTest extends TestCase
         $html = (string)Flashes::make();
 
         self::assertStringContainsString('<div id="flashes" class="flashes hidden-empty" aria-live="polite"></div><template id="network-error-flash">', $html);
-        self::assertStringContainsString(Yii::t('skeleton', 'COMMON_NETWORK_ERROR'), $html);
+        self::assertStringContainsString(Yii::t('skeleton', 'FLASH_NETWORK_ERROR'), $html);
         self::assertStringContainsString('data-alert="danger"', $html);
     }
 
@@ -80,7 +80,7 @@ class FlashesTest extends TestCase
 
         self::assertSame(4, substr_count(strstr($html, '<template', true) ?: $html, '<flash-alert>'));
         self::assertStringContainsString('<div class="alert-content">The asset “ą” was created.</div>', $html);
-        self::assertStringContainsString('<details><summary>' . Yii::t('skeleton', 'FLASHES_MORE', ['count' => 5]) . '</summary><ul><li>The asset “Ж” was created.</li>', $html);
+        self::assertStringContainsString('<details><summary>' . Yii::t('skeleton', 'FLASH_MORE_TEXT', ['count' => 5]) . '</summary><ul><li>The asset “Ж” was created.</li>', $html);
         self::assertStringContainsString('<li>The asset “404” was created.</li></ul></details>', $html);
         self::assertStringContainsString('Failed.', $html);
     }

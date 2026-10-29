@@ -67,7 +67,7 @@ class McpTokenForm extends Model
         $items = [];
 
         foreach ($this->lifetimes as $days) {
-            $items[$days] = Yii::t('skeleton', 'MCP_TOKEN_EXPIRES_DAYS', ['days' => $days]);
+            $items[$days] = Yii::t('skeleton', 'MCP_TOKEN_EXPIRES_DAYS_NAME', ['days' => $days]);
         }
 
         return $items;

@@ -83,13 +83,13 @@ class TrailController extends Controller
         $action = Yii::$container->get(RestoreTrail::class, [$trail]);
 
         if ($action->run()) {
-            $this->success(Yii::t('skeleton', 'TRAIL_SUCCESS_RESTORED', ['model' => $model->getAdminName()]));
+            $this->success(Yii::t('skeleton', 'TRAIL_RESTORE_SUCCESS', ['model' => $model->getAdminName()]));
         } else {
-            $this->error($action->getModel()?->getFirstErrors() ?: Yii::t('skeleton', 'TRAIL_ERROR_RESTORE'));
+            $this->error($action->getModel()?->getFirstErrors() ?: Yii::t('skeleton', 'TRAIL_RESTORE_ERROR'));
         }
 
         if ($skipped = $action->getSkipped()) {
-            $this->warning(Yii::t('skeleton', 'TRAIL_WARNING_RESTORE_SKIPPED', [
+            $this->warning(Yii::t('skeleton', 'TRAIL_RESTORE_SKIPPED_WARNING', [
                 'attributes' => implode(', ', array_map($model->getAttributeLabel(...), $skipped)),
             ]));
         }

@@ -29,7 +29,7 @@ class ActiveFormUnsavedTest extends TestCase
     {
         $html = ActiveForm::make()->model(new DynamicModel(['name' => '']))->render();
 
-        self::assertStringContainsString('data-unsaved="' . Yii::t('skeleton', 'COMMON_UNSAVED_CHANGES_CONFIRM') . '"', $html);
+        self::assertStringContainsString('data-unsaved="' . Yii::t('skeleton', 'FORM_UNSAVED_CHANGES_CONFIRM') . '"', $html);
         self::assertStringNotContainsString('data-dirty', $html);
     }
 

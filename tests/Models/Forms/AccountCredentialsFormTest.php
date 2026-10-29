@@ -31,7 +31,7 @@ class AccountCredentialsFormTest extends TestCase
         $form->user->email = 'owner@domain.com';
         self::assertFalse($form->save());
 
-        $expected = Yii::t('skeleton', 'ACCOUNT_UPDATE_CURRENT_PASSWORD');
+        $expected = Yii::t('skeleton', 'ACCOUNT_OLD_PASSWORD_ERROR');
         self::assertEquals($expected, $form->getFirstError('oldPassword'));
 
         $form->oldPassword = 'wrong';
@@ -46,7 +46,7 @@ class AccountCredentialsFormTest extends TestCase
         $form->oldPassword = 'password';
         self::assertFalse($form->save());
 
-        $expected = Yii::t('skeleton', 'USER_EMAIL_ADDRESS_ALREADY');
+        $expected = Yii::t('skeleton', 'USER_EMAIL_UNIQUE_ERROR');
         self::assertEquals($expected, $form->getFirstError('email'));
 
         $form->user->email = 'valid@domain.com';
@@ -77,7 +77,7 @@ class AccountCredentialsFormTest extends TestCase
         $form->newPassword = 'new_password';
         self::assertFalse($form->save());
 
-        $expected = Yii::t('skeleton', 'ACCOUNT_UPDATE_CURRENT_PASSWORD');
+        $expected = Yii::t('skeleton', 'ACCOUNT_OLD_PASSWORD_ERROR');
         self::assertEquals($expected, $form->getFirstError('oldPassword'));
 
         $form->oldPassword = 'password';
@@ -92,7 +92,7 @@ class AccountCredentialsFormTest extends TestCase
         $form->repeatPassword = 'wrong_new_password';
         self::assertFalse($form->save());
 
-        $expected = Yii::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH');
+        $expected = Yii::t('skeleton', 'USER_REPEAT_PASSWORD_ERROR');
         self::assertEquals($expected, $form->getFirstError('repeatPassword'));
 
         $form->repeatPassword = 'new_password';

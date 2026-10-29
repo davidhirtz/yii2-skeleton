@@ -39,7 +39,7 @@ class LoginActiveForm extends ActiveForm
         $this->attributes['hx-select'] ??= '#wrap';
         $this->attributes['id'] ??= 'login-form';
 
-        $this->submitButtonText ??= Yii::t('skeleton', 'COMMON_LOGIN');
+        $this->submitButtonText ??= Yii::t('skeleton', 'USER_LOGIN_TYPE_LOGIN_NAME');
 
         parent::configure();
     }

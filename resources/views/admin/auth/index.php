@@ -17,7 +17,7 @@ use Hirtz\Skeleton\Widgets\Navs\Header;
 use yii\data\ActiveDataProvider;
 
 echo Header::make()
-    ->title(Yii::t('skeleton', 'COMMON_PERMISSIONS'));
+    ->title(Yii::t('skeleton', 'AUTH_ITEM_PLURAL'));
 
 echo HintAlert::make()
     ->text(Yii::t('skeleton', 'AUTH_INDEX_HINT'));

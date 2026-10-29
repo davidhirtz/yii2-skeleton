@@ -142,7 +142,7 @@ class DuplicateActiveRecord
                 continue;
             }
 
-            $value = Yii::t('skeleton', 'COMMON_DUPLICATE_NAME', ['name' => $value], $language);
+            $value = Yii::t('skeleton', 'MODEL_DUPLICATE_FORMAT', ['name' => $value], $language);
             $this->duplicate->$name = mb_substr($value, 0, $maxLength);
         }
     }

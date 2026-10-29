@@ -87,7 +87,7 @@ class UpgradePasswordsTest extends TestCase
         $controller->actionPasswords();
 
         self::assertSame(
-            Yii::$app->getI18n()->callback('de', fn (): string => Yii::t('skeleton', 'PASSWORD_RECOVER_RESET_YOUR_PASSWORD')),
+            Yii::$app->getI18n()->callback('de', fn (): string => Yii::t('skeleton', 'PASSWORD_RECOVER_SUBJECT')),
             $this->mailer->getLastMessage()?->getSubject(),
         );
 

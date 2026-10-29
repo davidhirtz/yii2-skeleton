@@ -86,7 +86,7 @@ class UserDeviceCookieTest extends TestCase
         $form = $this->createForm($email, 'password');
 
         self::assertFalse($form->login());
-        self::assertSame(Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS'), $form->getFirstError('email'));
+        self::assertSame(Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS_ERROR'), $form->getFirstError('email'));
 
         $this->removeRequestDeviceCookie();
         $webuser->ipAddress = self::STRANGER;

@@ -23,7 +23,7 @@ class TypeFilterDropdown extends FilterDropdown
     #[Override]
     protected function configure(): void
     {
-        $this->label ??= Yii::t('skeleton', 'COMMON_TYPE');
+        $this->label ??= Yii::t('skeleton', 'MODEL_TYPE_LABEL');
 
         if ($this->model instanceof TypeAttributeInterface) {
             $items = $this->items ?: $this->model::getTypeDefinitions();

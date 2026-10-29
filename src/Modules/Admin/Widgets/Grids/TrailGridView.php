@@ -147,8 +147,8 @@ class TrailGridView extends GridView
             ),
         ];
 
-        return $trail->isAuthPermissionAssignType() ? Yii::t('skeleton', 'TRAIL_PERMISSION_NAMED_ASSIGNED', $params) :
-            Yii::t('skeleton', 'TRAIL_PERMISSION_NAMED_REVOKED', $params);
+        return $trail->isAuthPermissionAssignType() ? Yii::t('skeleton', 'TRAIL_ASSIGN_TEXT', $params) :
+            Yii::t('skeleton', 'TRAIL_REVOKE_TEXT', $params);
     }
 
     /**
@@ -306,8 +306,8 @@ class TrailGridView extends GridView
             ->confirmStyle('primary')
             ->icon('rotate-left')
             ->iconOnly()
-            ->label(Yii::t('skeleton', 'TRAIL_BUTTON_RESTORE'))
-            ->text(Yii::t('skeleton', 'TRAIL_CONFIRM_RESTORE', ['model' => $model->getAdminName()]))
+            ->label(Yii::t('skeleton', 'TRAIL_RESTORE_BUTTON'))
+            ->text(Yii::t('skeleton', 'TRAIL_RESTORE_CONFIRM', ['model' => $model->getAdminName()]))
             ->url(['/admin/trail/restore', 'id' => $trail->id])
             ->pushHistory(false);
     }
@@ -448,7 +448,7 @@ class TrailGridView extends GridView
         }
 
         $name ??= Div::make()
-            ->text(Yii::t('skeleton', 'COMMON_DELETED'))
+            ->text(Yii::t('skeleton', 'TRAIL_DELETE_NAME'))
             ->class('text-invalid');
 
         $message = $trail->getType()?->getMessage();
@@ -499,7 +499,7 @@ class TrailGridView extends GridView
 
         return $username . Div::make()
             ->addClass('text-muted')
-            ->text(Yii::t('skeleton', 'TRAIL_CLIENT', ['client' => $trail->client]));
+            ->text(Yii::t('skeleton', 'TRAIL_CLIENT_TEXT', ['client' => $trail->client]));
     }
 
     protected function getUsername(Trail $trail): string|Stringable
@@ -519,8 +519,8 @@ class TrailGridView extends GridView
 
         return A::make()
             ->href($this->getUserTrailRoute($trail))
-            ->content(Yii::t('skeleton', 'COMMON_MODEL_ID', [
-                'model' => Yii::t('skeleton', 'COMMON_USER'),
+            ->content(Yii::t('skeleton', 'MODEL_ID_FORMAT', [
+                'model' => Yii::t('skeleton', 'USER_SINGULAR'),
                 'id' => $trail->user_id,
             ]));
     }

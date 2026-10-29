@@ -23,8 +23,8 @@ use yii\data\Pagination;
 
 echo Header::make()
     ->title($query !== ''
-        ? Yii::t('skeleton', 'SEARCH_HEADER_RESULTS', ['query' => $query])
-        : Yii::t('skeleton', 'SEARCH_HEADER_TITLE'))
+        ? Yii::t('skeleton', 'SEARCH_RESULTS_TITLE', ['query' => $query])
+        : Yii::t('skeleton', 'SEARCH_TITLE'))
     ->pagination($pagination->getPage() + 1);
 
 echo Container::make()

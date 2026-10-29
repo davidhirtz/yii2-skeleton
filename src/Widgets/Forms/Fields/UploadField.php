@@ -112,7 +112,7 @@ class UploadField extends Field
         return Button::make()
             ->class('btn')
             ->icon('trash')
-            ->tooltip(Yii::t('skeleton', 'UPLOAD_BUTTON_REMOVE'))
+            ->tooltip(Yii::t('skeleton', 'UPLOAD_REMOVE_TOOLTIP'))
             ->replace($this->getUrl(remove: true), '#' . $this->getContainerId());
     }
 
@@ -131,7 +131,7 @@ class UploadField extends Field
                 ->content(
                     Span::make()
                         ->addClass('input upload-name text-muted')
-                        ->text(Yii::t('skeleton', 'UPLOAD_BUTTON_SELECT')),
+                        ->text(Yii::t('skeleton', 'UPLOAD_SELECT_BUTTON')),
                     Span::make()
                         ->addClass('input-group-append')
                         ->content(Span::make()

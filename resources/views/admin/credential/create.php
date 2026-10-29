@@ -25,7 +25,7 @@ echo AccountHeader::make()
 echo AccountSubmenu::make();
 
 echo HintAlert::make()
-    ->text(Yii::t('skeleton', 'CREDENTIAL_HINT'));
+    ->text(Yii::t('skeleton', 'CREDENTIAL_CREATE_HINT'));
 
 echo FormContainer::make()
     ->form(UserCredentialActiveForm::make()

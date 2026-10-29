@@ -18,7 +18,7 @@ class CsrfCookie extends Service
     {
         $this->name = Yii::t('skeleton', 'CONSENT_SERVICE_CSRF_NAME');
         $this->provider = Yii::$app->name;
-        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_CSRF_PURPOSE');
+        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_CSRF_TEXT');
         $this->cookies = [
             Cookie::make()->name(Request::current()->csrfParam ?? '_csrf'),
         ];

@@ -15,7 +15,7 @@ class UserCreateButton extends CreateButton
      */
     public function __construct(array $config = [])
     {
-        $this->label ??= Yii::t('skeleton', 'USER_CREATE_NEW_USER');
+        $this->label ??= Yii::t('skeleton', 'USER_CREATE_BUTTON');
         $this->icon ??= 'user-plus';
         $this->roles ??= [User::AUTH_USER];
         $this->url ??= ['/admin/user/create'];

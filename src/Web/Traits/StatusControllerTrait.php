@@ -35,7 +35,7 @@ trait StatusControllerTrait
         $model->setAttribute('status', $status->value);
 
         if ($model->update()) {
-            $this->success(Yii::t('skeleton', 'COMMON_STATUS_SUCCESS_UPDATED', [
+            $this->success(Yii::t('skeleton', 'MODEL_STATUS_UPDATE_SUCCESS', [
                 'name' => $model->getAdminName(),
                 'status' => $status->getName(),
             ]));

@@ -22,10 +22,10 @@ $webuser = User::current();
 
 echo Header::make()
     ->addBreadcrumb($webuser?->can(Account::AUTH_ROLE_ADMIN) || $webuser?->can(Account::AUTH_ROLE_MANAGER)
-        ? Yii::t('skeleton', 'COMMON_SYSTEM')
+        ? Yii::t('skeleton', 'SYSTEM_TITLE')
         : null, ['/admin/system/index'])
     ->pagination($provider)
-    ->title(Yii::t('skeleton', 'COMMON_CONSENTS'));
+    ->title(Yii::t('skeleton', 'CONSENT_PLURAL'));
 
 echo HintAlert::make()
     ->text(Yii::t('skeleton', 'CONSENT_INDEX_HINT'));

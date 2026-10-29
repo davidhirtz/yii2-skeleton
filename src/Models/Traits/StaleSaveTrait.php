@@ -76,7 +76,7 @@ trait StaleSaveTrait
 
         $user = $trail->user;
 
-        $this->addError('loadedAt', Yii::t('skeleton', 'COMMON_STALE_SAVE_ERROR', [
+        $this->addError('loadedAt', Yii::t('skeleton', 'MODEL_STALE_ERROR', [
             'user' => $user instanceof User ? $user->getUsername() : '',
             'date' => Yii::$app->getFormatter()->asDate($trail->created_at, 'short'),
             'time' => Yii::$app->getFormatter()->asTime($trail->created_at, 'short'),

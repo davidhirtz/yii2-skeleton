@@ -17,7 +17,7 @@ class GoogleMaps extends Service
     {
         $this->name = 'Google Maps';
         $this->provider = 'Google Ireland Limited';
-        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_GOOGLE_MAPS_PURPOSE');
+        $this->purpose = Yii::t('skeleton', 'CONSENT_SERVICE_GOOGLE_MAPS_TEXT');
         $this->privacyUrl = 'https://policies.google.com/privacy';
         $this->cookies = [
             Cookie::make()->name('NID')->duration('P6M')->thirdParty(),

@@ -75,22 +75,22 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
     {
         return [
             Type::make(static::TYPE_OTHER)
-                ->name(Yii::t('skeleton', 'USER_LOGIN_OTHER'))
+                ->name(Yii::t('skeleton', 'USER_LOGIN_TYPE_OTHER_NAME'))
                 ->icon('question'),
             Type::make(static::TYPE_LOGIN)
-                ->name(Yii::t('skeleton', 'COMMON_LOGIN'))
+                ->name(Yii::t('skeleton', 'USER_LOGIN_TYPE_LOGIN_NAME'))
                 ->icon('sign-in-alt'),
             Type::make(static::TYPE_COOKIE)
-                ->name(Yii::t('skeleton', 'USER_LOGIN_COOKIE'))
+                ->name(Yii::t('skeleton', 'USER_LOGIN_TYPE_COOKIE_NAME'))
                 ->icon('heart'),
             Type::make(static::TYPE_SIGNUP)
-                ->name(Yii::t('skeleton', 'USER_LOGIN_SIGN_UP'))
+                ->name(Yii::t('skeleton', 'USER_LOGIN_TYPE_SIGNUP_NAME'))
                 ->icon('user-plus'),
             Type::make(static::TYPE_CONFIRM_EMAIL)
-                ->name(Yii::t('skeleton', 'USER_LOGIN_EMAIL_CONFIRMATION'))
+                ->name(Yii::t('skeleton', 'USER_LOGIN_TYPE_CONFIRM_NAME'))
                 ->icon('envelope'),
             Type::make(static::TYPE_RESET_PASSWORD)
-                ->name(Yii::t('skeleton', 'USER_LOGIN_PASSWORD_RESET'))
+                ->name(Yii::t('skeleton', 'USER_LOGIN_TYPE_PASSWORD_NAME'))
                 ->icon('unlock'),
         ];
     }
@@ -104,7 +104,7 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
     public function attributeLabels(): array
     {
         return [
-            'typeName' => Yii::t('skeleton', 'USER_LOGIN_TYPENAME_LABEL'),
+            'typeName' => Yii::t('skeleton', 'USER_LOGIN_TYPE_LABEL'),
             'browser' => Yii::t('skeleton', 'USER_LOGIN_BROWSER_LABEL'),
             'ip_address' => Yii::t('skeleton', 'USER_LOGIN_IP_ADDRESS_LABEL'),
             'user' => Yii::t('skeleton', 'USER_LOGIN_USER_LABEL'),

@@ -55,9 +55,9 @@ $colorScheme = Module::current()->getColorScheme();
                 <h1><?= $handler->htmlEncode($message); ?></h1>
                 <h2><?= nl2br($handler->htmlEncode($name)); ?></h2>
                 <p>
-                    <?= Yii::t('skeleton', 'ERROR_ABOVE_OCCURRED'); ?>
+                    <?= Yii::t('skeleton', 'ERROR_OCCURRED_TEXT'); ?>
                     <br>
-                    <?= Yii::t('skeleton', 'ERROR_CONTACT_US'); ?>
+                    <?= Yii::t('skeleton', 'ERROR_CONTACT_TEXT'); ?>
                 </p>
             </div>
         </main>

@@ -60,7 +60,7 @@ class UserFormTest extends TestCase
 
         self::assertTrue($form->save(), print_r($form->getErrors(), true));
 
-        $subject = Yii::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]);
+        $subject = Yii::t('skeleton', 'USER_CREDENTIALS_SUBJECT', ['name' => Yii::$app->name]);
 
         $message = $this->mailer->getLastMessage();
 
@@ -164,7 +164,7 @@ class UserFormTest extends TestCase
         $form->repeatPassword = 'wrong_password';
         self::assertFalse($form->save());
 
-        $expected = Yii::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH');
+        $expected = Yii::t('skeleton', 'USER_REPEAT_PASSWORD_ERROR');
         self::assertEquals($expected, $form->getFirstError('repeatPassword'));
 
         $form->repeatPassword = 'new_password';

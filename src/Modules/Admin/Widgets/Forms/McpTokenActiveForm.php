@@ -23,7 +23,7 @@ class McpTokenActiveForm extends ActiveForm
     #[Override]
     protected function configure(): void
     {
-        $this->submitButtonText ??= Yii::t('skeleton', 'MCP_TOKEN_BUTTON_CREATE');
+        $this->submitButtonText ??= Yii::t('skeleton', 'MCP_TOKEN_CREATE_SUBMIT_BUTTON');
         parent::configure();
     }
 
@@ -42,7 +42,7 @@ class McpTokenActiveForm extends ActiveForm
     {
         return SelectField::make()
             ->property('expires')
-            ->prompt(Yii::t('skeleton', 'MCP_TOKEN_EXPIRES_NEVER'))
+            ->prompt(Yii::t('skeleton', 'MCP_TOKEN_EXPIRES_AT_PROMPT'))
             ->items($this->model->getExpiresItems());
     }
 

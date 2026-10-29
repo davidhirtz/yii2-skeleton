@@ -213,7 +213,7 @@ class ActiveForm extends Widget
         $this->flashStaleSaveError();
 
         if ($this->warnOnLeave && !$this->readonly) {
-            $this->attributes['data-unsaved'] ??= Yii::t('skeleton', 'COMMON_UNSAVED_CHANGES_CONFIRM');
+            $this->attributes['data-unsaved'] ??= Yii::t('skeleton', 'FORM_UNSAVED_CHANGES_CONFIRM');
 
             // Rendered with input nobody saved yet: a save that failed, or a reload after a type change.
             if ($this->model?->hasErrors() || Request::current()?->isFormReload()) {
@@ -363,7 +363,7 @@ class ActiveForm extends Widget
                 ->content(Button::make()
                     ->class('nav-link')
                     ->attribute('data-translation-all', true)
-                    ->text(Yii::t('skeleton', 'FORM_TRANSLATION_ALL_FIELDS'))),
+                    ->text(Yii::t('skeleton', 'FORM_TRANSLATION_ALL_LABEL'))),
         ];
 
         foreach ($this->model->getI18nLanguages() as $language) {
@@ -384,7 +384,7 @@ class ActiveForm extends Widget
             ->class('nav tabs translation-tabs')
             ->attribute('id', $this->getTranslationTabsId())
             ->attribute('data-translation-toolbar', $this->getId())
-            ->attribute('aria-label', Yii::t('skeleton', 'FORM_TRANSLATION_LANGUAGES'))
+            ->attribute('aria-label', Yii::t('skeleton', 'FORM_TRANSLATION_LABEL'))
             ->content(...$items);
     }
 
@@ -469,8 +469,8 @@ class ActiveForm extends Widget
     protected function getSubmitButton(): Stringable
     {
         $this->submitButtonText ??= $this->model instanceof ActiveRecordInterface && $this->model->getIsNewRecord()
-            ? Yii::t('skeleton', 'COMMON_CREATE')
-            : Yii::t('skeleton', 'COMMON_UPDATE');
+            ? Yii::t('skeleton', 'FORM_CREATE_BUTTON')
+            : Yii::t('skeleton', 'FORM_UPDATE_BUTTON');
 
         return Button::make()
             ->primary()

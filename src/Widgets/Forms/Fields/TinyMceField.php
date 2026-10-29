@@ -340,7 +340,7 @@ class TinyMceField extends Field
             if ($this->isTagAllowed($tag)) {
                 if ($this->stylesFormats) {
                     $headlineStyles[] = [
-                        'title' => Yii::t('skeleton', 'TINY_MCE_HEADING', ['n' => $i + 1]),
+                        'title' => Yii::t('skeleton', 'TINYMCE_HEADING_NAME', ['n' => $i + 1]),
                         'block' => $tag,
                         'preview' => false,
                     ];
@@ -418,8 +418,8 @@ class TinyMceField extends Field
             foreach ($this->htmlValidator?->getAllowedClassesByTag()['a'] ?? [] as $name => $cssClass) {
                 if (is_int($name)) {
                     $name = match ($cssClass) {
-                        'btn' => Yii::t('skeleton', 'TINY_MCE_BUTTON'),
-                        'cta' => Yii::t('skeleton', 'TINY_MCE_CALL_TO_ACTION'),
+                        'btn' => Yii::t('skeleton', 'TINYMCE_BUTTON_NAME'),
+                        'cta' => Yii::t('skeleton', 'TINYMCE_CTA_NAME'),
                         default => Inflector::humanize($cssClass),
                     };
                 }
@@ -432,7 +432,7 @@ class TinyMceField extends Field
 
             if ($linkClassList) {
                 array_unshift($linkClassList, [
-                    'title' => Yii::t('skeleton', 'TINY_MCE_NONE'),
+                    'title' => Yii::t('skeleton', 'TINYMCE_NONE_NAME'),
                     'value' => '',
                 ]);
 

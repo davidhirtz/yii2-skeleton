@@ -35,7 +35,7 @@ class PasswordRecoverActiveForm extends ActiveForm
     {
         $this->attributes['id'] ??= 'password-recover-form';
 
-        $this->submitButtonText = Yii::t('skeleton', 'COMMON_SEND_EMAIL');
+        $this->submitButtonText = Yii::t('skeleton', 'PASSWORD_RECOVER_SUBMIT_BUTTON');
 
         parent::configure();
     }
@@ -52,7 +52,7 @@ class PasswordRecoverActiveForm extends ActiveForm
     protected function getHelpText(): ?Stringable
     {
         return Div::make()
-            ->content(Yii::t('skeleton', 'PASSWORD_RECOVER_ACTIVE_ENTER'));
+            ->content(Yii::t('skeleton', 'PASSWORD_RECOVER_TEXT'));
     }
 
     protected function getEmailField(): ?Stringable

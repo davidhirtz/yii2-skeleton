@@ -39,7 +39,7 @@ class HostAlert extends Widget
             $this->icon ??= 'exclamation-triangle';
 
             if (!$this->content) {
-                $this->addText(Yii::t('skeleton', 'HOST_ALERT_MESSAGE'));
+                $this->addText(Yii::t('skeleton', 'SYSTEM_HOST_WARNING'));
             }
         }
 

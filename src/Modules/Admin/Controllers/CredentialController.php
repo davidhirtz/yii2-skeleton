@@ -93,7 +93,7 @@ class CredentialController extends Controller
         $form = new UserCredentialForm($this->webuser->getIdentity());
 
         if ($form->load($this->request->post()) && !$this->request->isFormReload() && $form->save()) {
-            $this->success(Yii::t('skeleton', 'CREDENTIAL_SUCCESS_SAVED'));
+            $this->success(Yii::t('skeleton', 'CREDENTIAL_SAVE_SUCCESS'));
             return $this->redirect(['index']);
         }
 
@@ -117,7 +117,7 @@ class CredentialController extends Controller
         }
 
         if ($credential->delete()) {
-            $this->success(Yii::t('skeleton', 'CREDENTIAL_SUCCESS_DELETED'));
+            $this->success(Yii::t('skeleton', 'CREDENTIAL_DELETE_SUCCESS'));
         }
 
         return $this->redirect($isOwn ? ['index'] : ['view', 'user' => $credential->user_id]);

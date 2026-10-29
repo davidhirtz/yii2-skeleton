@@ -177,14 +177,14 @@ class GroupCustomAttribute extends CustomAttribute
             $count = count($values);
 
             if ($count < $this->minCount) {
-                $owner->addError($attribute, Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ERROR_MIN_COUNT', [
+                $owner->addError($attribute, Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_MIN_COUNT_ERROR', [
                     'attribute' => $owner->getAttributeLabel($attribute),
                     'min' => $this->minCount,
                 ]));
             }
 
             if ($this->maxCount !== null && $count > $this->maxCount) {
-                $owner->addError($attribute, Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_ERROR_MAX_COUNT', [
+                $owner->addError($attribute, Yii::t('skeleton', 'CUSTOM_ATTRIBUTE_MAX_COUNT_ERROR', [
                     'attribute' => $owner->getAttributeLabel($attribute),
                     'max' => $this->maxCount,
                 ]));

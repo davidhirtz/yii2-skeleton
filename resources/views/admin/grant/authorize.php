@@ -46,7 +46,7 @@ echo Container::make()
                 'site' => Html::encode(Yii::$app->name),
                 'user' => Html::encode($user->getUsername()),
             ])),
-            P::make()->content(Yii::t('skeleton', 'GRANT_AUTHORIZE_REDIRECT', [
+            P::make()->content(Yii::t('skeleton', 'GRANT_AUTHORIZE_REDIRECT_TEXT', [
                 'host' => Html::tag('strong', Html::encode($redirectHost)),
             ])),
             RedirectUri::isLoopback($request->redirectUri)
@@ -81,11 +81,11 @@ echo Container::make()
                             Button::make()
                                 ->attributes(['type' => 'submit', 'name' => 'approve', 'value' => '1'])
                                 ->addClass('btn btn-primary')
-                                ->text(Yii::t('skeleton', 'GRANT_BUTTON_APPROVE')),
+                                ->text(Yii::t('skeleton', 'GRANT_APPROVE_BUTTON')),
                             Button::make()
                                 ->attributes(['type' => 'submit', 'name' => 'deny', 'value' => '1'])
                                 ->addClass('btn btn-secondary')
-                                ->text(Yii::t('skeleton', 'GRANT_BUTTON_DENY')),
+                                ->text(Yii::t('skeleton', 'GRANT_DENY_BUTTON')),
                         )),
                 )
         ));

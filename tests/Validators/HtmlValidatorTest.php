@@ -94,7 +94,7 @@ class HtmlValidatorTest extends TestCase
     {
         $validator = new HtmlValidator([
             'allowedClasses' => fn (): array => [
-                'a' => [Yii::t('skeleton', 'COMMON_ID_LABEL') => 'btn'],
+                'a' => [Yii::t('skeleton', 'MODEL_ID_LABEL') => 'btn'],
             ],
         ]);
 

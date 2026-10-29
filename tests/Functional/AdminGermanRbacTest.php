@@ -46,7 +46,7 @@ class AdminGermanRbacTest extends TestCase
     {
         $user = $this->login();
 
-        $this->createTrail($user, Trail::TYPE_ORDER, Message::make('skeleton', 'TRAIL_PASSWORD_CHANGED')->toJson());
+        $this->createTrail($user, Trail::TYPE_ORDER, Message::make('skeleton', 'TRAIL_PASSWORD_NAME')->toJson());
         $this->createTrail($user, Trail::TYPE_DELETE);
         $this->createTrail($user, Trail::TYPE_CHILD_DELETE);
 

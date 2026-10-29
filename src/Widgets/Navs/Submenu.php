@@ -89,7 +89,7 @@ class Submenu extends Widget
             return null;
         }
 
-        $label = Yii::t('skeleton', 'SUBMENU_BACK');
+        $label = Yii::t('skeleton', 'NAV_BACK_LABEL');
 
         return NavItem::make()
             ->icon('arrow-left')

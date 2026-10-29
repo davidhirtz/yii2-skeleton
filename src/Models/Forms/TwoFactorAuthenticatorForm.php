@@ -79,7 +79,7 @@ class TwoFactorAuthenticatorForm extends Model
     public function beforeValidate(): bool
     {
         if (Application::current()->getUser()->isLoginAttemptLimitReached($this->user->email)) {
-            $this->addError('code', Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS'));
+            $this->addError('code', Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS_ERROR'));
             return false;
         }
 
@@ -209,8 +209,8 @@ class TwoFactorAuthenticatorForm extends Model
     public function attributeLabels(): array
     {
         return [
-            'code' => Yii::t('skeleton', 'TWO_FACTOR_AUTHENTICATOR_CODE_LABEL'),
-            'password' => Yii::t('skeleton', 'ACCOUNT_UPDATE_OLDPASSWORD_LABEL'),
+            'code' => Yii::t('skeleton', 'TWO_FACTOR_CODE_LABEL'),
+            'password' => Yii::t('skeleton', 'USER_OLD_PASSWORD_LABEL'),
         ];
     }
 }

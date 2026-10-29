@@ -28,13 +28,13 @@ class AccountUpdateFormTest extends TestCase
 
         $form->user->name = '\\!//';
         self::assertFalse($form->save());
-        $expects = Yii::t('skeleton', 'USER_USERNAME_MUST_ONLY');
+        $expects = Yii::t('skeleton', 'USER_NAME_FORMAT_ERROR');
         self::assertEquals($expects, $form->getFirstError('name'));
 
         $form->user->name = 'disabled';
         self::assertFalse($form->save());
 
-        $expects = Yii::t('skeleton', 'USER_USERNAME_ALREADY_USED');
+        $expects = Yii::t('skeleton', 'USER_NAME_UNIQUE_ERROR');
         self::assertEquals($expects, $form->getFirstError('name'));
 
         $form->user->name = ' administrator ';

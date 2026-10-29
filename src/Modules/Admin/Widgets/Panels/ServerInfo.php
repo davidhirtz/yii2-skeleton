@@ -37,7 +37,7 @@ class ServerInfo extends InfoList
         $software = $_SERVER['SERVER_SOFTWARE'] ?? null;
 
         $this->addRow(
-            Yii::t('skeleton', 'SYSTEM_SERVER'),
+            Yii::t('skeleton', 'SYSTEM_SERVER_LABEL'),
             $this->getValue(
                 is_string($software) && $software !== '' ? $software : PHP_SAPI,
                 $this->webuser->can(Module::AUTH_SYSTEM) ? (string)php_uname('n') : null,
@@ -56,11 +56,11 @@ class ServerInfo extends InfoList
 
         if (!$trustedHosts && $forwarded !== null) {
             $this->addRow(
-                Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS'),
+                Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_LABEL'),
                 $this->getValue(
                     Span::make()
                         ->class('badge badge-warning')
-                        ->text(Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_MISSING')),
+                        ->text(Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_MISSING_TEXT')),
                     Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_HINT', ['header' => $forwarded]),
                 ),
             );
@@ -69,12 +69,12 @@ class ServerInfo extends InfoList
         }
 
         $this->addRow(
-            Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS'),
+            Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_LABEL'),
             $this->getValue(
-                $trustedHosts ? $this->getTrustedHostsValue($trustedHosts) : Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_NONE'),
+                $trustedHosts ? $this->getTrustedHostsValue($trustedHosts) : Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_NONE_TEXT'),
                 Application::current()->getRequest()->getIsSecureConnection()
-                    ? Yii::t('skeleton', 'SYSTEM_CONNECTION_SECURE')
-                    : Yii::t('skeleton', 'SYSTEM_CONNECTION_INSECURE'),
+                    ? Yii::t('skeleton', 'SYSTEM_CONNECTION_SECURE_TEXT')
+                    : Yii::t('skeleton', 'SYSTEM_CONNECTION_INSECURE_TEXT'),
             ),
         );
     }
@@ -112,7 +112,7 @@ class ServerInfo extends InfoList
             if ($headers !== '') {
                 $content[] = Div::make()
                     ->class('form-hint')
-                    ->text(Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_HEADERS', ['headers' => $headers]));
+                    ->text(Yii::t('skeleton', 'SYSTEM_TRUSTED_HOSTS_HEADERS_TEXT', ['headers' => $headers]));
             }
         }
 
@@ -140,8 +140,8 @@ class ServerInfo extends InfoList
 
         if ($mailer->useFileTransport) {
             $this->addRow(
-                Yii::t('skeleton', 'SYSTEM_MAILER'),
-                $this->getValue(Yii::t('skeleton', 'SYSTEM_MAILER_FILE_TRANSPORT'), $mailer->fileTransportPath),
+                Yii::t('skeleton', 'SYSTEM_MAILER_LABEL'),
+                $this->getValue(Yii::t('skeleton', 'SYSTEM_MAILER_FILE_TRANSPORT_TEXT'), $mailer->fileTransportPath),
             );
 
             return;
@@ -151,14 +151,14 @@ class ServerInfo extends InfoList
         $parts = is_string($dsn) ? parse_url($dsn) : false;
 
         $transport = $parts === false || !isset($parts['scheme'])
-            ? Yii::t('skeleton', 'COMMON_UNKNOWN')
+            ? Yii::t('skeleton', 'SYSTEM_UNKNOWN_TEXT')
             : $parts['scheme'] . '://' . ($parts['host'] ?? '')
                 . (isset($parts['port']) ? ':' . $parts['port'] : '');
 
         $error = $mailer->getTransportError();
 
         $this->addRow(
-            Yii::t('skeleton', 'SYSTEM_MAILER'),
+            Yii::t('skeleton', 'SYSTEM_MAILER_LABEL'),
             $error === null
                 ? $transport
                 : $this->getValue(Span::make()->class('badge badge-error')->text($transport), $error),
@@ -168,7 +168,7 @@ class ServerInfo extends InfoList
     protected function addTimeZoneRow(): void
     {
         $this->addRow(
-            Yii::t('skeleton', 'SYSTEM_TIME_ZONE'),
+            Yii::t('skeleton', 'SYSTEM_TIME_ZONE_LABEL'),
             $this->getValue(
                 Yii::$app->timeZone,
                 Yii::$app->getFormatter()->asDatetime(time(), 'php:Y-m-d H:i:s'),

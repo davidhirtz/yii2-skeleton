@@ -29,8 +29,8 @@ class AsidePinButton extends AbstractAsideButton
         $collapsed = $module->isAsideCollapsed();
 
         // One `Yii::t()` call per key, or `yii message` extracts neither and deletes both on the next run.
-        $pin = Yii::t('skeleton', 'ASIDE_PIN');
-        $unpin = Yii::t('skeleton', 'ASIDE_UNPIN');
+        $pin = Yii::t('skeleton', 'ASIDE_PIN_BUTTON');
+        $unpin = Yii::t('skeleton', 'ASIDE_UNPIN_BUTTON');
 
         return Button::make()
             ->addClass('btn btn-border aside-pin')

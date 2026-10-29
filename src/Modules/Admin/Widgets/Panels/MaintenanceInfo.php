@@ -37,9 +37,9 @@ class MaintenanceInfo extends InfoList
 
         /** @see SystemController::actionPublish() */
         $this->addRow(
-            Yii::t('skeleton', 'SYSTEM_ASSETS'),
+            Yii::t('skeleton', 'SYSTEM_ASSETS_LABEL'),
             $this->getValue(
-                Yii::t('skeleton', 'SYSTEM_ASSETS_PUBLISHED', [
+                Yii::t('skeleton', 'SYSTEM_ASSETS_TEXT', [
                     'count' => $assets['count'],
                     'size' => Yii::$app->getFormatter()->asShortSize($assets['size']),
                 ]),
@@ -49,7 +49,7 @@ class MaintenanceInfo extends InfoList
                 ->primary()
                 ->icon('sync-alt')
                 ->post(['/admin/system/publish'])
-                ->tooltip(Yii::t('skeleton', 'ASSET_REFRESH')),
+                ->tooltip(Yii::t('skeleton', 'SYSTEM_ASSETS_REFRESH_TOOLTIP')),
         );
     }
 
@@ -58,13 +58,13 @@ class MaintenanceInfo extends InfoList
         foreach (CacheComponents::getAll() as $name => $class) {
             /** @see SystemController::actionFlush() */
             $this->addRow(
-                Yii::t('skeleton', 'SYSTEM_CACHE'),
+                Yii::t('skeleton', 'SYSTEM_CACHE_LABEL'),
                 $this->getValue($name, $class),
                 Button::make()
                     ->primary()
                     ->icon('sync-alt')
                     ->post(['/admin/system/flush', 'cache' => $name])
-                    ->tooltip(Yii::t('skeleton', 'SYSTEM_FLUSH_CACHE')),
+                    ->tooltip(Yii::t('skeleton', 'SYSTEM_CACHE_FLUSH_TOOLTIP')),
             );
         }
     }
@@ -74,13 +74,13 @@ class MaintenanceInfo extends InfoList
         foreach (DatabaseComponents::getAll() as $name => $class) {
             /** @see SystemController::actionSchema() */
             $this->addRow(
-                Yii::t('skeleton', 'SYSTEM_SCHEMA'),
+                Yii::t('skeleton', 'SYSTEM_SCHEMA_LABEL'),
                 $this->getValue($name, $class),
                 Button::make()
                     ->primary()
                     ->icon('sync-alt')
                     ->post(['/admin/system/schema', 'db' => $name])
-                    ->tooltip(Yii::t('skeleton', 'SYSTEM_REFRESH_SCHEMA')),
+                    ->tooltip(Yii::t('skeleton', 'SYSTEM_SCHEMA_REFRESH_TOOLTIP')),
             );
         }
     }
@@ -91,12 +91,12 @@ class MaintenanceInfo extends InfoList
 
         /** @see SystemController::actionSessionGc() */
         $this->addRow(
-            Yii::t('skeleton', 'SESSION_SESSIONS'),
+            Yii::t('skeleton', 'SYSTEM_SESSIONS_LABEL'),
             $this->getValue(
-                Yii::t('skeleton', 'SESSION_EXPIRED_SESSIONS', [
+                Yii::t('skeleton', 'SYSTEM_SESSIONS_EXPIRED_TEXT', [
                     'count' => Session::find()->where(['<', 'expire', time()])->count(),
                 ]),
-                Yii::t('skeleton', 'SESSION_TOTAL_SESSIONS_GARBAGE_COLLECTION_PROBABILITY', [
+                Yii::t('skeleton', 'SYSTEM_SESSIONS_TEXT', [
                     'sessionCount' => Session::find()->count(),
                     'probability' => $session->getGCProbability(),
                 ]),
@@ -105,7 +105,7 @@ class MaintenanceInfo extends InfoList
                 ->primary()
                 ->icon('trash')
                 ->post(['/admin/system/session-gc'])
-                ->tooltip(Yii::t('skeleton', 'SESSION_DELETE_EXPIRED_SESSIONS')),
+                ->tooltip(Yii::t('skeleton', 'SYSTEM_SESSIONS_DELETE_TOOLTIP')),
         );
     }
 

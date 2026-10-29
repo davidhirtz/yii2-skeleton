@@ -72,27 +72,27 @@ class Cookie implements Configurable
     public function getDurationLabel(): string
     {
         if ($this->duration === null) {
-            return Yii::t('skeleton', 'CONSENT_DURATION_SESSION');
+            return Yii::t('skeleton', 'CONSENT_DURATION_SESSION_TEXT');
         }
 
         $interval = new DateInterval($this->duration);
 
         if ($interval->y) {
-            return Yii::t('skeleton', 'CONSENT_DURATION_YEARS', ['n' => $interval->y]);
+            return Yii::t('skeleton', 'CONSENT_DURATION_YEARS_FORMAT', ['n' => $interval->y]);
         }
 
         if ($interval->m) {
-            return Yii::t('skeleton', 'CONSENT_DURATION_MONTHS', ['n' => $interval->m]);
+            return Yii::t('skeleton', 'CONSENT_DURATION_MONTHS_FORMAT', ['n' => $interval->m]);
         }
 
         if ($interval->d) {
-            return Yii::t('skeleton', 'CONSENT_DURATION_DAYS', ['n' => $interval->d]);
+            return Yii::t('skeleton', 'CONSENT_DURATION_DAYS_FORMAT', ['n' => $interval->d]);
         }
 
         if ($interval->h) {
-            return Yii::t('skeleton', 'CONSENT_DURATION_HOURS', ['n' => $interval->h]);
+            return Yii::t('skeleton', 'CONSENT_DURATION_HOURS_FORMAT', ['n' => $interval->h]);
         }
 
-        return Yii::t('skeleton', 'CONSENT_DURATION_MINUTES', ['n' => $interval->i]);
+        return Yii::t('skeleton', 'CONSENT_DURATION_MINUTES_FORMAT', ['n' => $interval->i]);
     }
 }

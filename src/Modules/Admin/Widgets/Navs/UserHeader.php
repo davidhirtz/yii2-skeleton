@@ -38,7 +38,7 @@ class UserHeader extends ModelHeader
         }
 
         if ($this->provider) {
-            $this->title ??= Yii::t('skeleton', 'COMMON_USERS');
+            $this->title ??= Yii::t('skeleton', 'USER_PLURAL');
             $this->url ??= ['/admin/user/index'];
             $this->subtitle ??= $this->getPaginationSubtitle($this->provider);
         }

@@ -17,7 +17,7 @@ use yii\data\ActiveDataProvider;
 
 echo Header::make()
     ->pagination($provider)
-    ->title(Yii::t('skeleton', 'COMMON_USER_LOGINS'));
+    ->title(Yii::t('skeleton', 'USER_LOGIN_PLURAL'));
 
 echo GridContainer::make()
     ->grid(UserLoginGridView::make()

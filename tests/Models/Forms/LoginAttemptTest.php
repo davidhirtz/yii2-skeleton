@@ -31,7 +31,7 @@ class LoginAttemptTest extends TestCase
         $form = $this->createForm($email, 'password');
 
         self::assertFalse($form->login());
-        self::assertEquals(Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS'), $form->getFirstError('email'));
+        self::assertEquals(Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS_ERROR'), $form->getFirstError('email'));
         self::assertTrue($webuser->getIsGuest());
     }
 

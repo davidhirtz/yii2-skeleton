@@ -142,7 +142,7 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
 
     public function getAdminIndexBreadcrumb(): Breadcrumb
     {
-        return new Breadcrumb(Yii::t('skeleton', 'COMMON_REDIRECTS'), ['/admin/redirect/index']);
+        return new Breadcrumb(Yii::t('skeleton', 'REDIRECT_PLURAL'), ['/admin/redirect/index']);
     }
 
     public function getPermissionName(): string
@@ -152,7 +152,7 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
 
     public function getAdminType(): string
     {
-        return Yii::t('skeleton', 'REDIRECT_REDIRECT');
+        return Yii::t('skeleton', 'REDIRECT_SINGULAR');
     }
 
     public function getBaseUrl(): string
@@ -167,12 +167,12 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
     {
         return [
             Type::make(static::TYPE_MOVED_PERMANENTLY)
-                ->name(Yii::t('skeleton', 'REDIRECT_301_MOVED_PERMANENTLY'))
-                ->plural(Yii::t('skeleton', 'REDIRECT_301_PERMANENT'))
+                ->name(Yii::t('skeleton', 'REDIRECT_TYPE_301_NAME'))
+                ->plural(Yii::t('skeleton', 'REDIRECT_TYPE_301_PLURAL'))
                 ->icon('forward'),
             Type::make(static::TYPE_FOUND)
-                ->name(Yii::t('skeleton', 'REDIRECT_302_TEMPORARY_REDIRECT'))
-                ->plural(Yii::t('skeleton', 'REDIRECT_302_TEMPORARY'))
+                ->name(Yii::t('skeleton', 'REDIRECT_TYPE_302_NAME'))
+                ->plural(Yii::t('skeleton', 'REDIRECT_TYPE_302_PLURAL'))
                 ->icon('clock'),
         ];
     }

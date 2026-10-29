@@ -18,7 +18,7 @@ use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Grids\GridContainer;
 use yii\data\ActiveDataProvider;
 
-$this->title(Yii::t('skeleton', 'GRANT_CONNECTED_APPS'));
+$this->title(Yii::t('skeleton', 'GRANT_PLURAL'));
 
 echo AccountHeader::make()
     ->model($user);

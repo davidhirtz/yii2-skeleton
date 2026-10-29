@@ -31,7 +31,7 @@ echo Container::make()
         Stack::make()
             ->addItem(
                 StackItem::make()
-                    ->label(Yii::t('skeleton', 'ACCOUNT_BACK_TO_LOGIN'))
+                    ->label(Yii::t('skeleton', 'LOGIN_BACK_BUTTON'))
                     ->icon('sign-in-alt')
                     ->url(Url::to(['login']))
                     ->visible(Application::current()->getUser()->getIsGuest())

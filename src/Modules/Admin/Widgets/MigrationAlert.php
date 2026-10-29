@@ -44,10 +44,10 @@ class MigrationAlert extends Widget
                 // An unresolved history is the louder of the two and answers for the pending count as well:
                 // every migration looks pending to a database that predates the namespace rename.
                 $this->addText($this->unresolved !== []
-                    ? Yii::t('skeleton', 'MIGRATION_ALERT_UNRESOLVED_MESSAGE', [
+                    ? Yii::t('skeleton', 'SYSTEM_MIGRATION_UNRESOLVED_WARNING', [
                         'count' => count($this->unresolved),
                     ])
-                    : Yii::t('skeleton', 'MIGRATION_ALERT_MESSAGE', [
+                    : Yii::t('skeleton', 'SYSTEM_MIGRATION_WARNING', [
                         'count' => count($this->pending),
                     ]));
             }

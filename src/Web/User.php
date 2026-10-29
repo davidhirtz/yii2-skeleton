@@ -208,7 +208,7 @@ class User extends \yii\web\User
 
         // A flash or a return URL in the session would write a session row for every bot asking for the admin.
         if ($hasSession && (!$checkAjax || !$request->getIsAjax())) {
-            Application::current()->getSession()->addFlash('error', Yii::t('skeleton', 'USER_ERROR_MUST_LOGIN_VIEW'));
+            Application::current()->getSession()->addFlash('error', Yii::t('skeleton', 'LOGIN_REQUIRED_ERROR'));
         }
 
         if ($request->isHtmxRequest()) {

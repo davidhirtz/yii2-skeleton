@@ -74,7 +74,7 @@ class UserForm extends Model
                 ['repeatPassword'],
                 'compare',
                 'compareAttribute' => 'newPassword',
-                'message' => Yii::t('skeleton', 'COMMON_PASSWORD_MUST_MATCH'),
+                'message' => Yii::t('skeleton', 'USER_REPEAT_PASSWORD_ERROR'),
             ],
             [
                 ['sendEmail'],
@@ -149,7 +149,7 @@ class UserForm extends Model
         }
 
         if ($this->sendEmail && !$this->sendCredentialsEmail()) {
-            Application::current()->getSession()->addFlash('warning', Yii::t('skeleton', 'COMMON_ERROR_EMAIL_NOT_SENT', [
+            Application::current()->getSession()->addFlash('warning', Yii::t('skeleton', 'MAIL_SEND_ERROR', [
                 'email' => $this->user->email,
             ]));
         }
@@ -162,7 +162,7 @@ class UserForm extends Model
                 'user' => $this->user,
                 'url' => $this->passwordResetUrl,
             ])
-            ->setSubject(Yii::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]))
+            ->setSubject(Yii::t('skeleton', 'USER_CREDENTIALS_SUBJECT', ['name' => Yii::$app->name]))
             ->setFrom(Yii::$app->params['email'])
             ->setTo($this->user->email)
             ->send();
@@ -189,10 +189,10 @@ class UserForm extends Model
     {
         return [
             'newPassword' => $this->user->getIsNewRecord()
-                ? Yii::t('skeleton', 'COMMON_PASSWORD')
-                : Yii::t('skeleton', 'COMMON_NEW_PASSWORD'),
-            'repeatPassword' => Yii::t('skeleton', 'USER_REPEATPASSWORD_LABEL'),
-            'sendEmail' => Yii::t('skeleton', 'USER_SENDEMAIL_LABEL'),
+                ? Yii::t('skeleton', 'USER_PASSWORD_LABEL')
+                : Yii::t('skeleton', 'USER_NEW_PASSWORD_LABEL'),
+            'repeatPassword' => Yii::t('skeleton', 'USER_REPEAT_PASSWORD_LABEL'),
+            'sendEmail' => Yii::t('skeleton', 'USER_SEND_EMAIL_LABEL'),
         ];
     }
 }

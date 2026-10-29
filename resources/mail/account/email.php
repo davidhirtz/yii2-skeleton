@@ -15,14 +15,14 @@ use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_EMAIL_TITLE');
 ?>
-<p><?= Yii::t('skeleton', 'MAIL_ACCOUNT_GREETING', ['name' => Html::encode($form->user->getUsername())]); ?></p>
+<p><?= Yii::t('skeleton', 'MAIL_GREETING_TEXT', ['name' => Html::encode($form->user->getUsername())]); ?></p>
 <p>
     <?= Yii::t('skeleton', 'MAIL_ACCOUNT_EMAIL_TEXT', [
             'old' => Html::encode($form->email),
             'new' => Html::encode($form->user->email)
     ]); ?>
     <?= Yii::t('skeleton', 'MAIL_ACCOUNT_EMAIL_VERIFY_TEXT'); ?></p>
-<p><?php echo Yii::t('skeleton', 'MAIL_ACCOUNT_THANK_YOU'); ?></p>
+<p><?php echo Yii::t('skeleton', 'MAIL_THANK_YOU_TEXT'); ?></p>
 <div class="btn-wrap">
     <a href="<?= Html::encode($url); ?>"
        class="btn btn-primary"><?= Yii::t('skeleton', 'MAIL_ACCOUNT_CONFIRM_EMAIL_BUTTON'); ?></a>

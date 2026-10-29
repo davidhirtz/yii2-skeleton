@@ -38,7 +38,7 @@ class AccountSubmenu extends Submenu
     protected function getSettingsItem(): NavItem
     {
         return NavItem::make()
-            ->label(Yii::t('skeleton', 'COMMON_SETTINGS'))
+            ->label(Yii::t('skeleton', 'ACCOUNT_SETTINGS_LABEL'))
             ->url(['/admin/account/update'])
             ->icon('user');
     }
@@ -49,7 +49,7 @@ class AccountSubmenu extends Submenu
     protected function getLoginItem(): NavItem
     {
         return NavItem::make()
-            ->label(Yii::t('skeleton', 'COMMON_LOGIN'))
+            ->label(Yii::t('skeleton', 'USER_LOGIN_TYPE_LOGIN_NAME'))
             ->url(['/admin/account/credentials'])
             ->icon('key');
     }
@@ -61,7 +61,7 @@ class AccountSubmenu extends Submenu
     {
         return $this->webuser->enableTwoFactorAuthentication
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'COMMON_SECURITY'))
+                ->label(Yii::t('skeleton', 'ACCOUNT_SECURITY_LABEL'))
                 ->url(['/admin/account/security'])
                 ->icon('shield-halved')
             : null;
@@ -74,7 +74,7 @@ class AccountSubmenu extends Submenu
     {
         return Credentials::getComponent()->getProviders()
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'CREDENTIALS_TITLE'))
+                ->label(Yii::t('skeleton', 'CREDENTIAL_PLURAL'))
                 ->url(['/admin/credential/index'])
                 ->routes(['admin/credential/'])
                 ->icon('lock')
@@ -88,7 +88,7 @@ class AccountSubmenu extends Submenu
     {
         return Mcp::getComponent()->enableHttp
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'MCP_TOKENS_TITLE'))
+                ->label(Yii::t('skeleton', 'MCP_TOKEN_PLURAL'))
                 ->url(['/admin/mcp-token/index'])
                 ->routes(['admin/mcp-token/'])
                 ->icon('key')
@@ -102,7 +102,7 @@ class AccountSubmenu extends Submenu
     {
         return Mcp::getComponent()->isOAuthEnabled()
             ? NavItem::make()
-                ->label(Yii::t('skeleton', 'GRANT_CONNECTED_APPS'))
+                ->label(Yii::t('skeleton', 'GRANT_PLURAL'))
                 ->url(['/admin/grant/index'])
                 ->icon('plug')
             : null;

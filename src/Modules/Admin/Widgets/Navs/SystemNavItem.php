@@ -19,7 +19,7 @@ class SystemNavItem extends NavItem
      */
     public function __construct(array $config = [])
     {
-        $this->label ??= Yii::t('skeleton', 'COMMON_SYSTEM');
+        $this->label ??= Yii::t('skeleton', 'SYSTEM_TITLE');
         $this->icon ??= 'cogs';
         $this->order ??= 999;
         $this->url ??= ['/admin/system/index'];
@@ -53,7 +53,7 @@ class SystemNavItem extends NavItem
         }
 
         return NavItem::make()
-            ->label(Yii::t('skeleton', 'COMMON_CONSENTS'))
+            ->label(Yii::t('skeleton', 'CONSENT_PLURAL'))
             ->url(['/admin/consent/index'])
             ->order(80)
             ->roles([Module::AUTH_SYSTEM])
@@ -64,7 +64,7 @@ class SystemNavItem extends NavItem
     {
         return NavItem::make()
             //->icon('server')
-            ->label(Yii::t('skeleton', 'COMMON_ERROR_LOGS'))
+            ->label(Yii::t('skeleton', 'LOG_TITLE'))
             ->url(['/admin/log/index'])
             ->order(20)
             ->roles([Module::AUTH_SYSTEM])
@@ -75,7 +75,7 @@ class SystemNavItem extends NavItem
     {
         return NavItem::make()
             //->icon('forward')
-            ->label(Yii::t('skeleton', 'COMMON_REDIRECTS'))
+            ->label(Yii::t('skeleton', 'REDIRECT_PLURAL'))
             ->url(['/admin/redirect/index'])
             ->order(40)
             ->roles([Redirect::AUTH_REDIRECT])
@@ -86,7 +86,7 @@ class SystemNavItem extends NavItem
     {
         return NavItem::make()
             //->icon('history')
-            ->label(Yii::t('skeleton', 'COMMON_HISTORY'))
+            ->label(Yii::t('skeleton', 'TRAIL_TITLE'))
             ->url(['/admin/trail/index'])
             ->order(60)
             ->roles([Trail::AUTH_TRAIL_INDEX])

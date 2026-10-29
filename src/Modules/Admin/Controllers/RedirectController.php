@@ -73,7 +73,7 @@ class RedirectController extends Controller
         }
 
         if ($redirect->load($this->request->post()) && $redirect->insert()) {
-            $this->success(Yii::t('skeleton', 'REDIRECT_SUCCESS_CREATED'));
+            $this->success(Yii::t('skeleton', 'REDIRECT_CREATE_SUCCESS'));
             return $this->redirect(['index', ...$this->request->get()]);
         }
 
@@ -88,7 +88,7 @@ class RedirectController extends Controller
 
         if ($redirect->load($this->request->post())) {
             if ($redirect->update()) {
-                $this->success(Yii::t('skeleton', 'REDIRECT_SUCCESS_UPDATED'));
+                $this->success(Yii::t('skeleton', 'REDIRECT_UPDATE_SUCCESS'));
             }
 
             if (!$redirect->hasErrors()) {
@@ -106,7 +106,7 @@ class RedirectController extends Controller
         $redirect = $this->findRedirect($id);
         $redirect->delete();
 
-        $this->errorOrSuccess($redirect, Yii::t('skeleton', 'REDIRECT_SUCCESS_DELETED'));
+        $this->errorOrSuccess($redirect, Yii::t('skeleton', 'REDIRECT_DELETE_SUCCESS'));
         return $this->redirectToIndex();
     }
 
@@ -129,7 +129,7 @@ class RedirectController extends Controller
             }
 
             if ($isDeleted) {
-                $this->success(Yii::t('skeleton', 'REDIRECT_SUCCESS_SELECTED_DELETED'));
+                $this->success(Yii::t('skeleton', 'REDIRECT_DELETE_SELECTED_SUCCESS'));
             }
         }
 

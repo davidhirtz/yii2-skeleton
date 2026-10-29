@@ -93,10 +93,10 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
     {
         return [
             Type::make(Item::TYPE_ROLE)
-                ->name(Yii::t('skeleton', 'AUTH_ITEM_TYPE_ROLE'))
+                ->name(Yii::t('skeleton', 'AUTH_ITEM_TYPE_ROLE_NAME'))
                 ->icon('user'),
             Type::make(Item::TYPE_PERMISSION)
-                ->name(Yii::t('skeleton', 'AUTH_ITEM_TYPE_PERMISSION'))
+                ->name(Yii::t('skeleton', 'AUTH_ITEM_TYPE_PERMISSION_NAME'))
                 ->icon('edit'),
         ];
     }

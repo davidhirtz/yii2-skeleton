@@ -92,7 +92,7 @@ class GridSummary extends Widget
             $alert->button(Button::make()
                 ->class('btn-icon icon')
                 ->get($this->grid->getSearch()->getUrl())
-                ->tooltip(Yii::t('skeleton', 'GRID_SUMMARY_CLEAR_SEARCH'))
+                ->tooltip(Yii::t('skeleton', 'GRID_SEARCH_CLEAR_TOOLTIP'))
                 ->icon('xmark'));
         }
 
@@ -107,7 +107,7 @@ class GridSummary extends Widget
 
         $link = A::make()
             ->href(Url::to($this->emptyLinkUrl))
-            ->text(Yii::t('skeleton', 'COMMON_HERE'));
+            ->text(Yii::t('skeleton', 'GRID_HERE_LINK'));
 
         return ' ' . Yii::$app->getI18n()->format($this->emptyLinkText, ['here' => (string)$link], Yii::$app->language);
     }
@@ -147,18 +147,18 @@ class GridSummary extends Widget
         // "The only one" is of all of them: a last page holding one record is no such thing.
         if ($this->grid->getSearch()->getValue()) {
             return match (true) {
-                $totalCount === 1 => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ONLY', $params),
-                $count === 0 => Yii::t('skeleton', 'GRID_SUMMARY_NO_RESULTS_SEARCH', $params),
-                $count === $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RESULTS_MATCHING', $params),
-                default => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RESULTS_MATCHING', $params),
+                $totalCount === 1 => Yii::t('skeleton', 'GRID_SUMMARY_ONE_SEARCH_TEXT', $params),
+                $count === 0 => Yii::t('skeleton', 'GRID_SUMMARY_SEARCH_EMPTY', $params),
+                $count === $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_ALL_SEARCH_TEXT', $params),
+                default => Yii::t('skeleton', 'GRID_SUMMARY_PAGE_SEARCH_TEXT', $params),
             };
         }
 
         return match (true) {
-            $totalCount === 1 => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_THE_ONLY_RECORD', $params),
-            $count === 0 => Yii::t('skeleton', 'GRID_SUMMARY_NO_RESULTS', $params),
-            $count === $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_ALL_RECORDS', $params),
-            default => Yii::t('skeleton', 'GRID_SUMMARY_DISPLAYING_OF_RECORDS', $params),
+            $totalCount === 1 => Yii::t('skeleton', 'GRID_SUMMARY_ONE_TEXT', $params),
+            $count === 0 => Yii::t('skeleton', 'GRID_SUMMARY_EMPTY', $params),
+            $count === $totalCount => Yii::t('skeleton', 'GRID_SUMMARY_ALL_TEXT', $params),
+            default => Yii::t('skeleton', 'GRID_SUMMARY_PAGE_TEXT', $params),
         };
     }
 }

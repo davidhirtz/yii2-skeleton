@@ -37,7 +37,7 @@ class AccountResendConfirmActiveForm extends ActiveForm
     {
         $this->attributes['id'] ??= 'resend-form';
 
-        $this->submitButtonText ??= Yii::t('skeleton', 'COMMON_SEND_EMAIL');
+        $this->submitButtonText ??= Yii::t('skeleton', 'PASSWORD_RECOVER_SUBMIT_BUTTON');
 
         parent::configure();
     }
@@ -54,6 +54,6 @@ class AccountResendConfirmActiveForm extends ActiveForm
     protected function getHelpText(): ?Stringable
     {
         return Div::make()
-            ->text(Yii::t('skeleton', 'ACCOUNT_RESEND_CONFIRM_ACTIVE'));
+            ->text(Yii::t('skeleton', 'ACCOUNT_RESEND_TEXT'));
     }
 }

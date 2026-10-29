@@ -25,7 +25,7 @@ class UserCredentialActiveForm extends ActiveForm
     #[Override]
     protected function configure(): void
     {
-        $this->submitButtonText ??= Yii::t('skeleton', 'CREDENTIAL_BUTTON_SAVE');
+        $this->submitButtonText ??= Yii::t('skeleton', 'CREDENTIAL_SAVE_BUTTON');
         parent::configure();
     }
 

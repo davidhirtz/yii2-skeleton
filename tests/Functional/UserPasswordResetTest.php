@@ -48,7 +48,7 @@ class UserPasswordResetTest extends TestCase
     {
         $this->postReset();
 
-        self::assertAlertSame(Yii::t('skeleton', 'USER_SUCCESS_SENT_PASSWORD_RESET', [
+        self::assertAlertSame(Yii::t('skeleton', 'USER_PASSWORD_RESET_SUCCESS', [
             'email' => $this->user->email,
         ]), 'success');
 
@@ -67,7 +67,7 @@ class UserPasswordResetTest extends TestCase
         $this->postReset();
 
         self::assertSame(
-            Yii::t('skeleton', 'PASSWORD_RECOVER_RESET_YOUR_PASSWORD'),
+            Yii::t('skeleton', 'PASSWORD_RECOVER_SUBJECT'),
             $this->mailer->getLastMessage()?->getSubject(),
         );
     }
@@ -79,7 +79,7 @@ class UserPasswordResetTest extends TestCase
         $this->postReset();
 
         self::assertSame(
-            Yii::t('skeleton', 'USER_YOUR_ACCOUNT', ['name' => Yii::$app->name]),
+            Yii::t('skeleton', 'USER_CREDENTIALS_SUBJECT', ['name' => Yii::$app->name]),
             $this->mailer->getLastMessage()?->getSubject(),
         );
 

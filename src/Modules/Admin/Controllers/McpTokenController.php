@@ -143,7 +143,7 @@ class McpTokenController extends Controller
         }
 
         if ($token->delete()) {
-            $this->success(Yii::t('skeleton', 'MCP_TOKEN_SUCCESS_REVOKED'));
+            $this->success(Yii::t('skeleton', 'MCP_TOKEN_REVOKE_SUCCESS'));
         }
 
         return $this->redirect($isOwn ? ['index'] : ['view', 'user' => $token->user_id]);
