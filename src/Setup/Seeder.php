@@ -50,13 +50,18 @@ abstract class Seeder extends BaseObject
 
     protected function insert(ActiveRecord $record): bool
     {
-        if ($record->insert()) {
+        return $this->report($record, $record->insert());
+    }
+
+    protected function report(ActiveRecord $record, bool $inserted): bool
+    {
+        if ($inserted) {
             $this->inserted[] = $record;
-            return true;
+        } else {
+            $this->failed[] = $record;
         }
 
-        $this->failed[] = $record;
-        return false;
+        return $inserted;
     }
 
     /**
