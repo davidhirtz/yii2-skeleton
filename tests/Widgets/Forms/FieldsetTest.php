@@ -185,9 +185,7 @@ class FieldsetTest extends TestCase
     }
 
     /**
-     * An unticked checkbox posts nothing, so the hidden input in front of it is the only way a stored `true` is
-     * ever cleared. Asserted through `load()` rather than a functional test: BrowserKit keys a form's fields by
-     * name, so the checkbox hides the hidden input and the crawler cannot tell the two cases apart.
+     * Asserted through `load()`, since BrowserKit keys fields by name and the checkbox hides its hidden input.
      */
     public function testADerivedCheckboxCarriesItsUncheckedValue(): void
     {

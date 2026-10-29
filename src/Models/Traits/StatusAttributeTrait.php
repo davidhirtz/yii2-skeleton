@@ -15,7 +15,7 @@ use Yii;
 trait StatusAttributeTrait
 {
     /**
-     * @var Closure(): list<Status>|list<Status>|null what the container configured, see {@see static::setStatuses()}
+     * @var Closure(): list<Status>|list<Status>|null
      */
     private Closure|array|null $configuredStatuses = null;
 
@@ -30,8 +30,6 @@ trait StatusAttributeTrait
     }
 
     /**
-     * The configured list where the container set one, the model's {@see static::getDefaultStatuses()} otherwise.
-     *
      * @return list<Status>
      */
     public function getStatuses(): array
@@ -46,8 +44,8 @@ trait StatusAttributeTrait
     }
 
     /**
-     * Override this method to implement a model's statuses; unlike an override of {@see static::getStatuses()},
-     * it still gives way to what the container configured.
+     * Unlike an override of {@see static::getStatuses()}, an override of this still gives way to what the container
+     * configured.
      *
      * @return list<Status>
      */
@@ -82,9 +80,8 @@ trait StatusAttributeTrait
     }
 
     /**
-     * The next declared status, wrapping at the end of the list. `null` where the model declares fewer than two, or
-     * where the record's own value is not among them — a record stored with a status the configuration has since
-     * dropped is left alone rather than silently moved to the first one.
+     * `null` with fewer than two statuses, or for a stored status the configuration dropped, which is left alone
+     * rather than moved to the first.
      */
     public function getNextStatus(): ?Status
     {

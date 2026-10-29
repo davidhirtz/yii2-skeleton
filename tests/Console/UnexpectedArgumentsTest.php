@@ -12,8 +12,7 @@ use yii\console\Controller;
 use yii\console\Exception;
 
 /**
- * An argument the action does not take is otherwise dropped without a word: `transformation/delete name jpg`, meant
- * as `--extension=jpg`, deleted every extension of the transformation.
+ * Yii drops an argument the action does not take, so `transformation/delete name jpg` deleted every extension.
  */
 class UnexpectedArgumentsTest extends TestCase
 {
@@ -67,8 +66,7 @@ class UnexpectedArgumentsTest extends TestCase
     }
 
     /**
-     * The arguments belong to the route the application was asked to run; a controller run directly afterwards must
-     * not be judged by them.
+     * A controller run directly afterwards must not be judged by the application route's arguments.
      */
     public function testTheArgumentsDoNotOutliveTheirAction(): void
     {

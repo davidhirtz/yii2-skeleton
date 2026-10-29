@@ -8,16 +8,12 @@ use Composer\Autoload\ClassLoader;
 use Yii;
 
 /**
- * Yii resolves a namespace to a directory through an alias of the same name, which `yiisoft/yii2-composer` writes
- * into `vendor/yiisoft/extensions.php` for every installed extension and never for the root package — so a
- * project's own `App\Migrations` had nothing to resolve against. Composer's autoloader holds the same mapping for
- * both, without an alias and without reading anything from disk, and therefore answers first.
+ * Asks Composer's autoloader, since `yiisoft/yii2-composer` writes no alias for the root package's `App\Migrations`.
  */
 class NamespaceHelper
 {
     /**
-     * @return string|null the directory the namespace maps to, which need not exist: the first migration of a
-     * project is created in a directory that is not there yet.
+     * The directory need not exist: a project's first migration is created in one that is not there yet.
      */
     public static function getPath(string $namespace): ?string
     {

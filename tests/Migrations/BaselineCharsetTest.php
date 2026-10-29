@@ -12,8 +12,7 @@ use yii\db\Query;
 class BaselineCharsetTest extends TestCase
 {
     /**
-     * `bin/baseline` reads an upgraded database whose v2 tables kept `utf8mb3`; a baseline copying that rejects an
-     * emoji in any text a user types.
+     * A baseline copying v2's `utf8mb3` would reject an emoji in any text a user types.
      */
     public function testEveryBaselineTableIsUtf8mb4(): void
     {

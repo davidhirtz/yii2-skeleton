@@ -10,7 +10,7 @@ use Stringable;
 use Yii;
 
 /**
- * Opens the aside as a drawer below the `md` breakpoint, where {@see AsidePinButton} takes the same slot over.
+ * Below the `md` breakpoint only, where {@see AsidePinButton} takes the same slot over.
  */
 class AsideToggleButton extends AbstractAsideButton
 {

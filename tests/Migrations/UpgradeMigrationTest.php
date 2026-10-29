@@ -10,8 +10,7 @@ use ReflectionClass;
 use yii\db\Migration;
 
 /**
- * The v2 → v3 migrations live in `davidhirtz/yii2-upgrade` and are only ever loaded by a test here, so this is
- * the one place that proves the file the upgrade ships declares the class the history names it by.
+ * The one place that proves the file the upgrade ships declares the class the history names it by.
  */
 class UpgradeMigrationTest extends TestCase
 {
@@ -30,8 +29,7 @@ class UpgradeMigrationTest extends TestCase
     }
 
     /**
-     * Answered by a method so PHPStan sees a plain string in both checkouts: the monorepo scans the upgrade
-     * checkout and knows the class, a standalone one does not, and a literal would be typed differently in each.
+     * A method, so PHPStan sees a plain string whether or not it scans the upgrade checkout.
      */
     private function getMigrationClass(): string
     {

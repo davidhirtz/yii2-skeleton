@@ -15,17 +15,13 @@ use yii\web\BadRequestHttpException;
 use yii\web\Response;
 
 /**
- * The half of an upload action every controller that takes one writes the same way: read the chunk, tell the
- * uploader to send the next one when that is all this was, and collect what earlier uploads abandoned.
- *
  * @mixin Controller<Module>
  */
 trait UploadControllerTrait
 {
     /**
-     * @param Model|null $model the model the file input is named after, or `null` for a bare `$_FILES` entry
-     * @return ChunkedUploadedFile|null `null` when the request carried no file, or when the response already says
-     * what happened: `201` for a chunk that landed and wants the next one, `400` for one that disagrees with its range.
+     * `null` when the request carried no file or the response already answers: `201` for a chunk that wants the next
+     * one, `400` for one that disagrees with its range.
      */
     protected function receiveUpload(?Model $model = null, string $attribute = 'upload'): ?ChunkedUploadedFile
     {
@@ -49,8 +45,7 @@ trait UploadControllerTrait
     }
 
     /**
-     * The uploader shows the message. HTTP/2 has no reason phrase, so it also travels URL-encoded in
-     * `X-Upload-Error` (a header is Latin-1), and encoded in the body for a client rendering the response.
+     * HTTP/2 has no reason phrase, so the message also travels URL-encoded in `X-Upload-Error` (a header is Latin-1).
      */
     protected function refuseUpload(int $statusCode, string $message): Response
     {

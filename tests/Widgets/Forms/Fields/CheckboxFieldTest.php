@@ -11,9 +11,7 @@ use yii\base\Model;
 class CheckboxFieldTest extends TestCase
 {
     /**
-     * What the record holds and what the box posts are two different things in the one `value` attribute, so
-     * naming the second must not answer the first — `checkedValue()` assigned the attribute the tick is read
-     * from and every field that called it rendered `checked` whatever the record said.
+     * The record's value and the posted value share the `value` attribute, so `checkedValue()` must not set the tick.
      */
     public function testTheCheckedValueDoesNotDecideTheTick(): void
     {
@@ -35,9 +33,6 @@ class CheckboxFieldTest extends TestCase
         self::assertStringContainsString('value="yes" checked', $content);
     }
 
-    /**
-     * An explicitly assigned value still overrides the record's, which is what it is for.
-     */
     public function testAnAssignedValueStillDecidesTheTick(): void
     {
         $content = CheckboxField::make()

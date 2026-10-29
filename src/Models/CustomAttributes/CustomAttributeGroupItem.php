@@ -14,8 +14,8 @@ use yii\base\Model;
 use yii\db\BaseActiveRecord;
 
 /**
- * One row of a {@see GroupCustomAttribute}. Its form name carries the owner's, so `Html::getInputName()` produces
- * `Section[links][0][label]` and the nested case works by recursion.
+ * Its form name carries the owner's, so `Html::getInputName()` produces `Section[links][0][label]` and nesting works
+ * by recursion.
  */
 class CustomAttributeGroupItem extends Model implements CustomAttributeInterface, I18nAttributeInterface
 {

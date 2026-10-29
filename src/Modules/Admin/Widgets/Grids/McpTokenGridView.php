@@ -21,9 +21,6 @@ use Yii;
  */
 class McpTokenGridView extends GridView
 {
-    /**
-     * @var bool whether the tokens are the acting user's own, which only they create
-     */
     protected bool $isOwn = true;
 
     public function isOwn(bool $isOwn): static

@@ -14,8 +14,7 @@ use Hirtz\Skeleton\Widgets\Widget;
 trait UserRouteTrait
 {
     /**
-     * The first page of a user the acting one may open: the account needs the user permission alone, since it renders
-     * a user they may not manage read-only.
+     * The account needs the user permission alone, since it renders a user they may not manage read-only.
      *
      * @return array<int|string, mixed>|null
      */

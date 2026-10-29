@@ -6,33 +6,31 @@ namespace Hirtz\Skeleton\Models\Interfaces;
 
 use Hirtz\Skeleton\Models\Queries\TranslationQuery;
 use Hirtz\Skeleton\Models\Translation;
-use Hirtz\Skeleton\Models\Traits\TranslationTrait;
 
-/**
- * Implemented via {@see TranslationTrait}.
- */
 interface TranslationInterface extends I18nAttributeInterface
 {
     /**
-     * The canonical base class, never `static::class`: the container may resolve a subclass, and the record has to
-     * stay visible from both.
+     * The canonical base class, never `static::class`, since the container may resolve a subclass and the record has
+     * to stay visible from both.
      *
      * @return class-string
      */
     public function getTranslationModelClass(): string;
 
     /**
-     * @return list<string> `i18nAttributes` minus those stored elsewhere, e.g. a permalink slug
+     * Excludes those stored elsewhere, e.g. a permalink slug.
+     *
+     * @return list<string>
      */
     public function getTranslationAttributes(): array;
 
     /**
-     * @return array<string, array{string, string}> attribute and language per translated attribute name
+     * @return array<string, array{string, string}>
      */
     public function getTranslatedAttributeNames(): array;
 
     /**
-     * @return list<string> every configured language but the source language
+     * @return list<string>
      */
     public function getTranslationLanguages(): array;
 
@@ -56,7 +54,7 @@ interface TranslationInterface extends I18nAttributeInterface
     /**
      * Called by {@see \Hirtz\Skeleton\Db\ActiveRecord::afterSave()}, before the event the trail listens to.
      *
-     * @return array<string, string|null> the previous value per changed virtual attribute name
+     * @return array<string, string|null>
      */
     public function saveVirtualAttributes(): array;
 

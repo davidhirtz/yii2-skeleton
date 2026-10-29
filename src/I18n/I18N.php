@@ -9,7 +9,7 @@ use Yii;
 use yii\i18n\PhpMessageSource;
 
 /**
- * @property list<string> $languages {@see I18N::getLanguages()}
+ * @property list<string> $languages
  */
 class I18N extends \yii\i18n\I18N
 {
@@ -50,9 +50,6 @@ class I18N extends \yii\i18n\I18N
         parent::init();
     }
 
-    /**
-     * Calls the given callback with the given language set as application language.
-     */
     public function callback(string $language, callable $callback): mixed
     {
         $original = Yii::$app->language;
@@ -117,9 +114,6 @@ class I18N extends \yii\i18n\I18N
     }
 
     /**
-     * Returns a flat array with all translated attribute names for given languages. If languages are omitted, all
-     * available languages are used.
-     *
      * @param list<string>|string $attributes
      * @param list<string>|null $languages
      * @return list<string>

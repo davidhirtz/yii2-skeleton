@@ -13,8 +13,8 @@ use Yii;
 class ApplicationTest extends TestCase
 {
     /**
-     * Yii's default is the lowercase `app\controllers`, which resolves against nothing in a v3 project, and the
-     * path is pinned rather than derived from the namespace — deriving it needs an alias mirroring `App\`.
+     * Yii's default is the lowercase `app\controllers`, and the path is pinned since deriving it needs an alias
+     * mirroring `App\`.
      */
     public function testTheControllerNamespaceIsTheProjectsOwn(): void
     {

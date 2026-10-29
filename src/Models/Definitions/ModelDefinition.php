@@ -6,10 +6,6 @@ namespace Hirtz\Skeleton\Models\Definitions;
 
 use yii\base\InvalidConfigException;
 
-/**
- * A definition a model declares for one of its attributes, resolved and validated against that model by
- * {@see DefinitionRegistry}.
- */
 abstract class ModelDefinition extends Definition
 {
     protected ?string $plural = null;
@@ -21,8 +17,7 @@ abstract class ModelDefinition extends Definition
     }
 
     /**
-     * Falls back to the name, not to an inflection: `Inflector::pluralize()` is English-only and this is what the
-     * admin navigation renders.
+     * Falls back to the name, since `Inflector::pluralize()` is English-only and the admin navigation renders this.
      */
     public function getPlural(): string
     {

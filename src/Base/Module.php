@@ -48,9 +48,7 @@ class Module extends \yii\base\Module
     }
 
     /**
-     * A bundle keeps its views beside `src/` rather than inside it. A module class that lives in no `src/` tree —
-     * a project's own, under `app/Modules/Admin` — has nothing to walk up to, so it takes the application's view
-     * directory.
+     * A bundle keeps its views beside `src/`, so a module class in no `src/` tree takes the application's view directory.
      */
     protected function getViewPathFromBasePath(): string
     {

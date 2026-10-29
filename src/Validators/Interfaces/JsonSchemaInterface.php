@@ -8,8 +8,7 @@ use Hirtz\Skeleton\Mcp\SchemaBuilder;
 use yii\base\Model;
 
 /**
- * Describes a validator's attribute to an MCP client, for a validator {@see SchemaBuilder} cannot recognise by
- * class.
+ * For a validator {@see SchemaBuilder} cannot recognise by class.
  */
 interface JsonSchemaInterface
 {

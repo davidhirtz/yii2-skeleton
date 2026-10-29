@@ -14,8 +14,8 @@ use Override;
 use Stringable;
 
 /**
- * A checkbox per item for an attribute holding a list of values. The hidden input in front of them is what makes
- * "nothing checked" reach the model at all — a checkbox that is not checked posts nothing.
+ * The hidden input in front of the checkboxes makes "nothing checked" reach the model, since an unchecked checkbox
+ * posts nothing.
  */
 class CheckboxListField extends Field
 {
@@ -27,9 +27,9 @@ class CheckboxListField extends Field
     protected array $items = [];
 
     /**
-     * @var array<int|string, array<string, mixed>> attributes for an item's label, which is what a tooltip or a
-     * state class has to sit on: a tooltip is placed against its element's box, and the label is the only part
-     * of a checkbox row whose box is the text the reader is looking at
+     * On the label, since a tooltip is placed against its element's box and the label's box is the text.
+     *
+     * @var array<int|string, array<string, mixed>>
      */
     protected array $itemAttributes = [];
 
@@ -58,8 +58,7 @@ class CheckboxListField extends Field
     }
 
     /**
-     * The group's caption labels no single input, so it must not claim one — a `for` pointing at an id that is
-     * never rendered moves the focus nowhere.
+     * No `for`: the caption labels no single input, and one pointing at an id never rendered moves the focus nowhere.
      */
     #[Override]
     protected function getLabel(): ?Div

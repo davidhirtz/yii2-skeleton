@@ -33,28 +33,21 @@ class AsideMenuTest extends TestCase
     }
 
     /**
-     * A guest reaches no item at all, and the aside is left out of the document rather than hidden by a CSS rule
-     * — which a theme rendering a logo of its own into it would defeat.
+     * Left out of the document rather than hidden by CSS, which a theme rendering its own logo into it would defeat.
      */
     public function testAGuestGetsNoAside(): void
     {
         self::assertSame('', AsideMenu::make()->render());
     }
 
-    /**
-     * The skeleton's aside opens straight into its menu, the header being the extension point a theme with a
-     * logo of its own overrides.
-     */
+    /** The header is the extension point a theme with a logo of its own overrides. */
     public function testTheAsideRendersNoHeader(): void
     {
         $this->login();
         self::assertStringNotContainsString('aside-header', AsideMenu::make()->render());
     }
 
-    /**
-     * The control that collapses the aside is a navbar button, so nothing in the menu carries it — the aside
-     * renders after the navbar and could not have been asked whether to draw one.
-     */
+    /** The collapse control is a navbar button, since the aside renders after the navbar and could not be asked. */
     public function testTheAsideCarriesNoPinButton(): void
     {
         $this->login();

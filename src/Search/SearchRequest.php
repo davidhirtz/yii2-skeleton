@@ -7,10 +7,10 @@ namespace Hirtz\Skeleton\Search;
 final readonly class SearchRequest
 {
     /**
-     * @param list<string> $languages every indexed language when empty
-     * @param list<class-string> $models every indexed class when empty
-     * @param int|null $status the minimum status, `null` for any; the admin never sets it
-     * @param int|null $tenantId a frontend filter only, see the plan in `docs/plans/fulltext-search.md`
+     * `$status` and `$tenantId` are frontend filters the admin never sets.
+     *
+     * @param list<string> $languages
+     * @param list<class-string> $models
      */
     public function __construct(
         public string $query,

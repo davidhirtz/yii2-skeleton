@@ -6,16 +6,13 @@ namespace Hirtz\Skeleton\Models;
 
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 
-/**
- * A record named the way its page header names it: the **base** record — the one that owns the page — and the
- * subtitle of every record between it and this one, "About — Section 3/5 · Asset 1/2". Which record is the base
- * is {@see AdminModelInterface::getAdminSubtitle()}: a record that answers `null` owns its page.
- */
 final readonly class AdminModelChain
 {
     /**
-     * @param list<AdminModelInterface> $models everything between the base and the record, the record last
-     * @param list<string> $subtitles each model's subtitle, in the same order
+     * Both lists run from the base record to this one, the record last.
+     *
+     * @param list<AdminModelInterface> $models
+     * @param list<string> $subtitles
      */
     private function __construct(
         public AdminModelInterface $base,

@@ -24,14 +24,14 @@ class TwoFactorAuthenticatorForm extends Model
     public ?string $code = null;
 
     /**
-     * @var string|null the current password, asked for on enabling: a stolen session alone must not enrol its own
-     * authenticator and lock the owner out.
+     * Asked for on enabling: a stolen session alone must not enrol its own authenticator.
      */
     public ?string $password = null;
 
     /**
-     * @var list<string> the recovery codes in the clear, populated by a successful {@see static::save()} and the
-     * only chance anyone has to write them down.
+     * Populated by a successful {@see static::save()}, the only chance anyone has to write them down.
+     *
+     * @var list<string>
      */
     public array $recoveryCodes = [];
 
@@ -135,8 +135,7 @@ class TwoFactorAuthenticatorForm extends Model
     }
 
     /**
-     * A recovery code turns the second factor off as well as a code from the authenticator does. Without that, a
-     * user who lost the device could log in with a recovery code and still not get out of it on their own.
+     * A recovery code turns the second factor off too, or a user who lost the device could never get out of it.
      */
     private function validateDeleteCode(): bool
     {
@@ -170,8 +169,7 @@ class TwoFactorAuthenticatorForm extends Model
     }
 
     /**
-     * A data URI of an SVG rendered here: the code carries the shared secret, which no third-party QR service may
-     * ever see.
+     * Rendered here: the code carries the shared secret, which no third-party QR service may see.
      */
     public function getQrImageUrl(int $size): string
     {
@@ -183,9 +181,6 @@ class TwoFactorAuthenticatorForm extends Model
         return $auth->getQRCodeImageAsDataUri($label, $this->getSecret(), $size);
     }
 
-    /**
-     * Generates a new secret key and saves it to session.
-     */
     protected function generateSecret(): void
     {
         $this->secret = (new TwoFactorAuth(new BaconQrCodeProvider()))->createSecret();

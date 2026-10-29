@@ -31,17 +31,13 @@ class GroupField extends Field
 
     protected GroupCustomAttribute $group;
 
-    /**
-     * Resolved in {@see getInput()}, which is the first point the owner is known to hold custom attributes: a row
-     * of one field is a line of its own, a row of several is previewed by its title and expands, and a group
-     * holding exactly one row has nothing to fold away.
-     */
+    /** Resolved in {@see getInput()}, the first point the owner is known to hold custom attributes. */
     protected bool $single = false;
     protected bool $collapsible = false;
 
     /**
-     * What the group's label points at, once the first row has rendered — a field carries the id its input went
-     * out with only from then. A collapsible row hides its fields, so there it is the toggle instead.
+     * Set once the first row has rendered, since a field carries its input's id only from then; a collapsible row's
+     * toggle stands in for its fields.
      */
     protected Fieldset|Field|null $firstControl = null;
     protected ?string $firstToggleId = null;
@@ -64,11 +60,7 @@ class GroupField extends Field
         return $this;
     }
 
-    /**
-     * A group is a set of rows of its own, so it sits in a `<fieldset>` that spaces it off the plain fields
-     * around it — and the element is what says the controls inside belong together, which the row's
-     * `<label for>` cannot: that one labels the field it points at.
-     */
+    /** A `<fieldset>`, since a row's `<label for>` labels one control and cannot say the controls belong together. */
     #[Override]
     protected function renderContent(): string|Stringable
     {
@@ -79,9 +71,8 @@ class GroupField extends Field
     }
 
     /**
-     * The label points at the first field of the first row, so clicking it puts the cursor where typing starts.
-     * It cannot name the group that way — a `<label for>` labels one control — so the `<fieldset>` around it
-     * carries `aria-labelledby` instead, and a group with no row to point at renders a plain `div`.
+     * A `<label for>` labels one control, so the label points at the first field and the `<fieldset>` carries
+     * `aria-labelledby` instead.
      */
     #[Override]
     protected function getLabel(): ?Tag
@@ -101,9 +92,8 @@ class GroupField extends Field
     }
 
     /**
-     * {@see Field::renderContent()} renders its content before it asks for the label, so the row's fields have
-     * configured themselves by here and carry the ids their inputs were rendered with. A field that rendered
-     * nothing is not in the document and a disabled one cannot take the focus, so neither is pointed at.
+     * {@see Field::renderContent()} renders the content before the label, so the fields carry their rendered ids by
+     * here; an empty or disabled field is skipped.
      */
     protected function getLabelledFieldId(): ?string
     {
@@ -182,10 +172,7 @@ class GroupField extends Field
         return $container->addContent($this->getTemplate($owner), $this->getFooter(count($items)));
     }
 
-    /**
-     * What decides the layout is how many fields an item *renders*, not how many attributes the group declares: a
-     * translatable one is a field per configured language.
-     */
+    /** Counts the rendered fields, not the declared attributes: a translatable one is a field per language. */
     protected function isSingleField(CustomAttributeGroupItem $item): bool
     {
         $count = 0;
@@ -200,8 +187,6 @@ class GroupField extends Field
     }
 
     /**
-     * The rows a minimum count demands are rendered empty, rather than left to the add button.
-     *
      * @return list<CustomAttributeGroupItem>
      */
     protected function getItems(Model&CustomAttributeInterface $owner): array
@@ -239,10 +224,6 @@ class GroupField extends Field
         return $elements;
     }
 
-    /**
-     * Every row is the same shell: the control it is collapsed to, in an input group with the row's buttons, and
-     * whatever hangs below it.
-     */
     protected function getItem(
         CustomAttributeGroupItem $item,
         Field|Fieldset $control,
@@ -274,8 +255,8 @@ class GroupField extends Field
     }
 
     /**
-     * Derived from the item's form name rather than generated, since the script re-inserts the template and
-     * rewrites the placeholder in every id it carries.
+     * Derived from the form name rather than generated, since the script rewrites the placeholder in every id of the
+     * re-inserted template.
      */
     protected function getItemId(CustomAttributeGroupItem $item): string
     {
@@ -287,10 +268,7 @@ class GroupField extends Field
         return ($this->single ? $this->getField($item, $reorderable) : null) ?? $this->getFieldset($item);
     }
 
-    /**
-     * The group's own label names the one field, so the field drops its own and is laid out by the row rather
-     * than by a form row of its own.
-     */
+    /** The group's label names the one field, so the field drops its own label and row. */
     protected function getField(CustomAttributeGroupItem $item, bool $reorderable): ?Field
     {
         foreach ($item->getCustomAttributeDefinitions() as $definition) {
@@ -369,8 +347,7 @@ class GroupField extends Field
     }
 
     /**
-     * The row's preview: the title attribute rendered by its own definition, so a select reads as its option
-     * label rather than as its value.
+     * Rendered by the title attribute's own definition, so a select reads as its option label rather than its value.
      */
     protected function getItemTitle(CustomAttributeGroupItem $item): string
     {
@@ -439,10 +416,6 @@ class GroupField extends Field
             ->content($this->getEmptyAddButton($count), $this->getCountHint(), $this->getAddButton($count));
     }
 
-    /**
-     * Stands in for the first row while there is none, left where the row's input would be; the icon-only button
-     * takes over once a row exists.
-     */
     protected function getEmptyAddButton(int $count): ?Stringable
     {
         if ($this->group->getMinCount() > 0) {
@@ -483,9 +456,6 @@ class GroupField extends Field
         return $text ? Div::make()->addClass('form-hint')->text($text) : null;
     }
 
-    /**
-     * Icon-only, so it sits at the size of the row buttons above it rather than towering over them.
-     */
     protected function getAddButton(int $count): Stringable
     {
         $max = $this->group->getMaxCount();

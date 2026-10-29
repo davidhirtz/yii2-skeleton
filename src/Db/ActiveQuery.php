@@ -20,9 +20,6 @@ use yii\db\Query;
  */
 class ActiveQuery extends \yii\db\ActiveQuery
 {
-    /**
-     * @var int|null the global status to be used in WHERE clause with `whereStatus()`.
-     */
     protected static ?int $status = null;
 
     /**
@@ -31,8 +28,6 @@ class ActiveQuery extends \yii\db\ActiveQuery
     private array $joinedRecords = [];
 
     /**
-     * Makes sure the container instantiates the model class before calling parent constructor.
-     * Not sure why this is not part of the framework.
      * @param class-string<T> $modelClass
      * @param array<string, mixed> $config
      */
@@ -44,11 +39,8 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Makes sure only relations with any relational values are actually loaded. This gets rid of a lot of useless
-     * `WHERE 0=1` queries, which should not be executed in the first place. If an attribute is set or the relation is
-     * requested via a junction table, the query is executed.
+     * Skips a relation without any relational value, which would only run `WHERE 0=1`.
      *
-     * @link https://forum.yiiframework.com/t/question-about-activequery-findfor/134188
      * @return array<int|string, T>|T|null
      */
     #[Override]
@@ -64,10 +56,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Joins a `hasOne` relation and reads the related record off the same row, where `joinWith()` runs a second
-     * query for it. The joined table keeps its table name as alias, as with `joinWith()`; `alias()` it in the
-     * callback to join a table twice. The relation's own `where` moves into the ON clause, so its columns have to be
-     * qualified.
+     * The relation's own `where` moves into the ON clause, so its columns have to be qualified.
      *
      * @param Closure(ActiveQuery<covariant ActiveRecord>): mixed|null $callback
      */
@@ -120,9 +109,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Selects the columns of a joined table as `<name>__<column>` and, once the rows are populated, hands each row's
-     * record to `$populate` — `null` for a LEFT JOIN without a match. The query populates the records, so its
-     * `with()` and its translations apply. A query with `asArray()` keeps the prefixed columns and populates nothing.
+     * A query with `asArray()` keeps the `<name>__<column>` columns and populates nothing.
      *
      * @template R of \yii\db\ActiveRecord
      * @param \yii\db\ActiveQuery<R> $query
@@ -380,8 +367,6 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Prefixes given `columns` with the table alias.
-     *
      * @param array<string> $columns
      * @return list<string>
      */
@@ -393,8 +378,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Override Yii2's default implementation of adding the anti-pattern `$alias.*` on empty select. This causes
-     * problems with `sql_mode=only_full_group_by`.
+     * Never selects `$alias.*` on an empty select, which breaks `sql_mode=only_full_group_by`.
      */
     #[Override]
     public function prepare($builder): Query
@@ -425,7 +409,7 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Alters WHERE clause and sets static status that can be used by related queries.
+     * Also sets the static status, which related queries read.
      */
     public function whereStatus(?int $status = null): static
     {
@@ -446,8 +430,8 @@ class ActiveQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * The status belongs to the request — a draft host sets it to `STATUS_DRAFT` — so `ApplicationTrait` clears it
-     * for the next one rather than letting a draft request widen what a later one may see.
+     * The status belongs to the request (a draft host sets `STATUS_DRAFT`), so `ApplicationTrait` clears it for the
+     * next one.
      */
     public static function resetStatus(): void
     {

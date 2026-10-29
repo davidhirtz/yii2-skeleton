@@ -8,9 +8,7 @@ use Yii;
 use yii\base\InvalidConfigException;
 
 /**
- * The application secret behind everything that is keyed but is not a password — the HMAC of a user token, the
- * encrypted two-factor secret. It falls back to the cookie validation key, which every installation already has,
- * so nothing breaks before `secretKey` is set; losing or changing it invalidates whatever was written with it.
+ * Falls back to the cookie validation key; changing it invalidates every user token and two-factor secret.
  */
 class SecretKey
 {
@@ -45,8 +43,6 @@ class SecretKey
     }
 
     /**
-     * A random key of URL-safe characters, for anything that is handed out once and stored hashed.
-     *
      * @param positive-int $length
      */
     public static function generate(int $length = 32): string

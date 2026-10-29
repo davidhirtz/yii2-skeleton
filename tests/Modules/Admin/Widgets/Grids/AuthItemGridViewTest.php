@@ -97,9 +97,8 @@ class AuthItemGridViewTest extends TestCase
     }
 
     /**
-     * The button is what the actor could act on, so it is left out of the row of an item they cannot pass on
-     * themselves — {@see \Hirtz\Skeleton\Modules\Admin\Controllers\UserAuthController::getAuthItem()}
-     * refuses it either way.
+     * Left out for an item the actor cannot pass on, which {@see
+     * \Hirtz\Skeleton\Modules\Admin\Controllers\UserAuthController::getAuthItem()} refuses either way.
      */
     public function testOnlyAnItemTheActorHoldsOffersAButton(): void
     {

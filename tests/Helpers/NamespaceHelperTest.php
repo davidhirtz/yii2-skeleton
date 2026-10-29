@@ -12,10 +12,8 @@ use Yii;
 class NamespaceHelperTest extends TestCase
 {
     /**
-     * The project's own prefix is not aliased at all: `vendor/yiisoft/extensions.php` holds an alias for every
-     * installed extension and never for the root package, which is what Composer's map answers for instead. The
-     * prefix is registered here rather than read off the root package, since the root is the monorepo in one
-     * checkout and the bundle itself in a standalone install.
+     * `extensions.php` never aliases the root package, which is the monorepo here and the bundle in a standalone
+     * install.
      */
     public function testARootPackageNamespaceResolvesWithoutAnAlias(): void
     {
@@ -43,8 +41,7 @@ class NamespaceHelperTest extends TestCase
     }
 
     /**
-     * A namespace the autoloader does not know falls back to the alias table, which is where a bundle installed
-     * without Composer — or a namespace a project aliased by hand — comes from.
+     * A bundle installed without Composer, or a namespace aliased by hand, is known only to the alias table.
      */
     public function testANamespaceMissingFromTheAutoloaderFallsBackToItsAlias(): void
     {

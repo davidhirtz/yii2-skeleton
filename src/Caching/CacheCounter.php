@@ -8,9 +8,7 @@ use Yii;
 use yii\mutex\Mutex;
 
 /**
- * A counter in the cache, which has no increment of its own: concurrent requests would each write back the count
- * they read, losing every increment but one, and a burst of guesses would count as one. The `mutex` component makes
- * the read and the write one step.
+ * The cache has no atomic increment, so the `mutex` component makes the read and the write one step.
  */
 final class CacheCounter
 {
@@ -20,9 +18,7 @@ final class CacheCounter
     }
 
     /**
-     * Adds one and restarts the counter's lifetime.
-     *
-     * @return int the count after the increment
+     * Restarts the counter's lifetime.
      */
     public static function increment(mixed $key, int $duration): int
     {

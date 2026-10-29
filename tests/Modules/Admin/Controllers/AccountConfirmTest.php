@@ -13,7 +13,7 @@ use Yii;
 use yii\web\Response;
 
 /**
- * Covers `AccountController::actionConfirm()`, which is the one flow that logs a user in without a password.
+ * `AccountController::actionConfirm()` is the one flow that logs a user in without a password.
  */
 class AccountConfirmTest extends TestCase
 {
@@ -56,10 +56,7 @@ class AccountConfirmTest extends TestCase
         self::assertSame([$expected], $this->getWebSession()->getFlash('success'));
     }
 
-    /**
-     * The confirmation link is the second factor's blind spot: it arrives by email and carries no code, so it
-     * confirms the address and stops there.
-     */
+    /** The emailed link carries no code, so for a user with a second factor it confirms the address and stops there. */
     public function testAUserWithASecondFactorIsNotLoggedIn(): void
     {
         $user = $this->getUserFromFixture('admin');

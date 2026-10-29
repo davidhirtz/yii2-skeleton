@@ -11,9 +11,7 @@ use Yii;
 class VersionHelperTest extends TestCase
 {
     /**
-     * The exclusions are the framework's own extensions and a package that is a dependency rather than a bundle.
-     * A version that would distort an installation's *platform version* is the version registry's own exclusion,
-     * since only the registry computes one — the badges here report whatever the installation runs.
+     * The platform-version exclusions are the registry's own, since only the registry computes one.
      */
     public function testThePlatformIsTheBundlesRatherThanTheirDependencies(): void
     {

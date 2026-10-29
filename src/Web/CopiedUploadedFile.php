@@ -7,9 +7,8 @@ namespace Hirtz\Skeleton\Web;
 use Override;
 
 /**
- * An upload made from a file the application itself names — the source of a duplicate, a path a console command
- * was given — so the path is opened as it stands, a stream wrapper's included. A target that arrived with a
- * request is not one of these: that is {@see StreamUploadedFile}, and it is guarded.
+ * Opens the path as it stands, stream wrappers included, so a path from a request goes through
+ * {@see StreamUploadedFile}.
  */
 class CopiedUploadedFile extends AbstractUploadedFile
 {

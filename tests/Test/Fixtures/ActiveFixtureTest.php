@@ -30,8 +30,7 @@ class ActiveFixtureTest extends TestCase
     }
 
     /**
-     * A test losing its transaction to DDL runs this delete outside one, so a full table reset would commit the
-     * removal of rows nothing in the suite created — the seeded tenant among them (monorepo #142).
+     * After DDL this delete runs outside a transaction, so a full reset would commit removing the seeded tenant (#142).
      */
     public function testUnloadOnlyRemovesTheLoadedRows(): void
     {

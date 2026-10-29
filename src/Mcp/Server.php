@@ -15,15 +15,17 @@ use Yii;
 use yii\db\Exception as DbException;
 
 /**
- * Serves both eras of the protocol: a request naming its version in `_meta` (2026-07-28) is answered statelessly,
- * one without is answered as the `initialize` revisions expect. Neither keeps state between messages.
+ * A request naming its version in `_meta` (2026-07-28) is answered statelessly, one without as the `initialize`
+ * revisions expect.
  */
 class Server
 {
     final public const string MODERN_PROTOCOL_VERSION = '2026-07-28';
 
     /**
-     * @var list<string> newest first
+     * Newest first.
+     *
+     * @var list<string>
      */
     final public const array LEGACY_PROTOCOL_VERSIONS = ['2025-11-25', '2025-06-18'];
 
@@ -32,7 +34,7 @@ class Server
     final public const string META_SERVER_INFO = 'io.modelcontextprotocol/serverInfo';
 
     /**
-     * @var list<string> the results the 2026-07-28 revision requires caching hints on
+     * @var list<string>
      */
     private const array CACHEABLE_METHODS = [
         'server/discover',
@@ -86,7 +88,9 @@ class Server
     }
 
     /**
-     * @return array<string, mixed>|null `null` for a notification, which is never answered
+     * Answers `null` for a notification, which is never answered.
+     *
+     * @return array<string, mixed>|null
      */
     public function handle(mixed $message): ?array
     {

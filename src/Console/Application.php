@@ -40,14 +40,12 @@ class Application extends \yii\console\Application
     public $controllerNamespace = 'App\\Commands';
 
     /**
-     * @var list<mixed> the positional arguments of the action about to run, checked and cleared in {@see beforeAction()}
+     * @var list<mixed>
      */
     private array $arguments = [];
 
     /**
-     * The mirror of `Web\Application::current()`, for code that only ever runs as a command. `Yii::$app` stays
-     * the union of the two, which is what makes a console command reaching for `getUser()` or `getSession()` a
-     * static analysis error rather than a runtime surprise.
+     * `Yii::$app` stays the union, so a command reaching for `getUser()` is a static analysis error, not a runtime one.
      */
     public static function current(): static
     {
@@ -91,8 +89,7 @@ class Application extends \yii\console\Application
     }
 
     /**
-     * Without a request, the host comes from the pinned `params.hostInfo` or a configured `urlManager.hostInfo`; the
-     * URL manager is not built for it, as a bundle's may read the database a fresh installation does not have yet.
+     * The URL manager is not built for the host, since a bundle's may read a database a fresh installation lacks.
      */
     protected function setDefaultEmail(): void
     {

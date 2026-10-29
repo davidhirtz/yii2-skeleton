@@ -12,9 +12,7 @@ use yii\helpers\FileHelper;
 use yii\mail\BaseMessage;
 
 /**
- * Yii's message interface over a Symfony `Email`; anything beyond it (headers, priority, signing) is done on
- * `$email`. Addresses are `'a@b.c'`, `['a@b.c', …]` or `['a@b.c' => 'Name', …]` and are read back as
- * `['a@b.c' => 'Name']`, the name empty where none was given.
+ * Addresses are read back as `['a@b.c' => 'Name']`, the name empty where none was given.
  */
 class Message extends BaseMessage
 {

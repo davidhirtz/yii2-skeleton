@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Traits;
 
 /**
- * Names the default custom attributes of a model that are stored per language. The values live in the JSON column
- * under their suffixed name, so this is not {@see I18nAttributesTrait::$i18nAttributes}, which names columns.
+ * Not {@see I18nAttributesTrait::$i18nAttributes}, which names columns: these values live in the JSON column under
+ * their suffixed name.
  */
 trait TranslatableAttributesTrait
 {
     /**
-     * @var list<string> the names of the default definitions that are stored per language
+     * @var list<string>
      */
     public array $translatableAttributes = [];
 

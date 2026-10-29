@@ -7,15 +7,13 @@ namespace Hirtz\Skeleton\Db\Commands;
 use yii\db\Connection;
 
 /**
- * Renumbers the rows of each parent `1..n` in their current order, closing the gaps a delete or a move leaves, so a
- * row's position is its rank and the parent's count is the total. One statement, idempotent, and built from strings,
- * so a migration may run it as well as a model.
+ * Built from strings, so a migration may run it as well as a model.
  */
 class RenumberPositions
 {
     /**
-     * @param list<string> $partitionBy the columns naming the parent, e.g. `['entry_id']`
-     * @param array<string, mixed> $condition narrows the rows renumbered, typically to one parent
+     * @param list<string> $partitionBy
+     * @param array<string, mixed> $condition
      */
     public function __construct(
         protected Connection $db,
@@ -26,9 +24,6 @@ class RenumberPositions
     ) {
     }
 
-    /**
-     * @return int the number of rows whose position changed
-     */
     public function execute(): int
     {
         $params = [];

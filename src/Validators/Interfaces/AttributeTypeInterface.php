@@ -7,9 +7,8 @@ namespace Hirtz\Skeleton\Validators\Interfaces;
 use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 
 /**
- * Declares the type a validator's attributes hold, for a validator
- * {@see AttributeTypecastBehavior::detectAttributeTypes()} cannot recognise by class. Without it the attribute keeps
- * the string a form posted, which a form reload never validates away.
+ * For a validator {@see AttributeTypecastBehavior::detectAttributeTypes()} cannot recognise by class, whose attribute
+ * would otherwise keep the string a form posted.
  */
 interface AttributeTypeInterface
 {

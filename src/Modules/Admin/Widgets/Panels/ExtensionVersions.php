@@ -12,10 +12,6 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 
-/**
- * The installed extensions as a wrapped row of badges, so a maintainer can read off the version a client's
- * installation runs without the list taking a card of its own. The version is the badge's tooltip.
- */
 class ExtensionVersions extends Widget
 {
     /**
@@ -29,7 +25,7 @@ class ExtensionVersions extends Widget
     protected ?array $extensions = null;
 
     /**
-     * Package names to leave out, matched with `fnmatch()`.
+     * Matched with `fnmatch()`.
      *
      * @param list<string> $excluded
      */

@@ -40,10 +40,7 @@ class TrailModelCollection
     private static array $failedClasses = [];
 
     /**
-     * Finds the model based on the given class string. If a model supports `i18n` tables, the corresponding language
-     * will be added to the model, separated by "::" like `\Hirtz\Cms\Models\Entry::en_US`.
-     *
-     * For this reason, the cache key is the table name, rather than the model class name.
+     * Cached by table name, since an i18n model carries its language in the class string (`Entry::en_US`).
      */
     public static function getModelByClassAndId(string $modelClass, int|string|null $modelId): ?Model
     {
@@ -79,8 +76,6 @@ class TrailModelCollection
     }
 
     /**
-     * Loads the records a page of trails points at with one query per class, rather than one per record.
-     *
      * @param Trail[] $trails
      */
     public static function preload(array $trails): void
@@ -131,8 +126,7 @@ class TrailModelCollection
     }
 
     /**
-     * The statics outlive the application; `ApplicationTrait::preInitInternal()` resets them, so a test's
-     * application does not report the record a previous one loaded before it was renamed.
+     * The statics outlive the application, so `ApplicationTrait::preInitInternal()` resets them.
      */
     public static function reset(): void
     {
@@ -141,9 +135,6 @@ class TrailModelCollection
         self::$failedClasses = [];
     }
 
-    /**
-     * This is the fallback method to format the value based on the attribute name
-     */
     public static function formatAttributeValue(Model $model, string $attribute, mixed $value): mixed
     {
         if ($model instanceof ActiveRecord) {
@@ -167,8 +158,8 @@ class TrailModelCollection
     }
 
     /**
-     * The resolved definitions before the declaration, as {@see DynamicRangeValidator::getDynamicRange()} and
-     * {@see SelectField::getItemsFromModel()} do: `getTypes()` is indexed by offset, `getTypeDefinitions()` by value.
+     * The resolved definitions, as {@see DynamicRangeValidator::getDynamicRange()} and
+     * {@see SelectField::getItemsFromModel()} read them, since `getTypes()` is indexed by offset.
      */
     private static function formatRangeValue(Model $model, string $attribute, mixed $value): mixed
     {
@@ -221,8 +212,6 @@ class TrailModelCollection
     }
 
     /**
-     * Cycles through the owner model validators to detect default display values for attribute names.
-     *
      * @return array<string, mixed>
      */
     private static function getDefaultAttributeValues(Model $model): array

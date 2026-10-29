@@ -35,7 +35,6 @@ class MigrateController extends \yii\console\controllers\MigrateController
     public $migrationNamespaces = [];
 
     /**
-     * The actions that apply migrations, and therefore the only ones the history guard runs for.
      * @see MigrateController::checkHistory()
      */
     private const array MIGRATING_ACTIONS = ['up', 'down', 'to', 'redo', 'fresh'];
@@ -43,8 +42,8 @@ class MigrateController extends \yii\console\controllers\MigrateController
     public string $dbFile = '@root/config/db.php';
 
     /**
-     * @var string a script an upgrade may leave in the project to repair a migration history this code cannot
-     * resolve. Set to an empty string to refuse instead of repairing.
+     * @var string a script an upgrade may leave to repair a migration history this code cannot resolve, empty to
+     * refuse instead
      * @see MigrateController::repairHistory()
      */
     public string $upgradeFile = '@root/upgrade/collapse.php';
@@ -78,14 +77,8 @@ class MigrateController extends \yii\console\controllers\MigrateController
     }
 
     /**
-     * `BaseMigrateController` resolves a namespace's directory through an alias of the namespace's own name, in a
-     * private method — and Composer writes one into `vendor/yiisoft/extensions.php` for every installed extension
-     * but never for the root package, so a project's own `App\Migrations` had nothing to resolve against. The
-     * alias is registered here, from the autoloader and only for the namespaces that lack one, rather than
-     * configured: nothing outside a migration run asks for it, and `Db\MigrationHistory` — which reads the same
-     * namespaces from a web request — needs no alias at all. A namespace nothing can resolve is dropped, as the
-     * history does: `App\Migrations` is registered for every installation, and a bundle installed on its own has
-     * no `App\` prefix at all, where Yii would throw on the missing alias.
+     * Yii resolves a namespace's directory through an alias Composer never writes for the root package, and a
+     * namespace nothing resolves is dropped, since a standalone bundle has no `App\` prefix and Yii would throw.
      */
     protected function setMigrationNamespaceAliases(): void
     {
@@ -137,17 +130,8 @@ class MigrateController extends \yii\console\controllers\MigrateController
     }
 
     /**
-     * A migration history naming classes that cannot be loaded means the database predates a rename of the
-     * migration namespaces — it has not been upgraded. Yii would treat every migration as new and try to
-     * build the schema again over populated tables, so the run stops here.
-     *
-     * The repair, if the project ships one, runs **before** `parent::beforeAction()`: the list of new
-     * migrations is computed inside the action, so rewriting the history first is what makes the list right.
-     *
-     * Only the actions that apply migrations are guarded. Refusing `backup` because the history is unresolved
-     * is backwards — it is the one thing worth doing first — and `repairHistory()` calls `actionBackup()`
-     * itself, so guarding it would recurse. Reading the history table for `create` on a database that has
-     * none is the other reason: it takes a metadata lock the caller never asked for.
+     * Must repair before `parent::beforeAction()` computes the new migrations, and guards only the migrating
+     * actions, since `repairHistory()` calls `actionBackup()` itself and `create` must take no metadata lock.
      */
     protected function checkHistory(string $actionId): bool
     {
@@ -175,9 +159,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
     }
 
     /**
-     * Runs the script an upgrade left in the project, then reads the history again. The file's presence is
-     * the authorisation: it is generated, reviewed and committed by hand, and a deployment cannot be asked
-     * to confirm anything.
+     * The file's presence is the authorisation, since a deployment cannot be asked to confirm anything.
      */
     protected function repairHistory(MigrationHistory $history): bool
     {
@@ -266,8 +248,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
     }
 
     /**
-     * The backup is taken before the first migration of the run. One that fails stops the run: a deployment would
-     * otherwise apply the migrations without the backup it was configured to take.
+     * A failed backup stops the run, since a deployment would otherwise migrate without the backup it configured.
      */
     private function backUpOnce(): bool
     {

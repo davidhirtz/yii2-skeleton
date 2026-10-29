@@ -18,9 +18,8 @@ use Stringable;
 use Yii;
 
 /**
- * The navbar sits outside `#wrap`, whose `hx-select` and `hx-target` the body declares for every element: the input
- * has to override both, or a keystroke swaps the whole page. Deliberately not a `<form>` — it would be the first one
- * on every admin page and a functional test's `$this->submit('form')` would find it.
+ * Not a `<form>`, since it would be the first on every admin page and a functional test's `submit('form')` would find
+ * it.
  */
 class NavBarSearch extends Widget
 {
@@ -73,10 +72,6 @@ class NavBarSearch extends Widget
             ]);
     }
 
-    /**
-     * Both icons are rendered and the open state picks one in CSS, so the toggle needs no second render. The
-     * disclosure state is `aria-expanded` rather than a second label, which the script keeps in sync.
-     */
     protected function getToggle(): Stringable
     {
         return Button::make()

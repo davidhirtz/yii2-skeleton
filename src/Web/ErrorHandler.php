@@ -14,9 +14,6 @@ class ErrorHandler extends \yii\web\ErrorHandler
 {
     public $traceLine = '<a href="phpstorm://open?file={file}&line={line}">{html}</a>';
 
-    /**
-     * @var bool whether the redirect table should be checked first on 404 errors, defaults to `true`.
-     */
     public bool $enableRedirect = true;
 
     #[Override]
@@ -35,10 +32,8 @@ class ErrorHandler extends \yii\web\ErrorHandler
     }
 
     /**
-     * A {@see Redirect} may name a host (`www.example.com/old`) or not (`old`); a host-qualified record wins. The
-     * host is the URL manager's, not the request's, so a canonical host set by a URL manager subclass matches too.
-     * A record naming the query string wins over one naming the path alone, which is the one a tracked link
-     * (`old?utm_source=…`) finds, and which hands the query on to the target.
+     * A host-qualified record (the URL manager's host, not the request's) wins, then one naming the query string over
+     * the path alone, which hands a tracked link's query on to the target.
      */
     protected function redirectRequestUri(): bool
     {

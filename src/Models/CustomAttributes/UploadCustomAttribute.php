@@ -18,12 +18,7 @@ use yii\base\Model;
 use yii\web\UploadedFile;
 
 /**
- * One file attached to a record, stored by the `upload` component rather than in the media library: it has no folder,
- * no transformations and no assets, and it goes with the record it hangs on.
- *
- * The JSON column holds the filename alone — a translatable definition one per language — and the file itself sits in
- * a directory derived from the record. Until the record is saved the attribute carries the token the upload action
- * parked the file under, which is what lets a file be picked before the record exists.
+ * Until the record is saved the attribute holds the token the upload action parked the file under, not a filename.
  *
  * @see Upload
  * @see \Hirtz\Skeleton\Modules\Admin\Controllers\UploadController
@@ -61,8 +56,7 @@ class UploadCustomAttribute extends CustomAttribute
     }
 
     /**
-     * @param string|null $permission the auth item the upload action requires, which is the owner's own — the
-     * skeleton cannot know it, and a definition declaring none is guarded by the rate limit alone.
+     * Without a permission the upload action is guarded by the rate limit alone.
      */
     public function permission(?string $permission): static
     {
@@ -90,7 +84,7 @@ class UploadCustomAttribute extends CustomAttribute
     }
 
     /**
-     * @return string|null the URL of the stored file, `null` while the attribute is empty or holds a token
+     * `null` while the attribute is empty or holds a token.
      */
     public function getUrl(ActiveRecord $owner, string $name): ?string
     {
@@ -102,16 +96,13 @@ class UploadCustomAttribute extends CustomAttribute
             : null;
     }
 
-    /**
-     * The `accept` attribute of the file input, so the picker offers the right files to begin with.
-     */
     public function getAccept(): ?string
     {
         return $this->extensions ? '.' . implode(',.', $this->extensions) : null;
     }
 
     /**
-     * Whether the upload action may take this file at all, answered before it is written to the temporary directory.
+     * Answered before the file is written to the temporary directory.
      */
     public function validateUploadedFile(UploadedFile $upload): ?string
     {
@@ -125,8 +116,8 @@ class UploadCustomAttribute extends CustomAttribute
     }
 
     /**
-     * The files are served by the web server straight out of a public directory, so what may land there is an allow
-     * list and never a default — without one an editor could store a `.php` file and run it.
+     * An allow list, never a default: the directory is served as is, so an editor could otherwise store a `.php`
+     * file and run it.
      *
      * @return list<string>
      */
@@ -140,8 +131,8 @@ class UploadCustomAttribute extends CustomAttribute
     }
 
     /**
-     * An inline rule names a method of the *model*, which hands the attribute back here — a closure would be rebound
-     * to the model by {@see \yii\validators\InlineValidator} and an array callable is handed no model at all.
+     * An inline rule naming a model method, since {@see \yii\validators\InlineValidator} rebinds a closure to the
+     * model and hands an array callable no model at all.
      *
      * @see \Hirtz\Skeleton\Models\Traits\CustomAttributesTrait::validateCustomAttributeUpload()
      */
@@ -152,8 +143,7 @@ class UploadCustomAttribute extends CustomAttribute
     }
 
     /**
-     * The value is either the token the upload action answered with or a filename; anything else is dropped rather
-     * than reported, since a legitimate client never sends it.
+     * Anything but a token or a filename is dropped rather than reported, since a legitimate client never sends it.
      */
     public function validateUpload(Model $owner, string $attribute): void
     {
@@ -219,10 +209,6 @@ class UploadCustomAttribute extends CustomAttribute
         return is_string($value) ? (string)$this->serialize($value) : null;
     }
 
-    /**
-     * The record has an id now, so the file the upload action parked under the token moves into the directory it
-     * keeps for good — replacing whatever the attribute held before, since it holds one file.
-     */
     #[Override]
     public function afterSave(Model $owner, string $name, mixed $old): void
     {

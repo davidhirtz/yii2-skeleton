@@ -13,8 +13,7 @@ use yii\base\InvalidConfigException;
 class UniqueValidator extends \yii\validators\UniqueValidator
 {
     /**
-     * Extends the default `unique` validator by adding a default `when` check, that prevents database queries when
-     * the attributes haven't changed.
+     * Adds a default `when` check, so unchanged attributes run no query.
      */
     #[\Override]
     public function init(): void
@@ -112,7 +111,7 @@ class UniqueValidator extends \yii\validators\UniqueValidator
     }
 
     /**
-     * @return array<string, string> target attribute per model attribute
+     * @return array<string, string>
      */
     protected function getNormalizedTargetAttributes(string $attribute): array
     {

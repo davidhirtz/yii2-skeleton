@@ -74,8 +74,7 @@ class ModelHeaderTest extends TestCase
     }
 
     /**
-     * The name is what a view transition matches the same record by across two pages, so an item that did not
-     * change does not animate — it has to follow the record, never its place in the line.
+     * A view transition matches a record across two pages by the name, so it follows the record, never its place.
      */
     public function testASubtitleItemIsNamedAfterItsRecordAndNotItsPosition(): void
     {
@@ -231,8 +230,7 @@ class ModelHeaderTest extends TestCase
     }
 
     /**
-     * @return list<array{0: string, 1: string, 2: string, 3: string}> the whole tag, then its
-     *     `view-transition-name`, its `href` and its text, per item
+     * @return list<array{0: string, 1: string, 2: string, 3: string}>
      */
     private function getSubtitleItems(string $html): array
     {

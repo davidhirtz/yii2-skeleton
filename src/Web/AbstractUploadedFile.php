@@ -11,16 +11,14 @@ use Yii;
 use yii\web\UploadedFile;
 
 /**
- * An upload the server produces itself rather than one a browser posted: {@see StreamUploadedFile} fetches a URL,
- * {@see CopiedUploadedFile} copies a file the application names, {@see ContentUploadedFile} writes bytes a request
- * carried. Which one a caller reaches for is the whole of the difference between a request-supplied target and a
- * trusted one.
+ * The subclass a caller picks is the whole difference between a request-supplied target and a trusted one.
  */
 abstract class AbstractUploadedFile extends UploadedFile
 {
     /**
-     * @var list<string>|null the extensions the upload may turn out to have, filtered against the mime type found
-     * after it was written. This also determines the file ending; leave empty to use the source's.
+     * Filtered against the mime type found after writing, it also sets the file ending; empty keeps the source's.
+     *
+     * @var list<string>|null
      */
     public ?array $allowedExtensions = null;
 
@@ -45,8 +43,7 @@ abstract class AbstractUploadedFile extends UploadedFile
     }
 
     /**
-     * Writes the source to {@see UploadedFile::$tempName} and sets {@see UploadedFile::$name}, or reports why it
-     * could not through {@see UploadedFile::$error}.
+     * Sets {@see UploadedFile::$tempName} and {@see UploadedFile::$name}, or {@see UploadedFile::$error} on failure.
      */
     abstract protected function saveTemporaryFile(): void;
 
@@ -104,8 +101,7 @@ abstract class AbstractUploadedFile extends UploadedFile
     }
 
     /**
-     * The same directory every other upload waits in, so one collector reaches all of them — a file parked under
-     * a path of its own would be swept by nothing the moment a project moves {@see Upload::$tempPath}.
+     * The directory every other upload waits in, so the one collector of {@see Upload::$tempPath} reaches it.
      */
     public function getTemporaryUploadPath(): string
     {

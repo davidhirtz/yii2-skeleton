@@ -9,11 +9,7 @@ use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Base\Traits\IntBackedEnumTrait;
 
 /**
- * A named, iconed value the admin offers in a select. It is born with its value and must never be mutated
- * afterwards: what holds it caches it, and every use of that value shares the instance.
- *
- * {@see ModelDefinition} is the half a model declares and is validated against — a type, a status. A definition
- * that belongs to no record extends this one directly.
+ * Never mutated after construction: what holds a definition caches it, and every use of its value shares the instance.
  */
 abstract class Definition
 {

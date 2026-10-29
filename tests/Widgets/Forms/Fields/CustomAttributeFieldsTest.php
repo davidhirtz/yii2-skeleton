@@ -439,8 +439,7 @@ class CustomAttributeFieldsTest extends TestCase
     }
 
     /**
-     * A lone row has nowhere to move to. The script hides the handle again as rows come and go, so the server
-     * only has to get the first paint right.
+     * The script hides the handle as rows come and go, so the server only has to get the first paint right.
      */
     public function testTheReorderHandleIsHiddenWhileThereIsOneRow(): void
     {
@@ -512,9 +511,7 @@ class CustomAttributeFieldsTest extends TestCase
     }
 
     /**
-     * Every type change reloads, whatever the types have in common: what a type decides reaches past its custom
-     * attributes — hidden fields, a field another bundle contributes, a panel outside the form — and none of that
-     * is visible from here. See monorepo issue #118.
+     * Every type change reloads, since what a type decides reaches past its custom attributes (#118).
      */
     public function testTypeSelectReloadsThePage(): void
     {

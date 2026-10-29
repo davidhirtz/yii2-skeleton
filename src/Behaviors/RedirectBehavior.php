@@ -53,9 +53,6 @@ class RedirectBehavior extends Behavior
         $this->prevUrl = !$this->owner->getIsNewRecord() ? Url::sanitize($this->getUrl()) : null;
     }
 
-    /**
-     * Inserts and updates related {@see Redirect} models on owner's `url` change.
-     */
     public function afterSave(): void
     {
         $url = Url::sanitize($this->getUrl());
@@ -68,9 +65,6 @@ class RedirectBehavior extends Behavior
         $this->prevUrl = $url;
     }
 
-    /**
-     * Deletes all {@see Redirect} models pointing to owner's `url` on deleting.
-     */
     public function afterDelete(): void
     {
         if ($url = Url::sanitize($this->getUrl())) {
@@ -79,15 +73,8 @@ class RedirectBehavior extends Behavior
     }
 
     /**
-     * Updates previous redirect URLs. This is not handled via `updateAll` to enable {@see Trail} records.
-     *
-     * A redirect the owner has just moved back onto is a no-op and is deleted rather than updated: the update
-     * would fail {@see Redirect::validateUrl()} and, unreported, leave the row pointing at a URL that no longer
-     * resolves — and the redirect recorded for this rename would then chain through it onto itself.
-     *
-     * That deletion comes first, and the ordering is load-bearing: `validateUrl()` resolves the chain its new
-     * target starts, so while the no-op row is still there every other row updated in this pass follows it back
-     * to the URL they are all being moved off.
+     * Must delete a redirect the owner moved back onto first, or {@see Redirect::validateUrl()} chains every other row
+     * back through it.
      */
     protected function updatePreviousRedirectUrls(string $url): void
     {
@@ -129,8 +116,7 @@ class RedirectBehavior extends Behavior
     }
 
     /**
-     * Deletes redirect records matching given `attribute`. This is not handled via `deleteAll` to enable {@see Trail}
-     * records.
+     * One by one rather than `deleteAll()`, so each deletion writes its {@see Trail}.
      */
     protected function deleteRedirects(string $url): void
     {
@@ -144,10 +130,6 @@ class RedirectBehavior extends Behavior
         }
     }
 
-    /**
-     * The owner's own `getUrl()` where it has one — Yii's behavior magic used to pick between the two, which left
-     * every call site reading an ambiguous union — and a URL built from its `getRoute()` otherwise.
-     */
     public function getUrl(): false|string
     {
         if (method_exists($this->owner, 'getUrl')) {

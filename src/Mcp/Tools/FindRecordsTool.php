@@ -22,7 +22,7 @@ class FindRecordsTool extends ResourceTool
     public int $maxLimit = 100;
 
     /**
-     * @var int the search hits a text query narrows the records to before filter, order and offset apply
+     * A text query narrows the records to this many hits before filter, order and offset apply.
      */
     public int $maxSearchHits = 1000;
 

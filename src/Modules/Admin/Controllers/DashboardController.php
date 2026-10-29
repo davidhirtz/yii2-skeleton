@@ -55,8 +55,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * A bootstrap runs on every request, the dashboard on one action — so a `Closure` keeps the models the
-     * permission constants live on from being autoloaded just to name them.
+     * A `Closure` keeps a bootstrap from autoloading the models the permission constants live on.
      *
      * @param array<string>|Closure(): array<string> $roles
      */

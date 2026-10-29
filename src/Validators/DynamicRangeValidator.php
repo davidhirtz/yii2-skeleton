@@ -16,15 +16,12 @@ use yii\validators\RangeValidator;
 
 class DynamicRangeValidator extends RangeValidator implements JsonSchemaInterface
 {
-    /**
-     * @var bool whether numeric values should be cast to integer if validation was successful.
-     */
     public bool $integerOnly = true;
 
     /**
-     * @var array<int|string, mixed>|\Closure|\Traversable<int|string, mixed> which will be dynamically overridden by
-     * {@see DynamicRangeValidator::getDynamicRange()}. Defaults to an empty array to prevent an exception thrown
-     * by {@see RangeValidator}.
+     * An empty array rather than none, since {@see RangeValidator} throws without one.
+     *
+     * @var array<int|string, mixed>|\Closure|\Traversable<int|string, mixed>
      */
     public $range = [];
 
@@ -47,11 +44,8 @@ class DynamicRangeValidator extends RangeValidator implements JsonSchemaInterfac
     }
 
     /**
-     * The resolved definitions, not the declaration: {@see TypeAttributeInterface::getTypes()} returns a list whose
-     * keys are offsets, while the definitions are indexed by value.
-     *
-     * A {@see Type} the record cannot take is out of range, so a value the admin never offered cannot be posted
-     * past it either — {@see Type::isAvailableOrStored()} is what keeps the record's own value valid.
+     * Reads the definitions, keyed by value unlike the list {@see TypeAttributeInterface::getTypes()} returns; a
+     * {@see Type} the record cannot take is out of range.
      *
      * @return array<int|string, mixed>
      */
@@ -74,8 +68,6 @@ class DynamicRangeValidator extends RangeValidator implements JsonSchemaInterfac
     }
 
     /**
-     * The definitions in range, keyed by value.
-     *
      * @return array<int|string, mixed>
      */
     protected function getDefinitions(Model $model, string $attribute): array

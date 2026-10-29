@@ -27,14 +27,13 @@ class View extends \yii\web\View
     public ?string $titleTemplate = null;
 
     /**
-     * How deep in the admin the page sits, written onto `#wrap` by the layout so a swap can tell which way it
-     * is going. The header sets it; the content renders before the layout, so the layout reads it back.
+     * Set by the header and written onto `#wrap` by the layout, which renders after the content.
      */
     public int $depth = 0;
 
     /**
-     * The nonce of the page's `Content-Security-Policy`, set by the controller sending the strict policy. Every
-     * script and `<style>` rendered here carries it; without one a page renders as before, so a cached one is unchanged.
+     * Set by a controller sending the strict policy; without one a page renders as before, so a cached one is
+     * unchanged.
      */
     public ?string $nonce = null;
 
@@ -316,8 +315,7 @@ class View extends \yii\web\View
     }
 
     /**
-     * A file the deployment has not published yet answers without a version rather than taking the page down:
-     * `filemtime()` warns, and the error handler raises that as an exception.
+     * An unpublished file answers without a version, since `filemtime()` warns and the error handler raises that.
      */
     public function getFilenameWithVersion(string $filename): string
     {

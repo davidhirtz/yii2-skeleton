@@ -39,8 +39,7 @@ abstract class Widget implements Configurable, Stringable, ViewContextInterface
     private ?string $html = null;
 
     /**
-     * A subclass constructor runs before this one, so it must not read `$view` or `$webuser` — it has to call the
-     * components itself.
+     * A subclass constructor runs before this one, so it must not read `$view` or `$webuser` but call the components.
      *
      * @param array<string, mixed> $config
      */

@@ -14,9 +14,7 @@ final class SearchText
     public const int MIN_TOKEN_LENGTH = 3;
 
     /**
-     * InnoDB's built-in stopword list. Together with `MIN_TOKEN_LENGTH` it says which tokens InnoDB leaves out
-     * of the index — never which query terms are dropped, since a prefix term is always matched literally. A
-     * project that sets `innodb_ft_server_stopword_table` replaces this list too.
+     * What InnoDB leaves out of the index, never which query terms it drops; `innodb_ft_server_stopword_table` replaces it.
      */
     public const array STOPWORDS = [
         'a', 'about', 'an', 'are', 'as', 'at', 'be', 'by', 'com', 'de', 'en', 'for', 'from', 'how', 'i', 'in',
@@ -25,9 +23,8 @@ final class SearchText
     ];
 
     /**
-     * Prefixed to a token InnoDB would not index, so the index carries a form of it that InnoDB keeps: the
-     * underscore is a word character to its parser and counts towards the minimum length, so `__i` is indexed,
-     * and no word or query starts with two of them. Changing it needs a `search/rebuild`.
+     * InnoDB indexes `__i`, since the underscore is a word character counting towards the minimum length; changing it
+     * needs a `search/rebuild`.
      */
     public const string UNINDEXED_PREFIX = '__';
 
@@ -56,7 +53,7 @@ final class SearchText
     }
 
     /**
-     * @return list<string> every word of the search, with the boolean operators removed
+     * @return list<string>
      */
     public static function tokenize(?string $search): array
     {
@@ -91,10 +88,7 @@ final class SearchText
     }
 
     /**
-     * A token InnoDB indexes is asked for as an ordinary prefix. One it does not is asked for as either its
-     * prefixed copy or the plain prefix, so `com` finds both `domain.com` and `commerce`. A stopword beside
-     * another token only ranks, so `the Bergfirma` finds the record without `the`; on its own it is required.
-     * The optional pair is flat: InnoDB ORs a parenthesised group without an operator with the whole query.
+     * The optional pair stays flat, since InnoDB ORs a parenthesised group without an operator with the whole query.
      *
      * @param list<string> $tokens
      */

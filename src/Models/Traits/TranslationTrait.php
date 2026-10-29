@@ -12,10 +12,9 @@ use Override;
 use Yii;
 
 /**
- * Stores the translated attributes (`name_de`) in {@see Translation} records: they stay attributes but have no column.
  * Requires {@see I18nAttributesTrait}.
  *
- * @property-read Translation[] $translations {@see static::getTranslations()}
+ * @property-read Translation[] $translations
  *
  * @mixin ActiveRecord
  */
@@ -101,8 +100,8 @@ trait TranslationTrait
     }
 
     /**
-     * Populates like `__set()`: a value assigned before the translations are loaded would otherwise be overwritten by
-     * the stored one on the first read, which validation does.
+     * Populates first, or a value assigned before the translations were loaded is overwritten by the stored one on
+     * the first read.
      *
      * @param string $name
      */

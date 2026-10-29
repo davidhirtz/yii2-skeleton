@@ -25,8 +25,9 @@ class ModelSitemap extends AbstractSitemap
     public string $modelClass;
 
     /**
-     * @var Closure(T, string|null): (array<string, mixed>|list<array<string, mixed>>|false)|null the URL or URLs of a
-     * single record. Required unless {@see getRecordUrls()} is overridden.
+     * Required unless {@see getRecordUrls()} is overridden.
+     *
+     * @var Closure(T, string|null): (array<string, mixed>|list<array<string, mixed>>|false)|null
      */
     public ?Closure $url = null;
 
@@ -35,8 +36,7 @@ class ModelSitemap extends AbstractSitemap
     public ?string $changeFrequency = null;
 
     /**
-     * @var float|null the default priority, leave empty to omit. Valid values range from 0.0 to 1.0, the default of a
-     * page is 0.5.
+     * From 0.0 to 1.0; `null` omits it.
      */
     public ?float $priority = null;
 
@@ -92,9 +92,7 @@ class ModelSitemap extends AbstractSitemap
     }
 
     /**
-     * A record produces one URL per language, so a page holds fewer records than URLs whenever the URLs are
-     * translated. Integer division keeps the page below {@see getMaxUrlCount()} — a fractional limit is silently
-     * dropped by the query builder, which would put every record on every page.
+     * Integer division, since the query builder silently drops a fractional limit and puts every record on every page.
      */
     public function getRecordsPerPage(): int
     {
@@ -107,8 +105,7 @@ class ModelSitemap extends AbstractSitemap
     }
 
     /**
-     * The record count is what the pages are calculated from, so a record the URL generation skips — a disabled or
-     * routeless one the query cannot filter — shortens its page rather than moving a URL to the next one.
+     * A record this skips shortens its page, since the pages are calculated from the record count.
      *
      * @param T $record
      * @return list<array<string, mixed>>
@@ -167,7 +164,7 @@ class ModelSitemap extends AbstractSitemap
     }
 
     /**
-     * The languages a record is repeated for, `[null]` for a model whose URLs are not translated.
+     * `[null]` for a model whose URLs are not translated.
      *
      * @return list<string|null>
      */

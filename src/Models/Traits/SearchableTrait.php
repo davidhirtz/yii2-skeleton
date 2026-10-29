@@ -61,8 +61,9 @@ trait SearchableTrait
     }
 
     /**
-     * @param class-string<SearchableInterface>|null $modelClass the class the documents are stored under, defaults to
-     * the registered class this record is or extends
+     * `$modelClass` defaults to the registered class this record is or extends.
+     *
+     * @param class-string<SearchableInterface>|null $modelClass
      * @return list<SearchDocument>
      */
     public function getSearchDocuments(?string $modelClass = null): array
@@ -122,8 +123,7 @@ trait SearchableTrait
     }
 
     /**
-     * A record edited through another is named the way its page header names it, "About — Section 2/5": its own
-     * name would say nothing about where it is, and a section's is usually empty.
+     * A record edited through another is named the way its page header names it, since its own name is often empty.
      */
     protected function createSearchResult(): SearchResult
     {
@@ -164,9 +164,8 @@ trait SearchableTrait
     }
 
     /**
-     * The readable content plus what InnoDB would otherwise not have: the transliteration that makes `Mueller`
-     * find `Müller`, and a prefixed copy of every stopword and short token, which is the only way `.com` or `IT`
-     * reach the index at all. The title is read for its tokens but not repeated, so it keeps its own weight.
+     * Adds the transliteration (`Mueller` finds `Müller`) and a prefixed copy of every stopword and short token,
+     * which InnoDB would otherwise never index.
      */
     protected function getSearchIndexContent(?string $language = null): string
     {
@@ -192,10 +191,8 @@ trait SearchableTrait
     }
 
     /**
-     * Read through the magic getter, so a searchable name is any readable property: a column, a translated or
-     * custom attribute, or a getter such as the media `File::getFilename()`. A custom attribute only some types or
-     * some projects declare is absent rather than empty, which is why a name the record cannot read is skipped, as is
-     * one its type hides.
+     * A name the record cannot read or its type hides is skipped, since a custom attribute only some types declare
+     * is absent rather than empty.
      */
     protected function getSearchAttributeValue(string $attribute, ?string $language = null): mixed
     {

@@ -8,9 +8,7 @@ use Override;
 use yii\db\Migration;
 
 /**
- * Indexes `redirect.url`, which every rename looks redirects up by (once per file of a renamed folder), widens
- * `redirect.request_uri` and `url` for a URI qualified by its host, and makes `user.is_owner` a flag that cannot be
- * `NULL`.
+ * Indexes `redirect.url`, since every rename looks redirects up by it once per file of a renamed folder.
  *
  * @noinspection PhpUnused
  */

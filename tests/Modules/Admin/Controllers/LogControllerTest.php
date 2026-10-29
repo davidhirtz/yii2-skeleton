@@ -88,10 +88,7 @@ class LogControllerTest extends TestCase
         self::assertStringContainsString('And something else did too', $html);
     }
 
-    /**
-     * An `info` entry sharing the date of the entry above it holds that request's parameters, so it is appended to
-     * it rather than listed as an entry of its own.
-     */
+    /** An `info` entry sharing the date of the entry above holds that request's parameters, so it is appended to it. */
     public function testViewAppendsAnInfoEntryToTheOneAboveIt(): void
     {
         $this->login();

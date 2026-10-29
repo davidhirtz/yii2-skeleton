@@ -38,11 +38,8 @@ trait MigrationTrait
     }
 
     /**
-     * Adds the permission if it is not there, and hangs it under each parent it is not already under.
-     *
-     * `DbManager::add()` and `addChild()` are plain inserts, so both are a duplicate-key error on a second
-     * run — and after the squash there always is one: a fresh install gets these items from the baseline and
-     * then runs the migration that created them.
+     * `DbManager::add()` and `addChild()` are plain inserts, and a fresh install meets these items twice: from the
+     * baseline, then from the migration that created them.
      */
     protected function addChildIfMissing(Item $parent, Item $child): void
     {
@@ -78,8 +75,7 @@ trait MigrationTrait
     }
 
     /**
-     * Grants `$new` to every parent and every assignee of any of the `$old` items, then deletes those — so an
-     * assignee of a single old verb permission ends up with the whole model.
+     * An assignee of a single old verb permission ends up with the whole model.
      *
      * @param list<string> $old
      */
@@ -121,8 +117,8 @@ trait MigrationTrait
     }
 
     /**
-     * The reverse of {@see MigrationTrait::replaceAuthItems()}. The old items share the new item's description and
-     * parents: the keys that described them one by one are gone, and so is the hierarchy between them.
+     * The old items share the new item's description and parents, since the keys that described them one by one
+     * are gone.
      *
      * @param list<string> $old
      */
@@ -243,13 +239,8 @@ trait MigrationTrait
     }
 
     /**
-     * The mirror of the `…IfExists` guards below, and it exists for one reason: after the squash a
-     * migration runs against **two** starting schemas. An upgraded project brings the v2 shape, and a fresh
-     * install brings a baseline that already holds the whole v3 schema — so every kept migration has to add
-     * what is missing and skip what is there, on both paths.
-     *
-     * `Db\MigrationIdempotencyTest` re-applies every kept migration against the finished schema and fails on
-     * one that is not safe to run twice, so this is checked rather than remembered.
+     * After the squash a migration runs against both the v2 schema and the baseline's v3 one, which
+     * `Db\MigrationIdempotencyTest` checks.
      */
     protected function addColumnIfMissing(string $table, string $column, string $type): void
     {
@@ -279,14 +270,10 @@ trait MigrationTrait
     }
 
     /**
-     * Moves a column and any `<column>_<language>` beside it into the JSON column under the column's own name, then
-     * the {@see Translation} rows of the same attributes under their suffixed name, and drops the columns. Both
-     * shapes are read because a project whose configuration no longer names the attribute never had its columns
-     * moved to the translation table in the first place.
+     * Reads the `<column>_<language>` columns as well as the translation rows, since a project whose configuration
+     * no longer names the attribute never moved its columns to the translation table.
      *
      * @param list<string> $attributes
-     * @param string $modelClass the `model_class` of the translation rows, which a migration spells out: the class
-     * behind it may be gone by the time the migration runs
      */
     protected function moveColumnsToCustomAttributes(
         string $table,
@@ -408,11 +395,10 @@ trait MigrationTrait
     }
 
     /**
-     * The reverse: the source language goes back into its column, every other language back into a
-     * {@see Translation} row, and the keys are removed from the JSON. The values are read in PHP: MariaDB 10.5's
-     * `JSON_UNQUOTE()` answers in `utf8mb3` and would write an emoji back as `?`.
+     * The values are read in PHP, since MariaDB 10.5's `JSON_UNQUOTE()` answers in `utf8mb3` and would write an
+     * emoji back as `?`.
      *
-     * @param array<string, string> $columns the column definition per attribute
+     * @param array<string, string> $columns
      */
     protected function restoreColumnsFromCustomAttributes(
         string $table,
@@ -485,7 +471,7 @@ trait MigrationTrait
 
     /**
      * @param list<string> $attributes
-     * @return list<string> the attribute columns and their `_xx` variants, in the order they are written
+     * @return list<string>
      */
     private function getCustomAttributeColumns(string $table, array $attributes): array
     {
@@ -503,11 +489,10 @@ trait MigrationTrait
     }
 
     /**
-     * The columns are read off the table, never off the model: what a v2 database translated is what it has
-     * columns for, and the v3 model that would answer today declares a different set — one whose resolution can
-     * need columns this point in history does not have yet.
+     * The columns are read off the table, never off the model, since the v3 model declares a different set than
+     * the v2 database translated.
      *
-     * @param class-string $modelClass the `model_class` the records are filed under
+     * @param class-string $modelClass
      */
     protected function moveI18nColumnsToTranslations(string $table, string $modelClass): void
     {
@@ -535,8 +520,7 @@ trait MigrationTrait
     }
 
     /**
-     * A `<attribute>_<xx>` beside its attribute is a v2 translation, and one in a language the configuration no
-     * longer has would stay behind as a column with its values.
+     * A v2 `<attribute>_<xx>` in a language the configuration no longer has would stay behind as a column.
      *
      * @param list<string> $moved
      */
@@ -568,8 +552,9 @@ trait MigrationTrait
     }
 
     /**
-     * @return array<string, array{string, string}> the translated columns of the table, each mapped to its
-     * attribute and language. A `<attribute>_<language>` counts only while the source column is there too.
+     * A `<attribute>_<language>` counts only while its source column is there too.
+     *
+     * @return array<string, array{string, string}>
      */
     protected function getI18nColumns(string $table): array
     {
@@ -613,10 +598,10 @@ trait MigrationTrait
     }
 
     /**
-     * The rows themselves say which columns to rebuild, so a translation in a language the installation has since
-     * dropped is restored as well. Indexes are not; the migration that dropped one recreates it.
+     * The rows say which columns to rebuild, so a language the installation has since dropped is restored too,
+     * but no index is.
      *
-     * @param class-string $modelClass the `model_class` the records are filed under
+     * @param class-string $modelClass
      */
     protected function restoreI18nColumnsFromTranslations(string $table, string $modelClass): void
     {
@@ -659,7 +644,7 @@ trait MigrationTrait
 
     /**
      * @param class-string $modelClass
-     * @return list<array{string, string}> the attribute and language of every translation the model has
+     * @return list<array{string, string}>
      */
     private function getTranslatedAttributes(string $modelClass): array
     {
@@ -675,7 +660,7 @@ trait MigrationTrait
     }
 
     /**
-     * @return string|null the column, `null` while the source column it is typed and placed after is missing
+     * Answers `null` while the source column it is typed and placed after is missing.
      */
     private function addI18nColumn(string $table, string $attribute, string $language): ?string
     {
@@ -701,7 +686,6 @@ trait MigrationTrait
 
     /**
      * @param array<string> $names
-     * @return string the attribute's last language column, so a new one lands beside its siblings
      */
     private function getPreviousI18nColumn(array $names, string $attribute): string
     {

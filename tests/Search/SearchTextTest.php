@@ -54,8 +54,7 @@ class SearchTextTest extends TestCase
     }
 
     /**
-     * A token InnoDB indexes is an ordinary prefix; one it does not is either its copy or the plain prefix, so
-     * `com` finds `domain.com` as well as `commerce`.
+     * A token InnoDB drops is its copy or the plain prefix, so `com` finds `domain.com` as well as `commerce`.
      */
     public function testToBooleanQueryRequiresEveryTokenAsPrefix(): void
     {
@@ -66,8 +65,7 @@ class SearchTextTest extends TestCase
     }
 
     /**
-     * A stopword is only required when nothing else narrows the query; beside another token it ranks. The
-     * optional pair is never parenthesised, since InnoDB ORs an operator-less group with the whole query.
+     * The optional pair is never parenthesised, since InnoDB ORs an operator-less group with the whole query.
      */
     public function testToBooleanQueryMakesAStopwordOptionalBesideARequiredTerm(): void
     {

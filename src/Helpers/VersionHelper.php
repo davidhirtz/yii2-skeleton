@@ -8,16 +8,15 @@ use Composer\InstalledVersions;
 use Yii;
 
 /**
- * The versions a running installation reports about itself. Composer is the source of truth, since a deployed
- * project rarely ships a `.git` directory; where one exists it is preferred, because `vendor/composer/installed.php`
- * is only rewritten by `composer install` and therefore lags behind the checked out commit.
+ * Prefers `.git` where one exists, since `vendor/composer/installed.php` lags behind the checked out commit.
  */
 class VersionHelper
 {
     /**
-     * @var list<string> the installed packages that are not the platform, matched against the full name with
-     * `fnmatch()`. The framework's own extensions carry its version, and the one `davidhirtz/` package listed
-     * is v2's date dependency, which a project may still require.
+     * Matched with `fnmatch()`; the one `davidhirtz/` package is v2's date dependency, which a project may still
+     * require.
+     *
+     * @var list<string>
      */
     final public const array EXCLUDED_PACKAGES = [
         'yiisoft/*',
@@ -25,10 +24,7 @@ class VersionHelper
     ];
 
     /**
-     * Which of the installed extensions make up the platform, and therefore what an installation's version is
-     * read from. One answer, since the version registry asks it as well as the system page.
-     *
-     * @param list<string> $excluded patterns to use in place of {@see static::EXCLUDED_PACKAGES}
+     * @param list<string> $excluded
      */
     public static function isPlatformPackage(string $name, array $excluded = self::EXCLUDED_PACKAGES): bool
     {
@@ -58,7 +54,7 @@ class VersionHelper
     }
 
     /**
-     * The checked out branch, `null` without a `.git` directory or on a detached HEAD.
+     * `null` without a `.git` directory or on a detached HEAD.
      */
     public static function getApplicationBranch(): ?string
     {
@@ -71,7 +67,7 @@ class VersionHelper
     }
 
     /**
-     * The time the application was last deployed: the commit's checkout time, or the last `composer install`.
+     * The commit's checkout time, or the last `composer install`.
      */
     public static function getApplicationUpdatedAt(): ?int
     {
@@ -80,7 +76,7 @@ class VersionHelper
     }
 
     /**
-     * @return array<string, string> the installed Yii extensions, mapped to their pretty version.
+     * @return array<string, string>
      */
     public static function getExtensions(): array
     {
@@ -95,8 +91,7 @@ class VersionHelper
     }
 
     /**
-     * The extensions with the commit they were installed from, which is the only thing that tells two `dev-main`
-     * installs apart.
+     * The reference is the only thing that tells two `dev-main` installs apart.
      *
      * @return array<string, array{version: string, reference: string|null}>
      */
@@ -148,8 +143,7 @@ class VersionHelper
     }
 
     /**
-     * A branch whose loose ref was packed away by `git gc` only exists in `packed-refs`, whose modification time is
-     * the time of the packing rather than of the commit.
+     * A ref `git gc` packed exists only in `packed-refs`, whose modification time is the packing's, not the commit's.
      *
      * @return array{reference: string, time: int}|array{}
      */

@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Search;
 
 /**
- * Deliberately thin: documents in, ids and scores out, so a real search engine can replace {@see MysqlDriver}
- * without touching the models or the hydration.
+ * Deliberately thin, so a real search engine can replace {@see MysqlDriver} without touching models or hydration.
  */
 interface SearchDriverInterface
 {

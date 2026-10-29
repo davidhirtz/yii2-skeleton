@@ -17,8 +17,7 @@ interface StatusAttributeInterface
     public const STATUS_DEFAULT = self::STATUS_ENABLED;
 
     /**
-     * The declaration, and the only instance method of the three: it is what an installation replaces through the
-     * container, and {@see \Hirtz\Skeleton\Models\Definitions\DefinitionRegistry} is its only caller.
+     * The only instance method of the three, since an installation replaces it through the container.
      *
      * @return list<Status>
      */

@@ -29,23 +29,11 @@ use Stringable;
 use Yii;
 
 /**
- * Casts the attributes to the type their validators describe when they enter the record (after
- * {@see SkeletonActiveRecord::load()}) and before they are validated and written, so rules, `isAttributeChanged()` and
- * the dirty attributes compare what the database returns. Types come from the validators, `null` for an empty value on
- * a nullable column and the scale of a `decimal` column from the table schema.
+ * Casts only losslessly (`"abc"` stays a string for the `integer` rule to reject), dates by their column rather than a
+ * rule.
  *
- * A value is only cast when nothing is lost: `"abc"` stays a string for the `integer` rule to reject. `null` is never
- * cast. A boolean is an integer and a `decimal` column a string at the column's scale, which is what MySQL returns.
- *
- * Dates are the one type the database returns differently: a `datetime` or `date` column is a {@see DateTime} or
- * {@see Date} from the find on, typed by its column rather than a rule. A posted date is read in the application's
- * time zone; one that would write what the record holds keeps the old instance, so it does not read as changed.
- *
- * A model's own `beforeSave()` runs before the cast when it assigns ahead of `parent::beforeSave()`, which triggers the
- * event, but only `save(false)` reaches it with anything uncast.
- *
- * @property array<string, mixed>|null $attributeTypes {@see static::setAttributeTypes()}
- * @property list<string>|null $nullableAttributes {@see static::setNullableAttributes()}
+ * @property array<string, mixed>|null $attributeTypes
+ * @property list<string>|null $nullableAttributes
  *
  * @extends Behavior<ActiveRecord|Model>
  */
@@ -59,22 +47,26 @@ class AttributeTypecastBehavior extends Behavior
     final public const string TYPE_DATE = 'date';
 
     /**
-     * @var array<string, mixed>|null the attribute types, auto-detected from the validators when `null`.
+     * `null` detects them from the validators.
+     *
+     * @var array<string, mixed>|null
      */
     private ?array $attributeTypes = null;
 
     /**
-     * @var list<string>|null the attributes cast to `null` when empty, auto-detected from the table schema when `null`.
+     * `null` detects them from the table schema.
+     *
+     * @var list<string>|null
      */
     private ?array $nullableAttributes = null;
 
     /**
-     * @var array<string, int>|null the scale of each `decimal` column
+     * @var array<string, int>|null
      */
     private ?array $decimalScales = null;
 
     /**
-     * @var array<string, self::TYPE_DATETIME|self::TYPE_DATE>|null the type of each `datetime` and `date` column
+     * @var array<string, self::TYPE_DATETIME|self::TYPE_DATE>|null
      */
     private ?array $dateAttributes = null;
 
@@ -205,8 +197,7 @@ class AttributeTypecastBehavior extends Behavior
     }
 
     /**
-     * A date that writes what the record holds is the old instance, so neither `isAttributeChanged()` nor the dirty
-     * attributes see a difference the column cannot store, such as microseconds.
+     * Answers the old instance for a date writing what the record holds, so microseconds never read as a change.
      */
     protected function typecastDate(string $attributeName, mixed $value, bool $isDate): mixed
     {
@@ -227,8 +218,7 @@ class AttributeTypecastBehavior extends Behavior
     }
 
     /**
-     * A string is read in the application's time zone, which is what an editor typed. One PHP reads only by rolling
-     * it over, such as `2024-02-31`, stays a string.
+     * A string is read in the application's time zone, and one PHP reads only by rolling over (`2024-02-31`) stays one.
      */
     protected function createDate(mixed $value, bool $isDate): Date|DateTime|null
     {
@@ -265,7 +255,7 @@ class AttributeTypecastBehavior extends Behavior
     }
 
     /**
-     * The column holds UTC; the record holds the application's time zone. The old value is the same instance.
+     * The column holds UTC, the record the application's time zone, and the old value is the same instance.
      */
     protected function populateDateAttributes(): void
     {

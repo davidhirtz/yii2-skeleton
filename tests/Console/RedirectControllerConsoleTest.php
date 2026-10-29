@@ -11,8 +11,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 
 /**
- * The host list is the one thing the command reads off the application, and a console application is where that
- * bites — hence a case of its own rather than a method in {@see RedirectControllerTest}.
+ * Separate from {@see RedirectControllerTest}, since the host list is read off a console application.
  */
 class RedirectControllerConsoleTest extends TestCase
 {
@@ -24,8 +23,7 @@ class RedirectControllerConsoleTest extends TestCase
     }
 
     /**
-     * `UrlManager::getHostInfo()` throws under a console application rather than answering `null`, so reading it
-     * for the default host list took the whole command down.
+     * `UrlManager::getHostInfo()` throws under a console application rather than answering `null`.
      */
     public function testAnUnconfiguredHostInfoIsReportedRatherThanThrown(): void
     {

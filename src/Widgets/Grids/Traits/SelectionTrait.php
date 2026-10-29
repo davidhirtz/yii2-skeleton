@@ -20,10 +20,8 @@ use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 
 /**
- * The checkbox column, the footer the selection reveals and the delete and status buttons in it. A using class calls
- * {@see static::configureSelection()} from its own `configure()` before it builds its columns, since a trait
- * has nowhere to register a listener, and names the checkbox column itself — where it sits is the grid's own
- * business.
+ * A using class calls {@see static::configureSelection()} from its own `configure()` before it builds its columns,
+ * since a trait has nowhere to register a listener.
  *
  * @phpstan-require-extends GridView
  */
@@ -54,19 +52,15 @@ trait SelectionTrait
     }
 
     /**
-     * Whether the acting user may delete what the grid lists at all — a picker, a grid of somebody else's
-     * records or one the permission does not cover offers no selection rather than a button that 403s.
+     * A picker, a grid of somebody else's records or one the permission does not cover offers no selection rather than
+     * a button that 403s.
      */
     protected function canDeleteSelection(): bool
     {
         return true;
     }
 
-    /**
-     * Whether the acting user may change the status of what the grid lists; opt-in, and the button also needs
-     * {@see static::getUpdateSelectionRoute()}. Without this or {@see static::canDeleteSelection()} a grid offers no
-     * selection at all, whatever else it adds to it.
-     */
+    /** Opt-in, and the button also needs {@see static::getUpdateSelectionRoute()}. */
     protected function canUpdateSelection(): bool
     {
         return false;
@@ -80,9 +74,6 @@ trait SelectionTrait
         return [$this->getStatusSelectionDropdown(), $this->getDeleteSelectionButton()];
     }
 
-    /**
-     * One item per status of the listed model, each posting it with the checked rows to the update route.
-     */
     protected function getStatusSelectionDropdown(): ?Stringable
     {
         $route = $this->getUpdateSelectionRoute();
@@ -159,7 +150,7 @@ trait SelectionTrait
     }
 
     /**
-     * @return array<int|string, mixed>|null `null` for a grid without a bulk delete
+     * @return array<int|string, mixed>|null
      */
     protected function getDeleteSelectionRoute(): ?array
     {
@@ -167,7 +158,7 @@ trait SelectionTrait
     }
 
     /**
-     * @return array<int|string, mixed>|null the action receiving the status and the selection, `null` for none
+     * @return array<int|string, mixed>|null
      */
     protected function getUpdateSelectionRoute(): ?array
     {

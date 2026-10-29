@@ -243,7 +243,7 @@ class I18nAttributesTraitTest extends TestCase
     }
 
     /**
-     * @return array<string, string|null> the stored German value per attribute
+     * @return array<string, string|null>
      */
     protected function getTranslations(int $id): array
     {

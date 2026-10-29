@@ -173,9 +173,6 @@ class UploadCustomAttributeTest extends TestCase
         self::assertDirectoryDoesNotExist(dirname($path, 2));
     }
 
-    /**
-     * A translatable definition is one file per language, in a directory of its own.
-     */
     public function testEachLanguageKeepsItsOwnFile(): void
     {
         $record = $this->createRecord();
@@ -199,8 +196,7 @@ class UploadCustomAttributeTest extends TestCase
     }
 
     /**
-     * The value becomes a path segment, so a value that would reach out of the record's own directory is dropped
-     * rather than stored.
+     * The value becomes a path segment, so one reaching out of the record's own directory is dropped.
      */
     #[DataProvider('outOfSegmentValueDataProvider')]
     public function testAValueThatIsNotASingleFilenameIsDropped(string $value): void
@@ -240,8 +236,7 @@ class UploadCustomAttributeTest extends TestCase
     }
 
     /**
-     * Sixteen letters and hyphens followed by a hyphen is a plain slug, and it once read as a token whose file was
-     * gone — so the record never validated again, and a save would have cut the name down to what followed.
+     * A slug of sixteen letters and hyphens followed by a hyphen once read as a token whose file was gone.
      */
     public function testAHyphenatedFilenameIsNotAToken(): void
     {
@@ -266,8 +261,7 @@ class UploadCustomAttributeTest extends TestCase
     }
 
     /**
-     * The token names no attribute: one parked for a more permissive attribute is held to the rules of the one it
-     * is handed to.
+     * The token names no attribute, so one parked for a more permissive attribute must not bypass this one's rules.
      */
     public function testATokenIsHeldToTheRulesOfTheAttributeItIsHandedTo(): void
     {
@@ -338,8 +332,7 @@ class UploadCustomAttributeTest extends TestCase
     }
 
     /**
-     * A duplicate is inserted with the source's filename, which without a copy of its own would point into the
-     * source's directory — and go with it the moment the source is deleted.
+     * Without a copy, the duplicate's filename points into the source's directory and goes with the source.
      */
     public function testADuplicateGetsItsOwnCopyOfTheFile(): void
     {
@@ -364,8 +357,7 @@ class UploadCustomAttributeTest extends TestCase
     }
 
     /**
-     * The directory is public and the web server serves it, so what may land there is an allow list — a definition
-     * without one would let an editor store a `.php` file.
+     * The directory is served publicly, so without an allow list an editor could store a `.php` file.
      */
     public function testADefinitionWithoutExtensionsIsRefused(): void
     {
@@ -385,9 +377,6 @@ class UploadCustomAttributeTest extends TestCase
         return $record;
     }
 
-    /**
-     * Stands in for what the upload action parks under a token, so the model side is tested without the request.
-     */
     private function createToken(string $filename, string $content = 'x'): string
     {
         $token = 'abcdefghijklmnop_' . $filename;

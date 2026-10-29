@@ -11,8 +11,7 @@ use yii\helpers\BaseArrayHelper;
 class ArrayHelper extends BaseArrayHelper
 {
     /**
-     * Yii answers a plain `array`, which loses the element type at every call site. Grouping nests the result,
-     * so only the ungrouped form keeps it.
+     * Overridden for the element type, which only the ungrouped form keeps.
      *
      * @template T
      * @param array<T>|null $array

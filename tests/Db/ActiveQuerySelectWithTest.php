@@ -15,8 +15,7 @@ use Override;
 use yii\base\InvalidCallException;
 
 /**
- * `selectWith()` reads a hasOne record off the joined row, where `joinWith()` queries it again. Every trail of the
- * fixture belongs to the owner.
+ * Every trail of the fixture belongs to the owner.
  */
 class ActiveQuerySelectWithTest extends TestCase
 {

@@ -21,8 +21,7 @@ use yii\web\Response;
 class User extends \yii\web\User
 {
     /**
-     * The console application has no `user` component, so shared code — a model's blameable attributes, the trail,
-     * a search result's visibility — asks for the identity holder instead of assuming a web request.
+     * `null` under the console, which has no `user` component, so shared code never assumes a web request.
      */
     public static function current(): ?static
     {
@@ -30,103 +29,69 @@ class User extends \yii\web\User
         return $user instanceof static ? $user : null;
     }
 
-    /**
-     * @var int the cookie lifetime in seconds
-     */
     public int $cookieLifetime = 2_592_000;
 
-    /**
-     * @var bool whether the role-based access management always returns `false` if user is not logged in
-     */
     public bool $disableRbacForGuests = true;
 
-    /**
-     * @var bool whether the role-based access management always returns `true` if user is the site owner
-     */
     public bool $disableRbacForOwner = true;
 
-    /**
-     * @var bool whether users can log in
-     */
     public bool $enableLogin = true;
 
-    /**
-     * @var bool whether the user can log in without a confirmed email address
-     */
     public bool $enableUnconfirmedEmailLogin = true;
 
-    /**
-     * @var bool whether users can reset their password
-     */
     public bool $enablePasswordReset = true;
 
-    /**
-     * @var bool whether users can create new accounts
-     */
     public bool $enableSignup = false;
 
-    /**
-     * @var bool whether 2FA via Authenticator should be available.
-     */
     public bool $enableTwoFactorAuthentication = true;
 
     /**
-     * @var bool whether the guest-facing forms must answer the same for an address that has an account and one
-     * that does not. Turning it off restores the messages that name the reason — useful for a closed admin whose
-     * support desk relies on them, at the cost of handing out a list of accounts.
+     * Off restores the guest-facing messages that name the reason, at the cost of handing out a list of accounts.
      */
     public bool $enableUserEnumerationProtection = true;
 
-    /**
-     * @var string|null the IP address of the user
-     */
     public ?string $ipAddress = null;
 
     /**
-     * @var string the query parameter carrying the return URL to the login of a request without a session, which
-     * {@see loginRequired()} does not start.
+     * Carries the return URL of a request without a session, which {@see loginRequired()} does not start.
      */
     public string $returnUrlQueryParam = 'returnUrl';
 
     /**
-     * @var int how many failed logins an email address or an IP may accumulate before both are locked out, `0`
-     * disables the lockout. A six-digit TOTP code with a discrepancy of one leaves three codes valid per period,
-     * so the second factor needs this as much as the password does.
+     * `0` disables the lockout, which the second factor needs too: a discrepancy of one leaves three codes valid.
      */
     public int $loginAttemptLimit = 10;
 
     /**
-     * @var int how long a lockout lasts, in seconds. Every further attempt restarts it.
+     * Every further attempt restarts it.
      */
     public int $loginAttemptDuration = 900;
 
     /**
-     * @var bool whether a browser an account logged in from keeps an attempt count of its own (OWASP's device
-     * cookies): strangers guessing the password lock the account for everyone but its owner's known browsers, and a
-     * known browser locks only itself.
+     * Strangers guessing the password lock the account for everyone but its owner's known browsers (OWASP).
      */
     public bool $enableDeviceCookies = true;
 
     /**
-     * @var array<string, mixed> `secure` follows the auto login cookie's
+     * `secure` follows the auto login cookie's.
+     *
+     * @var array<string, mixed>
      */
     public array $deviceCookie = ['name' => '_device', 'httpOnly' => true, 'sameSite' => Cookie::SAME_SITE_LAX];
 
     /**
-     * @var int the device cookie lifetime in seconds, renewed by every login
+     * Renewed by every login.
      */
     public int $deviceCookieLifetime = 31_536_000;
 
     /**
-     * @var int the type written to `user_login`, one of the {@see UserLogin} constants. A flow that logs a user in
-     * without naming one is recorded as {@see UserLogin::TYPE_OTHER}.
+     * One of the {@see UserLogin} constants.
      */
     public int $loginType = UserLogin::TYPE_OTHER;
 
     /**
-     * @var bool|null whether the auto login cookie is `Secure`, `null` derives it from the request. Pin it on a
-     * host that answers on both schemes: a browser refuses a plain HTTP response the right to overwrite or
-     * delete a cookie an HTTPS one wrote, so the two would be a cookie nothing can clear.
+     * `null` derives it from the request; pin it on a host answering both schemes, since no HTTP response can clear a
+     * cookie an HTTPS one wrote.
      */
     public ?bool $cookieSecure = null;
 
@@ -142,24 +107,28 @@ class User extends \yii\web\User
     public $loginUrl = null;
 
     /**
-     * @var array<int|string, list<string>> the permission names already looked up in this request
+     * @var array<int|string, list<string>>
      */
     private array $permissionNames = [];
 
     /**
-     * @var array<int|string, list<string>> the role names already looked up in this request
+     * @var array<int|string, list<string>>
      */
     private array $roleNames = [];
 
     /**
-     * @var array<int|string, array<int|string, bool>> by actor, then target: what {@see canManageUser()} answered
+     * By actor, then target.
+     *
+     * @var array<int|string, array<int|string, bool>>
      */
     private array $manageableUsers = [];
 
     private ?int $permissionCount = null;
 
     /**
-     * @var array<string, string|null> by normalised address and cookie value: the nonce, if the cookie is that account's
+     * The nonce by normalised address and cookie value, if the cookie is that account's.
+     *
+     * @var array<string, string|null>
      */
     private array $loginDevices = [];
 
@@ -180,10 +149,6 @@ class User extends \yii\web\User
         parent::init();
     }
 
-    /**
-     * Sets a user without session or cookie as the `user` component, for a console command or a request
-     * authenticated by a bearer token.
-     */
     public static function setSessionlessIdentity(?\Hirtz\Skeleton\Models\User $identity): self
     {
         /** @var self $webuser */
@@ -252,11 +217,8 @@ class User extends \yii\web\User
     }
 
     /**
-     * Yii renews the auto login cookie without ever looking inside it, so one whose auth key the database no
-     * longer holds — every cookie issued before a password change, a reset or the v3 upgrade — is handed another
-     * full lifetime on every request the session carries, and only fails once that session lapses. Worse, a
-     * request that renews it while a fresh one is still in flight puts the stale value back, so the logout
-     * repeats for as long as the cookie survives. Validate it here and drop it instead.
+     * Yii renews the auto login cookie unchecked, so one with a stale auth key would live on (and a concurrent renewal
+     * put it back): it is validated and dropped here.
      */
     #[Override]
     protected function renewIdentityCookie(): void
@@ -276,11 +238,8 @@ class User extends \yii\web\User
     }
 
     /**
-     * The auto login cookie is a credential, so the logout has to remove it whatever scope it was written under. A
-     * `Domain` the installation has since gained or lost — a tenant's, an edited `cookie_domain` — leaves a second
-     * cookie of the same name behind that the scoped deletion never reaches, and the next request logs the account
-     * straight back in. {@see \yii\web\CookieCollection} is keyed by name, so the twin deletions cannot go
-     * through it and are sent as headers of their own.
+     * A twin under a stale `Domain` would log the account straight back in, and `CookieCollection` is keyed by name,
+     * so its deletion is a header of its own.
      */
     #[Override]
     protected function removeIdentityCookie(): void
@@ -385,8 +344,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * A signup that does not log the user in is recorded all the same: the signup form counts an origin's signups
-     * by these rows.
+     * Recorded even without a login, since the signup form counts an origin's signups by these rows.
      */
     public function insertSignup(\Hirtz\Skeleton\Models\User $user): void
     {
@@ -394,8 +352,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * A password change rotates the auth key every auto login and device cookie carries, so the acting user's are
-     * written again: "remember me" and the browser's own attempt count must survive the user's own change.
+     * A password change rotates the auth key, so the acting user's auto login and device cookies are written again.
      */
     public function resendIdentityCookie(): void
     {
@@ -424,8 +381,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * Binds this browser to the account with a fresh nonce. The signature is keyed by the auth key, so rotating it
-     * — a password change, "log out other sessions" — invalidates every device cookie the account handed out.
+     * The signature is keyed by the auth key, so rotating it invalidates every device cookie the account handed out.
      */
     public function sendDeviceCookie(\Hirtz\Skeleton\Models\User $identity): void
     {
@@ -491,9 +447,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * Guards the site owner, and anyone whose permissions or roles the acting user does not already hold: managing a user
-     * means setting a password, generating a reset token and clearing a second factor, so without this it is a
-     * takeover of every account it reaches — including the ones that can grant permissions.
+     * Managing a user can take the account over, so the owner and anyone holding what the actor lacks are guarded.
      */
     public function canManageUser(\Hirtz\Skeleton\Models\User $user): bool
     {
@@ -565,8 +519,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * A known browser's failures count against that browser alone, so strangers cannot use up its owner's attempts —
-     * and a stolen device cookie is worth no more guesses than the account allows.
+     * A known browser's failures count against that browser alone, so strangers cannot use up its owner's attempts.
      */
     public function addFailedLoginAttempt(?string $email = null): void
     {
@@ -580,8 +533,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * The account's count only: the origin's expires on its own, or one valid account logged into between guesses
-     * would keep an address spraying passwords at every other account forever.
+     * The account's count only, or one valid login between guesses would let an address spray passwords forever.
      */
     public function resetFailedLoginAttempts(?string $email = null): void
     {
@@ -593,8 +545,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * Both the account and the origin are counted: the first stops a password being guessed, the second stops one
-     * password being tried against every account. A known browser is counted in place of the account.
+     * The origin is counted beside the account (or known browser), which stops one password tried on every account.
      *
      * @return list<array{string, string, string, string}>
      */
@@ -644,9 +595,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * The account is only looked up when the browser carries a device cookie at all.
-     *
-     * @return string|null the nonce of the request's device cookie, if it was issued to the account of `$email`
+     * The nonce of the request's device cookie, if it was issued to the account of `$email`.
      */
     private function getLoginDevice(?string $email): ?string
     {
@@ -695,10 +644,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * Rotating the auth key only invalidates the auto login cookies — every session row already written for this
-     * user keeps working until it expires, so a password change has to delete them by hand.
-     *
-     * @return int the number of sessions destroyed
+     * Rotating the auth key leaves every session row working, so a password change deletes them by hand.
      */
     public function destroyOtherSessions(?\Hirtz\Skeleton\Models\User $user = null): int
     {
@@ -715,12 +661,6 @@ class User extends \yii\web\User
         );
     }
 
-    /**
-     * Rotates the auth key, which ends the auto login and device cookies of every other browser, and destroys the
-     * user's other sessions.
-     *
-     * @return int the number of sessions destroyed
-     */
     public function revokeOtherSessions(?\Hirtz\Skeleton\Models\User $user = null): int
     {
         $user ??= $this->getIdentity();
@@ -744,8 +684,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * A flow that logs a user in without asking for a password — a password reset, an email confirmation, a signup —
-     * must not skip the second factor. It has no code to check, so it has to refuse the login instead.
+     * A flow logging a user in without a password has no code to check, so it refuses the login rather than skip 2FA.
      */
     public function isTwoFactorAuthenticationRequired(\Hirtz\Skeleton\Models\User $user): bool
     {

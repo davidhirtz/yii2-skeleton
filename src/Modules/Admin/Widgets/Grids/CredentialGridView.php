@@ -22,9 +22,6 @@ use Yii;
  */
 class CredentialGridView extends GridView
 {
-    /**
-     * @var bool whether the keys are the acting user's own, which only they add
-     */
     protected bool $isOwn = true;
 
     public function isOwn(bool $isOwn): static

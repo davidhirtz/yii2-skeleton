@@ -11,8 +11,7 @@ use yii\db\Expression;
 use yii\db\Query;
 
 /**
- * The MySQL driver's query builder. The admin never calls {@see static::tenant()} or `enabled()`: those are the
- * frontend presets, where a site must only ever surface its own tenant's enabled records.
+ * The admin never calls {@see static::tenant()} or `enabled()`, the frontend presets.
  *
  * @template T of Search
  * @extends ActiveQuery<T>
@@ -21,9 +20,6 @@ class SearchQuery extends ActiveQuery
 {
     public const string SCORE = 'score';
 
-    /**
-     * @var float multiplied into the title match, so a hit in the name outranks one in the body
-     */
     public float $titleBoost = 3.0;
 
     private ?string $scoreExpression = null;
@@ -96,8 +92,7 @@ class SearchQuery extends ActiveQuery
     }
 
     /**
-     * Collapses the per-language rows of a record into one hit, so an editor working in English still finds
-     * "Kontakt". Only the grouped columns are selected, which is also all the hydration needs.
+     * Collapses a record's per-language rows into one hit, so an editor working in English still finds "Kontakt".
      */
     public function groupByModel(): static
     {

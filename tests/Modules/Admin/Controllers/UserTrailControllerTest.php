@@ -32,8 +32,8 @@ class UserTrailControllerTest extends TestCase
     }
 
     /**
-     * The grid is the trail grid, whose filter links are relative to the trail controller — on this page a
-     * relative `index` would resolve to `user-trail/index` and drop the id (monorepo issue #234).
+     * The trail grid's filter links are relative to the trail controller, so on this page `index` would drop the id
+     * (monorepo issue #234).
      */
     public function testTheFilterLinksPointAtTheTrailIndex(): void
     {

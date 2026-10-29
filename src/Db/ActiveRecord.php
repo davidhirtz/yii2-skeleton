@@ -44,9 +44,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * A form posts strings; {@see AttributeTypecastBehavior} casts them on this event, so a `Closure` reading an
-     * attribute off the loaded record, {@see \Hirtz\Skeleton\Models\Types\Type::available()} and its kind, sees
-     * what the saved record holds even on a form reload, which never validates.
+     * {@see AttributeTypecastBehavior} casts on this event, so a `Closure` reading the loaded record sees typed values
+     * even on a form reload, which never validates.
      *
      * @param array<string, mixed> $data
      */
@@ -67,7 +66,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return list<string> the attributes without a column of their own
+     * @return list<string>
      */
     public function getVirtualAttributes(): array
     {
@@ -122,10 +121,10 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * Keeps a key no current definition claims, so switching a type back does not lose its values, and overwrites in
-     * place because MySQL reorders the keys of a rebuilt object and every save would then read as changed.
+     * Keeps a key no current definition claims and overwrites in place, since MySQL reorders the keys of a rebuilt
+     * object and every save would then read as changed.
      *
-     * @return array<string, mixed>|null the column's value holding the current custom attribute values
+     * @return array<string, mixed>|null
      */
     public function getSerializedCustomAttributesColumn(): ?array
     {
@@ -153,8 +152,9 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return array<string, mixed> the previous value per changed custom attribute, so the trail logs the attribute
-     * rather than the JSON column
+     * Keyed by custom attribute, so the trail logs the attribute rather than the JSON column.
+     *
+     * @return array<string, mixed>
      */
     protected function getChangedCustomAttributes(bool $insert): array
     {
@@ -290,8 +290,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * The virtual attributes are written here rather than from a behavior, so their changes reach the event the
-     * trail listens to without depending on the order two behaviors were attached in.
+     * Written here rather than from a behavior, so the changes reach the trail's event whatever the behavior order.
      *
      * @param array<string, mixed> $changedAttributes
      */
@@ -395,12 +394,10 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * Saves values derived from other rows — a count, a list of ids — and stamps `updated_at` when one changed, which
-     * {@see static::touchOwners()} passes on. No validation and no save hooks: a parent that no longer validates would
-     * refuse its own bookkeeping, and a save would write whatever else the instance holds dirty.
+     * No validation and no save hooks, since a parent that no longer validates would refuse its own bookkeeping and
+     * a save would write whatever else the instance holds dirty.
      *
      * @param array<string, mixed> $attributes
-     * @return int the number of rows updated, `0` where no value changed
      */
     public function updateDenormalizedAttributes(array $attributes): int
     {
@@ -425,10 +422,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $rows;
     }
 
-    /**
-     * Stamps `updated_at` for a change made through a record this one owns — an asset, a linked entry — without
-     * saving it, and passes the change on through {@see static::touchOwners()}.
-     */
     public function touchUpdatedAt(): int
     {
         if ($this->isDeleted()) {
@@ -442,8 +435,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
     }
 
     /**
-     * Runs whenever `updated_at` moved without a save. A record shown as part of another one (a section of its
-     * entry) touches that one here, so the owner's `updated_at` stays the time its page last changed.
+     * A record shown as part of another one touches it here, so the owner's `updated_at` stays its page's last change.
      */
     protected function touchOwners(): void
     {

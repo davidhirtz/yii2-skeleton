@@ -11,9 +11,7 @@ use GuzzleHttp\RequestOptions;
 use Yii;
 
 /**
- * The transport behind `registry/push`, kept apart from the command so a project can push from elsewhere. The
- * key travels in the `Authorization` header only; it is never logged, `_SERVER.HTTP_AUTHORIZATION` being masked on
- * the receiving side already.
+ * The key travels in the `Authorization` header only, which the receiving side already masks.
  */
 class RegistryClient
 {
@@ -22,9 +20,7 @@ class RegistryClient
     public int $connectTimeout = 5;
     public int $timeout = 10;
 
-    /**
-     * @var ClientInterface|null the test seam: a client built over a `MockHandler`
-     */
+    /** A test seam for a client built over a `MockHandler`. */
     public ?ClientInterface $client = null;
 
     public function push(Report $report): RegistryResponse

@@ -38,8 +38,7 @@ class UpgradePasswordsTest extends TestCase
     }
 
     /**
-     * A failed send is reported and exits with an error; the next run picks the user up again, and skips the ones
-     * whose link went out.
+     * The next run skips the users whose link went out.
      */
     public function testAFailedSendIsReportedAndRetriedByTheNextRun(): void
     {

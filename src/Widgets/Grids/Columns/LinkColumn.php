@@ -27,8 +27,7 @@ class LinkColumn extends DataColumn
     private ?array $linkClosures = null;
 
     /**
-     * The closure a caller hands `url()` is typed against whichever model it re-binds the column to, which the
-     * column itself has no way of holding — it applies it to the model the grid gives it.
+     * Typed `mixed`, since the closure is typed against whichever model `url()` re-binds the column to.
      *
      * @var Closure(mixed, string|int=, int=):(array<int|string, mixed>|string|null|false)|null
      */
@@ -84,8 +83,7 @@ class LinkColumn extends DataColumn
     }
 
     /**
-     * Keeps the {@see LinkColumn} type (and its {@see self::url()} method) when the model type is
-     * re-bound through {@see DataColumn::value()}.
+     * Overridden to keep the {@see LinkColumn} type when the model is re-bound through {@see DataColumn::value()}.
      *
      * @template TValueModel of array|Model
      * @param Closure(TValueModel, string|int=, int=):mixed|null $value

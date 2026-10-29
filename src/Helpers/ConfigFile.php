@@ -8,9 +8,7 @@ use Yii;
 use yii\helpers\VarDumper;
 
 /**
- * Writes a PHP file returning a config array, such as `config/params.php`. The top-level keys are sorted, so a file
- * saved by the admin or a console command reads the same whatever order it was edited in. A file whose config and
- * docblock are unchanged is left alone, so its `@version` stays the date of the last actual change.
+ * A file whose config and docblock are unchanged is left alone, so its `@version` stays the date of the last change.
  */
 class ConfigFile
 {

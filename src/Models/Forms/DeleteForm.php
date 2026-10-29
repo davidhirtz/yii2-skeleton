@@ -50,8 +50,8 @@ class DeleteForm extends Model
     }
 
     /**
-     * The form renders this as the input's `pattern`, so a secret that is verified rather than compared must
-     * return `null` and override {@see static::isValidValue()}.
+     * Rendered as the input's `pattern`, so a secret that is verified rather than compared returns `null` and
+     * overrides {@see static::isValidValue()}.
      */
     public function getExpectedValue(): ?string
     {
@@ -76,8 +76,7 @@ class DeleteForm extends Model
     }
 
     /**
-     * The empty name puts `value` at the top level of the request, where `Widgets\Buttons\DeleteButton` posts it, so a
-     * plain `load($post)` reaches it.
+     * The empty name puts `value` at the top level of the request, where `DeleteButton` posts it.
      */
     #[Override]
     public function formName(): string

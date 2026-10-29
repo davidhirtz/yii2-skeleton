@@ -20,14 +20,10 @@ class LoginForm extends Model
     use ModelTrait;
 
     /**
-     * A bcrypt hash at the default cost that nothing matches, so a login for an unknown address costs the same as
-     * one for a known address with the wrong password.
+     * Matches nothing, so a login for an unknown address costs as much as one with the wrong password.
      */
     private const string DUMMY_PASSWORD_HASH = '$2y$13$DbNN/izySYY01sK3RTJb2OZa1Kc1Kr/PImftEuYLT.2IbCbvukEWu';
 
-    /**
-     * The session key of a login whose password was right and whose two-factor code is still to come.
-     */
     final public const string PENDING_SESSION_KEY = 'pendingLogin';
 
     public ?string $password = null;
@@ -35,7 +31,7 @@ class LoginForm extends Model
     public bool|string $rememberMe = true;
 
     /**
-     * @var int the seconds the second step may follow the first
+     * Between the password and the two-factor code.
      */
     public int $pendingDuration = 300;
 
@@ -221,8 +217,7 @@ class LoginForm extends Model
     }
 
     /**
-     * The password is verified at this point and is not seen again, so an outdated hash is renewed now, whatever
-     * the code turns out to be.
+     * The password is not seen again after this, so an outdated hash is renewed now, whatever the code turns out to be.
      */
     private function setPendingLogin(): void
     {

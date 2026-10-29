@@ -29,8 +29,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
     final public const string TRANSLATION_LAYOUT_TABS = 'tabs';
 
     /**
-     * The value the aside cookie and the layout's `data-aside` attribute carry, `includes/aside.ts` writing
-     * the same literal.
+     * Must match the literal `includes/aside.ts` writes to the aside cookie and `data-aside`.
      */
     final public const string ASIDE_COLLAPSED = 'collapsed';
 
@@ -41,52 +40,43 @@ class Module extends \Hirtz\Skeleton\Base\Module
     final public const string ERROR_VIEW = '@skeleton/../resources/views/admin/dashboard/error.php';
 
     /**
-     * @var bool whether the fulltext search is available: the navbar button, both search actions, the index writes
-     * of {@see \Hirtz\Skeleton\Behaviors\SearchBehavior} and the `search` console commands.
+     * Also switches the index writes of {@see \Hirtz\Skeleton\Behaviors\SearchBehavior} and the `search` commands.
      */
     public bool $enableSearch = true;
 
     /**
-     * @var string how a form lays out its translations until an editor switches: `inline`, every language beneath
-     * the other, or `tabs`, one language at a time. The switch on the form is remembered per browser.
+     * `inline` or `tabs`, the default until an editor switches, which is remembered per browser.
      */
     public string $translationLayout = self::TRANSLATION_LAYOUT_INLINE;
 
     /**
-     * @var string[]|null the languages the admin interface is offered in, defaulting to the application's content
-     * languages. The two are only related by that default: the admin overrides whichever language the URL manager
-     * resolved, so a project whose content languages the admin has no translation for names its own list here.
+     * Defaults to the content languages, so a project whose content languages the admin has no translation for
+     * names its own.
+     *
+     * @var string[]|null
      */
     public ?array $languages = null;
 
-    /**
-     * @var string the session key holding the language picked for the current session, see
-     * {@see Module::getSessionLanguage()}.
-     */
     public string $languageSessionKey = 'language';
 
     /**
-     * @var string the cookie holding whether the aside is collapsed to its icons on this device. Written by
-     * `includes/aside.ts`, so it carries no signature — see {@see isAsideCollapsed()}.
+     * Unsigned, since `includes/aside.ts` writes it — see {@see isAsideCollapsed()}.
      */
     public string $asideCookieName = '_aside';
 
     /**
-     * @var bool|null whether the aside cookie is `Secure`, `null` derives it from the request.
+     * `null` derives `Secure` from the request.
      */
     public ?bool $asideCookieSecure = null;
 
     /**
-     * @var int|false how long a `trail` record is kept, in seconds. Set it and run `trail/clear` console command.
-     * {@see TrailController::actionClear()}
+     * Applied only by the `trail/clear` command ({@see TrailController::actionClear()}).
      */
     public int|false $trailLifetime = false;
 
     /**
-     * @var int|false how long a `user_login` record is kept, in seconds. The table holds an IP address and a user
-     * agent for every login, so it is personal data with no reason to be kept forever — set it and run
-     * `user-login/clear` console command.
-     * {@see UserLoginController::actionClear()}
+     * Applied only by `user-login/clear` ({@see UserLoginController::actionClear()}); the rows are personal
+     * data.
      */
     public int|false $userLoginLifetime = false;
 
@@ -98,8 +88,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
     public $layout = 'main';
 
     /**
-     * The admin module whether this request is being handled by it — {@see getInstance()} answers `null`
-     * outside it, and the error view renders outside.
+     * {@see getInstance()} answers `null` outside the module's own requests, and the error view renders outside.
      */
     public static function current(): self
     {
@@ -109,8 +98,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
     }
 
     /**
-     * Where a signed-in user's admin starts: the dashboard, or their account when the dashboard admits none of
-     * their roles, as after a signup.
+     * The account when the dashboard admits none of the user's roles, as after a signup.
      *
      * @return array<int|string, mixed>
      */
@@ -217,8 +205,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
     }
 
     /**
-     * The language picked for the current session, `null` when none was picked, the picked one is no longer
-     * offered or the application has no session at all.
+     * `null` also when the picked one is no longer offered or the application has no session.
      */
     public function getSessionLanguage(): ?string
     {
@@ -239,9 +226,8 @@ class Module extends \Hirtz\Skeleton\Base\Module
     }
 
     /**
-     * The scheme this request renders in: the account's column, or `null` for the browser's own
-     * `prefers-color-scheme`, which no request can answer — `Sec-CH-Prefers-Color-Scheme` is Chromium-only and
-     * needs an `Accept-CH` round trip first, so the layout emits no attribute and the CSS decides.
+     * `null` leaves it to the CSS, since no request can answer `prefers-color-scheme` (the client hint is
+     * Chromium-only).
      */
     public function getColorScheme(): ?string
     {
@@ -249,11 +235,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
     }
 
     /**
-     * Whether the aside renders collapsed to its icons, read straight out of `$_COOKIE`, because
-     * {@see Request::getCookies()} cannot see this one at all: with `enableCookieValidation` on,
-     * {@see \yii\web\Request::loadCookies()} HMAC-validates every entry and silently skips the ones that do not
-     * verify — which a cookie `document.cookie` wrote never does. The value is a single literal, so the
-     * comparison is the validation.
+     * Read off `$_COOKIE`, since {@see Request::getCookies()} silently skips the unsigned cookie the script writes.
      */
     public function isAsideCollapsed(): bool
     {
@@ -261,10 +243,8 @@ class Module extends \Hirtz\Skeleton\Base\Module
     }
 
     /**
-     * Built with `new`, never through the container: {@see Application::setDefaultCookieConfig}
-     * and {@see \Hirtz\Tenant\Web\UrlManager} put a `Domain` on the container's {@see Cookie}, and a scoped
-     * twin of a host-only cookie is the one `$_COOKIE` hides behind (monorepo issue #195). This one is host-only
-     * at both ends — the script writes no domain either.
+     * Built with `new`, since the container's {@see Cookie} carries a `Domain` and a scoped twin hides this host-only
+     * one in `$_COOKIE` (#195).
      */
     public function getAsideCookie(): Cookie
     {
@@ -312,9 +292,6 @@ class Module extends \Hirtz\Skeleton\Base\Module
     }
 
     /**
-     * The auth items of the admin's permission lists: roles first, in the order of {@see sortRoles()}, then
-     * permissions by name.
-     *
      * @param array<string, AuthItem> $items
      * @return array<string, AuthItem>
      */
@@ -325,9 +302,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
     }
 
     /**
-     * Admin and manager lead, the rest follow by name. A project overrides it for roles of its own.
-     *
-     * @param array<string, AuthItem> $roles by name
+     * @param array<string, AuthItem> $roles
      * @return array<string, AuthItem>
      */
     public function sortRoles(array $roles): array

@@ -22,17 +22,15 @@ use yii\widgets\ActiveFormAsset;
 use yii\widgets\PjaxAsset;
 
 /**
- * The debug panels are the one corner of a skeleton application still built on jQuery, which the skeleton
- * itself has left behind: `ApplicationTrait` maps `JqueryAsset` onto an empty bundle, `composer.json` only
- * `provide`s `bower-asset/jquery` instead of installing it, and `Web\View` drops every `POS_READY` script.
- * `yii\debug\Module::beforeAction()` empties `assetManager.bundles`, so the mapping is gone by the time a
- * panel renders and its `GridView` dies publishing the `@bower/jquery/dist` that was never installed.
+ * `yii\debug\Module::beforeAction()` empties `assetManager.bundles`, so the empty `JqueryAsset` mapping is gone and a
+ * panel's `GridView` dies publishing the never-installed `@bower/jquery/dist`.
  */
 class Module extends \yii\debug\Module
 {
     /**
-     * @var list<class-string> the bundles whose scripts throw on load without jQuery. `Web\View` drops the
-     *     `POS_READY` calls into them anyway, so nothing is lost by not publishing them.
+     * Their scripts throw on load without jQuery, and `Web\View` drops their `POS_READY` calls anyway.
+     *
+     * @var list<class-string>
      */
     private const array JQUERY_BUNDLES = [
         JqueryAsset::class,
@@ -43,17 +41,16 @@ class Module extends \yii\debug\Module
     ];
 
     /**
-     * @var string|null the directory a jQuery for the panels is published from, `null` for none. Suggested
-     *     rather than required, so the panels render either way — without it their grid filters do nothing.
+     * Suggested rather than required: without it the panels still render, but their grid filters do nothing.
      */
     public ?string $jqueryPath = '@vendor/components/jquery';
 
     public string $jqueryFile = 'jquery.min.js';
 
     /**
-     * @var list<string> wildcard patterns of request paths never recorded, such as the DevTools probe Chrome
-     *     sends on every page with the console open, or those carrying an MCP credential: the endpoint's bearer
-     *     token, the token endpoint's codes and refresh tokens, a new token in the session flash.
+     * Wildcard patterns of request paths never recorded, among them every path carrying an MCP credential.
+     *
+     * @var list<string>
      */
     public array $ignoredPaths = [
         '.well-known/appspecific/*',
@@ -76,8 +73,7 @@ class Module extends \yii\debug\Module
     }
 
     /**
-     * Yii derives a module's view path from the directory of its class, which for a subclass is no longer the
-     * one holding the views.
+     * Yii derives the view path from the class's directory, which for a subclass no longer holds the views.
      */
     #[Override]
     public function getBasePath(): string
@@ -87,8 +83,6 @@ class Module extends \yii\debug\Module
 
     /**
      * The toolbar echoes its script inline, which the admin's `Content-Security-Policy` refuses without the nonce.
-     *
-     * @param \yii\base\Event $event
      */
     #[Override]
     public function renderToolbar($event): void

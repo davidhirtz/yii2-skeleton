@@ -47,10 +47,7 @@ class GridSummary extends Widget
         return $this;
     }
 
-    /**
-     * What the grid is for, said only where the grid is empty and nothing was searched for — a filled grid
-     * explains itself, and a fruitless search needs the search summary rather than the explanation.
-     */
+    /** Shown only while the grid is empty and nothing was searched for. */
     public function emptyMessage(?string $emptyMessage): static
     {
         $this->emptyMessage = $emptyMessage;
@@ -58,8 +55,7 @@ class GridSummary extends Widget
     }
 
     /**
-     * The way to the grid's first record, a sentence after the empty message whose `{here}` links to it — "Click
-     * {here} to create the first section." A grid names it only where the user may follow it.
+     * `{here}` in the text links to `$url`; a grid names it only where the user may follow it.
      *
      * @param array<int|string, mixed>|string|null $url
      */

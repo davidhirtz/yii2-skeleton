@@ -7,24 +7,17 @@ namespace Hirtz\Skeleton\Web;
 use yii\base\BaseObject;
 
 /**
- * The strict `Content-Security-Policy` of the admin, as directives a project or bundle extends with `addSource()`.
- *
- * Scripts are trusted by a nonce, which `Web\View` stamps on every script it renders once a controller sends the
- * policy: `'strict-dynamic'` extends that trust to whatever a trusted script loads itself (TinyMCE's plugins, a map,
- * a script htmx swaps in), so their hosts need no listing in `script-src`, where a browser ignores them anyway.
- *
- * Styles are unrestricted unless a project adds `style-src` (or `style-src-elem`): the nonce then joins it, which
- * `Web\View` stamps on every `<style>` it renders. Not where the directive allows `'unsafe-inline'`, which a nonce
- * would switch off, `style` attributes included. A `<style>` swapped in later carries its own response's nonce, not
- * the page's, and is blocked: such a policy suits styles of full page loads.
+ * A nonced `style-src` blocks every `<style>` swapped in later (it carries its own response's nonce), so it suits
+ * full page loads alone; `'strict-dynamic'` makes hosts in `script-src` unnecessary.
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP
  */
 class ContentSecurityPolicy extends BaseObject
 {
     /**
-     * @var array<string, list<string>> the directives and their sources, the nonce is added to `script-src` (and a
-     *     style directive) when the header is built
+     * The nonce is added to `script-src` (and a style directive) when the header is built.
+     *
+     * @var array<string, list<string>>
      */
     public array $directives = [
         'script-src' => ["'self'", "'strict-dynamic'"],
@@ -42,7 +35,9 @@ class ContentSecurityPolicy extends BaseObject
     }
 
     /**
-     * @param list<string>|null $sources `null` removes the directive
+     * `null` removes the directive.
+     *
+     * @param list<string>|null $sources
      */
     public function setDirective(string $directive, ?array $sources): static
     {

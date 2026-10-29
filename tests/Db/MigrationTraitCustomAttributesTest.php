@@ -13,7 +13,6 @@ use yii\db\Migration;
 use yii\db\Query;
 
 /**
- * The round trip an upgrade and its rollback run: a column and its translations move into the JSON column and back.
  * Everything here is DDL, which commits the surrounding transaction, so the rows are cleaned up by hand.
  */
 class MigrationTraitCustomAttributesTest extends TestCase
@@ -137,8 +136,7 @@ class MigrationTraitCustomAttributesTest extends TestCase
     }
 
     /**
-     * MariaDB 10.5's `JSON_UNQUOTE()` answers in `utf8mb3`: an emoji read back through it is `?`, which failed the
-     * check after the move and would have been written back on the way down.
+     * MariaDB 10.5's `JSON_UNQUOTE()` answers in `utf8mb3`, so an emoji read back through it is `?`.
      */
     public function testAFourByteCharacterSurvivesTheRoundTrip(): void
     {

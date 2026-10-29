@@ -35,9 +35,7 @@ class AsideMenu extends Widget
     }
 
     /**
-     * The menus are rendered here rather than in {@see renderContent()}, because {@see isVisible()} answers from
-     * what they came to — an aside holding nothing is left out of the document instead of being hidden by a CSS
-     * rule, which a theme adding a logo of its own would defeat.
+     * Rendered here rather than in {@see renderContent()}, since {@see isVisible()} answers from what they came to.
      */
     #[Override]
     protected function configure(): void
@@ -71,8 +69,7 @@ class AsideMenu extends Widget
     }
 
     /**
-     * The skeleton's aside opens straight into its menu — the header is the extension point for a theme
-     * rendering a logo of its own, as `Hirtz\Anakin` does.
+     * The extension point for a theme's own logo, as `Hirtz\Anakin` renders.
      */
     protected function getHeader(): ?Stringable
     {

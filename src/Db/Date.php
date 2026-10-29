@@ -8,8 +8,7 @@ use DateTimeImmutable;
 use Stringable;
 
 /**
- * A `date` column's value: a calendar day at midnight in the application's time zone, written as it reads. Unlike
- * {@see DateTime} it is never shifted to UTC, which would move the day.
+ * Never shifted to UTC, unlike {@see DateTime}, which would move the day.
  */
 class Date extends DateTimeImmutable implements Stringable
 {

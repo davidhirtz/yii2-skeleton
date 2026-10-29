@@ -79,7 +79,7 @@ abstract class CustomAttribute
     }
 
     /**
-     * Shows the formatted value as text instead of an input, so nothing is posted; a translatable attribute refuses it.
+     * A translatable attribute refuses it.
      */
     public function plainText(Closure|bool $plainText = true): static
     {
@@ -115,9 +115,8 @@ abstract class CustomAttribute
     }
 
     /**
-     * A single content language leaves nothing to translate: its attribute keeps the bare name, which the source
-     * language would otherwise own — a German-only application (`language` `de`, `sourceLanguage` `en-US`) had no
-     * `content` at all, only a `content_de` its stored values were never written to.
+     * A single content language keeps the bare name, which the source language would otherwise own and leave
+     * unwritten.
      */
     public function isTranslatable(): bool
     {
@@ -130,8 +129,7 @@ abstract class CustomAttribute
     }
 
     /**
-     * A type hiding the attribute is the same answer as a `visible(false)` of the definition's own: no field, no
-     * rule, and therefore no assignment — {@see \Hirtz\Skeleton\Models\Types\Type::hiddenFields()}.
+     * A type hiding the attribute counts as `visible(false)`: no field, no rule, no assignment.
      */
     public function isVisible(Model $owner): bool
     {
@@ -206,7 +204,9 @@ abstract class CustomAttribute
     }
 
     /**
-     * @return list<array> rule tails without the attribute names, e.g. `[['string', 'max' => 255]]`
+     * Rule tails without the attribute names, e.g. `[['string', 'max' => 255]]`.
+     *
+     * @return list<array>
      */
     abstract protected function getValidationRules(Model $owner): array;
 
@@ -226,8 +226,9 @@ abstract class CustomAttribute
     }
 
     /**
-     * @return string|Stringable|array<string, string|Stringable|null>|null an array is a label => value map the trail
-     * renders as its own rows
+     * An array is a label => value map the trail renders as rows of its own.
+     *
+     * @return string|Stringable|array<string, string|Stringable|null>|null
      */
     public function formatValue(Model $owner, mixed $value): string|Stringable|array|null
     {
@@ -240,9 +241,6 @@ abstract class CustomAttribute
 
     abstract public function createField(Model $owner): Field;
 
-    /**
-     * The field a form renders: the definition's own, or the value as text.
-     */
     public function getField(Model $owner): Field
     {
         if (!$this->isPlainText($owner)) {
@@ -259,9 +257,7 @@ abstract class CustomAttribute
     }
 
     /**
-     * Side effects a definition has beyond the JSON column, such as a file to move into place or to remove. Called
-     * from {@see \Hirtz\Skeleton\Db\ActiveRecord::afterSave()} for every attribute whose value changed, before the
-     * old values are updated, so a hook may still rewrite the attribute.
+     * Called for every changed attribute before the old values are updated, so a hook may still rewrite it.
      */
     public function afterSave(Model $owner, string $name, mixed $old): void
     {
@@ -275,8 +271,7 @@ abstract class CustomAttribute
     }
 
     /**
-     * A duplicate is inserted with the source's values, which for a definition storing something outside the column
-     * is a reference to what the source owns — this is where it gets its own copy.
+     * A duplicate is inserted with a reference to what the source owns outside the column; here it gets its own copy.
      *
      * @see \Hirtz\Skeleton\Models\Actions\DuplicateActiveRecord::afterDuplicate()
      */
@@ -285,8 +280,8 @@ abstract class CustomAttribute
     }
 
     /**
-     * Label and hint are left to the model: it reports them through `attributeLabels()` and `attributeHints()`, which
-     * is what gives the per-language clone of a translatable definition its own "(DE)" label.
+     * Label and hint are the model's `attributeLabels()` and `attributeHints()`, which give a translatable clone its
+     * "(DE)" label.
      */
     protected function configureField(Field $field, Model $owner): Field
     {

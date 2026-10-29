@@ -19,12 +19,12 @@ use yii\base\InvalidCallException;
 class I18nActiveQuery extends ActiveQuery
 {
     /**
-     * @var array<string, string> alias per "attribute/language"
+     * @var array<string, string>
      */
     private array $translationJoins = [];
 
     /**
-     * @var list<string>|null `null` until decided
+     * @var list<string>|null
      */
     private ?array $translationLanguages = null;
 
@@ -54,9 +54,6 @@ class I18nActiveQuery extends ActiveQuery
             : "[[$join]].[[value]]";
     }
 
-    /**
-     * @return string the join alias
-     */
     public function joinTranslation(string $attribute, ?string $language = null): string
     {
         $instance = $this->getModelInstance();
@@ -92,10 +89,10 @@ class I18nActiveQuery extends ActiveQuery
     }
 
     /**
-     * Applied by {@see static::populate()} for every list unless {@see static::withoutTranslations()} was called, so
-     * a list read in another language later does not query per record. A single record stays lazy.
+     * Applied by {@see static::populate()} to every list unless {@see static::withoutTranslations()} was called; a
+     * single record stays lazy.
      *
-     * @param list<string>|string|null $languages defaults to every configured language
+     * @param list<string>|string|null $languages
      */
     public function withTranslations(array|string|null $languages = null): static
     {

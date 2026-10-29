@@ -37,8 +37,7 @@ class RedirectTest extends TestCase
     }
 
     /**
-     * The rename-back cycle: `about` was renamed to `about-test`, and renaming it back resolves the new target
-     * through the redirect the first rename left behind, landing on the new redirect's own request URI.
+     * Renaming `about-test` back to `about` resolves through the redirect the first rename left, onto itself.
      */
     public function testARenameBackIsRefusedInsteadOfBeingFlattenedIntoASelfRedirect(): void
     {
@@ -52,8 +51,7 @@ class RedirectTest extends TestCase
     }
 
     /**
-     * A cycle among the rows already in the table — a legacy row written before the validator caught them — must
-     * not walk forever.
+     * A cycle among legacy rows written before the validator caught them must not walk forever.
      */
     public function testAnExistingCycleTerminatesTheChainLookup(): void
     {

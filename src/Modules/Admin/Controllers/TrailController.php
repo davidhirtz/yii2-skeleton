@@ -63,8 +63,7 @@ class TrailController extends Controller
     }
 
     /**
-     * Writes the values an update replaced back. Reading the trail is not enough: the acting user needs the
-     * record's own permission, as for any other change to it.
+     * Needs the record's own permission, since reading the trail is not enough to change it.
      */
     public function actionRestore(int $id): Response
     {

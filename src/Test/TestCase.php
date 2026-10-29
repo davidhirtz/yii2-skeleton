@@ -191,11 +191,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         Yii::setLogger($this->logger);
     }
 
-    /**
-     * `Yii::$app` is the `Console|Web` union, which is what keeps a console command reaching for one of these a
-     * static analysis error. A test case that overrides `$applicationClass` with the console application — the
-     * two under `tests/Console` — calls none of them.
-     */
+    /** Web-only, since `Yii::$app` stays the `Console|Web` union; the `tests/Console` cases call none of these. */
     protected function getWebUser(): WebUser
     {
         return Application::current()->getUser();
@@ -217,8 +213,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * A second application on the connection of the first, so the test keeps its open transaction. This is how a
-     * test pins what a request must not inherit from the one before it — a static a `Bootstrap` has to clear.
+     * A second application on the first one's connection, so the test keeps its transaction and can pin what a request
+     * must not inherit, such as a static a `Bootstrap` clears.
      */
     protected function reloadApplication(): void
     {

@@ -14,12 +14,13 @@ use Closure;
 class SerializedAttributesBehavior extends Behavior
 {
     /**
-     * @var list<string> containing the attributes to be serialized
+     * @var list<string>
      */
     public array $attributes = [];
 
     /**
-     * @var bool serialized data to protect them from corruption (when your DB is not in UTF-8)
+     * Base64-encodes the serialized data, protecting it from corruption in a database that is not UTF-8.
+     *
      * @see http://www.jackreichert.com/2014/02/02/handling-a-php-unserialize-offset-error/
      */
     public bool $encode = false;

@@ -12,9 +12,8 @@ use Override;
 use Stringable;
 
 /**
- * The frontend counterpart of {@see AdminButton}: an overlay covering the record it is given, linking to that
- * record's admin page for an account holding its permission. The `admin` class is what
- * {@see AdminButton::registerCss()} positions and reveals, so the button has to be on the page as well.
+ * The `admin` class is what {@see AdminButton::registerCss()} positions and reveals, so an {@see AdminButton} has to be
+ * on the page as well.
  */
 class AdminLink extends Widget
 {

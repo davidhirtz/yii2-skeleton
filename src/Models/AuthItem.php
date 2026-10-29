@@ -22,19 +22,19 @@ use yii\rbac\Item;
  * @property int|null $updated_at
  * @property int $created_at
  *
- * @property User[] $users {@see AuthItem::getUsers()}
+ * @property User[] $users
  */
 class AuthItem extends ActiveRecord implements TypeAttributeInterface
 {
     use TypeAttributeTrait;
 
     /**
-     * @var bool whether the item is assigned to the current user.
+     * @var bool
      */
     public ?bool $isAssigned = null;
 
     /**
-     * @var bool whether the item is inherited by another item.
+     * @var bool
      */
     public ?bool $isInherited = null;
 
@@ -68,8 +68,7 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
     }
 
     /**
-     * The description is a {@see Message} pointer; a row written before 3.0 holds rendered English and is shown as
-     * it stands.
+     * The description is a {@see Message} pointer, or rendered English in a row written before 3.0.
      */
     public function getLabel(): string
     {

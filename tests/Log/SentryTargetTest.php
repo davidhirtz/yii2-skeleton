@@ -26,8 +26,7 @@ use yii\base\InvalidConfigException;
 use yii\log\Logger;
 
 /**
- * The transport is replaced, so nothing here reaches the network. Sentry's hub is a process-wide singleton the
- * target sets, so each test starts from a fresh one.
+ * Sentry's hub is a process-wide singleton the target sets, so each test starts from a fresh one.
  */
 class SentryTargetTest extends TestCase
 {
@@ -63,8 +62,7 @@ class SentryTargetTest extends TestCase
     }
 
     /**
-     * `captureException()` names no level of its own, and Sentry defaults a level-less event to `error` — so
-     * without the scope's, every exception would arrive as one whatever Yii logged it as.
+     * Sentry defaults a level-less event to `error`, so without the scope's level every exception would arrive as one.
      */
     public function testAnExceptionKeepsTheLevelItWasLoggedAt(): void
     {
@@ -116,8 +114,7 @@ class SentryTargetTest extends TestCase
     }
 
     /**
-     * The frames of a report point into the same twelve bundle repositories whichever installation raised it, so
-     * the root package Composer recorded is what tells two deployments apart.
+     * The frames point into the same bundle repositories everywhere, so the root package tells two deployments apart.
      */
     public function testEveryReportNamesTheProject(): void
     {
@@ -152,10 +149,7 @@ class SentryTargetTest extends TestCase
         self::assertSame(VersionHelper::getApplicationName(), $tags['project'] ?? null);
     }
 
-    /**
-     * The posted body is what the file log's `maskVars` keeps out of it, and no mask of ours reaches Sentry's own
-     * request integration — so the integration is told not to read one.
-     */
+    /** No mask of ours reaches Sentry's request integration, so it is told not to read the posted body. */
     public function testThePostedBodyAndTheCookiesAreNeverSent(): void
     {
         $options = $this->getClientOptions();
@@ -165,8 +159,8 @@ class SentryTargetTest extends TestCase
     }
 
     /**
-     * Yii's error handler reports through this target. Sentry's own listeners would report a second time and take
-     * over the handler that renders the error page.
+     * Yii's error handler reports through this target; Sentry's listeners would report twice and take over the error
+     * page.
      */
     public function testSentryInstallsNoErrorHandlerOfItsOwn(): void
     {
@@ -198,8 +192,8 @@ class SentryTargetTest extends TestCase
     }
 
     /**
-     * A deploy pipeline sets these, and it is the only thing that can associate commits with a release — so a
-     * default of ours must not shadow Sentry's own resolution of them.
+     * Only a deploy pipeline can associate commits with a release, so a default of ours must not shadow Sentry's own
+     * resolution.
      */
     public function testTheDeploymentsOwnReleaseAndEnvironmentWin(): void
     {
@@ -239,8 +233,8 @@ class SentryTargetTest extends TestCase
     }
 
     /**
-     * `Target::collect()` appends the `logVars` dump as a message of its own — the cookies and the posted body
-     * among them, masked for a file on this server rather than for an external service.
+     * `Target::collect()` appends the `logVars` dump as a message, masked for a local file rather than for an external
+     * service.
      */
     public function testTheContextDumpIsNotReported(): void
     {
@@ -254,12 +248,8 @@ class SentryTargetTest extends TestCase
     }
 
     /**
-     * `send_default_pii` gates the cookies and the headers, not the URL — a confirmation or reset link carries
-     * its token in the query string, and Sentry's request integration sends both either way (issue #166).
-     *
-     * The callback is exercised rather than the integration: `RequestIntegration::setupOnce()` registers a
-     * *global* event processor bound to whichever instance ran first in the process, so a fetcher of one's own
-     * reaches nothing once any other client has been built.
+     * The callback is exercised rather than the integration, since `RequestIntegration::setupOnce()` binds a global
+     * event processor to the first instance in the process (issue #166).
      */
     public function testTheTokenIsMaskedInTheRequestUrl(): void
     {

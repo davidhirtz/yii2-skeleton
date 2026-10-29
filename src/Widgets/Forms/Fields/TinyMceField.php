@@ -63,8 +63,7 @@ class TinyMceField extends Field
     protected array $toolbar = [];
 
     /**
-     * @var array{class: class-string<HtmlValidator>}|class-string<HtmlValidator>|HtmlValidator|null containing the validator configuration. If set to false, no
-     * validation will be performed.
+     * @var array{class: class-string<HtmlValidator>}|class-string<HtmlValidator>|HtmlValidator|null
      */
     protected array|HtmlValidator|string|null $validator = HtmlValidator::class;
 
@@ -106,8 +105,7 @@ class TinyMceField extends Field
     }
 
     /**
-     * An array is keyed by selector, its value a declaration string or a `property => value` map; an integer key
-     * keeps a raw rule (`@import`, `@media`).
+     * Keyed by selector; an integer key keeps a raw rule (`@import`, `@media`).
      *
      * @param array<int|string, array<string, string>|string>|string|null $contentStyle
      */
@@ -319,10 +317,6 @@ class TinyMceField extends Field
         $this->clientOptions['toolbar'] ??= implode(' ', $this->toolbar);
     }
 
-    /**
-     * Creates the style dropdown. All classes allowed for inline and block elements will be added to the dropdown. if
-     * there are any styles defined, the headline styles will be added also.
-     */
     protected function configureStyleFormats(): void
     {
         $headlines = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];

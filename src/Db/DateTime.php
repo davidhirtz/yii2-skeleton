@@ -8,8 +8,7 @@ use DateTimeImmutable;
 use Stringable;
 
 /**
- * A `datetime` column's value, written as UTC. Immutable, so a record's attribute and its old value share one
- * instance: `modify()` answers a new date, which reads as a change, and never edits the one the record loaded.
+ * Written as UTC, and immutable so a record's attribute and its old value can share one instance.
  */
 class DateTime extends DateTimeImmutable implements Stringable
 {

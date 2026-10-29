@@ -61,8 +61,8 @@ class SearchResultList extends Widget
     }
 
     /**
-     * Inside the navbar search's popover, which is the listbox, the list and its items step aside for the results;
-     * `includes/combobox.ts` gives these their ids.
+     * Inside the navbar search's popover, which is the listbox, the list and its items step aside for the results,
+     * which `includes/combobox.ts` gives ids.
      */
     public function listbox(bool $listbox = true): static
     {

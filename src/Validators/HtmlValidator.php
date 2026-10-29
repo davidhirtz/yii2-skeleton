@@ -14,18 +14,10 @@ use yii\validators\Validator;
 class HtmlValidator extends Validator implements JsonSchemaInterface
 {
     /**
+     * A translated list is a closure, since `Yii::t()` cannot run while the application is being configured; a list
+     * not keyed by tag applies to links only.
+     *
      * @var array<int|string, array<int|string, string>|string>|Closure(): array<int|string, array<int|string, string>|string>
-     *     containing CSS classes that should be allowed. Use tag name as a key and an array of allowed classes as
-     *     value. Example: ['a' => ['btn', 'btn-primary']].
-     *
-     * Allowed classes can also have a human-readable name as key and the class name as value.
-     * Example: ['a' => ['Primary Button' => 'btn btn-primary']].
-     *
-     * A label is a `Yii::t()` result, which cannot be called while the application is still being configured, so a
-     * translated list is declared as a closure returning the array.
-     *
-     * For backwards compatibility, this can also be a simple array of allowed classes. These will be applied to link
-     * tags only
      */
     public array|Closure $allowedClasses = [];
 
@@ -35,8 +27,7 @@ class HtmlValidator extends Validator implements JsonSchemaInterface
     private array $classesByTag = [];
 
     /**
-     * `allowedClasses` still carries whichever of the three shapes it was configured with; this is the tag-keyed
-     * one `init()` settled on.
+     * The tag-keyed shape `init()` settled on, whatever `allowedClasses` was configured with.
      *
      * @return array<string, array<int|string, string>>
      */
@@ -46,45 +37,34 @@ class HtmlValidator extends Validator implements JsonSchemaInterface
     }
 
     /**
-     * @var list<string> containing allowed HTML tags like h1-h5 for format, table, th, td, tr for tables or blockquote,
-     * strike, em for font styles.
+     * @var list<string>
      */
     public array $allowedHtmlTags = [];
 
     /**
-     * @var list<string> containing a list of excluded HTML tags. Use this to override the default allowedHtmlTags.
+     * @var list<string>
      */
     public array $excludedHtmlTags = [];
 
     /**
-     * @var array<string, list<string>> containing allowed HTML attributes, indexed by tag name.
+     * @var array<string, list<string>>
      */
     public array $allowedHtmlAttributes = [];
 
     /**
-     * @var array<string, list<string>> containing CSS properties that should be allowed.
+     * @var array<string, list<string>>
      */
     public array $allowedCssProperties = [];
 
-    /**
-     * @var bool whether images should be allowed. This is a shorthand for adding img[alt|height|src|title|width] to
-     * allowedHtmlTags.
-     */
     public bool $allowImages = false;
 
-    /**
-     * @var bool whether tables should be allowed. This is a shorthand for adding table, th, td, tr to allowedHtmlTags.
-     */
     public bool $allowTables = false;
 
     /**
-     * @var array<string, mixed> containing options for HtmlPurifier. This should not be necessary in most cases.
+     * @var array<string, mixed>
      */
     public array $purifierOptions = [];
 
-    /**
-     * @var bool whether to remove unnecessary span tags.
-     */
     public bool $removeUnnecessarySpanTags = false;
 
     #[\Override]

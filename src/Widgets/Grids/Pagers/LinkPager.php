@@ -80,7 +80,7 @@ class LinkPager extends \yii\widgets\LinkPager
     }
 
     /**
-     * @param int|string $label the page number a first/last button carries, beside the configured labels
+     * @param int|string $label
      */
     #[\Override]
     protected function renderPageButton($label, $page, $class, $disabled, $active): string

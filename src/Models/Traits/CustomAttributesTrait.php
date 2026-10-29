@@ -18,8 +18,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Model;
 
 /**
- * Stores typed attribute definitions in one JSON column instead of a column each. Requires {@see I18nAttributesTrait}
- * for translatable definitions. Used by records and by {@see CustomAttributeGroupItem}, a plain model.
+ * Requires {@see I18nAttributesTrait} for translatable definitions.
  *
  * @mixin Model
  */
@@ -45,12 +44,12 @@ trait CustomAttributesTrait
     private array $customAttributeItems = [];
 
     /**
-     * @var array<string, mixed> the value each item list was built from
+     * @var array<string, mixed>
      */
     private array $customAttributeItemSources = [];
 
     /**
-     * @var array<string, array{int, ActiveRecord|null}> the record per attribute name and the id it was resolved for
+     * @var array<string, array{int, ActiveRecord|null}>
      */
     private array $customAttributeRecords = [];
 
@@ -60,7 +59,7 @@ trait CustomAttributesTrait
     private array $customAttributeBaselines = [];
 
     /**
-     * @return list<CustomAttribute> the configured definitions, or those of the type options when none were set
+     * @return list<CustomAttribute>
      */
     public function getCustomAttributes(): array
     {
@@ -201,8 +200,7 @@ trait CustomAttributesTrait
     }
 
     /**
-     * Rebuilt when the attribute was assigned since, and kept otherwise, so the form renders the instances that carry
-     * the validation errors.
+     * Rebuilt only when the attribute was assigned since, so the form renders the instances carrying the errors.
      *
      * @return array<int|string, CustomAttributeGroupItem>
      */
@@ -298,7 +296,7 @@ trait CustomAttributesTrait
     }
 
     /**
-     * @param string $name the attribute name, translated variant included
+     * `$name` may be a translated variant.
      */
     public function populateCustomAttributeRecord(string $name, ?ActiveRecord $record): void
     {
@@ -310,7 +308,7 @@ trait CustomAttributesTrait
     }
 
     /**
-     * Loaded lazily when not populated, and resolved again once the value was reassigned.
+     * Resolved again once the value was reassigned.
      */
     public function getCustomAttributeRecord(string $name): ?ActiveRecord
     {
@@ -336,8 +334,10 @@ trait CustomAttributesTrait
     }
 
     /**
+     * Nested names are joined by `.`.
+     *
      * @param class-string<RecordCustomAttribute> $class
-     * @return array<int, array<string, int>> how often each name holds an id, nested names joined by `.`
+     * @return array<int, array<string, int>>
      */
     public function getCustomAttributeRecordIds(string $class): array
     {
@@ -371,10 +371,9 @@ trait CustomAttributesTrait
     }
 
     /**
-     * Clears every value holding the id, in a group the value alone and not its row.
+     * In a group the value alone is cleared, not its row.
      *
      * @param class-string<RecordCustomAttribute> $class
-     * @return bool whether a value changed
      */
     public function clearCustomAttributeRecordId(string $class, int $id): bool
     {
@@ -437,9 +436,7 @@ trait CustomAttributesTrait
     }
 
     /**
-     * The custom attributes are assigned last, in a pass of their own: a value of the first pass can change which
-     * definitions apply, which both drops the new ones from `safeAttributes()` and makes assigning a name the new
-     * state does not have throw.
+     * The custom attributes are assigned last, since a value of the first pass can change which definitions apply.
      *
      * @param array<string, mixed> $values
      */

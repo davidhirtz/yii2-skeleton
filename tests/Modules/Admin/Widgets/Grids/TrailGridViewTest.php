@@ -43,8 +43,8 @@ class TrailGridViewTest extends TestCase
     }
 
     /**
-     * A create trail carries the record's attributes as they are, so a JSON column reaches the nested table with
-     * whatever it holds — an `int` included, which used to be a `TypeError` on the whole trail page.
+     * A create trail's JSON column reaches the nested table with whatever it holds, an `int` included, which used to be
+     * a `TypeError`.
      */
     public function testACreateTrailRendersANestedHashOfAnyScalar(): void
     {
@@ -78,8 +78,8 @@ class TrailGridViewTest extends TestCase
     }
 
     /**
-     * The type is a range attribute, resolved through the model's definitions — the declaration it used to read is
-     * indexed by offset and handed the formatter a {@see \Hirtz\Skeleton\Models\Types\Type} to subscript.
+     * The type is resolved through the model's definitions; the declaration read before handed the formatter a {@see
+     * \Hirtz\Skeleton\Models\Types\Type} to subscript.
      */
     public function testAnUpdateTrailRendersTheNamesOfAChangedType(): void
     {

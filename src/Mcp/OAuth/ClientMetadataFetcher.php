@@ -28,14 +28,11 @@ class ClientMetadataFetcher
     public int $maxSize = 5120;
 
     /**
-     * @var int seconds a document is kept when its response sets no `max-age`, which is also the most it is kept
+     * Also the most a document is kept, whatever its `max-age`.
      */
     public int $defaultCacheDuration = 3600;
     public int $maxCacheDuration = 86400;
 
-    /**
-     * @var ClientInterface|null the test seam: a client built over a `MockHandler`
-     */
     public ?ClientInterface $client = null;
 
     /**

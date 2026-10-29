@@ -11,8 +11,7 @@ use yii\db\Connection;
 use yii\di\Instance;
 
 /**
- * The auto-increment counter is never reset: `ALTER TABLE` is DDL and would commit the test transaction, so a record
- * a test creates gets whatever id the counter has reached, never a fixed number.
+ * The auto-increment counter is never reset, since `ALTER TABLE` would commit the test transaction.
  */
 abstract class ActiveFixture extends \yii\test\ActiveFixture
 {
@@ -37,8 +36,8 @@ abstract class ActiveFixture extends \yii\test\ActiveFixture
     }
 
     /**
-     * The data file lives in `Data/`, the StudlyCase directory of v3, where Yii looks in `data/` — which only a
-     * case-insensitive filesystem resolves — and loads nothing at all when it finds no file.
+     * In `Data/`, the StudlyCase directory, where Yii looks in `data/` and silently loads nothing without a file.
+     *
      * @return array<string, array<string, mixed>>
      */
     #[Override]
@@ -56,10 +55,8 @@ abstract class ActiveFixture extends \yii\test\ActiveFixture
     }
 
     /**
-     * Yii empties the whole table, which the test transaction normally rolls back — but a test that loses its
-     * transaction to DDL commits the delete, removing rows it never wrote (monorepo #142). A fixture holding
-     * loaded rows removes those; one holding none — the `unloadFixtures()` that precedes every load — still
-     * clears the table of whatever an earlier run left behind, and so does a row that cannot be identified.
+     * Removes only the loaded rows, since a test that lost its transaction to DDL would commit deleting rows it never
+     * wrote (monorepo #142); without loaded rows it still clears the table.
      */
     #[Override]
     protected function resetTable(): void

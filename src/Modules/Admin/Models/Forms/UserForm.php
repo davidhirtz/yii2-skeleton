@@ -176,8 +176,7 @@ class UserForm extends Model
     }
 
     /**
-     * @return string|null the reset url the credentials email sends the user to, in place of a password. Only the
-     *     token's HMAC is stored, so this is populated by {@see static::save()} and cannot be rebuilt later.
+     * Set by {@see static::save()} alone, since only the token's HMAC is stored.
      */
     public function getPasswordResetUrl(): ?string
     {

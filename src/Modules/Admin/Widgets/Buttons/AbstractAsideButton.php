@@ -9,9 +9,7 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 
 /**
- * A navbar button standing in for the aside, which renders after it and cannot be asked. Both answer the guest
- * check {@see AsideMenu::isVisible()} comes to for everything shipped — a bar carrying a toggle for an aside
- * that had left itself out of the document is monorepo issue #190, and the pin beside it is the same trap.
+ * Repeats the guest check of {@see AsideMenu::isVisible()}, since the aside renders after the navbar (#190).
  */
 abstract class AbstractAsideButton extends Widget
 {

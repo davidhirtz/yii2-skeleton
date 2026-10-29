@@ -107,8 +107,7 @@ class RequestEnvironmentTest extends TestCase
     }
 
     /**
-     * The button is invisible to a guest, which `Tests\Widgets\Buttons\AdminButtonTest` is about — the badge is
-     * what is under test here, so this one opts out rather than logging in.
+     * The button is invisible to a guest, so this test of the badge opts out rather than logging in.
      */
     private function renderAdminButton(): string
     {

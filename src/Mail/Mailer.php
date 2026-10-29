@@ -15,9 +15,7 @@ use yii\base\InvalidConfigException;
 use yii\mail\BaseMailer;
 
 /**
- * Sends through a Symfony transport built from a DSN against Symfony's own transport list, so every installed
- * bridge resolves (`resend+api://` with `symfony/resend-mailer`). The transport is built on the first send. A
- * transport failure is logged and answered `false`, as `MailerInterface::send()` promises; a DSN that does not
+ * A transport failure is logged and answered `false`, as `MailerInterface::send()` promises; a DSN that does not
  * resolve still throws.
  */
 class Mailer extends BaseMailer
@@ -28,9 +26,7 @@ class Mailer extends BaseMailer
     private ?TransportExceptionInterface $lastTransportException = null;
 
     /**
-     * A message composed from an HTML view alone gets its text part derived here rather than by Yii, which strips
-     * every tag and with it the target of every link: the text part of a mail whose point is its button would carry
-     * no URL at all.
+     * Derives the text part of an HTML-only message here, since Yii's derivation strips every link's target.
      *
      * @param array<string, string>|string|null $view
      * @param array<string, mixed> $params
@@ -52,9 +48,6 @@ class Mailer extends BaseMailer
         return $message;
     }
 
-    /**
-     * Yii's derivation of a text part, with every link's target kept beside its label.
-     */
     public static function createTextBody(string $html): string
     {
         if (preg_match('~<body[^>]*>(.*?)</body>~is', $html, $match)) {
@@ -86,7 +79,7 @@ class Mailer extends BaseMailer
     }
 
     /**
-     * @param TransportInterface|array{dsn: string}|string $transport a transport, or its DSN
+     * @param TransportInterface|array{dsn: string}|string $transport
      */
     public function setTransport(TransportInterface|array|string $transport): void
     {
@@ -107,7 +100,7 @@ class Mailer extends BaseMailer
     }
 
     /**
-     * The transport's DSN without its credentials or options, for what an installation reports about itself.
+     * Without credentials or options.
      */
     public function getMaskedTransportDsn(): ?string
     {
@@ -124,8 +117,7 @@ class Mailer extends BaseMailer
     }
 
     /**
-     * Why no transport can be built, without sending anything: none configured, a malformed DSN, a bridge that is
-     * not installed, or a bridge missing its own dependency (`symfony/http-client` for the HTTP API ones).
+     * Sends nothing; a bridge missing its own dependency (`symfony/http-client` for the HTTP API ones) counts too.
      */
     public function getTransportError(): ?string
     {
@@ -160,9 +152,6 @@ class Mailer extends BaseMailer
         return true;
     }
 
-    /**
-     * Why the last send failed, for a caller that shows the reason rather than only `false`.
-     */
     public function getLastTransportException(): ?TransportExceptionInterface
     {
         return $this->lastTransportException;

@@ -99,8 +99,7 @@ class ActiveFormTest extends TestCase
     }
 
     /**
-     * The shape used to be sniffed off the first row and the answer applied to the rest, so a bare field behind a
-     * group was handed to a fieldset that never got its model — a fatal, one row order away (#120).
+     * A shape sniffed off the first row once handed a bare field behind a group to a fieldset without a model (#120).
      */
     public function testMixingGroupsAndBareFieldsIsRefused(): void
     {

@@ -56,9 +56,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * An unticked checkbox posts nothing at all, so only the hidden `0` in front of it can turn the hints off.
-     * Submitting the form cannot prove it here: BrowserKit keys its fields by name, so the checkbox replaces the
-     * hidden input of the same name and unticking it posts nothing either way.
+     * Not provable by submitting: BrowserKit keys fields by name, so the checkbox hides its hidden `0` input.
      */
     public function testTheHintCheckboxCarriesItsUncheckedValue(): void
     {
@@ -178,8 +176,8 @@ class AccountTest extends TestCase
     }
 
     /**
-     * The successful delete lives in `AccountDeleteFormTest`: logging out a user that was just deleted makes
-     * `session_regenerate_id()` write a session row whose `user_id` is gone, and the warning would ride along here.
+     * The successful delete is in `AccountDeleteFormTest`, since logging out a deleted user makes
+     * `session_regenerate_id()` warn.
      */
     public function testDeleteAccountWithWrongPassword(): void
     {

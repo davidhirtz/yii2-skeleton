@@ -72,8 +72,7 @@ class GrantController extends Controller
     }
 
     /**
-     * A POST approves or denies the request its query string carries. The answer leaves the site, so the form is
-     * not boosted.
+     * The form is not boosted, since the answer leaves the site.
      */
     public function actionAuthorize(): Response|string
     {
@@ -164,8 +163,7 @@ class GrantController extends Controller
     }
 
     /**
-     * Approving the same client again replaces the scope it was granted and keeps its tokens, but for the write
-     * tokens of a grant narrowed to reading.
+     * Approving a client again keeps its tokens, except the write tokens of a grant narrowed to reading.
      */
     protected function saveGrant(AuthorizationRequest $request, string $resource, string $scope): OAuthGrant
     {

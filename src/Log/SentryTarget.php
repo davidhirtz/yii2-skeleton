@@ -27,8 +27,7 @@ use yii\log\Logger;
 use yii\log\Target;
 
 /**
- * Reports to Sentry beside the file log rather than instead of it. `Base\Traits\ApplicationTrait` adds one when
- * `params.sentryDsn` is set, so an installation without the parameter carries no Sentry client at all.
+ * Added beside the file log by `Base\Traits\ApplicationTrait` only when `params.sentryDsn` is set.
  */
 class SentryTarget extends Target
 {
@@ -37,8 +36,7 @@ class SentryTarget extends Target
     public ?string $dsn = null;
 
     /**
-     * Both are what a report is grouped and filtered by, and both are resolved in the same order: this property,
-     * then Sentry's own `SENTRY_ENVIRONMENT` / `SENTRY_RELEASE` variable, then a default of ours.
+     * Both resolve from the property, then `SENTRY_ENVIRONMENT` / `SENTRY_RELEASE`, then a default of ours.
      */
     public ?string $environment = null;
     public ?string $release = null;
@@ -50,9 +48,7 @@ class SentryTarget extends Target
     public array $clientOptions = [];
 
     /**
-     * Nothing, deliberately: `Target::collect()` appends the context dump as a message of its own, and the
-     * masking that makes it safe for a file on this server is not what should reach an external service. The
-     * request integration carries the URL and the method instead.
+     * Empty, since the context dump's masking is meant for a local file rather than an external service.
      *
      * @var array<array-key, string>
      */
@@ -106,8 +102,7 @@ class SentryTarget extends Target
     }
 
     /**
-     * The id alone: an account's name and address are the user's, and Sentry is not this server. The identity is
-     * read without renewing it, so a report never opens a session of its own.
+     * The id alone, read without renewing the identity, so a report never opens a session of its own.
      */
     protected function getUser(): ?UserDataBag
     {
@@ -126,9 +121,7 @@ class SentryTarget extends Target
     }
 
     /**
-     * The hub is Sentry's own process-wide singleton, so it is set rather than read: the target is configured from
-     * this application's parameters and must not report through a client another one left behind. `\Sentry\`'s own
-     * helpers reach the same client from anywhere afterwards.
+     * Set rather than read, since Sentry's process-wide hub may hold a client another application left behind.
      */
     protected function getHub(): HubInterface
     {
@@ -166,11 +159,8 @@ class SentryTarget extends Target
     }
 
     /**
-     * `send_default_pii` gates the cookies and the headers, not the URL — Sentry's `RequestIntegration` sends
-     * `url` and `query_string` either way, and a confirmation or reset link carries its token in one
-     * (monorepo issue #166). This is the hook that can see them: `Client::prepareEvent()` runs the scope's event
-     * processors, which is what attaches the request, and only then the callback. A project's own runs after
-     * this one, on the already masked event.
+     * Masks the URL tokens `RequestIntegration` sends whatever `send_default_pii` says (#166); a project's callback
+     * runs after.
      */
     protected function getBeforeSend(): Closure
     {
@@ -192,10 +182,7 @@ class SentryTarget extends Target
     }
 
     /**
-     * Sentry's own `package@version` convention, so the Releases view reads as the project rather than as a bare
-     * commit. The version is the deployed commit where there is one, abbreviated as everywhere else here: an
-     * installation reaching this default has no pipeline registering releases, and therefore no commits to
-     * associate a full reference with.
+     * Sentry's `package@version` convention, the abbreviated deployed commit as the version.
      */
     protected function getDefaultRelease(): string
     {
@@ -204,11 +191,8 @@ class SentryTarget extends Target
     }
 
     /**
-     * `Client` merges these into every event. **Which installation** is the one thing a report cannot be read
-     * without and nothing else carries: the frames point into the same twelve bundle repositories whichever
-     * deployment raised them, and `server_name` is the host rather than the project. Composer's root package is
-     * the answer — a project whose `composer.json` declares no `name` reports `__root__`, which is the sign to
-     * give it one.
+     * The root package names the installation, which nothing else in a report does (`__root__`: its `composer.json`
+     * lacks a `name`).
      *
      * @return array<string, string>
      */

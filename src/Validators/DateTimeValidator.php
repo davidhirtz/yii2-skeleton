@@ -12,14 +12,15 @@ use Yii;
 use yii\validators\Validator;
 
 /**
- * Declares a date for {@see AttributeTypecastBehavior}, which reads the posted value; a value still a string after
- * the cast is one it could not read. A model without the behavior never passes.
+ * A value still a string after {@see AttributeTypecastBehavior}'s cast is one it could not read, so a model without
+ * the behavior never passes.
  */
 class DateTimeValidator extends Validator implements AttributeTypeInterface
 {
     /**
-     * @var AttributeTypecastBehavior::TYPE_DATETIME|AttributeTypecastBehavior::TYPE_DATE the type of an attribute
-     * without a column, which names its own
+     * Only for an attribute without a column, which names its own.
+     *
+     * @var AttributeTypecastBehavior::TYPE_DATETIME|AttributeTypecastBehavior::TYPE_DATE
      */
     public string $type = AttributeTypecastBehavior::TYPE_DATETIME;
 

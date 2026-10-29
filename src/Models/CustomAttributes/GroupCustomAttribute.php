@@ -65,8 +65,7 @@ class GroupCustomAttribute extends CustomAttribute
     }
 
     /**
-     * The attribute a collapsed row is previewed by. It defaults to the first one declared, which is the one a
-     * group is normally named after.
+     * Defaults to the first attribute declared.
      */
     public function titleAttribute(string $titleAttribute): static
     {
@@ -75,7 +74,7 @@ class GroupCustomAttribute extends CustomAttribute
     }
 
     /**
-     * The label of the button an empty group shows, derived from the placeholder when not set.
+     * Derived from the placeholder when not set.
      */
     public function addButtonLabel(?string $addButtonLabel): static
     {
@@ -137,8 +136,7 @@ class GroupCustomAttribute extends CustomAttribute
     }
 
     /**
-     * Named rather than a closure: `InlineValidator` rebinds a closure to the model, which fails for one created in
-     * the scope of the definition.
+     * Named rather than a closure: `InlineValidator` rebinds a closure to the model.
      */
     #[Override]
     protected function getValidationRules(Model $owner): array
@@ -147,10 +145,9 @@ class GroupCustomAttribute extends CustomAttribute
     }
 
     /**
-     * Drops rows whose every value is empty, reindexes the rest in request order and copies the item errors into the
-     * owner as `links.0.url`, so the save is blocked and the form shows them next to their input.
+     * Item errors are copied into the owner as `links.0.url`, so the save is blocked and the form shows them.
      *
-     * @return array<string, mixed>|list<array<string, mixed>>|null the normalized value the owner assigns
+     * @return array<string, mixed>|list<array<string, mixed>>|null
      */
     public function validateGroup(Model $owner, string $attribute): mixed
     {
@@ -244,8 +241,7 @@ class GroupCustomAttribute extends CustomAttribute
     }
 
     /**
-     * A label per child of every row, so the trail can pair the old and the new value of each one. A nested group is
-     * flattened into the same map rather than nested, so its children diff on their own too.
+     * A nested group is flattened into the same map, so the trail diffs its children on their own too.
      *
      * @return array<string, array<string, string|Stringable|null>|string|Stringable|null>
      */

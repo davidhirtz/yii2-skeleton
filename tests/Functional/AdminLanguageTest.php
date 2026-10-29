@@ -43,8 +43,7 @@ class AdminLanguageTest extends TestCase
     }
 
     /**
-     * The admin list is independent of the content languages, so a language the content is written in is not
-     * automatically one the admin is offered in.
+     * The admin list is independent of the content languages.
      */
     public function testALanguageOutsideTheAdminListIsRefused(): void
     {
@@ -72,10 +71,6 @@ class AdminLanguageTest extends TestCase
         self::assertLanguageSame('en');
     }
 
-    /**
-     * A single admin language leaves nothing to pick: it is pinned, and neither the dropdown nor the account's
-     * language field renders.
-     */
     public function testASingleLanguageIsPinnedAndHidesThePickers(): void
     {
         self::getAdminModule()->languages = ['de'];
@@ -136,8 +131,7 @@ class AdminLanguageTest extends TestCase
     }
 
     /**
-     * The navbar renders outside `#wrap`, so the page the button was rendered with is not the page it is clicked
-     * on — the whole document is reloaded rather than swapped, and the URL is the browser's own.
+     * The navbar renders outside `#wrap`, so the whole document is reloaded rather than swapped.
      */
     public function testAnHtmxRequestIsAnsweredWithARefresh(): void
     {
@@ -210,8 +204,7 @@ class AdminLanguageTest extends TestCase
     }
 
     /**
-     * The route is fixed and the language travels in the body, because the navbar holds whichever page it was last
-     * rendered with — the current URL is only known to the browser.
+     * The navbar holds whichever page it was last rendered with, so the language travels in the body.
      */
     public function testTheDropdownPostsTheLanguageToTheFixedRoute(): void
     {

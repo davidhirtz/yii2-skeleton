@@ -12,16 +12,16 @@ use Yii;
 class UrlSitemap extends AbstractSitemap
 {
     /**
-     * @var list<array<string, mixed>|string> containing sitemap URLs. A URL can be set as route or relative URL. If
-     * additional information such as priority or last modified should be added, an array with the url as "loc"
-     * value can be used.
+     * A route or relative URL, or an array with it as `loc` beside further tags such as `priority`.
+     *
+     * @var list<array<string, mixed>|string>
      */
     public array $urls = [];
 
     /**
-     * @var array<string, mixed> containing the static views. Array keys "alias" for the view path and "route" string
-     * for URL manager are required. Optional "params" for additional route params, "paramName" for the view param
-     * and "exclude" for files that should not be included.
+     * Requires `alias` and `route`; `params`, `paramName` and `exclude` are optional.
+     *
+     * @var array<string, mixed>
      */
     public array $views = [];
 
@@ -69,8 +69,6 @@ class UrlSitemap extends AbstractSitemap
     }
 
     /**
-     * Generates sitemap URLs from view files.
-     *
      * @return list<array<string, mixed>|string>
      */
     public function generateFileUrls(): array

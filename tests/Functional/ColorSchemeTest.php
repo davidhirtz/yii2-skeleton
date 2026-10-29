@@ -16,9 +16,8 @@ class ColorSchemeTest extends TestCase
     use UserFixtureTrait;
 
     /**
-     * No attribute is the third state: nothing pinned, so `prefers-color-scheme` decides in the stylesheet. The
-     * server cannot answer it — `Sec-CH-Prefers-Color-Scheme` is Chromium-only and needs an `Accept-CH` first.
-     * A guest has no column either, so the login page never carries one.
+     * No attribute leaves `prefers-color-scheme` to the stylesheet, since `Sec-CH-Prefers-Color-Scheme` is
+     * Chromium-only.
      */
     public function testTheLoginPageRendersNoAttribute(): void
     {
@@ -41,8 +40,7 @@ class ColorSchemeTest extends TestCase
     }
 
     /**
-     * `data-theme` is on `<html>`, which every swap leaves standing — so a scheme the account form changed only
-     * reaches the document on a full load, and the save has to ask for one.
+     * `data-theme` is on `<html>`, which every swap leaves standing, so a changed scheme needs a full load.
      */
     public function testTheAccountFormRefreshesTheDocumentWhenTheSchemeChanged(): void
     {
@@ -60,8 +58,7 @@ class ColorSchemeTest extends TestCase
     }
 
     /**
-     * A save that left the scheme where it was answers the ordinary refresh, or every account save would reload
-     * the whole document.
+     * Otherwise every account save would reload the whole document.
      */
     public function testTheAccountFormDoesNotRefreshWhenTheSchemeIsUnchanged(): void
     {

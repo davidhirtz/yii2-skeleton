@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Test\Traits;
 
-/**
- * Asserts the `{DOMAIN}_{SUBJECT}_{KIND}` scheme of a category's keys and that every language holds the same ones.
- */
 trait MessageKeysTrait
 {
     protected static function assertMessageKeys(string $messagePath, string $category): void

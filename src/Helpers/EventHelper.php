@@ -9,13 +9,8 @@ use yii\base\Event;
 class EventHelper
 {
     /**
-     * Yii's `Event::on()` cannot be typed, since it also takes wildcard patterns — so every handler starts with an
-     * inline `@var` on `$event->sender`. This narrows the sender for a single class string and hands it to the
-     * handler; the event itself is the optional second argument. An event triggered without an instance
-     * (`Event::trigger(Foo::class, …)`) carries no sender and reaches no handler registered here.
-     *
-     * A handler that reads more than the base event names its class in `$eventClass`, which is checked here as
-     * well as narrowed — nothing maps an event name to its class, so the two could otherwise disagree silently.
+     * A sender-less `Event::trigger(Foo::class, …)` reaches no handler registered here; `$eventClass` is checked as
+     * well as narrowed, since nothing maps an event name to its class.
      *
      * @template T of object
      * @template TEvent of Event

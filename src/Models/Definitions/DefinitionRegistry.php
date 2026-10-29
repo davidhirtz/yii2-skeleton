@@ -10,13 +10,8 @@ use Yii;
 use yii\base\InvalidConfigException;
 
 /**
- * Resolves, validates and caches the definitions a model declares. The cache is keyed by the application language as
- * well: a definition's `name` is a {@see Yii::t()} result, so the admin language switch would otherwise freeze the
- * language of whichever request built it first.
- *
- * The declaration is an instance method, which is what lets the container configure it — so a model is built here,
- * once per class and language. {@see Yii::createObject()} rather than `instance()`, whose cache is process wide and
- * would hand back an object configured by an application that is already gone.
+ * Cached per application language, since a definition's `name` is a {@see Yii::t()} result; models are built with
+ * {@see Yii::createObject()}, since `instance()` caches process-wide past the application.
  */
 final class DefinitionRegistry
 {
@@ -81,8 +76,7 @@ final class DefinitionRegistry
     }
 
     /**
-     * One model instance per declared type. Cached here rather than in the trait, whose `private static` would be a
-     * separate property in every using class and could not be reset from one place.
+     * Cached here rather than in the trait, whose `private static` would be separate per using class.
      *
      * @param class-string $modelClass
      * @param Closure(): array<int, object> $create

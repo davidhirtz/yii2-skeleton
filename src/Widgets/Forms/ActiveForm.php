@@ -55,8 +55,8 @@ class ActiveForm extends Widget
     protected string $layout = "{errors}{rows}{buttons}{footer}";
 
     /**
-     * Renders every fieldset `disabled` and drops the buttons, so a record the user may see but not change shows
-     * the form it would otherwise be a 403 instead of.
+     * Renders every fieldset `disabled` without buttons, so a user who may see but not change a record gets the form
+     * instead of a 403.
      */
     protected bool $readonly = false;
 
@@ -76,9 +76,6 @@ class ActiveForm extends Widget
     protected array $excludedErrorProperties = [];
 
     /**
-     * What `rows()` was given, normalized. A row of a form is a label and its content — `Fieldset::$rows` holds
-     * those — so what a form itself holds is the fieldsets they sit in.
-     *
      * @var list<Fieldset>|null
      */
     protected ?array $fieldsets = null;
@@ -92,8 +89,8 @@ class ActiveForm extends Widget
     }
 
     /**
-     * A container placing the language tabs beside the form ({@see FormContainer}) turns it off and asks
-     * {@see getTranslationTabs()} after the form rendered.
+     * A {@see FormContainer} placing the tabs beside the form turns this off and asks {@see getTranslationTabs()} after
+     * the render.
      */
     public function inlineTranslationTabs(bool $inlineTranslationTabs = true): static
     {
@@ -101,9 +98,6 @@ class ActiveForm extends Widget
         return $this;
     }
 
-    /**
-     * Whether leaving the page with unsaved changes asks first (`includes/unsaved.ts`).
-     */
     public function warnOnLeave(bool $warnOnLeave = true): static
     {
         $this->warnOnLeave = $warnOnLeave;
@@ -167,9 +161,7 @@ class ActiveForm extends Widget
     }
 
     /**
-     * The closure form is what an outside listener uses to insert a field of its own: the collection is not
-     * public, so it is handed the current one and returns the one it wants. Whatever shape it returns is
-     * normalized, so the closure may hand back the fieldsets it was given.
+     * Whatever shape the closure returns is normalized, so it may hand back the fieldsets it was given.
      *
      * @param array<mixed>|null|Closure(list<Fieldset>): (array<mixed>|null) $rows
      * @return $this
@@ -229,17 +221,14 @@ class ActiveForm extends Widget
         parent::configure();
     }
 
-    /**
-     * A form model editing a record it wraps answers for that record here.
-     */
+    /** A form model wrapping a record answers for that record here. */
     protected function isSavedRecord(): bool
     {
         return $this->model instanceof ActiveRecordInterface && !$this->model->getIsNewRecord();
     }
 
     /**
-     * The rows a form shows when the caller named none. A subclass declares its fields here rather than assigning
-     * `$fieldsets`, so whatever it returns is normalized before an `EVENT_CONFIGURE` listener ever sees it.
+     * A subclass declares its fields here rather than assigning `$fieldsets`, so a listener sees them normalized.
      *
      * @return array<mixed>
      */
@@ -249,10 +238,7 @@ class ActiveForm extends Widget
     }
 
     /**
-     * Rows are declared as a flat list of fields, as a list of groups or as fieldsets, and become a list of
-     * fieldsets here — so a subclass, a listener and the render all see one shape. Mixing a bare field into a list
-     * of groups is refused rather than guessed at: the old sniff asked only the first element and applied its
-     * answer to the rest, which rendered a fieldset that never got its model.
+     * Mixing a bare field into a list of groups is refused rather than guessed at.
      *
      * @param array<mixed> $rows
      * @return list<Fieldset>
@@ -306,8 +292,8 @@ class ActiveForm extends Widget
     }
 
     /**
-     * The conflict is about the whole record, not a field, so it is a flash rather than a line in the summary. The
-     * view renders before the layout, whose flashes pick it up in the same response.
+     * A flash rather than a summary line, since the conflict concerns the whole record; the layout renders after the
+     * view and picks it up.
      */
     protected function flashStaleSaveError(): void
     {
@@ -327,9 +313,8 @@ class ActiveForm extends Widget
     }
 
     /**
-     * The record's version when the form was rendered, posted back for {@see \Hirtz\Skeleton\Models\Traits\StaleSaveTrait}.
-     * A conflict it reported takes the current version, so saving once more overwrites knowingly; any other error
-     * keeps the version the form was opened at.
+     * A conflict {@see \Hirtz\Skeleton\Models\Traits\StaleSaveTrait} reported takes the current version, so saving once
+     * more overwrites knowingly.
      */
     protected function getStaleSaveInput(): string
     {
@@ -343,11 +328,7 @@ class ActiveForm extends Widget
         return Html::hiddenInput(Html::getInputName($this->model, 'loadedVersion'), (string)$value);
     }
 
-    /**
-     * The form's languages as tabs, like a submenu: every field, then one language at a time, driven by
-     * `includes/translationLayout.ts`; the rows it hides carry `data-language` ({@see Fieldset}). A language the
-     * record lacks a translation for is marked.
-     */
+    /** Driven by `includes/translationLayout.ts`; the rows it hides carry `data-language` ({@see Fieldset}). */
     protected function getTranslationToolbar(): string
     {
         if (!$this->hasTranslationToolbar() || !$this->model instanceof I18nAttributeInterface) {
@@ -388,9 +369,7 @@ class ActiveForm extends Widget
             ->content(...$items);
     }
 
-    /**
-     * The toolbar only where the rows hold a translated field: a model may declare translations its form leaves out.
-     */
+    /** Only where the rows hold a translated field, since a model may declare translations its form leaves out. */
     protected function getTranslatedRows(): string
     {
         $rows = (string)$this->getRows();

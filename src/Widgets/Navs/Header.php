@@ -122,8 +122,8 @@ class Header extends Widget
     }
 
     /**
-     * A subtitle is always a list of items, even when it is one string: the bar in front of it is drawn by the
-     * first item, so that it travels with the item's view transition instead of sitting still behind it.
+     * Always a list of items, since the first item draws the bar in front so that it travels with the item's view
+     * transition.
      */
     protected function getSubtitle(): ?Stringable
     {

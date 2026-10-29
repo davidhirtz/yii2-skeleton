@@ -9,7 +9,7 @@ use Hirtz\Skeleton\Models\User;
 
 /**
  * @property int|null $updated_by_user_id
- * @property-read User|null $updated {@see static::getUpdated()}
+ * @property-read User|null $updated
  */
 trait UpdatedByUserTrait
 {

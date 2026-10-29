@@ -19,7 +19,7 @@ class PasswordRecoverForm extends Model
     use IdentityTrait;
 
     /**
-     * @var string the interval in which no new email will be sent as date time string.
+     * A relative date time string within which no new email is sent.
      */
     public string $timeoutSpamProtection = '5 mins';
 
@@ -94,8 +94,8 @@ class PasswordRecoverForm extends Model
     }
 
     /**
-     * In the recipient's language, as an administrator or the console may send it; a user who never logged in gets
-     * the credentials email instead.
+     * In the recipient's language, since an administrator or the console may send it; a user who never logged in
+     * gets the credentials email instead.
      */
     public function sendPasswordResetEmail(): bool
     {

@@ -24,8 +24,7 @@ class RegistryController extends Controller
     public ?string $url = null;
 
     /**
-     * @var bool whether an unreachable or refusing registry fails the command. A deploy runs the push last and
-     * must not go red because the registry is down, so the default is a warning and exit code 0.
+     * @var bool whether an unreachable or refusing registry fails the command, off since a deploy runs the push last
      */
     public bool $strict = false;
 

@@ -8,24 +8,19 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttributeGroupItem;
 use Hirtz\Skeleton\Models\CustomAttributes\RecordCustomAttribute;
-use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 
-/**
- * Implemented via {@see CustomAttributesTrait}.
- */
 interface CustomAttributeInterface
 {
     /**
-     * Must be cheap and free of side effects, it runs for every loaded record. A definition depending on a relation has
-     * to eager load it or guard with `isRelationPopulated()`.
+     * Runs for every loaded record, so it must be cheap and free of side effects: a definition depending on a
+     * relation eager loads it or guards with `isRelationPopulated()`.
      *
-     * @return list<CustomAttribute> the definitions for the model's current state
+     * @return list<CustomAttribute>
      */
     public function getCustomAttributes(): array;
 
     /**
-     * @param list<CustomAttribute>|\Closure(static): list<CustomAttribute>|null $customAttributes replaces those of
-     * the type options; settable through the container like `i18nAttributes`
+     * @param list<CustomAttribute>|\Closure(static): list<CustomAttribute>|null $customAttributes
      */
     public function setCustomAttributes(array|\Closure|null $customAttributes): void;
 
@@ -35,17 +30,19 @@ interface CustomAttributeInterface
     public function getCustomAttributeDefinitions(): array;
 
     /**
-     * @param string $name the definition name or one of its translated variants
+     * `$name` may be a translated variant.
      */
     public function getCustomAttribute(string $name): ?CustomAttribute;
 
     /**
-     * @return list<string> the definition names plus their translated variants
+     * Includes the translated variants.
+     *
+     * @return list<string>
      */
     public function getCustomAttributeNames(): array;
 
     /**
-     * @return list<string> the translatable definition names, untranslated
+     * @return list<string>
      */
     public function getTranslatableCustomAttributeNames(): array;
 
@@ -70,7 +67,9 @@ interface CustomAttributeInterface
     public function getCustomAttributeItems(string $name): array;
 
     /**
-     * @return array<string, mixed> the JSON representation of every defined value, `null` values omitted
+     * `null` values are omitted.
+     *
+     * @return array<string, mixed>
      */
     public function getSerializedCustomAttributes(): array;
 

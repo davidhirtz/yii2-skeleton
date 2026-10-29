@@ -24,8 +24,7 @@ class BreadcrumbList extends Thing
     }
 
     /**
-     * A crumb without a URL is left out, unless it is the last one: the current page, which schema.org lists
-     * without an `item`. Positions count the listed crumbs only.
+     * A crumb without a URL is left out unless it is the current page, which schema.org lists without an `item`.
      *
      * @return list<array<string, mixed>>
      */

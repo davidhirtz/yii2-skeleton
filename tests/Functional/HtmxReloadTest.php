@@ -10,9 +10,7 @@ use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 
 /**
- * A page rendered for a session that is over — a guest's as much as a gone one — cannot be patched, because a swap
- * only ever reaches `#wrap` and the navbar and the flashes sit outside it. So htmx is told to load a fresh document
- * instead, at the URL the response redirects to or at the one it is already on.
+ * A swap only reaches `#wrap` and the navbar and flashes sit outside it, so an ended session reloads the document.
  */
 class HtmxReloadTest extends TestCase
 {
@@ -34,8 +32,8 @@ class HtmxReloadTest extends TestCase
     }
 
     /**
-     * A login that swapped left the guest navbar standing and the login-required error in `#flashes` behind it,
-     * where nothing removes it: only a success alert times out (monorepo issue #185).
+     * A swapped login left the guest navbar and the login-required error standing, since only a success alert times
+     * out (#185).
      */
     public function testALoginSendsTheDocumentToTheReturnUrl(): void
     {
@@ -67,8 +65,7 @@ class HtmxReloadTest extends TestCase
     }
 
     /**
-     * The refresh is the whole of the answer here: a redirect to the login page would carry no return URL, since
-     * Yii records one for a GET alone, and would lose a form post to a session that lapsed under it.
+     * A redirect to the login would carry no return URL, since Yii records one for a GET alone.
      */
     public function testAGuestHtmxRequestRefreshesInsteadOfLoggingIn(): void
     {
@@ -87,10 +84,8 @@ class HtmxReloadTest extends TestCase
     }
 
     /**
-     * Two pieces of per-request state used to reach the request after it: `Test\Browser` merged each request's
-     * server bag into the process-wide `$_SERVER`, so one htmx request made the rest of the test an htmx
-     * session, and `Web\Response` kept its refresh flag across a `clear()`, so every later response was an empty
-     * 200 carrying `HX-Refresh` — which reads as a request that silently did nothing.
+     * `Test\Browser` once merged each server bag into `$_SERVER` and `Web\Response` kept its refresh flag across
+     * `clear()`, so one htmx request made every later response an empty `HX-Refresh`.
      */
     public function testAnHtmxRequestDoesNotOutliveItself(): void
     {

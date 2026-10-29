@@ -16,17 +16,14 @@ use yii\helpers\Console;
 /**
  * Cleans up broken redirect records.
  *
- * Only structural breakage of a {@see Redirect} is touched: one resolving to itself, the members of a cycle,
- * and a target that is itself redirected. Whether a target still resolves is deliberately never asked — a
- * redirect may point at a static file, another site or anything else this command cannot route, and guessing
- * would delete good rows.
+ * Only structural breakage is touched (a self-redirect, a cycle, a redirected target), never whether a target
+ * resolves, since it may be a static file or another site.
  */
 class RedirectController extends Controller
 {
     /**
-     * @var string comma-separated hosts a `request_uri` may be qualified by, defaults to the URL manager's. A
-     * multi-tenant installation has to name them: without the host, `www.example.com/old` cannot be told apart
-     * from a bare path whose first segment happens to look like one.
+     * @var string comma-separated hosts a `request_uri` may be qualified by, defaults to the URL manager's; a
+     * multi-tenant installation has to name them
      */
     public string $hosts = '';
 
@@ -36,7 +33,7 @@ class RedirectController extends Controller
     public bool $dryRun = false;
 
     /**
-     * @var array<string, Redirect> keyed by {@see self::key()}
+     * @var array<string, Redirect>
      */
     private array $redirects = [];
 
@@ -119,10 +116,9 @@ class RedirectController extends Controller
     }
 
     /**
-     * Follows the target the way {@see ErrorHandler::redirectRequestUri()} would, hop by hop.
+     * Mirrors {@see ErrorHandler::redirectRequestUri()}; the last entry repeats an earlier request URI on a cycle.
      *
-     * @return list<Redirect> the redirects passed through, in order and empty when nothing matches the target;
-     * the last entry repeats an earlier request URI when the walk closed into a cycle
+     * @return list<Redirect>
      */
     protected function follow(Redirect $redirect): array
     {
@@ -145,10 +141,7 @@ class RedirectController extends Controller
     }
 
     /**
-     * The mirror of {@see ErrorHandler::findRedirectByRequestUri()}: a host-qualified record wins over a bare one,
-     * which is what ordering by request URI length achieves there.
-     *
-     * @param string|null $host the host the request is on, for a target that does not name one itself
+     * Mirrors {@see ErrorHandler::findRedirectByRequestUri()}: a host-qualified record wins over a bare one.
      */
     protected function findRedirectFor(string $url, ?string $host): ?Redirect
     {
@@ -242,7 +235,7 @@ class RedirectController extends Controller
     }
 
     /**
-     * @param array<string, string> $urls the new target per {@see self::key()}
+     * @param array<string, string> $urls
      */
     protected function flattenRedirects(array $urls): int
     {
@@ -295,8 +288,7 @@ class RedirectController extends Controller
     }
 
     /**
-     * The URL manager is only consulted when no host was passed: a console application has no request to take one
-     * from, and Yii throws rather than guessing.
+     * The URL manager is consulted only when no host was passed, since Yii throws without a request to take one from.
      *
      * @return list<string>
      */

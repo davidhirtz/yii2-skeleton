@@ -20,8 +20,9 @@ class SelectField extends Field
     use TagInputTrait;
 
     /**
-     * @var array<int|string, string|int|array<string, mixed>> an item with an `items` key is an option group,
-     * labelled by its `label`
+     * An item with an `items` key is an option group, labelled by its `label`.
+     *
+     * @var array<int|string, string|int|array<string, mixed>>
      */
     protected array $items = [];
 
@@ -33,8 +34,9 @@ class SelectField extends Field
     protected bool $multiple = false;
 
     /**
-     * @var array<int|string, array<string, mixed>> extra attributes per option value, also applied to an item
-     * built from the model
+     * Also applied to an item built from the model.
+     *
+     * @var array<int|string, array<string, mixed>>
      */
     protected array $itemAttributes = [];
 
@@ -154,9 +156,7 @@ class SelectField extends Field
             ->type('hidden');
     }
 
-    /**
-     * A required single choice leaves nothing to pick, so it is posted as a hidden input without a row.
-     */
+    /** A required single choice leaves nothing to pick, so it is posted as a hidden input without a row. */
     protected function isHiddenInput(): bool
     {
         return !$this->multiple && $this->getOptionCount() <= 1 && $this->isRequired();

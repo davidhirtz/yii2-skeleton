@@ -81,9 +81,8 @@ class NavItem extends Widget
     }
 
     /**
-     * Marks the item active on `$route` as well, a regular expression matched against the current route and
-     * negated by a leading `!`. `$params` narrows it to requests carrying one of the given query parameters: a
-     * list names parameters that must be present, a map values they must equal.
+     * `$route` is a regular expression matched against the current route, negated by a leading `!`; a list `$params`
+     * names parameters that must be present, a map values they must equal.
      *
      * @param array<int|string, mixed> $params
      */
@@ -179,8 +178,8 @@ class NavItem extends Widget
     }
 
     /**
-     * Compared with the current route built the same way as well: a URL manager may add a language prefix to every
-     * link that the request it answers did not carry.
+     * Compared with the current route built the same way too, since a URL manager may add a language prefix the request
+     * did not carry.
      */
     protected function isCurrentUrl(string $href): bool
     {
@@ -207,8 +206,8 @@ class NavItem extends Widget
     }
 
     /**
-     * An item the user may not open is still shown for a sub-item they may, and leads to the first of those. A
-     * sub-item without roles of its own goes with its parent.
+     * An item the user may not open is still shown for a sub-item they may and leads to it; a sub-item without roles
+     * goes with its parent.
      */
     #[Override]
     protected function isGranted(): bool

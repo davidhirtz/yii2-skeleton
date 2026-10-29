@@ -26,8 +26,9 @@ class MigrationAlert extends Widget
     protected ?array $pending = null;
 
     /**
-     * @var list<string>|null applied migrations whose class cannot be loaded, which means this database has
-     * not been upgraded to the namespaces this code uses.
+     * Applied migrations whose class cannot be loaded: a database not upgraded to the v3 namespaces.
+     *
+     * @var list<string>|null
      */
     protected ?array $unresolved = null;
 

@@ -43,8 +43,7 @@ class RenumberPositionsTest extends TestCase
     }
 
     /**
-     * Without a condition every parent is renumbered on its own, which is what a migration repairing an
-     * installation runs. Equal positions keep the order of their ids.
+     * Equal positions keep the order of their ids.
      */
     public function testEveryParentIsRenumberedOnItsOwn(): void
     {
@@ -65,7 +64,7 @@ class RenumberPositionsTest extends TestCase
     }
 
     /**
-     * @param list<array{int, int, int}> $rows the id, parent and position of each row
+     * @param list<array{int, int, int}> $rows
      */
     private function insertRows(array $rows): void
     {

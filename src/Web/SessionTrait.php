@@ -9,14 +9,11 @@ use yii\web\Cookie;
 
 trait SessionTrait
 {
-    /**
-     * @var string|null the optional cookie domain
-     */
     public ?string $cookieDomain = null;
 
     /**
-     * @var bool|null whether the session cookie is `Secure`, `null` derives it from the request. Pin it on a host
-     * that answers on both schemes — see {@see \Hirtz\Skeleton\Web\User::$cookieSecure}.
+     * `null` derives it from the request; pin it on a host answering both schemes
+     * ({@see \Hirtz\Skeleton\Web\User::$cookieSecure}).
      */
     public ?bool $cookieSecure = null;
 

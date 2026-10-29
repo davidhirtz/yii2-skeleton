@@ -11,11 +11,11 @@ use Override;
 use Yii;
 
 /**
- * One record per searchable model, id and language; written by {@see \Hirtz\Skeleton\Search\MysqlDriver}.
+ * `model_id` loads as a string, the column being an unsigned bigint.
  *
  * @property int $id
  * @property string $model_class
- * @property int|string $model_id a string once loaded, the column is an unsigned bigint
+ * @property int|string $model_id
  * @property string $language
  * @property int|null $tenant_id
  * @property int $status

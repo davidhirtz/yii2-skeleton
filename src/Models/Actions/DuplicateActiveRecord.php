@@ -27,8 +27,10 @@ class DuplicateActiveRecord
     public ActiveRecord $duplicate;
 
     /**
+     * No default may overwrite the `$attributes` the caller assigned.
+     *
      * @param T $model
-     * @param array<string, mixed> $attributes the attributes the caller assigned, which no default may overwrite
+     * @param array<string, mixed> $attributes
      */
     public function __construct(protected ActiveRecord $model, protected array $attributes = [])
     {
@@ -109,8 +111,7 @@ class DuplicateActiveRecord
     }
 
     /**
-     * The duplicate was inserted with the source's values, so a definition storing something of its own outside the
-     * column is pointing at what the source owns until it is told.
+     * Until told, a definition storing something outside the column points at what the source owns.
      */
     protected function duplicateCustomAttributes(): void
     {
@@ -126,8 +127,7 @@ class DuplicateActiveRecord
     }
 
     /**
-     * A duplicate is otherwise indistinguishable from its source wherever it is listed. The attribute can be
-     * translated, so each language is prefixed in its own, and the result is truncated to the attribute's length.
+     * Each language is prefixed in its own, truncated to the attribute's length.
      */
     protected function prefixDuplicateName(string $attribute = 'name', int $maxLength = 255): void
     {

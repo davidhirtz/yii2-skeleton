@@ -16,20 +16,17 @@ use Override;
 use Yii;
 
 /**
- * A single-use credential that is mailed to, or written down by, a user. Only the HMAC of the token reaches the
- * database, so a read of this table hands out nothing.
- *
  * @property string $id
  * @property int $user_id
  * @property int|null $grant_id
  * @property string $type
- * @property string $token the HMAC, never the token itself
+ * @property string $token
  * @property DateTime|null $expires_at
  * @property DateTime|null $last_used_at
  * @property DateTime $created_at
  *
- * @property-read User $user {@see static::getUser()}
- * @property-read OAuthGrant|null $grant {@see static::getGrant()}
+ * @property-read User $user
+ * @property-read OAuthGrant|null $grant
  */
 class UserToken extends ActiveRecord
 {
@@ -84,7 +81,7 @@ class UserToken extends ActiveRecord
     }
 
     /**
-     * @param int|null $lifetime seconds until the token expires, `null` for one that is spent rather than aged out
+     * A `null` lifetime is a token that is spent rather than aged out.
      */
     public static function issue(int $userId, string $type, string $token, ?int $lifetime = null, ?int $grantId = null): static
     {
@@ -131,8 +128,7 @@ class UserToken extends ActiveRecord
     }
 
     /**
-     * The token is only ever compared as its HMAC, which is both constant time and keyed — a leaked table cannot
-     * be turned back into working links even for the short tokens.
+     * Only ever stored and compared as a keyed HMAC, so a leaked table cannot be turned back into working links.
      */
     public static function hash(string $token): string
     {

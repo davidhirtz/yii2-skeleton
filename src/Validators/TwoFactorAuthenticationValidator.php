@@ -14,21 +14,16 @@ use yii\validators\StringValidator;
 
 class TwoFactorAuthenticationValidator extends StringValidator
 {
-    /**
-     * @var string|null the authenticator secret key.
-     */
     public ?string $secret = null;
 
     /**
-     * @var DateTime|null the previous datetime a code was matched. Only if the returned timeslice is greater than the
-     * last used datetime for this user/secret this is the first time the code has been used. This is an effective
-     * defense against a replay attack. If null, the check will not be performed.
+     * A code must match a later timeslice than the one this time falls in.
      */
     public ?DateTime $datetime = null;
 
     /**
-     * @var int|null the timeslice the last accepted code matched: a code must match a later one, and a match sets it.
-     * The previous login time is no replay defense, since a code may match a slice up to {@see $discrepancy} ahead.
+     * A code must match a later timeslice than this, since the previous login time is no replay defense when a code
+     * may match a slice up to {@see $discrepancy} ahead.
      */
     public ?int $timeslice = null;
 
@@ -37,22 +32,10 @@ class TwoFactorAuthenticationValidator extends StringValidator
      */
     public $length = 6;
 
-    /**
-     * @var int the factor of periodSize ($discrepancy *) allowed on either side of the given codePeriod.
-     * For example, if a code with codePeriod = 60 is generated at 10:00:00, a discrepancy of 1 will allow a periodSize
-     * of 30 seconds on either side of the codePeriod resulting in a valid code from 09:59:30 to 10:00:29.
-     */
     public int $discrepancy = 1;
 
-    /**
-     * @var int defines the period that a TOTP code will be valid for, in seconds. The default value is 30.
-     */
     public int $period = 30;
 
-    /**
-     * @var int|null allows checking a code for a specific point in time. This argument has no real practical use but is
-     * used for unit testing. The default value, null, means: use the current time
-     */
     public ?int $currentTime = null;
 
     #[Override]

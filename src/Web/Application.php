@@ -43,16 +43,14 @@ class Application extends \yii\web\Application
     use ApplicationTrait;
 
     /**
-     * @var string Yii's default is the lowercase `app\controllers`, which Composer's case-sensitive PSR-4 lookup
-     * never resolves against a project's `App\` prefix — and a controller that cannot be found is a 404 rather
-     * than an error.
+     * Yii's lowercase `app\controllers` never resolves against `App\` under PSR-4, and a missing controller is a 404.
+     *
+     * @var string
      */
     public $controllerNamespace = 'App\\Controllers';
 
     /**
-     * `Yii::$app` is either application, so code that only ever runs under a web request asks for this one and
-     * code that runs under both keeps `Yii::$app` and narrows — which is what makes a console command reaching
-     * for `getUser()` or `getSession()` a static analysis error rather than a runtime surprise.
+     * Web-only code asks for this, so a console command reaching for `getUser()` is a static analysis error.
      */
     public static function current(): static
     {
@@ -66,8 +64,8 @@ class Application extends \yii\web\Application
     }
 
     /**
-     * The status a record needs to be listed on the website: published, or a draft on the draft host. `null` for the
-     * admin and MCP, which list every status, and before a controller runs.
+     * Published, or a draft on the draft host; `null` for the admin and MCP, which list every status, and before a
+     * controller runs.
      */
     public function getVisibleStatus(): ?int
     {
@@ -107,9 +105,8 @@ class Application extends \yii\web\Application
     }
 
     /**
-     * The entry script a base path is derived from when the configuration names none. PHP's built-in server reports
-     * the requested file as `SCRIPT_FILENAME` whenever it exists below the document root, so anything but a PHP file
-     * there means the script PHP started, the router, is the entry script.
+     * PHP's built-in server reports an existing requested file as `SCRIPT_FILENAME`, so anything but a PHP file there
+     * means the router is the entry script.
      */
     protected function getEntryScript(): string
     {
@@ -201,7 +198,6 @@ class Application extends \yii\web\Application
     }
 
     /**
-     * Configures Yii2 debug module (which is currently only available for web applications) if `YII_DEBUG` is `true`.
      * `yiisoft/yii2-debug` is a dev dependency, so a `--no-dev` install running with `YII_DEBUG` goes without it.
      *
      * @param array<string, mixed> $config
@@ -220,7 +216,7 @@ class Application extends \yii\web\Application
     }
 
     /**
-     * Sets default email address based on server name, this must be called after initialization.
+     * Must run after initialization.
      */
     protected function setDefaultEmail(): void
     {
@@ -228,8 +224,7 @@ class Application extends \yii\web\Application
     }
 
     /**
-     * Sets default cookie `domain` and `sameSite` properties. The cookie domain can be set via `params` but must match
-     * the actual host info, otherwise the session cookies cannot be registered.
+     * A cookie domain from `params` must match the host info, or the session cookies cannot be registered.
      */
     protected function setDefaultCookieConfig(): void
     {

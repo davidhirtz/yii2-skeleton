@@ -218,8 +218,7 @@ class TrailGridView extends GridView
     }
 
     /**
-     * A create trail carries the record's attributes as they are, so a value is anything JSON holds — an `int`
-     * column included, which `Td::text()` refuses.
+     * A create trail's value is anything JSON holds, an `int` included, which `Td::text()` refuses.
      *
      * @param array<string, mixed> $values
      */
@@ -272,9 +271,6 @@ class TrailGridView extends GridView
             : '';
     }
 
-    /**
-     * Last, and only while a row on the page can be restored at all.
-     */
     protected function getRestoreColumn(): ?Column
     {
         $restorable = array_filter($this->provider->getModels(), $this->canRestore(...));
@@ -344,8 +340,6 @@ class TrailGridView extends GridView
     }
 
     /**
-     * One row per changed label, so a group with many attributes reads down rather than across.
-     *
      * @param array<string, string|Stringable|null> $oldValues
      * @param array<string, string|Stringable|null> $newValues
      */
@@ -479,8 +473,7 @@ class TrailGridView extends GridView
     }
 
     /**
-     * Wraps behavior method and makes sure value is cast to string to prevent {@see \Jfcherng\Diff\Differ} to throw
-     * errors.
+     * Cast to string, since {@see \Jfcherng\Diff\Differ} throws on anything else.
      */
     protected function formatTrailAttributeValue(Model $model, string $attribute, mixed $value): mixed
     {
@@ -550,9 +543,8 @@ class TrailGridView extends GridView
     }
 
     /**
-     * {@see \Hirtz\Skeleton\Modules\Admin\Controllers\TrailController::actionIndex()} splits the parameter on
-     * `@`, so a route that joins on anything else filters nothing. Routes are absolute because the grid also
-     * renders on a user's trail tab, where a relative `index` resolves to `user-trail/index` and reads a user id.
+     * Joined on `@`, which {@see \Hirtz\Skeleton\Modules\Admin\Controllers\TrailController::actionIndex()} splits on,
+     * and absolute, since the grid also renders on the `user-trail` tab.
      *
      * @return array<int|string, mixed>
      */

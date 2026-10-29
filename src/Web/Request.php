@@ -7,17 +7,15 @@ namespace Hirtz\Skeleton\Web;
 use Override;
 use Yii;
 
-/**
- * The web Request class extends the default Yii class by a draft mode, environments and allowed hosts.
- */
 class Request extends \yii\web\Request
 {
     final public const string ENVIRONMENT_LOCAL = 'local';
     final public const string ENVIRONMENT_STAGE = 'stage';
 
     /**
-     * @var array<string, list<string>> the host names per environment, matched with `fnmatch()`. A host that matches
-     * none of them is the production environment; a project replaces or extends the list under `components.request`.
+     * Matched with `fnmatch()`; a host matching none is production.
+     *
+     * @var array<string, list<string>>
      */
     public array $environments = [
         self::ENVIRONMENT_LOCAL => ['localhost', '*.localhost'],
@@ -25,29 +23,26 @@ class Request extends \yii\web\Request
     ];
 
     /**
-     * @var list<string> the host names a request may carry, matched with `fnmatch()` like {@see $environments};
-     * anything else is refused before routing. Empty means any host. Defaults to `params.allowedHosts`. A local host
-     * always passes. Without it, a link built from the request — a password reset mailed to a user — names whatever
-     * host the request claimed.
+     * Without it a link built from the request (a mailed password reset) names whatever host the request claimed.
+     *
+     * @var list<string>
      */
     public array $allowedHosts = [];
 
     /**
-     * @var string the parameter name used to add the language to a URL via `UrlManager::$i18nUrl` and to switch the
-     * session language of the admin, see {@see \Hirtz\Skeleton\Modules\Admin\Module::beforeAction()}.
+     * Also switches the admin's session language ({@see \Hirtz\Skeleton\Modules\Admin\Module::beforeAction()}).
      */
     public string $languageParam = 'language';
 
     /**
-     * @var string the header a form reload is marked with by {@see \Hirtz\Skeleton\Widgets\Forms\Fields\Field::reloadsForm()}.
+     * Set by {@see \Hirtz\Skeleton\Widgets\Forms\Fields\Field::reloadsForm()}.
      */
     public string $formReloadHeader = 'X-Form-Reload';
 
     private bool $isDraft = false;
 
     /**
-     * Both applications answer a request, so shared code — a mail template rendering a form, a collection reading
-     * a query parameter — asks for the web one instead of assuming the request carries a query string at all.
+     * `null` under the console, so shared code (a mail template, a collection) never assumes a web request.
      */
     public static function current(): ?static
     {
@@ -70,8 +65,7 @@ class Request extends \yii\web\Request
     }
 
     /**
-     * `config/params.php` holds scalars only — `./yii params` and the config admin compare and print them as
-     * strings — so the parameter is a comma-separated list; an array written by hand is taken as well.
+     * `config/params.php` holds scalars only, so the parameter is a comma-separated list; a hand-written array works.
      *
      * @return list<string>
      */
@@ -119,8 +113,7 @@ class Request extends \yii\web\Request
     }
 
     /**
-     * A body parser configured to decode into objects makes `yii\web\Request` answer one, which `Model::load()`
-     * rejects — every call site would have to handle it, so the shape is settled here instead.
+     * A body parser decoding into objects would hand `Model::load()` an object, which it rejects.
      *
      * @return array<string, mixed>
      */
@@ -152,8 +145,7 @@ class Request extends \yii\web\Request
     }
 
     /**
-     * PHP collapses two cookies of one name into the first the browser sent, so `$_COOKIE` — and with it
-     * {@see getCookies()} — cannot see a duplicate at all. Only the raw header lists both (monorepo issue #195).
+     * `$_COOKIE` keeps only the first of two cookies of one name, so only the raw header lists both (#195).
      *
      * @return list<string>
      */

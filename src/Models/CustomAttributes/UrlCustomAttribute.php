@@ -10,12 +10,8 @@ use Override;
 use yii\base\Model;
 
 /**
- * The rule and the field have to agree on what a URL is, or the form refuses a value the application accepts and
- * the other way round. So there is no `defaultScheme`, which `<input type="url">` makes unreachable — the browser
- * answers a scheme-less value with a bubble of its own — and `enableIDN` is on, which is why the skeleton requires
- * `ext-intl`: without it a non-ASCII *host* was refused while a non-ASCII *path* passed. A `relative()` URL is a
- * text input, since the browser refuses `/path` in a URL input; it accepts a path, a query or a fragment, never a
- * scheme-less host (`example.com`, `//example.com`).
+ * Rule and field must agree on what a URL is: no `defaultScheme`, which `<input type="url">` makes unreachable,
+ * `enableIDN` on (hence the required `ext-intl`), and `relative()` a text input, since the browser refuses `/path`.
  */
 class UrlCustomAttribute extends TextCustomAttribute
 {

@@ -159,9 +159,7 @@ class LoginTest extends TestCase
     }
 
     /**
-     * The login page is what renders the flash, so one `loginRequired()` adds after it was drawn — from a
-     * background htmx request, which is answered with a refresh rather than a body — is read by the page after
-     * the login instead: a flash removed after access is removed only once something reads it.
+     * A flash a background htmx `loginRequired()` adds after the login page drew is read by the page after the login.
      */
     public function testALoginRequiredFlashDoesNotOutliveTheLogin(): void
     {

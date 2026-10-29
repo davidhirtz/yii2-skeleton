@@ -11,9 +11,6 @@ class DbSession extends \yii\web\DbSession
 {
     use SessionTrait;
 
-    /**
-     * @return int the number of sessions destroyed
-     */
     public function destroyUserSessions(int $userId, ?string $exceptId = null): int
     {
         $condition = ['user_id' => $userId];

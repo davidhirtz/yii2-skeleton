@@ -47,8 +47,7 @@ class Fieldset extends Widget
     protected array $rows = [];
 
     /**
-     * The closure form is what an outside listener uses to insert a field of its own: the collection is not
-     * public, so it is handed the current one and returns the one it wants.
+     * The closure form lets a listener insert a field, since the collection is not public.
      *
      * @param array<Field|Stringable|string|null>|Closure(list<Field|Stringable|string>): array<Field|Stringable|string|null> $rows
      */
@@ -65,8 +64,7 @@ class Fieldset extends Widget
     }
 
     /**
-     * Before `configure()` these are the rows as declared — a property name, a field or any other stringable.
-     * Afterwards they are the resolved fields, cloned per language where the model translates them.
+     * The rows as declared before `configure()`, the resolved fields (cloned per language) after.
      *
      * @return list<Field|Stringable|string>
      */
@@ -135,10 +133,7 @@ class Fieldset extends Widget
         parent::configure();
     }
 
-    /**
-     * A type declaring a field hidden takes it out of `rules()` as well, so a custom attribute is already gone by
-     * here; this is what answers for a column of the model's own.
-     */
+    /** A type's hidden custom attribute is already gone from `rules()`; this answers for the model's own columns. */
     protected function isAttributeHidden(string $property): bool
     {
         return $this->model instanceof VisibleAttributeInterface && !$this->model->isAttributeVisible($property);
@@ -212,8 +207,8 @@ class Fieldset extends Widget
     }
 
     /**
-     * {@see BooleanValidator::$trueValue} and {@see BooleanValidator::$falseValue} are untyped, and a value a
-     * checkbox cannot carry has no place in one.
+     * {@see BooleanValidator::$trueValue} and {@see BooleanValidator::$falseValue} are untyped, and a value a checkbox
+     * cannot carry has no place in one.
      */
     protected function getCheckboxValue(mixed $value): string|int|null
     {

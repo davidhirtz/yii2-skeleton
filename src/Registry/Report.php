@@ -13,22 +13,19 @@ use Yii;
 use yii\base\InvalidConfigException;
 
 /**
- * What an installation says about itself to the version registry: the system page's *Application* tab,
- * serialized. Nothing in it is personal data. A project re-points it in the container to add keys under `extra`.
+ * Nothing in it is personal data; a project re-points it in the container to add keys under `extra`.
  */
 class Report implements JsonSerializable
 {
     final public const int SCHEMA = 1;
     final public const int SENTRY_KEY_LENGTH = 8;
 
-    /**
-     * @var string|null the installation's URL, for a console application whose URL manager has no `hostInfo`
-     */
+    /** For a console application whose URL manager has no `hostInfo`. */
     public ?string $url = null;
 
     /**
-     * @var string|null the name reported instead of `params.registryHostname` or `gethostname()`, for a host whose
-     * shell sessions land on changing nodes of one shared file system
+     * Reported instead of `params.registryHostname` or `gethostname()` for a host whose shell sessions land on changing
+     * nodes.
      */
     public ?string $hostname = null;
 
@@ -92,10 +89,7 @@ class Report implements JsonSerializable
         return is_string($hostname) && $hostname !== '' ? $hostname : (gethostname() ?: null);
     }
 
-    /**
-     * A console URL manager without a configured `hostInfo` throws rather than answering `null`; the registry shows
-     * hostname and path for an installation without a URL.
-     */
+    /** A console URL manager without a configured `hostInfo` throws rather than answering `null`. */
     protected function getUrl(): ?string
     {
         if ($this->url !== null) {
@@ -150,9 +144,6 @@ class Report implements JsonSerializable
         return $dsn !== null ? mb_substr($dsn, 0, 255) : null;
     }
 
-    /**
-     * @return string|null the beginning of the Sentry DSN's public key, `null` without an enabled Sentry target
-     */
     protected function getSentry(): ?string
     {
         foreach (Yii::$app->getLog()->targets as $target) {

@@ -77,8 +77,7 @@ class InfoListTest extends TestCase
 }
 
 /**
- * Declared here rather than in a file of its own: PHPUnit only includes files ending in `Test.php`, and the tests
- * are not covered by Composer's autoload map.
+ * Declared here, since PHPUnit includes only files ending in `Test.php` and no test is in Composer's map.
  */
 class TestInfoList extends InfoList
 {

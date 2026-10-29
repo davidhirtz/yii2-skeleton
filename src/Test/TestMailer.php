@@ -20,9 +20,7 @@ class TestMailer extends Mailer
      */
     private array $messages = [];
 
-    /**
-     * @var bool whether the transport refuses every message, which `Mail\Mailer` logs and answers with `false`
-     */
+    /** Refuses every message, which `Mail\Mailer` logs and answers with `false`. */
     public bool $isFailing = false;
 
     public function init(): void

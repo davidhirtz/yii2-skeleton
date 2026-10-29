@@ -104,9 +104,8 @@ class GridSearchForm extends Widget
     }
 
     /**
-     * A GET form submits its own fields and nothing else — the browser replaces the action's query string with
-     * them, and htmx strips it from a boosted form for the same reason — so every parameter the grid's URL
-     * carries is a hidden input here, or searching leaves the route it was issued from.
+     * Every parameter of the grid's URL is a hidden input, since a GET form replaces the action's query string with
+     * its own fields.
      *
      * @return list<Stringable>
      */

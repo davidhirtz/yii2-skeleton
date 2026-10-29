@@ -53,8 +53,8 @@ abstract class RecordCustomAttribute extends CustomAttribute
     }
 
     /**
-     * Whether the value is the one the owner started from, which a changed-value rule exempts. Inside a group, where
-     * no item has an old value, any id in the baseline of the top-level group counts, so a reorder exempts it too.
+     * Inside a group, where no item has an old value, any id in the top-level group's baseline counts, so a reorder
+     * is exempt too.
      */
     public function isBaselineValue(Model $owner, string $name, mixed $value): bool
     {

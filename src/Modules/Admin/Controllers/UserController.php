@@ -109,8 +109,7 @@ class UserController extends Controller
     }
 
     /**
-     * A user the acting one may not update — the site owner, or anyone holding a permission they lack — is
-     * rendered read-only rather than refused, so every link to a user leads somewhere.
+     * Read-only rather than refused for a user the acting one may not update, so every link to a user leads somewhere.
      */
     public function actionUpdate(int $id): Response|string
     {

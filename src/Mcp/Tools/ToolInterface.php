@@ -13,8 +13,9 @@ interface ToolInterface
     public function getDescription(): string;
 
     /**
-     * @return array<string, mixed> a JSON Schema `object`, whose `required` keys and scalar `type`s the server checks
-     * before {@see static::call()}
+     * The server checks its `required` keys and scalar `type`s before {@see static::call()}.
+     *
+     * @return array<string, mixed>
      */
     public function getInputSchema(): array;
 
@@ -23,7 +24,7 @@ interface ToolInterface
     public function isIdempotent(): bool;
 
     /**
-     * Whether a call may overwrite or remove what is there, which a client takes as the reason to ask first.
+     * A client takes a destructive tool as the reason to ask first.
      */
     public function isDestructive(): bool;
 

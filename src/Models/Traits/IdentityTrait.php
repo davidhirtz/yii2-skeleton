@@ -35,9 +35,8 @@ trait IdentityTrait
     }
 
     /**
-     * Reports `$message` while the application is willing to say which addresses have an account, and otherwise
-     * either replaces it with the one message every failure shares, or — for a form that would give the answer
-     * away by failing at all — drops the identity so the caller reports its ordinary success.
+     * Reports `$message` only while the application reveals which addresses have an account, and otherwise the
+     * shared message, or drops the identity where failing at all would give the answer away.
      */
     protected function addIdentityError(string $message): void
     {
@@ -52,8 +51,7 @@ trait IdentityTrait
     }
 
     /**
-     * `false` for a form whose failure alone would confirm that an address exists — the password recovery and the
-     * confirmation resend, which a guest can submit for any address they like.
+     * `false` for a form a guest can submit for any address, whose failure alone would confirm the address exists.
      */
     protected function canRevealIdentity(): bool
     {

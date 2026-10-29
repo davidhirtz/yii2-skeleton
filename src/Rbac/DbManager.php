@@ -46,8 +46,7 @@ class DbManager extends \yii\rbac\DbManager
     }
 
     /**
-     * Answered from the cached hierarchy when there is one: the parent's four queries a user become the one that
-     * reads the assignments, shared with {@see checkAccess()} — the user grids ask this for every row.
+     * Answered from the cached hierarchy, since the user grids ask this for every row.
      *
      * @return array<string, Permission>
      */
@@ -117,10 +116,7 @@ class DbManager extends \yii\rbac\DbManager
         return $roles;
     }
 
-    /**
-     * The item is named, never described: the description is a pointer that a later migration may rewrite, and the
-     * row has to keep reading correctly when it does.
-     */
+    /** Named, never described, since the description is a pointer a later migration may rewrite. */
     protected function createTrail(int $type, Assignment $assignment, int|string $userId): Trail
     {
         $item = $this->getItem($assignment->roleName);

@@ -43,8 +43,7 @@ class PasswordResetTest extends TestCase
     }
 
     /**
-     * A disabled field is unsafe by definition, so the fieldset dropping it silently left the page without its
-     * address — the whole of monorepo issue #103.
+     * A disabled field is unsafe, so the fieldset silently dropped the address (#103).
      */
     public function testPasswordResetShowsTheAddressItResets(): void
     {

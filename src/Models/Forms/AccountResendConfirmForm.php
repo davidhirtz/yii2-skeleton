@@ -19,7 +19,7 @@ class AccountResendConfirmForm extends Model
     use ModelTrait;
 
     /**
-     * @var string the interval in which no new email will be sent as date time string.
+     * A relative date time string within which no new email is sent.
      */
     public string $timeoutSpamProtection = '1 min';
 

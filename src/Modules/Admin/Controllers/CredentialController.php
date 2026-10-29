@@ -20,8 +20,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
- * The user's own keys for third-party services. Only the owner adds one; a manager of the user lists and removes
- * them, and nobody reads one back.
+ * Only the owner adds a key, a manager of the user lists and removes them, and nobody reads one back.
  *
  * @extends Controller<Module>
  */

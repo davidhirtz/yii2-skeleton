@@ -22,11 +22,8 @@ use Stringable;
 use Yii;
 
 /**
- * The file picker of {@see UploadCustomAttribute}: the chunked upload of {@see FileUploadButton} pointed at
- * {@see \Hirtz\Skeleton\Modules\Admin\Controllers\UploadController}, which answers with this field re-rendered.
- *
- * The container id is derived from the input name rather than generated, because the swap happens across two
- * requests — {@see \Hirtz\Skeleton\Helpers\Html::getId()} counts per request and would answer differently in each.
+ * The container id is derived from the input name rather than generated, since the swap spans two requests and
+ * {@see \Hirtz\Skeleton\Helpers\Html::getId()} counts per request.
  */
 class UploadField extends Field
 {
@@ -64,9 +61,6 @@ class UploadField extends Field
         return $this->getId() . '-upload';
     }
 
-    /**
-     * The name the file is offered under: what the record holds, or what the pending upload will be stored as.
-     */
     protected function getFilename(): ?string
     {
         $value = $this->attributes['value'] ?? null;
@@ -76,10 +70,6 @@ class UploadField extends Field
             : null;
     }
 
-    /**
-     * A filled field reads as the text input it stands in for, the remove button appended the way the grid search
-     * prepends its own — {@see \Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm::getInputGroup()}.
-     */
     protected function getFile(): string|Stringable
     {
         return InputGroup::make()
@@ -87,9 +77,7 @@ class UploadField extends Field
             ->content($this->getFileLink());
     }
 
-    /**
-     * A pending upload has no URL yet — it is not attached to anything until the record is saved.
-     */
+    /** A pending upload has no URL until the record is saved. */
     protected function getFileLink(): string|Stringable
     {
         $filename = (string)$this->getFilename();
@@ -116,10 +104,7 @@ class UploadField extends Field
             ->replace($this->getUrl(remove: true), '#' . $this->getContainerId());
     }
 
-    /**
-     * An empty field reads as the filled one does, the text input it stands in for with the action appended: the
-     * whole group is the one button that opens the picker, so it is one tab stop and a click anywhere on it counts.
-     */
+    /** The whole group is the one button, so it is one tab stop and a click anywhere on it counts. */
     protected function getUploadButton(): string|Stringable
     {
         return FileUploadButton::make()
@@ -144,8 +129,7 @@ class UploadField extends Field
     }
 
     /**
-     * A hidden input is not labelable, and the picker the label could name is only in the DOM while no file is
-     * chosen — so the label names the row rather than a control.
+     * A hidden input is not labelable and the picker exists only while no file is chosen, so the label names the row.
      */
     #[Override]
     protected function getLabel(): ?Tag
@@ -154,7 +138,7 @@ class UploadField extends Field
     }
 
     /**
-     * The type travels with the request because the definitions do: it is what the model resolves them from.
+     * The type travels with the request, since the model resolves the definitions from it.
      *
      * @return array<int|string, mixed>
      */

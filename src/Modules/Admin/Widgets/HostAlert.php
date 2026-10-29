@@ -25,8 +25,7 @@ class HostAlert extends Widget
     use IconTrait;
 
     /**
-     * @var bool|null a project whose web server refuses unknown hosts answers `false` from an `EVENT_CONFIGURE`
-     * listener.
+     * A project whose web server refuses unknown hosts sets `false` from an `EVENT_CONFIGURE` listener.
      */
     protected ?bool $unpinned = null;
 

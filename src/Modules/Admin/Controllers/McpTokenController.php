@@ -22,8 +22,6 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
- * The access tokens of the HTTP endpoint, for a client that does not speak OAuth.
- *
  * @extends Controller<Module>
  */
 class McpTokenController extends Controller
@@ -33,12 +31,14 @@ class McpTokenController extends Controller
     final public const string TOKEN_FLASH = 'mcpToken';
 
     /**
-     * @var list<int> the days a token may last, besides never expiring
+     * Days, besides never expiring.
+     *
+     * @var list<int>
      */
     public array $tokenLifetimes = [30, 90, 365];
 
     /**
-     * @var int|null the lifetime preselected, `null` for a token that never expires
+     * Days, `null` preselects a token that never expires.
      */
     public ?int $defaultTokenLifetime = 90;
 
@@ -81,9 +81,6 @@ class McpTokenController extends Controller
         return parent::beforeAction($action);
     }
 
-    /**
-     * A new token is shown once, from the flash the create action left.
-     */
     public function actionIndex(): string
     {
         $user = $this->webuser->getIdentity();
@@ -97,7 +94,7 @@ class McpTokenController extends Controller
     }
 
     /**
-     * Another user's tokens, which a manager may revoke but never create.
+     * A manager may revoke another user's tokens but never create one.
      */
     public function actionView(int $user): string
     {

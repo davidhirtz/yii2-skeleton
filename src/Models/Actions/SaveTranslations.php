@@ -18,7 +18,7 @@ class SaveTranslations
     /**
      * Diffs against the stored records, so a value written via `setAttribute()` without a lazy load is still detected.
      *
-     * @return array<string, string|null> the previous value per changed translated attribute name
+     * @return array<string, string|null>
      */
     public function save(): array
     {

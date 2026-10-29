@@ -11,7 +11,7 @@ use yii\helpers\BaseFileHelper;
 class FileHelper extends BaseFileHelper
 {
     /**
-     * This is a stream-wrapper-aware replacement to PHP's rename function. Renaming remote folders is not supported.
+     * Stream-wrapper aware, but cannot rename a remote folder.
      */
     public static function rename(string $source, string $dest): bool
     {
@@ -141,8 +141,6 @@ class FileHelper extends BaseFileHelper
     }
 
     /**
-     * Whether a file of this basename already exists in any of the given extensions.
-     *
      * @param list<string> $extensions
      */
     public static function isFilenameTaken(string $basename, array $extensions): bool

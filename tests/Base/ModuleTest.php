@@ -30,8 +30,8 @@ class ModuleTest extends TestCase
     }
 
     /**
-     * A project's own module class lives in no `src/` tree, so the loop walking up to one used to pop every
-     * segment and answer a path above the filesystem root.
+     * A project's module lives in no `src/` tree, where the walk up to one used to answer a path above the filesystem
+     * root.
      */
     public function testAModuleOutsideASourceTreeTakesTheApplicationViews(): void
     {
@@ -39,10 +39,7 @@ class ModuleTest extends TestCase
         self::assertSame(Yii::getAlias('@views/project'), $module->getViewPath());
     }
 
-    /**
-     * Yii derives the directory back from the controller namespace, through an alias mirroring it that only an
-     * installed extension ever has — so a project's module is the case that has to be pinned.
-     */
+    /** Yii derives the directory from the controller namespace through an alias only an installed extension has. */
     public function testAModuleTakesItsControllerPathFromItsBasePath(): void
     {
         $module = new ProjectModule('project');

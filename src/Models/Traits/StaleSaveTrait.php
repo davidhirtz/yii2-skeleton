@@ -10,23 +10,21 @@ use Hirtz\Skeleton\Models\User;
 use Yii;
 
 /**
- * Two editors on one record: the second save overwrote the first without a word. The form posts back when it was
- * rendered ({@see \Hirtz\Skeleton\Widgets\Forms\ActiveForm}), and a save is refused while the record has an update
- * in its trail from after that — the trail rather than `updated_at`, which a count updater bumps without anybody
- * editing. Opting in means spreading {@see static::getStaleSaveRules()} into `rules()`.
+ * A save is refused while the trail holds an update from after the form was rendered — the trail, since a count
+ * updater bumps `updated_at` without anybody editing; opt in by spreading {@see static::getStaleSaveRules()} into
+ * `rules()`.
  *
  * @phpstan-require-implements \Hirtz\Skeleton\Models\Interfaces\StaleSaveInterface
  */
 trait StaleSaveTrait
 {
     /**
-     * @var int|null the time the form was rendered, posted back with it; `null` checks nothing
+     * `null` checks nothing.
      */
     public ?int $loadedAt = null;
 
     /**
-     * @var int|null the record's version when it was read, see {@see static::getStaleSaveVersion()}; it wins over
-     * `loadedAt`, which cannot tell two saves within one second apart
+     * Wins over `loadedAt`, which cannot tell two saves within one second apart.
      */
     public ?int $loadedVersion = null;
 
@@ -41,7 +39,7 @@ trait StaleSaveTrait
     }
 
     /**
-     * The id of the record's newest update trail, `0` before its first update.
+     * `0` before the record's first update.
      */
     public function getStaleSaveVersion(): int
     {
@@ -84,8 +82,7 @@ trait StaleSaveTrait
     }
 
     /**
-     * The newest update another save wrote after the record was read: by version, or else by the second it was read
-     * in, which misses a save within that same second.
+     * By version, or else by the second the record was read in, which misses a save within that same second.
      */
     public function findUpdateTrailSince(): ?Trail
     {

@@ -15,28 +15,16 @@ class MaintenanceConfigForm extends Model
 
     public const string MAINTENANCE_CONFIG = '@runtime/maintenance.json';
 
-    /**
-     * @var string|null optional redirect URL
-     */
     public ?string $redirect = null;
 
-    /**
-     * @var int|null number of seconds after which the crawler should retry
-     */
     public ?int $retry = null;
 
-    /**
-     * @var int|null interval in seconds after which the page is refreshed
-     */
     public ?int $refresh = null;
 
-    /**
-     * @var int HTTP status code
-     */
     public int $statusCode = 503;
 
     /**
-     * @var string path to the maintenance mode template, set empty string to render nothing
+     * An empty string renders nothing.
      */
     public string $viewFile = '@skeleton/../resources/views/maintenance.php';
 

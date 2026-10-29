@@ -13,9 +13,8 @@ use yii\web\Cookie;
 class ResponseCookieHeaderTest extends TestCase
 {
     /**
-     * `yii\web\Response::sendHeaders()` sends the first value of every header name with PHP's `$replace`, which for
-     * `Set-Cookie` discards the session cookie `session_regenerate_id()` has already queued — so a login kept the
-     * old session id and every flash behind the redirect died with it.
+     * Yii sends every header name with PHP's `$replace`, which for `Set-Cookie` discards the session cookie
+     * `session_regenerate_id()` has already queued.
      */
     public function testACookieHeaderIsAppendedRatherThanSentThroughTheCollection(): void
     {
@@ -53,7 +52,7 @@ class ResponseCookieHeaderTest extends TestCase
 
     /**
      * A tenant scopes the cookies to its host, so a parent domain configured later leaves a twin that a deletion
-     * without `Domain` never reaches: the upload chunks of monorepo issue #555 each landed in a new session.
+     * without `Domain` never reaches (#555).
      */
     public function testTheTwinOfATenantScopedSessionCookieIsRemoved(): void
     {

@@ -16,8 +16,7 @@ use Yii;
 use yii\base\Model;
 
 /**
- * The fields are those of the provider chosen, as custom attributes: changing the provider reloads the form with
- * the next one's.
+ * The fields are the chosen provider's, as custom attributes: changing the provider reloads the form.
  */
 class UserCredentialForm extends Model implements CustomAttributeInterface
 {
@@ -130,7 +129,7 @@ class UserCredentialForm extends Model implements CustomAttributeInterface
     }
 
     /**
-     * Where to get a key goes under the last field, as a single provider is not offered as a choice at all.
+     * Where to get a key goes under the last field, since a single provider is not offered as a choice.
      */
     #[Override]
     public function attributeHints(): array

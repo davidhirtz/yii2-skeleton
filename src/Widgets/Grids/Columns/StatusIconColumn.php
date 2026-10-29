@@ -20,8 +20,7 @@ use yii\base\Model;
 class StatusIconColumn extends LinkColumn
 {
     /**
-     * The closure a caller hands `enableUpdate()` is typed against whichever model it re-binds the column to, which
-     * the column itself has no way of holding — it applies it to the model the grid gives it.
+     * Typed `mixed`, since the closure is typed against whichever model `enableUpdate()` re-binds the column to.
      *
      * @var Closure(mixed): bool|bool
      */
@@ -42,12 +41,8 @@ class StatusIconColumn extends LinkColumn
     }
 
     /**
-     * Whether a click cycles the record through its statuses. The grid answers, since only it knows whether it is a
-     * picker and which permission its records need — and a grid whose rows are of mixed classes, as the media
-     * `FileAssetGridView` is, answers per record with a closure.
-     *
-     * Keeps the {@see StatusIconColumn} type when the model type is re-bound, the way
-     * {@see LinkColumn::url()} does.
+     * The grid answers, since only it knows whether it is a picker and which permission its records need; a grid of
+     * mixed classes answers per record with a closure.
      *
      * @template TUpdateModel of StatusAttributeInterface&Model = TModel
      * @param Closure(TUpdateModel): bool|bool $enableUpdate
@@ -89,10 +84,8 @@ class StatusIconColumn extends LinkColumn
     }
 
     /**
-     * The status action sits beside the update action the record's own admin route names — only the model knows its
-     * controller, so `update` is swapped for `status` rather than the route rebuilt. Anything else keeps the plain
-     * icon: a model with no admin page of its own answers `false`, and one whose route falls back to the index
-     * (`Models\User`, the cms `Category`, the media `Folder`) carries no primary key to act on.
+     * Swaps `update` for `status` in the record's own admin route, since only the model knows its controller; a route
+     * without a primary key keeps the plain icon.
      *
      * @param TModel $model
      * @return array<array-key, mixed>|null

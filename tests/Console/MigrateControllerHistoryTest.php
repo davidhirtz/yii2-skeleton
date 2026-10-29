@@ -11,10 +11,6 @@ use Hirtz\Skeleton\Test\Traits\StdOutBufferControllerTrait;
 use Override;
 use Yii;
 
-/**
- * The guard that refuses to migrate a database whose history names classes this code cannot load, and the
- * repair it runs when the project ships one.
- */
 class MigrateControllerHistoryTest extends TestCase
 {
     protected string $applicationClass = Application::class;
@@ -41,10 +37,8 @@ class MigrateControllerHistoryTest extends TestCase
     }
 
     /**
-     * `backup` is the one thing worth doing against a database whose history cannot be read, and
-     * `repairHistory()` calls `actionBackup()` itself — so guarding it would refuse the useful action and
-     * recurse into the guard. `create` is guarded for a different reason: reading the history table on a
-     * database that has none takes a metadata lock the caller never asked for.
+     * `backup` stays unguarded, since `repairHistory()` calls it, while reading a missing history takes a metadata
+     * lock.
      */
     public function testOnlyTheActionsThatApplyMigrationsAreGuarded(): void
     {
@@ -79,8 +73,7 @@ class MigrateControllerHistoryTest extends TestCase
     }
 
     /**
-     * The file's presence is the authorisation: a deployment cannot be asked to confirm anything, and the
-     * script is generated, reviewed and committed by hand.
+     * The file's presence is the authorisation, since a deployment cannot be asked to confirm anything.
      */
     public function testItRunsTheRepairTheProjectShipsAndContinues(): void
     {
@@ -110,8 +103,7 @@ class MigrateControllerHistoryTest extends TestCase
     }
 
     /**
-     * A repair that leaves the history unresolved must not let the run continue: the next thing Yii does is
-     * treat every migration as new.
+     * The run must not continue, since Yii would next treat every migration as new.
      */
     public function testARepairThatChangesNothingStillRefuses(): void
     {
@@ -130,10 +122,8 @@ class MigrateControllerHistoryTest extends TestCase
     }
 
     /**
-     * The shape a v2 project migration has on the upgrade deploy: its file is on disk and it still `use`s a
-     * trait v3 removed, so `class_exists()` throws rather than returning false. Unguarded, the `Error` comes
-     * from inside this guard — `./yii migrate` dies with a stack trace before printing anything, and
-     * maintenance mode is left on.
+     * A v2 migration still `use`ing a removed trait makes `class_exists()` throw, killing `./yii migrate` in
+     * maintenance mode.
      *
      * @see https://github.com/davidhirtz/yii2-monorepo/issues/199
      */
@@ -153,9 +143,7 @@ class MigrateControllerHistoryTest extends TestCase
     }
 
     /**
-     * A class whose file is on disk and whose parent is not. Autoloaded from `@runtime` rather than committed,
-     * so no fixture of this repository is a file PHP cannot declare. A missing parent throws an `Error` on every
-     * supported PHP version; a missing trait was a compile-time fatal before PHP 8.5.
+     * A missing parent rather than trait, since a missing trait was a compile-time fatal before PHP 8.5.
      */
     private function registerUndeclarableClass(): string
     {
@@ -183,9 +171,7 @@ class MigrateControllerHistoryTest extends TestCase
     }
 
     /**
-     * The repair runs in a subprocess on its own connection, so a row still inside this test's transaction is
-     * invisible to it. Such a test commits and leaves the cleanup to `tearDown()`, as every test that loses
-     * the transaction here does.
+     * The repair runs on a connection of its own, so the row is committed and `tearDown()` cleans up.
      */
     private function insertLegacyRow(bool $commit = false): void
     {

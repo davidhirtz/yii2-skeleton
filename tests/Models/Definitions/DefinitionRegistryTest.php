@@ -21,15 +21,11 @@ use Override;
 use Yii;
 use yii\base\InvalidConfigException;
 
-/**
- * The declaration is an instance method, so an installation names a model's types and statuses in the container
- * instead of subclassing it — which is all a small project needs to be fully configured.
- */
 class DefinitionRegistryTest extends TestCase
 {
     /**
-     * The configured value reaches the model through `Yii::configure()`, and `ActiveRecord::__set()` asks
-     * `hasAttribute()` before it looks for a setter — so a model configured this way needs its table.
+     * `ActiveRecord::__set()` asks `hasAttribute()` before a setter, so a model `Yii::configure()` sets needs its
+     * table.
      */
     #[Override]
     protected function setUpSchema(): void
@@ -91,8 +87,7 @@ class DefinitionRegistryTest extends TestCase
     }
 
     /**
-     * The draft trait and the user declare statuses of their own, which the configuration still replaces — the
-     * container is how a project changes them on every shipped model.
+     * The draft trait and the user declare statuses of their own, which the configuration still replaces.
      */
     public function testTheConfiguredStatusesReplaceTheShippedDeclarations(): void
     {
@@ -118,8 +113,7 @@ class DefinitionRegistryTest extends TestCase
     }
 
     /**
-     * A plain list is accepted, but it is the closure that keeps a name a `Yii::t()` result rather than one frozen
-     * at configuration time — so the definitions resolve once per language, as a declared list does.
+     * Only the closure keeps a name a `Yii::t()` result per language rather than one frozen at configuration time.
      */
     public function testTheClosureIsEvaluatedPerLanguage(): void
     {
@@ -146,9 +140,6 @@ class DefinitionRegistryTest extends TestCase
         self::assertSame('Literal', ConfiguredRecord::getTypeDefinitions()[1]->getName());
     }
 
-    /**
-     * A class that declares its own types owns them: the override never reads what the container configured.
-     */
     public function testADeclaredOverrideWinsOverTheConfiguration(): void
     {
         Yii::$container->set(DeclaredRecord::class, ['types' => static fn (): array => [

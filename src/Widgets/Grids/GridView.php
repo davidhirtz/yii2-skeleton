@@ -54,7 +54,7 @@ class GridView extends Widget
     protected array $columns;
 
     /**
-     * @var list<Column> what `ensureColumns()` resolved the configuration above into
+     * @var list<Column>
      */
     protected array $visibleColumns = [];
 
@@ -132,10 +132,7 @@ class GridView extends Widget
         parent::__construct($config);
     }
 
-    /**
-     * Whether the status icon cycles the record's status on a click; a grid still answers for its own pickers and
-     * permissions.
-     */
+    /** A grid still answers for its own pickers and permissions. */
     public function enableStatusUpdate(bool $enableStatusUpdate = true): static
     {
         $this->enableStatusUpdate = $enableStatusUpdate;
@@ -271,8 +268,7 @@ class GridView extends Widget
     }
 
     /**
-     * The closure form is what an outside listener uses to insert a column of its own: the collection is not
-     * public, so it is handed the current one and returns the one it wants.
+     * The closure form lets a listener insert a column, since the collection is not public.
      *
      * @param array<Column|string>|Closure(array<Column|string>): array<Column|string> $columns
      * @return $this
@@ -287,8 +283,6 @@ class GridView extends Widget
     }
 
     /**
-     * Like {@see columns()}: a listener adds a dropdown of its own through the closure form.
-     *
      * @param list<string|Stringable>|GridHeader|Closure(list<string|Stringable>): list<string|Stringable> $header
      * @return $this
      */
@@ -336,10 +330,7 @@ class GridView extends Widget
         ]);
     }
 
-    /**
-     * A grid with nothing in it and nothing narrowing it has nothing to search or filter, so the toolbar is
-     * dropped rather than offered over an empty table (monorepo issue #159).
-     */
+    /** Dropped while the grid is empty and unfiltered, since there is nothing to search (monorepo issue #159). */
     protected function getHeader(): ?GridHeader
     {
         if (!$this->provider->getCount() && !$this->isFiltered()) {
@@ -351,18 +342,12 @@ class GridView extends Widget
             : $this->header;
     }
 
-    /**
-     * Whether something the toolbar offers is what emptied the grid. The toolbar has to stay in that case, or a
-     * search that matched nothing takes away the box that would clear it.
-     */
+    /** The toolbar stays in that case, or a search that matched nothing takes away the box that clears it. */
     protected function isFiltered(): bool
     {
         return $this->hasFilterValue();
     }
 
-    /**
-     * Whether the request narrows the rows, by the search or a filter dropdown of the toolbar.
-     */
     public function hasFilterValue(): bool
     {
         if ($this->search->getValue()) {
@@ -388,11 +373,7 @@ class GridView extends Widget
     }
 
     /**
-     * What the grid is for, rendered in place of the bare "no records" summary while it is empty. A grid whose
-     * empty state is not self-explanatory sets it in `configure()`.
-     */
-    /**
-     * The way to the first record, a sentence after the empty message whose `{here}` links to it.
+     * `{here}` in the text links to `$url`.
      *
      * @param array<int|string, mixed>|string|null $url
      */

@@ -16,8 +16,7 @@ use Override;
 use Yii;
 
 /**
- * InnoDB fulltext does not see uncommitted rows, so the documents are committed and removed by hand; everything
- * else in the suite stays inside the rolled back transaction.
+ * InnoDB fulltext does not see uncommitted rows, so the documents are committed and removed by hand.
  */
 class SearchQueryTest extends TestCase
 {
@@ -72,8 +71,7 @@ class SearchQueryTest extends TestCase
     }
 
     /**
-     * `GmbH` is two characters short of what InnoDB indexes and `com` is one of its stopwords, so only the
-     * prefixed copies the write puts in the index can find either.
+     * `GmbH` is too short for InnoDB and `com` a stopword, so only the prefixed copies can find either.
      */
     public function testATokenInnoDbDropsIsStillFound(): void
     {
@@ -116,8 +114,7 @@ class SearchQueryTest extends TestCase
     }
 
     /**
-     * A stopword beside another token only ranks, so a record without it is still found; the other token
-     * still narrows.
+     * A stopword beside another token only ranks, so a record without it is still found.
      */
     public function testAStopwordIsOptionalBesideARequiredTerm(): void
     {

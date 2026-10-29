@@ -11,9 +11,6 @@ use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Yii;
 
-/**
- * A third-party service a user may store a key of their own for, declared by the bundle that calls it.
- */
 class CredentialProvider
 {
     protected ?string $label = null;
@@ -50,7 +47,7 @@ class CredentialProvider
     }
 
     /**
-     * What a user enters for the service, a single `key` unless the service names more, such as an ID and a secret.
+     * A single `key` unless the service names more, such as an ID and a secret.
      */
     public function fields(CustomAttribute ...$fields): static
     {
@@ -59,8 +56,9 @@ class CredentialProvider
     }
 
     /**
-     * @param Closure(array<string, string>): bool $verify a cheap call to the service, so a mistyped key is refused
-     * when it is saved
+     * A cheap call to the service, so a mistyped key is refused when it is saved.
+     *
+     * @param Closure(array<string, string>): bool $verify
      */
     public function verify(Closure $verify): static
     {

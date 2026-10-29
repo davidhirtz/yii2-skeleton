@@ -130,9 +130,8 @@ class RedirectBehaviorTest extends TestCase
     }
 
     /**
-     * Renaming a record back to a URL it already had must leave one redirect onto the current URL and nothing
-     * else: the redirect recorded for the first rename now points at where the record is again, so it is a
-     * no-op. Leaving it in place used to flatten the second redirect onto its own request URI.
+     * The redirect of the first rename now points at where the record is again, and left in place it flattened the
+     * second redirect onto its own request URI.
      */
     public function testRenamingBackRemovesTheRedirectItPointsAtInsteadOfLooping(): void
     {

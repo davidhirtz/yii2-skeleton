@@ -50,8 +50,7 @@ class LogGridView extends GridView
     }
 
     /**
-     * The date alone cannot tell two entries of the same day apart, which is most of a log. The file holds UTC —
-     * {@see FileTarget::getTime()} — and the formatter reads it as such, so both lines are in the account's zone.
+     * The file holds UTC ({@see FileTarget::getTime()}), which the formatter shows in the account's zone.
      *
      * @return list<string|Stringable>
      */

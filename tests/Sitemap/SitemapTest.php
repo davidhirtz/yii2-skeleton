@@ -171,8 +171,7 @@ class SitemapTest extends TestCase
     }
 
     /**
-     * The pages are counted from the records, so a record the URL generation skips shortens its page rather than
-     * pulling a URL forward from the next one.
+     * Pages are counted from the records, so a skipped record shortens its page rather than pulling a URL forward.
      */
     public function testARecordWithoutAUrlShortensItsPage(): void
     {

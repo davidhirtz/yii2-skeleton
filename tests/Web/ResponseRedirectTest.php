@@ -8,10 +8,8 @@ use Hirtz\Skeleton\Test\TestCase;
 use yii\helpers\Json;
 
 /**
- * `HX-Location` is htmx's navigation, and it carries a swap context that overrides the `hx-select`, `hx-swap` and
- * `hx-select-oob` of whatever issued the request — so an action refreshing a region of the page the user is on has
- * to opt out of it. Which of the two a redirect is only the action knows: a form targets itself so its validation
- * errors land in place, and still navigates away once it saves.
+ * `HX-Location` carries a swap context overriding the requester's `hx-select`, `hx-swap` and `hx-select-oob`, so an
+ * action refreshing a region of the page has to opt out of it.
  */
 class ResponseRedirectTest extends TestCase
 {

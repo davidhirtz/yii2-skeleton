@@ -43,8 +43,8 @@ class AsidePinButtonTest extends TestCase
     }
 
     /**
-     * The cookie is written by `includes/aside.ts` and read straight out of `$_COOKIE`, the layout rendering
-     * the attribute the CSS keys on — so a collapsed aside never unfolds for a frame on a full load.
+     * The layout reads the cookie `includes/aside.ts` writes straight out of `$_COOKIE`, so a collapsed aside never
+     * unfolds for a frame on a full load.
      */
     public function testTheCookieCollapsesThePinButton(): void
     {
@@ -67,8 +67,8 @@ class AsidePinButtonTest extends TestCase
     }
 
     /**
-     * The navbar renders before the aside and cannot ask whether one came to anything, so both aside buttons
-     * answer the guest check it reaches for everything shipped (monorepo issue #190).
+     * The navbar renders before the aside and cannot ask whether it rendered, so both aside buttons answer the guest
+     * check (monorepo issue #190).
      */
     public function testAGuestGetsNoPinButton(): void
     {

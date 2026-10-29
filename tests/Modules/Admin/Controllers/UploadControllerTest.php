@@ -91,8 +91,8 @@ class UploadControllerTest extends TestCase
     }
 
     /**
-     * The container id is what the response is selected by, so it has to be the same one the form rendered — a
-     * generated id counts per request and would differ.
+     * The response is selected by the container id, so it must match the form's, which a per-request generated id would
+     * not.
      */
     public function testTheContainerIdIsDerivedFromTheAttribute(): void
     {
@@ -124,10 +124,7 @@ class UploadControllerTest extends TestCase
         self::assertSame([], glob($this->upload->tempPath . '*') ?: []);
     }
 
-    /**
-     * The skeleton cannot know a model's permission, so the definition names it and the action asks — an account
-     * that may open the form is otherwise all the endpoint checks.
-     */
+    /** The skeleton cannot know a model's permission, so the definition names it and the action asks. */
     public function testADefinitionsPermissionIsEnforced(): void
     {
         $this->login();
@@ -282,8 +279,8 @@ class UploadControllerTest extends TestCase
     }
 
     /**
-     * Nothing will ever ask for the file of a pending upload once the form has dropped its token, so it goes now
-     * rather than waiting for the collector.
+     * Nothing asks for a pending upload's file once the form dropped its token, so it goes now rather than waiting for
+     * the collector.
      */
     public function testRemovingAPendingUploadDeletesItsFile(): void
     {

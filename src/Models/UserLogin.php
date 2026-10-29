@@ -21,7 +21,7 @@ use Yii;
  * @property string|null $ip_address
  * @property DateTime $created_at
  *
- * @property User $user {@see UserLogin::getUser}
+ * @property User $user
  * @property-read string $typeName
  * @property-read string $displayIp
  */
@@ -30,9 +30,8 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
     use TypeAttributeTrait;
 
     /**
-     * Deliberately {@see TypeAttributeInterface::TYPE_DEFAULT}: a login whose caller named no type has told us
-     * nothing, which is what "other" means. It is also where the upgrade's `M260914180000UserLoginType` collects the
-     * provider names the removed social login wrote.
+     * Deliberately {@see TypeAttributeInterface::TYPE_DEFAULT}: a login naming no type told us nothing, and the
+     * upgrade collects the removed social login's provider names here.
      */
     public const int TYPE_OTHER = self::TYPE_DEFAULT;
 

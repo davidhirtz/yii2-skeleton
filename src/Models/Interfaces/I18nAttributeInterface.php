@@ -7,12 +7,14 @@ namespace Hirtz\Skeleton\Models\Interfaces;
 interface I18nAttributeInterface
 {
     /**
-     * @return list<string> `i18nAttributes` plus the translatable custom attributes of the model's current state
+     * Includes the translatable custom attributes of the model's current state.
+     *
+     * @return list<string>
      */
     public function getI18nAttributes(): array;
 
     /**
-     * The languages the admin offers, the application's unless the record narrows them.
+     * The application's languages unless the record narrows them.
      *
      * @return list<string>
      */

@@ -208,8 +208,8 @@ class ChunkedUploadedFileTest extends TestCase
     }
 
     /**
-     * A browser that aborts mid-upload leaves PHP with `UPLOAD_ERR_PARTIAL` and an empty `tmp_name`, which every
-     * path that touches the file has to survive — `fopen('')` is a `ValueError`, not a `false`.
+     * An aborted upload leaves `UPLOAD_ERR_PARTIAL` and an empty `tmp_name`, and `fopen('')` is a `ValueError`, not a
+     * `false`.
      *
      * @see https://github.com/davidhirtz/yii2-monorepo/issues/27
      */

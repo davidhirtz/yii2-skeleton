@@ -11,24 +11,18 @@ use Yii;
 use yii\base\InvalidConfigException;
 
 /**
- * {@see static::getTypes()} is the declaration; everything reads {@see static::getTypeDefinitions()},
- * {@see static::findType()} or {@see static::getType()}, which are resolved, validated and cached.
- *
  * @property int $type
  */
 trait TypeAttributeTrait
 {
     /**
-     * @var Closure(): list<Type>|list<Type>|null what the container configured, see {@see static::setTypes()}
+     * @var Closure(): list<Type>|list<Type>|null
      */
     private Closure|array|null $configuredTypes = null;
 
     /**
-     * Instantiates a class based on the given `type`. In contrast to the original implementation, this can be used for
-     * creating new records directly, as it also populates the model.
-     *
-     * A caller holding a type rather than a row takes {@see static::instantiateByType()}, whose `?int` the analyser
-     * checks — a misspelled key here falls through to the base class as silently as no key at all.
+     * A caller holding a type rather than a row takes {@see static::instantiateByType()}, since a misspelled key here
+     * falls through to the base class silently.
      *
      * @param array<string, mixed> $row
      */
@@ -44,10 +38,9 @@ trait TypeAttributeTrait
     }
 
     /**
-     * **A record whose type is known is built here, never through `create()` or {@see Yii::createObject()}.**
-     * Assigning `type` to an already-built record leaves the base class, with the base class's definitions, rules
-     * and lifecycle hooks — and nothing catches it, since the wrong class is a valid instance of the right base.
-     * {@see static::loadDefaultValues()} runs after this, or the column default wins over the type asked for.
+     * A typed record is built here, never by assigning `type` to a built one, which keeps the base class's
+     * definitions, rules and hooks unnoticed; {@see static::loadDefaultValues()} runs after this, or the column
+     * default wins.
      */
     public static function instantiateByType(?int $type): static
     {
@@ -55,11 +48,10 @@ trait TypeAttributeTrait
     }
 
     /**
-     * The type a form posted decides the class, so it is read before the record is built: a type select reloads the
-     * form by posting to the same action, and {@see static::load()} cannot change the class of a record that already
-     * exists. `$type` is the fallback the route carries, for the first request, which posts nothing.
+     * The posted type decides the class before the record is built, since {@see static::load()} cannot change it;
+     * `$type` is the route's fallback for the first request, which posts nothing.
      *
-     * @param array<string, mixed> $data the request body, as {@see static::load()} takes it
+     * @param array<string, mixed> $data
      */
     public static function instantiateFromPost(array $data, ?int $type = null): static
     {
@@ -86,9 +78,8 @@ trait TypeAttributeTrait
     }
 
     /**
-     * A closure, because a type's name is a {@see Yii::t()} result and a literal in a configuration file resolves
-     * before the application has an `i18n` component — which would freeze every definition to one language. A plain
-     * list is accepted for a declaration that needs no translation.
+     * A closure, since a type's name is a {@see Yii::t()} result a configuration literal would freeze before the
+     * application has an `i18n` component.
      *
      * @param Closure(): list<Type>|list<Type> $types
      */
@@ -98,7 +89,7 @@ trait TypeAttributeTrait
     }
 
     /**
-     * Override this method to implement types — an override owns them, and the configured list is then ignored.
+     * An override owns the types, and the configured list is then ignored.
      *
      * @return list<Type>
      */
@@ -114,8 +105,8 @@ trait TypeAttributeTrait
     }
 
     /**
-     * The single type of a model nothing declares types for. Unlike an override of {@see static::getTypes()}, an
-     * override of this method still gives way to what the container configured.
+     * Unlike an override of {@see static::getTypes()}, an override of this still gives way to what the container
+     * configured.
      */
     protected function getDefaultType(): Type
     {
@@ -155,8 +146,7 @@ trait TypeAttributeTrait
     }
 
     /**
-     * The attribute is whatever was assigned or read — a form posts a string and PDO answers one for an integer
-     * column — so it is normalized here rather than in {@see static::findType()}, which is the typed API. A
+     * Normalized here rather than in {@see static::findType()}, since a form posts a string and PDO answers one; a
      * narrowing `getType()` override has to call this too.
      */
     protected static function normalizeTypeValue(mixed $type): ?int

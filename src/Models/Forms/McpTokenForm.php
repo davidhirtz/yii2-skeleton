@@ -16,7 +16,9 @@ class McpTokenForm extends Model
     public bool|string $readOnly = false;
 
     /**
-     * @param list<int> $lifetimes the days a token may last, besides never expiring
+     * `$lifetimes` are the days a token may last, besides never expiring.
+     *
+     * @param list<int> $lifetimes
      * @param array<string, mixed> $config
      */
     public function __construct(
@@ -46,7 +48,7 @@ class McpTokenForm extends Model
     }
 
     /**
-     * @return string|null the token, shown once, or `null` when the form did not validate
+     * The token is shown once; `null` when the form did not validate.
      */
     public function create(): ?string
     {

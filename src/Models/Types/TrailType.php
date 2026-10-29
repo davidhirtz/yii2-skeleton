@@ -16,7 +16,7 @@ class TrailType extends Type
     protected bool $hasDataModel = false;
 
     /**
-     * @param Message|null $message a pointer, not text: it is rendered in the language of whoever reads the trail.
+     * A pointer, not text: it is rendered in the language of whoever reads the trail.
      */
     public function message(?Message $message): static
     {

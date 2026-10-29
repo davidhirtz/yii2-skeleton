@@ -15,8 +15,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
- * The body of the status action the grid's status icon posts to, without any opinion on who may run it — a
- * controller resolves and authorises the record the way its update action does and calls this.
+ * Authorises nothing: the controller resolves and authorises the record the way its update action does.
  *
  * @mixin Controller<Module>
  */

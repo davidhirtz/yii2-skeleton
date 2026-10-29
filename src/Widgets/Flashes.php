@@ -57,8 +57,8 @@ class Flashes extends Widget
     }
 
     /**
-     * Beside the container rather than in it, which would no longer count as empty. `includes/networkError.ts`
-     * clones it into the container when a request never reached the server.
+     * Beside the container rather than in it, which would no longer count as empty; `includes/networkError.ts` clones
+     * it in when a request never reached the server.
      */
     protected function renderNetworkErrorTemplate(): string
     {

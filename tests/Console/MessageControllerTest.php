@@ -61,8 +61,7 @@ class MessageControllerTest extends TestCase
     }
 
     /**
-     * Yii removes every message file whose category a run did not produce, which is silent data loss the moment
-     * the scan misses a call site.
+     * Yii removes every message file whose category a run did not produce, silently losing it.
      */
     public function testAMessageFileOfAnotherCategoryIsNeverDeleted(): void
     {
@@ -94,9 +93,7 @@ class MessageControllerTest extends TestCase
     }
 
     /**
-     * A key the tokenizer cannot reach — a permission description lives in the `auth_item.description` a
-     * migration seeds, as a `Message` pointer inside an SQL string — was deleted by `removeUnused` on every run
-     * (monorepo issue #211). Naming it in `keepMessages` keeps it, with the translation it already has.
+     * A key no call site names, as a permission description seeded in SQL, was deleted by `removeUnused` (#211).
      */
     public function testAKeptKeyAndItsTranslationSurviveARunThatCannotSeeIt(): void
     {
@@ -124,8 +121,7 @@ class MessageControllerTest extends TestCase
     }
 
     /**
-     * The skipped-category branch counts the kept keys too, or a category reached from data alone would be
-     * reported as empty and left behind.
+     * The skipped-category branch counts the kept keys too, or such a category would be reported as empty.
      */
     public function testACategoryHoldingOnlyKeptKeysIsWritten(): void
     {

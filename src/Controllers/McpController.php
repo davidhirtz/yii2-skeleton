@@ -17,9 +17,6 @@ use yii\base\Module;
 use yii\web\Response;
 
 /**
- * The stateless Streamable HTTP transport: one JSON-RPC message per POST, answered as JSON, authenticated by a
- * token `mcp/token` or the OAuth token endpoint issued.
- *
  * @extends Controller<Module>
  */
 class McpController extends Controller

@@ -9,8 +9,7 @@ use Hirtz\Skeleton\Mcp\Tools\GetRecordTool;
 use Hirtz\Skeleton\Mcp\Tools\ListResourcesTool;
 
 /**
- * The records of the registered resources as MCP resources, `record://entry/8`. Everything goes through the read
- * tools, so a record is offered, listed and read under exactly the permissions `get_record` checks.
+ * Everything goes through the read tools, so a record is offered under exactly the permissions `get_record` checks.
  */
 class RecordResources
 {
@@ -38,8 +37,7 @@ class RecordResources
     }
 
     /**
-     * The most recently updated records of each resource, so a client has something to offer before a template is
-     * filled in.
+     * The latest records, so a client has something to offer before a template is filled in.
      *
      * @return list<array<string, mixed>>
      */

@@ -103,7 +103,9 @@ class Schema extends \yii\db\mysql\Schema
     }
 
     /**
-     * @return list<string> the tables, views left out
+     * Views are left out.
+     *
+     * @return list<string>
      */
     public function getBaseTableNames(): array
     {

@@ -18,8 +18,7 @@ class HelpControllerTest extends TestCase
     protected string $applicationClass = Application::class;
 
     /**
-     * A web controller in a module's `controllerMap` must be skipped by reflection: the console application has no
-     * `user` component, so building one to find out what it is throws while an unknown command is being reported.
+     * Building a web controller throws under the console, which has no `user` component.
      */
     public function testGetCommandsSkipsWebControllersInControllerMap(): void
     {
@@ -51,8 +50,7 @@ class HelpControllerTest extends TestCase
     }
 
     /**
-     * `./yii help` lists the first line of a docblock, so a first sentence wrapping onto the next line is shown cut
-     * off, and a command without a docblock is shown with nothing at all.
+     * `./yii help` lists only the first docblock line, so a wrapped sentence is shown cut off.
      */
     public function testEverySummaryIsOneCompleteLine(): void
     {

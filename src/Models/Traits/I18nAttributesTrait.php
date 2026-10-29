@@ -13,7 +13,7 @@ use yii\validators\UniqueValidator as BaseUniqueValidator;
 trait I18nAttributesTrait
 {
     /**
-     * @var list<string> containing the attribute names of attributes which should be used with I18N features
+     * @var list<string>
      */
     public array $i18nAttributes = [];
 
@@ -28,12 +28,14 @@ trait I18nAttributesTrait
     private array $i18nLabels = [];
 
     /**
-     * @var list<string>|null the attributes the labels and hints were built for, `null` while they never were
+     * @var list<string>|null
      */
     private ?array $i18nLabelsKey = null;
 
     /**
-     * @return list<string> `i18nAttributes` plus the translatable custom attributes of the model's current state
+     * Includes the translatable custom attributes of the model's current state.
+     *
+     * @return list<string>
      */
     public function getI18nAttributes(): array
     {
@@ -221,11 +223,8 @@ trait I18nAttributesTrait
     }
 
     /**
-     * If an i18n attribute has a unique validator with a "targetAttribute", all related attributes need their own rule
-     * translating the target attribute.
-     *
-     * Override this method if a custom unique validator is used. It is kept on the per-language rules and has to handle
-     * a translated target attribute itself.
+     * Override for a custom unique validator, which stays on the per-language rules and translates its target
+     * attribute itself.
      */
     protected function isUniqueRule(mixed $ruleName): bool
     {
@@ -256,8 +255,7 @@ trait I18nAttributesTrait
     }
 
     /**
-     * The languages lacking a translation: one a visible attribute is empty in while the source language has it.
-     * An attribute left empty in the source is not expected anywhere else.
+     * An attribute left empty in the source language is not expected anywhere else.
      *
      * @return list<string>
      */

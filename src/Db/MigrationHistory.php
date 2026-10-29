@@ -11,9 +11,8 @@ use yii\db\Connection as BaseConnection;
 use yii\db\Query;
 
 /**
- * Reads the migration state from outside the console, so the admin can report the last applied migration and warn
- * about pending ones. The namespaces come from `Base\Traits\ApplicationTrait::getMigrationNamespaces()`, which is
- * populated under both SAPIs.
+ * The namespaces come from `Base\Traits\ApplicationTrait::getMigrationNamespaces()`, which is populated under both
+ * SAPIs.
  */
 class MigrationHistory
 {
@@ -31,7 +30,9 @@ class MigrationHistory
     }
 
     /**
-     * @return array<string, int> the applied migration class names, mapped to their apply time, newest first.
+     * Newest first.
+     *
+     * @return array<string, int>
      */
     public function getApplied(): array
     {
@@ -61,15 +62,8 @@ class MigrationHistory
     }
 
     /**
-     * Applied migrations whose class cannot be loaded. On a healthy installation this is empty; a v2 database
-     * pointed at v3 code returns all of them, because the namespaces were renamed. A project that deleted one
-     * of its own migrations without clearing the row shows up here too, which is worth knowing either way.
-     *
-     * `class_exists()` returns false for a class that is simply absent and **throws** for one whose file is
-     * found and cannot be declared — a missing parent, interface or trait. That is not a corner case here: it
-     * is the shape of a project migration still using a trait v3 removed, and the throw would come from inside
-     * the guard whose whole job is to print a readable message. Such a version is unresolved in the sense that
-     * matters, so it is reported rather than raised.
+     * `class_exists()` throws for a file that cannot be declared (a project migration using a trait v3 removed), so
+     * such a version is reported rather than raised.
      *
      * @return list<string>
      */
@@ -94,9 +88,6 @@ class MigrationHistory
         return $unresolved;
     }
 
-    /**
-     * Forgets what it read, for a caller that has just rewritten the table.
-     */
     public function refresh(): void
     {
         $this->applied = null;
@@ -122,7 +113,9 @@ class MigrationHistory
     }
 
     /**
-     * @return list<string> the migration class names found on disk that the database has not applied, oldest first.
+     * Oldest first.
+     *
+     * @return list<string>
      */
     public function getPending(): array
     {

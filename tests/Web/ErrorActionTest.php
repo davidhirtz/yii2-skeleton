@@ -125,7 +125,7 @@ class ErrorActionTest extends TestCase
 class TestController extends Controller
 {
     /**
-     * @var array{class: class-string, ...} the error action, with whatever options a test adds to it
+     * @var array{class: class-string, ...}
      */
     public array $config = ['class' => ErrorAction::class];
 

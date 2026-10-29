@@ -25,44 +25,32 @@ class Controller extends \yii\web\Controller
 {
     final public const string EVENT_CONFIGURE = 'configure';
 
-    /**
-     * @var bool whether spaces between HTML tags should be removed from the output.
-     */
     public bool $spacelessOutput = false;
 
     /**
-     * @var string|false the `Content-Security-Policy` header of a page outside the admin. It restricts nothing a page
-     * runs, so a page cached as a whole can send it: only the site itself may frame the content (`frame-ancestors
-     * 'none'` for nobody), no plugin is loaded and no foreign `<base>` resolves the page's links.
+     * Restricts no script, so a page cached as a whole can send it.
+     *
      * @link https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Clickjacking_Defense_Cheat_Sheet.md
      */
     public string|false $contentSecurityPolicy = "frame-ancestors 'self'; object-src 'none'; base-uri 'self'";
 
     /**
-     * @var bool|null whether the application's `contentSecurityPolicy` is sent instead, allowing only the scripts
-     * `Web\View` stamps with its nonce; `null` sends it inside the admin alone. A page cached as a whole cannot: every
-     * visitor would get the nonce it was cached with.
+     * `null` sends it inside the admin alone; a page cached as a whole cannot, since every visitor would share its
+     * nonce.
      */
     public ?bool $strictContentSecurityPolicy = null;
 
     /**
-     * @var string|false the `Strict-Transport-Security` header, e.g. `max-age=31536000`. Off by default: it is a
-     * promise about the whole host, which the web server makes for every response — sent here as well, the browser
-     * receives it twice and a scanner reads neither. Only ever sent over a secure connection, which behind a proxy
-     * terminating TLS needs `Request::$trustedHosts`.
+     * Off by default, since the web server makes it for the whole host; sent over a secure connection only, which
+     * behind a TLS-terminating proxy needs `Request::$trustedHosts`.
      */
     public string|false $strictTransportSecurity = false;
 
     /**
-     * @var string|false the `Referrer-Policy` header: by default the full URL never leaves the site, so a token in it
-     * reaches no other host. A page carrying one sends `no-referrer`, see {@see static::sendNoReferrer()}.
+     * A page whose URL carries a token sends `no-referrer` instead ({@see static::sendNoReferrer()}).
      */
     public string|false $referrerPolicy = 'strict-origin-when-cross-origin';
 
-    /**
-     * @var bool whether `X-Content-Type-Options: nosniff` is sent, which keeps a browser from running a response as
-     * something other than its declared type.
-     */
     public bool $noSniff = true;
 
     protected User $webuser;
@@ -74,9 +62,8 @@ class Controller extends \yii\web\Controller
     }
 
     /**
-     * Listeners must run before `behaviors()` is evaluated, so this cannot be an `EVENT_BEFORE_ACTION` handler:
-     * `Component::trigger()` attaches the behaviors before it calls any handler, and a class-level handler is called
-     * after the instance-level ones an `ActionFilter` registers.
+     * Not an `EVENT_BEFORE_ACTION` handler, since listeners must run before `behaviors()` and `trigger()` attaches
+     * those first.
      */
     #[Override]
     public function init(): void
@@ -225,9 +212,7 @@ class Controller extends \yii\web\Controller
     }
 
     /**
-     * A flash is rendered as HTML, so a plain string is encoded here and only a `Stringable` — something that
-     * built its own markup and knows what it escaped — is trusted (monorepo issue #160). The session holds a
-     * string either way, since a flash survives a redirect by being serialized into it.
+     * A flash renders as HTML, so a plain string is encoded and only a `Stringable` is trusted (#160).
      *
      * @param array<int|string, mixed>|string|Stringable|null $value
      */

@@ -15,8 +15,7 @@ use yii\web\UploadedFile;
 class ChunkedUploadedFile extends UploadedFile
 {
     /**
-     * @var int|null the maximum size of the assembled file, {@see Upload::$maxSize} unless set: the first chunk
-     * already names the total, so an oversized upload is refused before any of it is written.
+     * {@see Upload::$maxSize} unless set; the first chunk names the total, so an oversized upload is refused unwritten.
      */
     public ?int $maxSize = null;
 
@@ -111,8 +110,7 @@ class ChunkedUploadedFile extends UploadedFile
     }
 
     /**
-     * Whether the request opens an upload rather than continuing one: a file sent whole or the first chunk of one.
-     * A chunk at any other offset only lands on a file such a request started.
+     * A file sent whole or a first chunk; a chunk at any other offset only lands on a file such a request started.
      */
     public static function isUploadStart(): bool
     {
@@ -120,8 +118,7 @@ class ChunkedUploadedFile extends UploadedFile
     }
 
     /**
-     * Two uploads of one filename, from two tabs or fields, must not append to each other's chunks: the client names
-     * each upload, and only a client that does not falls back to the filename.
+     * The client names each upload, so two of one filename never append to each other's chunks.
      */
     protected static function getUploadKey(string $name): string
     {
@@ -130,7 +127,9 @@ class ChunkedUploadedFile extends UploadedFile
     }
 
     /**
-     * @return array{int, int, int}|null the first byte, last byte and total size, `null` for a file sent whole
+     * The first byte, last byte and total size; `null` for a file sent whole.
+     *
+     * @return array{int, int, int}|null
      */
     protected static function getContentRange(): ?array
     {
@@ -144,9 +143,7 @@ class ChunkedUploadedFile extends UploadedFile
     }
 
     /**
-     * The abandoned chunks are not collected here: {@see Upload} owns the directory and
-     * {@see Upload::collectGarbageOncePerSession()} sweeps it, so an upload pays for it once rather than by dice
-     * roll on every write.
+     * Abandoned chunks are swept by {@see Upload::collectGarbageOncePerSession()}, not here.
      */
     #[Override]
     public function saveAs($file, $deleteTempFile = true): bool
@@ -191,8 +188,7 @@ class ChunkedUploadedFile extends UploadedFile
     }
 
     /**
-     * Whether a chunk landed and the next one is expected. PHP reports an aborted transfer as `UPLOAD_ERR_PARTIAL`
-     * too, so the error code alone cannot tell the two apart — only a chunk this class wrote itself counts.
+     * PHP reports an aborted transfer as `UPLOAD_ERR_PARTIAL` too, so only a chunk this class wrote counts.
      *
      * @noinspection PhpUnused
      */

@@ -117,8 +117,7 @@ class AccountController extends Controller
     }
 
     /**
-     * Returns JSON encoded string containing a signup token.
-     * The token will only be every five minutes, to prevent multiple signups within one session.
+     * A new token only every five minutes, against repeated signups within one session.
      *
      * @return array<string, mixed>
      */
@@ -516,9 +515,8 @@ class AccountController extends Controller
     }
 
     /**
-     * The dropdown renders in the navbar, which sits outside `#wrap` and therefore holds whichever page it was last
-     * rendered with — so the language cannot travel as a parameter of the current URL. It is posted to this route
-     * instead, and the answer is a reload of whatever page the click happened on.
+     * Posted rather than a URL parameter, since the navbar sits outside `#wrap` and keeps the page it was rendered
+     * with.
      *
      * @see \Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\LanguageDropdownButton
      */
@@ -537,8 +535,7 @@ class AccountController extends Controller
     }
 
     /**
-     * A request carrying no timezone is the client failing to report one, never a user clearing theirs — an empty
-     * value is skipped by every validator, so assigning it would wipe the stored one and still flash a success.
+     * An empty timezone is skipped, since every validator skips it and assigning it would wipe the stored one.
      */
     public function actionTimezone(?string $redirect = null): Response|string
     {

@@ -22,7 +22,7 @@ use Yii;
  * @property DateTime|null $last_used_at
  * @property DateTime $created_at
  *
- * @property-read User $user {@see static::getUser()}
+ * @property-read User $user
  */
 class OAuthGrant extends ActiveRecord
 {

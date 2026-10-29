@@ -14,8 +14,7 @@ interface TypeAttributeInterface
     public const int TYPE_DEFAULT = 1;
 
     /**
-     * The declaration, and the only instance method of the three: it is what an installation replaces through the
-     * container, and {@see \Hirtz\Skeleton\Models\Definitions\DefinitionRegistry} is its only caller.
+     * The only instance method of the three, since an installation replaces it through the container.
      *
      * @return list<Type>
      */

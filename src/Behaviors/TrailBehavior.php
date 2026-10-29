@@ -30,12 +30,12 @@ class TrailBehavior extends Behavior
     final public const string MASKED_VALUE = '********';
 
     /**
-     * @var class-string|null if not set, the default class of `owner` will be used
+     * @var class-string|null
      */
     public ?string $modelClass = null;
 
     /**
-     * @var list<string> the attributes excluded from the default trail attributes
+     * @var list<string>
      */
     public array $exclude = [
         'id',
@@ -133,8 +133,7 @@ class TrailBehavior extends Behavior
     }
 
     /**
-     * The type is taken here rather than assigned afterwards: it decides the class, see
-     * {@see Trail::instantiate()}.
+     * The type is passed in rather than assigned afterwards, since it decides the class ({@see Trail::instantiate()}).
      */
     protected function createTrail(int $type): Trail
     {

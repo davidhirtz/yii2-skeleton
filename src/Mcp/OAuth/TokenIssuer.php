@@ -10,8 +10,8 @@ use Hirtz\Skeleton\Models\UserToken;
 use Yii;
 
 /**
- * The token endpoint's two grants. Refresh tokens rotate, and presenting one already rotated away revokes the
- * whole grant (OAuth 2.1 §4.3.1): either the client or a thief holds a stale copy, and nobody can tell which.
+ * Presenting a refresh token already rotated away revokes the whole grant (OAuth 2.1 §4.3.1), since either the
+ * client or a thief holds a stale copy.
  */
 class TokenIssuer
 {

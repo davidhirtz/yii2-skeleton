@@ -21,19 +21,12 @@ class PageCache extends \yii\filters\PageCache
      */
     public const string EVENT_CONFIGURE = 'configure';
 
-    /**
-     * @var bool whether to cache the response for logged-in users
-     */
     public bool $disableForUsers = true;
 
-    /**
-     * @var bool whether to cache the response for POST requests
-     */
     public bool $disableForPostRequests = true;
 
     /**
-     * @var string|false GET param name to disable caching, set to `false` to disable cache skipping. Honoured only
-     * with {@see $debug} or a session the request brought, so a visitor cannot make every request a full render.
+     * Honoured only with {@see $debug} or a session the request brought, so a visitor cannot force a full render.
      */
     public string|false $noCacheParam = 'nocache';
 
@@ -45,13 +38,12 @@ class PageCache extends \yii\filters\PageCache
     public $only = ['index', 'view'];
 
     /**
-     * @var array<string, mixed> the default GET param values used by {@see static::$variations}
+     * The default GET param values {@see static::$variations} uses.
+     *
+     * @var array<string, mixed>
      */
     public array $params = [];
 
-    /**
-     * @var bool whether to use the tag dependency as a dependency
-     */
     public bool $useTagDependency = true;
 
     #[Override]

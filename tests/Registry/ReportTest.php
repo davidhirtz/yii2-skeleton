@@ -14,7 +14,7 @@ use Override;
 use Yii;
 
 /**
- * Under the console application, which is what a deploy runs the push from.
+ * Under the console application, since a deploy runs the push from it.
  */
 class ReportTest extends TestCase
 {

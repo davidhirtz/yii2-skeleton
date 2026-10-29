@@ -9,14 +9,12 @@ use Yii;
 use yii\base\Component;
 
 /**
- * The `credentials` application component. Each bundle appends the services it calls through its default config, as
- * closures, since a label is a `Yii::t()` result.
+ * Bundles append their services as closures, since a label is a `Yii::t()` result.
  */
 class Credentials extends Component
 {
     /**
-     * @var list<Closure(): (CredentialProvider|list<CredentialProvider>|null)> a closure may answer several providers,
-     * or `null` for none
+     * @var list<Closure(): (CredentialProvider|list<CredentialProvider>|null)>
      */
     public array $providers = [];
 

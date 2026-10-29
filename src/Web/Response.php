@@ -24,10 +24,7 @@ class Response extends \yii\web\Response
     private bool $isHtmxReload = false;
 
     /**
-     * Both htmx properties are per-response state, and `clear()` is what resets a response for the next one —
-     * which only an application serving more than one request reaches, `Test\Browser` among them. Without this
-     * a single `setHtmxReload()` turned every later response of the same test into an empty 200 carrying
-     * `HX-Refresh`, so a login answered after one read as a login that had silently failed.
+     * Without the htmx reset, one `setHtmxReload()` made every later response of `Test\Browser` an empty `HX-Refresh`.
      */
     #[Override]
     public function clear(): void
@@ -55,16 +52,8 @@ class Response extends \yii\web\Response
     }
 
     /**
-     * A cookie's identity is its name *and* its scope, and PHP keeps the **first** of two the browser sends, which
-     * is the stale one. So a `_session` left over from an earlier scope of the installation silently
-     * discards every session written under the configured `Domain`: each request reads the dead id, starts a fresh
-     * session and writes a domain-scoped cookie nothing ever reads back — the admin language, the flashes and the
-     * CSRF token a form was rendered with all die between requests, with nothing on the server to say why. Nothing
-     * else clears the twin, since the application only ever writes the scoped cookie (monorepo issue #195).
-     *
-     * This is {@see User::removeIdentityCookie} for the two cookies that have no logout to
-     * hang the deletion on, and it is sent only for a name the request actually carried twice, so a healed browser
-     * stops paying for it.
+     * PHP keeps the first, stale twin of a cookie from an earlier scope, which discards every session written under
+     * the configured `Domain` (#195).
      */
     protected function removeCookieTwins(): void
     {
@@ -105,11 +94,8 @@ class Response extends \yii\web\Response
     }
 
     /**
-     * `yii\web\Response::sendHeaders()` sends the first value of every header name with PHP's `$replace` set, and
-     * for `Set-Cookie` that throws away every cookie already queued — including the session cookie PHP itself
-     * emitted from `session_regenerate_id()`, which a login always triggers. The client then kept the session id
-     * it came with, found no session behind it on the next request, and every flash died with it. A cookie the
-     * application adds as a header is therefore appended after the rest, never sent through the collection.
+     * Yii sends `Set-Cookie` with `$replace`, dropping the cookie `session_regenerate_id()` queued, so header cookies
+     * are appended after the rest.
      */
     #[Override]
     protected function sendHeaders(): void
@@ -129,9 +115,7 @@ class Response extends \yii\web\Response
     }
 
     /**
-     * htmx reads `HX-Refresh` first and returns, so it must not be set beside the `HX-Redirect` a redirect issued
-     * after {@see setHtmxReload()} has already answered with; `HX-Location` is the navigation this is the opposite
-     * of and goes either way.
+     * htmx reads `HX-Refresh` first and returns, so it must not sit beside an `HX-Redirect` already set.
      */
     protected function prepareHtmxReload(): void
     {
@@ -194,13 +178,8 @@ class Response extends \yii\web\Response
     }
 
     /**
-     * `HX-Location` is the navigation: it carries its own swap context and so overrides the `hx-select`, `hx-swap`
-     * and `hx-select-oob` of whatever issued the request, which is what lets it replace the page and push the URL.
-     * An action refreshing a region of the page the user is already on passes `null` instead, and is answered with
-     * an ordinary redirect the requesting element follows itself, leaving all three of its attributes to apply.
-     *
-     * Which of the two it is only the action knows: a form targets itself so its validation errors land in place,
-     * and still navigates away once it saves.
+     * `HX-Location` overrides the requester's `hx-select`, `hx-swap` and `hx-select-oob`; an action refreshing a region
+     * in place passes `null` for an ordinary redirect.
      */
     public function setHtmxRedirectTarget(?string $target): static
     {
@@ -209,12 +188,7 @@ class Response extends \yii\web\Response
     }
 
     /**
-     * Answers a htmx request with a fresh document instead of swapping into the current one: `HX-Redirect` for a
-     * redirect issued after this, `HX-Refresh` for a response that stays where it is. The page was rendered for a
-     * session that is over — the navbar and the flashes outside `#wrap` that no swap reaches among it, down to the
-     * CSRF token it carries — so nothing of it can be kept.
-     *
-     * A request that is not htmx is answered as it would be anyway, so an action need not ask which it is.
+     * `HX-Redirect` for a redirect issued after this, `HX-Refresh` otherwise; inert for a request that is not htmx.
      */
     public function setHtmxReload(): static
     {

@@ -11,8 +11,7 @@ use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 
 /**
- * What the tools need to know about a model beyond what the model itself says. Each closure reproduces what the
- * model's admin action does besides `load()` and `insert()`.
+ * Each closure reproduces what the model's admin action does besides `load()` and `insert()`.
  *
  * @template T of ActiveRecord&AdminModelInterface
  */
@@ -70,10 +69,11 @@ class Resource
     }
 
     /**
+     * `$populate` runs before `load()`, and its `false` refuses the parent as if it did not exist.
+     *
      * @template TParent of ActiveRecord&AdminModelInterface
      * @param class-string<TParent> $parentClass
-     * @param Closure(T, TParent|null): mixed $populate called before `load()`, the parent `null` only when it is
-     * optional; `false` refuses the parent as if it did not exist
+     * @param Closure(T, TParent|null): mixed $populate
      */
     public function parent(string $param, string $parentClass, Closure $populate, bool $required = true): static
     {
@@ -95,8 +95,7 @@ class Resource
     }
 
     /**
-     * @param Closure(T, list<string>): list<string> $attributes receives the record and the default
-     * list, see {@see SchemaBuilder::getWritableAttributes()}
+     * @param Closure(T, list<string>): list<string> $attributes
      */
     public function attributes(Closure $attributes): static
     {
@@ -111,7 +110,9 @@ class Resource
     }
 
     /**
-     * @param Closure(T): void $beforeInsert called after `load()`
+     * Runs after `load()`.
+     *
+     * @param Closure(T): void $beforeInsert
      */
     public function beforeInsert(Closure $beforeInsert): static
     {
@@ -120,8 +121,7 @@ class Resource
     }
 
     /**
-     * @param Closure(?ActiveRecord, list<int>): bool $reorder receives the parent, if the resource has one, and the
-     * ids in their new order
+     * @param Closure(?ActiveRecord, list<int>): bool $reorder
      */
     public function reorder(Closure $reorder): static
     {
@@ -130,7 +130,7 @@ class Resource
     }
 
     /**
-     * @param Closure(T): (array<array-key, mixed>|string|false|null) $url the frontend route or URL
+     * @param Closure(T): (array<array-key, mixed>|string|false|null) $url
      */
     public function url(Closure $url): static
     {
@@ -139,7 +139,7 @@ class Resource
     }
 
     /**
-     * A picture of the record, base64, which `get_record` shows the client beside the JSON.
+     * Base64, which `get_record` shows the client beside the JSON.
      *
      * @param Closure(T): (array{data: string, mimeType: string}|null) $image
      */
@@ -150,7 +150,7 @@ class Resource
     }
 
     /**
-     * @param Closure(): ?int $defaultType the type a record is created as when the caller names none
+     * @param Closure(): ?int $defaultType
      */
     public function defaultType(Closure $defaultType): static
     {

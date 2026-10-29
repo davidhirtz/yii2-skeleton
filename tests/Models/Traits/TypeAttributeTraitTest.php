@@ -177,8 +177,7 @@ class TypeAttributeTraitTest extends TestCase
     }
 
     /**
-     * A form name follows the runtime class, so a type naming one that answers a different name would post under
-     * one and load under another — silently dropping everything typed on the type switch.
+     * A type class answering another form name would post under one and load under another, dropping the input.
      */
     public function testAModelClassChangingTheFormNameThrows(): void
     {
@@ -254,8 +253,7 @@ class TypeRecord extends ActiveRecord implements TypeAttributeInterface
     final public const int TYPE_CHILD = 2;
 
     /**
-     * Pinned across the subclasses a type names: the form name follows the runtime class otherwise, and a type
-     * switch would post under one and load under another.
+     * Pinned, since the form name otherwise follows the runtime class and a type switch would load nothing.
      */
     #[Override]
     public function formName(): string
@@ -298,10 +296,6 @@ class TypeRecord extends ActiveRecord implements TypeAttributeInterface
     }
 }
 
-/**
- * A type's model class keeps the form name of the class declaring the types, which is what lets a form switch
- * between them — {@see TypeRecord::formName()}.
- */
 class TypeRecordChild extends TypeRecord
 {
 }

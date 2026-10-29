@@ -34,8 +34,7 @@ class ReorderActiveRecords
     }
 
     /**
-     * {@see static::afterReorder()} writes the trail and touches the parent record, so it belongs to the same
-     * transaction as the positions it describes.
+     * {@see static::afterReorder()} writes the trail and touches the parent, so it shares the positions' transaction.
      */
     public function run(): int|false
     {
@@ -102,8 +101,8 @@ class ReorderActiveRecords
     }
 
     /**
-     * A filtered grid posts some of the rows: they share out the positions they held and the hidden rows keep theirs.
-     * Positions that do not tell the rows apart are numbered from `1` instead.
+     * A filtered grid posts some of the rows, which share out the positions they held while the hidden rows keep
+     * theirs; positions that do not tell the rows apart are renumbered from `1`.
      *
      * @return array<int|string, int>
      */

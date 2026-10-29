@@ -99,10 +99,7 @@ abstract class Field extends Widget
         return $this->language;
     }
 
-    /**
-     * A field laid out by something else renders its control, error and hint without the {@see FormRow} around
-     * them — {@see GroupField} puts a single-field group's control in an input group with the row's buttons.
-     */
+    /** Off for a field laid out by something else, such as {@see GroupField}'s single-field row. */
     public function showRow(bool $showRow): static
     {
         $this->showRow = $showRow;
@@ -157,10 +154,7 @@ abstract class Field extends Widget
             : $content;
     }
 
-    /**
-     * The control, in an input group where the caller appended or prepended anything to it. A field building one
-     * of its own — the date, the colour picker — does that inside {@see getInput()} instead.
-     */
+    /** A field building its own input group (the date, the colour picker) does so inside {@see getInput()} instead. */
     protected function getControl(): string|Stringable
     {
         return $this->append || $this->prepend
@@ -184,10 +178,7 @@ abstract class Field extends Widget
 
     abstract protected function getInput(): string|Stringable;
 
-    /**
-     * A hint holding `{count}` counts the characters typed into the field, kept current by
-     * `includes/characterCounter.ts` — "ideally at most 160 characters, now {count}".
-     */
+    /** A hint holding `{count}` counts the characters typed, kept current by `includes/characterCounter.ts`. */
     protected function getHint(): string|Stringable
     {
         if (!$this->hint) {
@@ -219,10 +210,7 @@ abstract class Field extends Widget
         return $this->hint !== null && str_contains($this->hint, '{count}');
     }
 
-    /**
-     * At render time rather than in `configure()`, so a hint a `prepare()` closure added is linked as well; a
-     * subclass rendering its own layout calls it before the input.
-     */
+    /** At render time rather than in `configure()`, so a hint a `prepare()` closure added is linked as well. */
     protected function setDescribedBy(): void
     {
         $describedBy = array_filter([
@@ -257,7 +245,7 @@ abstract class Field extends Widget
 
     /**
      * Read by {@see \Hirtz\Skeleton\Widgets\Forms\Fieldset::configure()} before the field configures itself, so a
-     * subclass binding itself to an attribute declares `$property` rather than assigning it in `configure()`.
+     * subclass bound to an attribute declares `$property` rather than assigning it in `configure()`.
      */
     public function isSafe(): bool
     {
@@ -275,14 +263,8 @@ abstract class Field extends Widget
     }
 
     /**
-     * Posts the form to its own action on change and re-renders the page from the loaded but unsaved record, so a
-     * field the rest of the page depends on takes effect without saving.
-     * {@see \Hirtz\Skeleton\Web\Request::isFormReload()} tells the action apart.
-     *
-     * The swap is the whole `#wrap` the body declares, not the form: a type decides more than its fields — the
-     * submenu tabs, the header, the record's own noun — and picking those out one selector at a time is what the
-     * server already answers by rendering the page. The form's own narrower `hx-select` has to be overridden for
-     * that, and `hx-swap` beats the body's `show:top` so the scroll position survives.
+     * Swaps the whole `#wrap` rather than the form, since a type decides more than its fields, and `hx-swap` overrides
+     * the body's `show:top` to keep the scroll position.
      */
     public function reloadsForm(): static
     {

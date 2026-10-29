@@ -38,8 +38,7 @@ class AdminLinkTest extends TestCase
     }
 
     /**
-     * A model with no admin page of its own is linked nowhere however the permission answers, which is what keeps
-     * the widget usable for a record type that only sometimes has one.
+     * Linked nowhere however the permission answers, so the widget suits a type that only sometimes has a page.
      */
     public function testARecordWithoutAnAdminRouteIsLinkedNowhere(): void
     {

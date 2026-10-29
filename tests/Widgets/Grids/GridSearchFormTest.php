@@ -18,9 +18,7 @@ use yii\base\Module;
 use yii\data\ArrayDataProvider;
 
 /**
- * A GET form submits its own fields and nothing else, so the parameters the grid's route carries have to be
- * hidden inputs — the browser replaces the action's query string with the form's fields, and htmx strips it
- * from a boosted form for the same reason.
+ * The route's parameters have to be hidden inputs, since a GET form replaces the action's query string.
  */
 class GridSearchFormTest extends TestCase
 {

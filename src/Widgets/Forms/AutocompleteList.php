@@ -16,10 +16,8 @@ use Stringable;
 use Yii;
 
 /**
- * The options an autocomplete endpoint answers with, swapped into the popover of an {@see AutocompleteField}. The
- * list carries {@see AutocompleteField::OPTIONS_ID} because the field selects it out of the response: the body's
- * inherited `hx-select` would otherwise find nothing and swap nothing. The field's popover is the listbox, so the list
- * and its items step aside for the options; `includes/combobox.ts` gives these their ids.
+ * Carries {@see AutocompleteField::OPTIONS_ID}, since the field selects it out of the response; `includes/combobox.ts`
+ * gives the options their ids.
  */
 class AutocompleteList extends Widget
 {

@@ -29,7 +29,9 @@ class Submenu extends Widget
     protected bool $hideSingleItem = true;
 
     /**
-     * @var array<int|string, mixed>|string|false|null `null` lets a submenu derive it, `false` shows none
+     * `null` derives it, `false` shows none.
+     *
+     * @var array<int|string, mixed>|string|false|null
      */
     protected array|string|false|null $backUrl = null;
 
@@ -100,9 +102,6 @@ class Submenu extends Widget
     }
 
     /**
-     * The listing the record appears in, or its parent's own page where it has none: one level up the tree the
-     * submenu replaced. A record without an admin parent is a root and needs no way back.
-     *
      * @return array<int|string, mixed>|string|null
      */
     protected function getAdminBackUrl(AdminModelInterface $model): array|string|null

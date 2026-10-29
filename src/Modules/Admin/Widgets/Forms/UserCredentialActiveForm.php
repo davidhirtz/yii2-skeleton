@@ -40,9 +40,6 @@ class UserCredentialActiveForm extends ActiveForm
         ];
     }
 
-    /**
-     * Another provider asks for other fields, so a change reloads the form.
-     */
     protected function getProviderField(): string|Stringable
     {
         $items = $this->model->getProviderItems();

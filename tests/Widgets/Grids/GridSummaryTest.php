@@ -15,9 +15,8 @@ use yii\base\Module;
 use yii\data\ArrayDataProvider;
 
 /**
- * The empty message is what a grid says it is *for*, so it may only replace the summary where the grid is empty
- * and nothing was searched for — a fruitless search needs the search summary instead, or the user is told the
- * grid is empty when it is their keyword that matched nothing.
+ * The empty message replaces the summary only where nothing was searched for, or a fruitless search reads as an
+ * empty grid.
  */
 class GridSummaryTest extends TestCase
 {

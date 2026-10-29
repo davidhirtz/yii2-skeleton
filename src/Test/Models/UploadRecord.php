@@ -22,8 +22,8 @@ use Override;
 use Yii;
 
 /**
- * A record with an {@see UploadCustomAttribute}, declared here rather than in a test file so the model and the
- * controller test can both reach it. Its table is created by whichever test uses it.
+ * Declared here rather than in a test file so the model and the controller test can both reach it; its table is
+ * created by whichever test uses it.
  *
  * @property int $id
  * @property string|null $attachment

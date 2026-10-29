@@ -18,9 +18,6 @@ use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Yii;
 use yii\base\DynamicModel;
 
-/**
- * What `includes/unsaved.ts` reads off a form: the question to ask, and whether it starts out changed.
- */
 class ActiveFormUnsavedTest extends TestCase
 {
     use UserFixtureTrait;

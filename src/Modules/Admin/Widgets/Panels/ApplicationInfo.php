@@ -40,9 +40,7 @@ class ApplicationInfo extends InfoList
     }
 
     /**
-     * The repository and branch the installation was built from, the schema it runs against and everything
-     * reachable through `phpinfo()` are infrastructure rather than content, so a manager is shown the platform
-     * without them.
+     * Repository, branch, schema and `phpinfo()` are infrastructure, which a manager is not shown.
      */
     protected function canReadSystem(): bool
     {

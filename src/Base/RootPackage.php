@@ -7,8 +7,8 @@ namespace Hirtz\Skeleton\Base;
 use Composer\InstalledVersions;
 
 /**
- * A bundle installed as a dependency is wired up by `vendor/yiisoft/extensions.php`, which Composer never writes
- * the root package into — so a bundle run on its own has neither its namespace alias nor its `Bootstrap`.
+ * Composer never writes the root package into `vendor/yiisoft/extensions.php`, so a bundle run on its own lacks its
+ * namespace alias and its `Bootstrap`.
  */
 class RootPackage
 {
@@ -18,8 +18,7 @@ class RootPackage
     private ?array $package = null;
 
     /**
-     * @param array{name?: string, type?: string}|null $rootPackage what Composer installed as the root package;
-     * defaults to `InstalledVersions::getRootPackage()`, which the autoloader already holds in memory
+     * @param array{name?: string, type?: string}|null $rootPackage
      */
     public function __construct(
         private readonly string $basePath,
@@ -34,8 +33,6 @@ class RootPackage
     }
 
     /**
-     * The aliases Composer would have written for the package: `@Hirtz/Skeleton` for `Hirtz\Skeleton\` => `src`.
-     *
      * @return array<string, string>
      */
     public function getAliases(): array
@@ -61,10 +58,8 @@ class RootPackage
     }
 
     /**
-     * Only a root package of type `yii2-extension` is read from disk — a project answers `project` without any I/O.
-     * The name has to match too: tests run from inside a bundle directory of a monorepo see that bundle's
-     * composer.json beside the base path while Composer's root is the monorepo, whose extensions.php already
-     * bootstraps the bundle.
+     * The name has to match, since a test run from a bundle inside a monorepo sees that bundle's composer.json
+     * while Composer's root is the monorepo, whose extensions.php already bootstraps it.
      *
      * @return array<string, mixed>
      */

@@ -46,6 +46,7 @@ class UserLoginGridView extends GridView
 
     /**
      * `LinkColumn` wraps the cell's *value*, so a `content()` of its own would replace the link instead of filling it.
+     *
      * @see UserLoginController::actionIndex()
      */
     protected function getIpAddressColumn(): ?Column

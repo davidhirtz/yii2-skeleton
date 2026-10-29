@@ -30,8 +30,7 @@ use Yii;
 use yii\base\Component;
 
 /**
- * The `mcp` application component. Each bundle appends its resources and tools through its default config, as
- * closures, so registering one autoloads no class.
+ * Bundles append their resources and tools as closures, so registering one autoloads no class.
  */
 class Mcp extends Component
 {
@@ -41,7 +40,7 @@ class Mcp extends Component
     public array $resources = [];
 
     /**
-     * @var list<Closure(self): ?ToolInterface> a closure answering `null` offers no tool
+     * @var list<Closure(self): ?ToolInterface>
      */
     public array $tools = [];
 
@@ -51,28 +50,19 @@ class Mcp extends Component
     public array $prompts = [];
 
     /**
-     * @var list<Closure(self): ?string> paragraphs a bundle appends to what the server tells a client in `initialize`
+     * @var list<Closure(self): ?string>
      */
     public array $instructions = [];
 
-    /**
-     * @var bool whether the records are offered as MCP resources (`record://entry/8`) besides the tools
-     */
     public bool $enableResources = true;
 
-    /**
-     * @var bool whether `POST /mcp` answers, authenticated by the tokens `mcp/token` issues
-     */
     public bool $enableHttp = false;
 
     /**
-     * @var list<string> origins besides the request's own a browser may send, e.g. `https://claude.ai`
+     * @var list<string>
      */
     public array $allowedOrigins = [];
 
-    /**
-     * @var int guessed tokens per IP address before the endpoint answers `429`; an expired one is no guess
-     */
     public int $authenticationAttemptLimit = 10;
 
     public int $authenticationAttemptDuration = 900;
@@ -80,8 +70,7 @@ class Mcp extends Component
     public int $tokenLength = 48;
 
     /**
-     * @var bool whether `POST /mcp` also takes the tokens of its OAuth 2.1 authorization server, which needs
-     * {@see self::$enableHttp}
+     * Needs {@see self::$enableHttp}.
      */
     public bool $enableOAuth = false;
 
@@ -89,7 +78,9 @@ class Mcp extends Component
     public int $refreshTokenLifetime = 2592000;
 
     /**
-     * @var list<string> prefixes a client's `client_id` must start with, e.g. `https://claude.ai/`; empty allows any
+     * Empty allows any client.
+     *
+     * @var list<string>
      */
     public array $allowedClientIds = [];
 
@@ -163,8 +154,7 @@ class Mcp extends Component
     }
 
     /**
-     * @param int|null $lifetime seconds until the token expires, `null` for one that never does
-     * @return string the token, which only its HMAC is stored for
+     * Only the token's HMAC is stored, and a `null` lifetime never expires.
      */
     public function issueToken(User $user, bool $readOnly, ?int $lifetime = null): string
     {
@@ -216,8 +206,8 @@ class Mcp extends Component
     }
 
     /**
-     * Counts a guessed token per address and answers `false` past the limit. Called after the lookup: the clients of
-     * a remote connector share its few addresses, so a valid token is never refused.
+     * Called after the lookup, since the clients of a remote connector share its few addresses and a valid token must
+     * never be refused.
      */
     public function countAuthenticationAttempt(string $ip): bool
     {
@@ -231,9 +221,6 @@ class Mcp extends Component
         return true;
     }
 
-    /**
-     * Names the client of this request in the trail: an OAuth client's host, a token or the stdio transport.
-     */
     public function setClient(?string $client): void
     {
         $this->client = $client !== null ? mb_substr($client, 0, 100) : null;
@@ -250,8 +237,7 @@ class Mcp extends Component
     }
 
     /**
-     * The URL of the HTTP endpoint, which is the resource its OAuth tokens are bound to. Built from the request: the
-     * route is a literal, and a URL manager would add a language prefix where a page is localised.
+     * Built from the request, since a URL manager would add a language prefix where a page is localised.
      */
     public function getResourceUrl(): string
     {
@@ -287,10 +273,6 @@ class Mcp extends Component
         return array_map(fn (Closure $closure): Prompt => $closure(), $this->prompts);
     }
 
-    /**
-     * What a client would otherwise learn over several calls, or guess: the order of the calls, the languages, and
-     * that a saved record is live once enabled.
-     */
     public function getInstructions(bool $readOnly = false): string
     {
         $i18n = Yii::$app->getI18n();

@@ -14,9 +14,7 @@ class AdminButtonTest extends TestCase
     use UserFixtureTrait;
 
     /**
-     * The button is furniture for the admin overlay, and a project rendering the cms `site/view.php` unchanged
-     * supplied no guard of its own — so every public page carried it, environment badge included (monorepo
-     * issue #198).
+     * A project rendering the cms `site/view.php` unchanged has no guard of its own (#198).
      */
     public function testAGuestSeesNoButton(): void
     {

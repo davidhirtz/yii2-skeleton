@@ -7,7 +7,6 @@ namespace Hirtz\Skeleton\Models\Types;
 use Closure;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttribute;
 use Hirtz\Skeleton\Models\Definitions\ModelDefinition;
-use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Override;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
@@ -33,8 +32,7 @@ class Type extends ModelDefinition
     protected Closure|bool $available = true;
 
     /**
-     * @param class-string<Model>|null $modelClass the model class records of this type are instantiated as, see
-     * {@see TypeAttributeTrait::instantiate()}
+     * @param class-string<Model>|null $modelClass
      */
     public function modelClass(?string $modelClass): static
     {
@@ -43,8 +41,7 @@ class Type extends ModelDefinition
     }
 
     /**
-     * Attribute names the type does not use, plus the `FIELD_*` markers a bundle declares for a panel of its own. A
-     * hidden attribute is neither rendered nor safe, so its stored value survives a save under a type hiding it.
+     * A hidden attribute is neither rendered nor safe, so its stored value survives a save under a type hiding it.
      */
     public function hiddenFields(string ...$hiddenFields): static
     {
@@ -62,8 +59,7 @@ class Type extends ModelDefinition
     }
 
     /**
-     * Whether the type is offered for a record in the admin — not a frontend render filter, which a subclass adds
-     * under its own name.
+     * Offered in the admin — not a frontend render filter, which a subclass adds under its own name.
      */
     public function available(Closure|bool $available = true): static
     {
@@ -103,9 +99,8 @@ class Type extends ModelDefinition
     }
 
     /**
-     * A rule stops matching records that already hold the type — a parent's type changed, a record moved to
-     * another tenant — and those have to keep saving and keep showing what they are. So the value a record is
-     * stored with stays offered and stays valid, while every other unavailable one does not.
+     * The value a record is stored with stays offered and valid, since a changed parent type or tenant must not stop
+     * it from saving.
      */
     public function isAvailableOrStored(Model $owner, string $attribute): bool
     {

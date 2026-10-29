@@ -20,11 +20,8 @@ use yii\base\UserException;
 class Browser extends AbstractBrowser
 {
     /**
-     * A request replaces `$_COOKIE`, `$_GET`, `$_POST` and `$_REQUEST` and is merged into `$_SERVER`, and none of
-     * that may outlive it: an `HTTP_HX_REQUEST` would otherwise be sent by every request after it, in this browser
-     * and in the next one the test opens (#187), and the cookies and query string of a test's last request would
-     * be read by the rest of it — which
-     * {@see \Hirtz\Skeleton\Modules\Admin\Module::isAsideCollapsed()} does, having to (#202).
+     * No superglobal a request replaces may outlive it, or later requests inherit its `HTTP_HX_REQUEST` (#187) and its
+     * cookies and query string (#202).
      */
     protected function doRequest(object $request): Response
     {

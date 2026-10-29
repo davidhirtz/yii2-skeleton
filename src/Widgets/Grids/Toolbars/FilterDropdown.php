@@ -90,8 +90,8 @@ class FilterDropdown extends Widget
     }
 
     /**
-     * Read by {@see \Hirtz\Skeleton\Widgets\Grids\GridView::isFiltered()}, which has to answer before anything
-     * rendered — a dropdown a grid never configured has no parameter at all.
+     * Read by {@see \Hirtz\Skeleton\Widgets\Grids\GridView::isFiltered()} before anything rendered, so a dropdown a
+     * grid never configured has no parameter.
      */
     public function getParamName(): ?string
     {

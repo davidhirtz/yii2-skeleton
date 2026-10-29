@@ -13,9 +13,7 @@ use yii\log\Logger;
 
 class TestLogger extends Logger
 {
-    /**
-     * @var bool whether messages are kept for {@see TestCase::countQueries()}
-     */
+    /** Keeps the messages for {@see TestCase::countQueries()}. */
     public bool $isRecording = false;
 
     /**

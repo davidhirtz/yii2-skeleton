@@ -57,8 +57,8 @@ class ModuleTest extends TestCase
     }
 
     /**
-     * `YII_DEBUG` is off in production only, so the error view is never rendered by a test — and a path that has
-     * gone stale is only noticed on a live site.
+     * `YII_DEBUG` is off only in production, so no other test renders the error view and a stale path would surface
+     * only on a live site.
      */
     public function testErrorView(): void
     {

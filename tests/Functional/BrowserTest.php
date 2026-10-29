@@ -12,10 +12,8 @@ class BrowserTest extends TestCase
     use FunctionalTestTrait;
 
     /**
-     * The superglobals are process-wide while the application is rebuilt per test, so what a request writes into
-     * them has to be put back when it ends — a header one request sends would otherwise be sent by every request
-     * after it (#187), and the cookies and query string of the last one would still be there for the rest of the
-     * test, where {@see \Hirtz\Skeleton\Modules\Admin\Module::isAsideCollapsed()} reads `$_COOKIE` (#202).
+     * The superglobals are process-wide, so a request's headers, cookies and query string must not reach the next
+     * (#187, #202).
      */
     public function testARequestDoesNotOutliveItself(): void
     {

@@ -93,8 +93,8 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * Two guards stand in front of the owner's star, and the outer one answers first: `Web\User::canManageUser()`
-     * refuses a target holding a permission the acting user lacks, before `isStatusUpdatable()` is ever asked.
+     * `Web\User::canManageUser()` refuses the owner, who holds permissions the actor lacks, before
+     * `isStatusUpdatable()` is ever asked.
      */
     public function testStatusRefusesTheSiteOwner(): void
     {

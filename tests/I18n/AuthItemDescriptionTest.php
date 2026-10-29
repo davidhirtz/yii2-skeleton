@@ -10,10 +10,7 @@ use Yii;
 use yii\db\Query;
 
 /**
- * A permission's description is a {@see Message} pointer in `auth_item.description`, seeded by a migration
- * inside an SQL string — so no `Yii::t()` or `Message::make()` call site names its key and `yii message` used to
- * delete it from every language file on each run (monorepo issue #211). `PhpMessageSource` then renders the key
- * itself, and neither the regeneration nor the page says anything is wrong, which is what these assert.
+ * A {@see Message} pointer seeded in SQL has no call site, so `yii message` deleted its key unnoticed (#211).
  */
 class AuthItemDescriptionTest extends TestCase
 {
@@ -42,8 +39,7 @@ class AuthItemDescriptionTest extends TestCase
     }
 
     /**
-     * The keys the bundle names in `keepMessages` are the ones nothing extracts, so a permission added without
-     * one is deleted again by the next regeneration.
+     * A permission added without its `keepMessages` entry is deleted again by the next regeneration.
      */
     public function testEveryDescriptionKeyOfThisBundleIsKeptByTheMessageConfiguration(): void
     {

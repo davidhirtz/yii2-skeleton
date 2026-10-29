@@ -16,10 +16,8 @@ use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 
 /**
- * Writes the values an update replaced back, through the record's own `load()` and `save()`: they are cast and
- * validated like an editor's, and the restore is a trail entry of its own. Only what the record still accepts is
- * restored — an attribute it dropped or no longer lets a form set is skipped, and so is an upload, whose earlier
- * file was deleted when it was replaced. Relations, positions and deletions are not replayed.
+ * Restores through the record's own `load()` and `save()`, so only what it still accepts comes back, and an upload,
+ * whose earlier file is gone, is skipped.
  */
 class RestoreTrail
 {
@@ -116,8 +114,7 @@ class RestoreTrail
     }
 
     /**
-     * A date went through `json_encode()` into the trail, which wrote PHP's own shape of it. A custom attribute reads
-     * that itself, and a `date` column is the day it was saved as.
+     * A date went into the trail through `json_encode()` in PHP's own shape, which a custom attribute reads itself.
      */
     protected function normalize(ActiveRecord $model, string $attribute, mixed $value): mixed
     {

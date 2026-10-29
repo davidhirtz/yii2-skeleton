@@ -8,9 +8,7 @@ use Hirtz\Skeleton\Log\Traits\MaskQueryParamsTrait;
 use Override;
 
 /**
- * Yii's file target, plus the masking `maskVars` cannot express. The pass is over the rendered context rather
- * than over the variables, so one rule covers `_SERVER.REQUEST_URI`, `QUERY_STRING`, `HTTP_REFERER` and
- * whichever other variable happens to carry the same URL.
+ * Masks the rendered context rather than the variables, so one rule covers every variable carrying the URL.
  */
 class FileTarget extends \yii\log\FileTarget
 {
@@ -23,10 +21,7 @@ class FileTarget extends \yii\log\FileTarget
     }
 
     /**
-     * Yii stamps the line with `date()`, which answers in the process time zone — and
-     * {@see \Hirtz\Skeleton\Models\User::findIdentity()} pins that to the account behind the request. So the file
-     * held one time zone per user and was not even in chronological order, while the admin reads it back through
-     * the formatter, whose `defaultTimeZone` is UTC. The line is written in UTC instead.
+     * UTC, since Yii's `date()` follows the zone {@see \Hirtz\Skeleton\Models\User::findIdentity()} pins per account.
      *
      * @param float|int $timestamp
      */

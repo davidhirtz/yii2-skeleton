@@ -14,10 +14,7 @@ use yii\helpers\Console;
 /**
  * Toggles maintenance mode.
  *
- * The command copies the maintenance mode template to the runtime directory. In the `web/index.php` entry script, the
- * existence of the file is checked and the maintenance mode template is displayed if necessary.
- *
- * @since v1.8
+ * Copies the template to the runtime directory, which `web/index.php` checks for.
  */
 class MaintenanceController extends Controller
 {
@@ -54,7 +51,7 @@ class MaintenanceController extends Controller
     public string $viewFile = '@skeleton/../resources/views/maintenance.php';
 
     /**
-     * @var string[] list of properties that can be configured
+     * @var string[]
      */
     protected array $configProperties = [
         'redirect',
@@ -105,10 +102,7 @@ class MaintenanceController extends Controller
     }
 
     /**
-     * Enables maintenance mode with the given configuration by copying the maintenance mode template to the runtime.
-     * The configuration is saved in a JSON file in the runtime directory.
-     *
-     * A deployment chains its next step on the exit code (`maintenance/enable && migrate`), so a failure is one.
+     * A failure must exit non-zero, since a deployment chains its next step on it (`maintenance/enable && migrate`).
      *
      * @see $redirect
      * @see $retry
@@ -148,7 +142,7 @@ class MaintenanceController extends Controller
     }
 
     /**
-     * Disables maintenance mode by removing the maintenance mode template from the runtime. Keeping the config.
+     * Keeps the saved configuration.
      */
     protected function disableMaintenanceMode(): int
     {

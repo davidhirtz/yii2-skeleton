@@ -8,8 +8,7 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 
 /**
- * Loads the hits one query per class, never one per hit, and over-fetches because the permission check of
- * {@see SearchableInterface::getSearchResult()} drops hits after the fact.
+ * Over-fetches, since the permission check of {@see SearchableInterface::getSearchResult()} drops hits afterwards.
  */
 class SearchResultBuilder
 {
@@ -20,8 +19,7 @@ class SearchResultBuilder
     }
 
     /**
-     * A page takes the window of hits its pager counted, so no hit shows on two pages: one losing hidden hits comes
-     * out shorter. Suggestions, which have no pager, are filled up to their limit instead.
+     * A page keeps the window its pager counted, so no hit shows on two pages; suggestions are filled up instead.
      *
      * @return list<SearchResult>
      */

@@ -8,20 +8,18 @@ use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Input;
-use Hirtz\Skeleton\Widgets\Forms\AutocompleteList;
 use Override;
 use Stringable;
 
 /**
- * An input whose suggestions an endpoint renders as an {@see AutocompleteList} and htmx swaps into a popover below
- * it. Picking one writes its value into the input, so the endpoint decides what the field holds. In hidden mode the
- * value goes into a hidden input posting the attribute and the option's text into the visible one, which has no name.
+ * In hidden mode the value goes into a hidden input posting the attribute, the option's text into the visible one,
+ * which has no name.
  */
 class AutocompleteField extends InputField
 {
     /**
-     * The id the field selects out of the endpoint's response; the body's inherited `hx-select` would otherwise
-     * swap the whole page on every keystroke.
+     * Selected out of the endpoint's response, since the body's inherited `hx-select` would otherwise swap the whole
+     * page on every keystroke.
      */
     final public const string OPTIONS_ID = 'autocomplete-options';
 
@@ -133,9 +131,8 @@ class AutocompleteField extends InputField
     }
 
     /**
-     * The input is a WAI-ARIA combobox: `includes/autocomplete.ts` keeps `aria-expanded` and `aria-activedescendant`
-     * current. The endpoint answers with the option list alone. The query is not named here: the input's own name carries
-     * the model and attribute, so `includes/autocomplete.ts` rewrites the parameters to a single `q`.
+     * The query is not named here: `includes/autocomplete.ts` rewrites the input's own name, which carries the model
+     * and attribute, to a single `q`.
      */
     protected function addAutocompleteAttributes(): void
     {

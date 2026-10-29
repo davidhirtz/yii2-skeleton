@@ -12,23 +12,19 @@ use yii\console\ExitCode;
 trait GarbageCollectionTrait
 {
     /**
-     * @var int The number of seconds to sleep between batches when deleting records to prevent a database shutdown
-     * while deleting huge amounts of records, defaults to 1 second.
+     * @var int the seconds to sleep between batches, so deleting huge amounts of records does not shut the database down
      */
     public int $sleep = 1;
 
     /**
-     * @var int The number of records deleted per batch.
+     * @var int the number of records deleted per batch
      */
     public int $batchSize = 100;
 
     /**
-     * Orders by primary key and deletes in batches, so the table is never locked for long and no `WHERE` clause
-     * grows unbounded. This means the id must be an auto-incrementing integer, with the oldest records having the
-     * lowest ids.
+     * Deletes in primary-key batches, so the id must be an auto-incrementing integer with the oldest records lowest.
      *
      * @param class-string<ActiveRecord> $modelClass
-     * @return int the number of records deleted
      */
     protected function deleteExpiredRecords(string $modelClass, int $lifetime, ?int $limit = null): int
     {

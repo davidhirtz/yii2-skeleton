@@ -15,8 +15,8 @@ use yii\log\Logger;
 class FileTargetTest extends TestCase
 {
     /**
-     * `maskVars` replaces a whole variable, which is no use for a token that sits inside the one variable saying
-     * which page failed (monorepo issue #166).
+     * `maskVars` replaces a whole variable, no use for a token inside the one saying which page failed (monorepo issue
+     * #166).
      */
     public function testTheTokenIsMaskedWhereverTheUrlAppears(): void
     {
@@ -50,8 +50,8 @@ class FileTargetTest extends TestCase
     }
 
     /**
-     * Apache prefixes `REDIRECT_` once per internal redirect, and the two-rewrite shape a project's `.htaccess`
-     * commonly has therefore hands PHP a doubly-prefixed variable no literal name reaches (monorepo issue #197).
+     * Apache prefixes `REDIRECT_` once per internal redirect, so a two-rewrite `.htaccess` hands PHP a doubly-prefixed
+     * variable (monorepo issue #197).
      */
     public function testADoublyPrefixedCredentialVariableIsMasked(): void
     {
@@ -80,9 +80,8 @@ class FileTargetTest extends TestCase
     }
 
     /**
-     * Yii stamps the line with `date()`, which answers in the process time zone — and `Models\User::findIdentity()`
-     * pins that to the account behind the request, so the file held one zone per user and was not even in
-     * chronological order, while the admin reads it back as UTC (monorepo issue #192).
+     * Yii stamps the line with `date()` in the process zone, which `Models\User::findIdentity()` pins per account,
+     * while the admin reads the file as UTC (monorepo issue #192).
      */
     public function testTheTimestampIsWrittenInUtc(): void
     {
@@ -106,10 +105,7 @@ class FileTargetTest extends TestCase
         self::assertStringNotContainsString($local, $message);
     }
 
-    /**
-     * The list the application configures is what the issue is about, so the test reads it off the live target
-     * rather than restating it.
-     */
+    /** Read off the live target rather than restated, since the configured list is what the issue is about. */
     private function getConfiguredContextMessage(): string
     {
         $file = Yii::$app->getLog()->targets['file'];

@@ -49,7 +49,7 @@ class Prompt
     }
 
     /**
-     * @param Closure(array<string, string>): string $text the user message, built from the arguments
+     * @param Closure(array<string, string>): string $text
      */
     public function text(Closure $text): static
     {

@@ -90,10 +90,6 @@ class FileUploadButton extends Widget
         return $this;
     }
 
-    /**
-     * @param string|null $selectOob the htmx `hx-select-oob` list of elements the response also refreshes, such as a
-     * counter outside the target
-     */
     public function selectOob(?string $selectOob): static
     {
         $this->selectOob = $selectOob;

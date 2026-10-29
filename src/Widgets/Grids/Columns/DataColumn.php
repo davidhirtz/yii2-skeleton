@@ -25,8 +25,7 @@ class DataColumn extends Column
     use PropertyTrait;
 
     /**
-     * The closure a caller hands `value()` is typed against whichever model it re-binds the column to, which the
-     * column itself has no way of holding — it applies it to the model the grid gives it.
+     * Typed `mixed`, since the closure is typed against whichever model `value()` re-binds the column to.
      *
      * @var Closure(mixed, string|int=, int=):mixed|null
      */

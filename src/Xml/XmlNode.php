@@ -8,8 +8,7 @@ use SimpleXMLElement;
 use yii\base\InvalidArgumentException;
 
 /**
- * A namespace-aware read of a {@see SimpleXMLElement} tree: an attribute and a child of a prefixed namespace keeps
- * its prefix (`dc:creator`), which the element's own accessors drop because they answer one namespace at a time.
+ * Keeps the prefix of a namespaced attribute or child (`dc:creator`), which {@see SimpleXMLElement} drops.
  */
 class XmlNode
 {

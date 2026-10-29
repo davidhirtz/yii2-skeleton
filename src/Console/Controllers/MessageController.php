@@ -41,8 +41,7 @@ class MessageController extends \yii\console\controllers\MessageController
     }
 
     /**
-     * Yii deletes every message file whose category the run did not produce, so a source path that
-     * misses a call site is silent data loss. Only the owned categories are written, none is deleted.
+     * Writes only the owned categories and deletes none, since Yii deletes every file whose category the run missed.
      *
      * @param array<string, string[]> $messages
      * @param string $dirName
@@ -73,10 +72,7 @@ class MessageController extends \yii\console\controllers\MessageController
     }
 
     /**
-     * The keys of a category that no call site can name, because what holds them is data: the
-     * `auth_item.description` a migration seeds is a {@see \Hirtz\Skeleton\I18n\Message} pointer inside an SQL
-     * string, and the tokenizer reads literal arguments of `Yii::t()` and `Message::make()` alone — so
-     * `removeUnused` dropped every permission description on each run (monorepo issue #211).
+     * Keys only data names (a seeded `auth_item.description` pointer), which `removeUnused` would drop (#211).
      *
      * @return list<string>
      */

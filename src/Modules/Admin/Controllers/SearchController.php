@@ -20,24 +20,22 @@ use yii\web\Response;
 use Hirtz\Skeleton\Modules\Admin\Module;
 
 /**
- * Never scoped to a tenant: users are not scoped to tenants, so an editor sees every tenant's hits. The results are
- * filtered by {@see \Hirtz\Skeleton\Models\Interfaces\SearchableInterface::getSearchResult()} instead.
- */
-/**
+ * Never scoped to a tenant, since users are not:
+ * {@see \Hirtz\Skeleton\Models\Interfaces\SearchableInterface::getSearchResult()} filters instead.
+ *
  * @extends Controller<Module>
  */
 class SearchController extends Controller
 {
     /**
-     * The id the navbar input selects out of the suggest response; the body's inherited `hx-select` would otherwise
-     * replace the whole page on every keystroke.
+     * Selected by the navbar input, since the body's inherited `hx-select` would otherwise swap the whole page.
      */
     final public const string LIST_ID = 'search-results-list';
 
     public int $suggestLimit = 8;
 
     /**
-     * @var int a shorter query would run the `title LIKE` fallback over the whole table on every keystroke
+     * A shorter query would run the `title LIKE` fallback over the whole table on every keystroke.
      */
     public int $suggestMinLength = 2;
     public int $pageSize = 20;
@@ -121,7 +119,7 @@ class SearchController extends Controller
     }
 
     /**
-     * Limited to the classes the user sees, so the pager counts only hits a page can show; `null` when there are none.
+     * Limited to the classes the user sees, so the pager counts only hits a page can show.
      */
     protected function createRequest(string $q, int $limit, int $offset = 0): ?SearchRequest
     {

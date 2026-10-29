@@ -11,14 +11,8 @@ use yii\base\InvalidConfigException;
 use yii\caching\Cache;
 use yii\caching\Dependency;
 
-/**
- * The `sitemap` application component.
- */
 class Sitemap extends Component
 {
-    /**
-     * @var string the key of the sitemap holding {@see static::$urls} and {@see static::$views}.
-     */
     final public const string URLS_KEY = 'urls';
 
     public Cache|string|null $cache = 'cache';
@@ -31,45 +25,38 @@ class Sitemap extends Component
     public array|Dependency|null $dependency = null;
 
     /**
-     * @var callable|string[]|string|null the list of factors that would cause the variation of the sitemap being
-     * cached. Each factor is a string representing a variation (e.g., the language, a GET parameter). This can be also
-     * callable to configure it during application setup:
+     * Read it through {@see getVariations()}, which normalizes a single factor into a list.
      *
-     * `
-     * 'variations' => function () {
-     *       return [Yii::$app->language];
-     *   },
-     * `
-     *
-     * Read it through {@see getVariations()}, which is what normalizes a single factor into a list.
+     * @var callable|string[]|string|null
      */
     public mixed $variations = null;
 
     /**
-     * @var bool whether sitemaps should be split into separate sitemap files. This is necessary for a sitemap which
-     * would exceed 50 MB or 50.000 URLs.
+     * Required for a sitemap that would exceed 50 MB or 50,000 URLs.
      */
     public bool $useSitemapIndex = false;
 
     /**
-     * @var int the maximum number of URLs per sitemap, used to split the URLs into separate sitemaps when
-     * `useSitemapIndex` is set to true. A sitemap can override it via {@see AbstractSitemap::$maxUrlCount}.
+     * A sitemap can override it through {@see AbstractSitemap::$maxUrlCount}.
      */
     public int $maxUrlCount = 50000;
 
     /**
-     * @var array<string, mixed> containing the static views, see {@see UrlSitemap::$views}.
+     * @var array<string, mixed>
+     * @see UrlSitemap::$views
      */
     public array $views = [];
 
     /**
-     * @var list<array<string, mixed>|string> containing additional sitemap URLs, see {@see UrlSitemap::$urls}.
+     * @var list<array<string, mixed>|string>
+     * @see UrlSitemap::$urls
      */
     public array $urls = [];
 
     /**
-     * @var array<array-key, class-string<SitemapInterface>|array{class: class-string<SitemapInterface>, ...}> the class definitions of the
-     * sitemaps. The key is what the sitemap index names the sitemap by, so it should be a stable string.
+     * The key is what the sitemap index names the sitemap by, so it should be a stable string.
+     *
+     * @var array<array-key, class-string<SitemapInterface>|array{class: class-string<SitemapInterface>, ...}>
      */
     public array $sitemaps = [];
 
@@ -149,8 +136,7 @@ class Sitemap extends Component
     }
 
     /**
-     * Generates the URLs of a single sitemap. Without `useSitemapIndex` there is only one, holding every URL, and
-     * both `key` and `offset` are ignored.
+     * Without `useSitemapIndex` there is only one sitemap, and `key` and `offset` are ignored.
      *
      * @return list<array<string, mixed>|string>
      */
@@ -170,8 +156,6 @@ class Sitemap extends Component
     }
 
     /**
-     * Generates an index of sitemap.xml URLs.
-     *
      * @return list<array<string, mixed>|string>
      */
     public function generateIndexUrls(): array

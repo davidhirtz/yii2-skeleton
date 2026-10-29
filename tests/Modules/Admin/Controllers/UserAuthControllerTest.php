@@ -107,9 +107,8 @@ class UserAuthControllerTest extends TestCase
     }
 
     /**
-     * `Rbac\DbManager::assign()` hands back the assignment that is already there rather than failing, so a repeated
-     * assignment is idempotent: no second row, no second trail, and the controller's "already assigned" branch is
-     * never reached.
+     * `Rbac\DbManager::assign()` hands back an existing assignment rather than failing, so a repeat writes no second
+     * row or trail.
      */
     public function testAssigningTwiceIsIdempotent(): void
     {
@@ -348,8 +347,8 @@ class UserAuthControllerTest extends TestCase
     }
 
     /**
-     * The actor holds `authUpdate` alone, so `Web\User::canManageUser()` has to answer for every target and
-     * every item they hand out has to be one they hold themselves.
+     * The actor holds `authUpdate` alone, so `Web\User::canManageUser()` answers for every target and only items they
+     * hold may be handed out.
      */
     private function loginWithAuthUpdateOnly(): User
     {

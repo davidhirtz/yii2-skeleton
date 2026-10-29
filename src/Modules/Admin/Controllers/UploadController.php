@@ -25,12 +25,8 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
- * The upload endpoint of {@see UploadCustomAttribute}, shared by every form that renders such a field: the file is
- * parked in {@see Upload::$tempPath} and the field is answered re-rendered, carrying the token.
- *
- * It is reached from a form the acting user was already allowed to open, which is what the field's signature says —
- * so it is checked here rather than a permission of the model, which the skeleton cannot know. Nothing is published
- * either way: the record's own save is what moves a file out of the temporary directory.
+ * Checks the field's signature rather than a model permission the skeleton cannot know; only the record's save moves
+ * the file out of {@see Upload::$tempPath}.
  *
  * @extends Controller<Module>
  */
@@ -108,9 +104,8 @@ class UploadController extends Controller
     }
 
     /**
-     * A translatable definition is one field per language, and the form builds those by cloning the definition's own
-     * — see {@see \Hirtz\Skeleton\Widgets\Forms\Fieldset::configure()}. The response has to carry the same
-     * container id as the one the form rendered, so the field is bound to the attribute that was asked for.
+     * Bound to the attribute asked for, since the response must carry the container id of the cloned per-language field
+     * ({@see \Hirtz\Skeleton\Widgets\Forms\Fieldset::configure()}).
      */
     protected function createField(
         UploadCustomAttribute $definition,
@@ -133,7 +128,7 @@ class UploadController extends Controller
     }
 
     /**
-     * @return string|null the token, or `null` when the response says what went wrong instead
+     * `null` when the response says what went wrong instead.
      */
     protected function upload(UploadCustomAttribute $definition, Upload $upload): ?string
     {
@@ -183,8 +178,7 @@ class UploadController extends Controller
     }
 
     /**
-     * A record of the right shape, never one from the database: only the definitions are wanted, and the file is not
-     * attached to anything until the form that opened this is saved.
+     * Never one from the database: only the definitions are wanted, and nothing is attached until the form is saved.
      */
     protected function findRecord(string $model, ?int $type): ActiveRecord&CustomAttributeInterface
     {

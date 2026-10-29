@@ -13,8 +13,9 @@ use yii\base\InvalidConfigException;
 class Setup extends Component
 {
     /**
-     * @var array<string, class-string<Seeder>|array{class: class-string<Seeder>}|null> keyed by the key of the setup
-     * file the seeder reads, `null` drops one a bundle registered
+     * `null` drops a seeder a bundle registered.
+     *
+     * @var array<string, class-string<Seeder>|array{class: class-string<Seeder>}|null>
      */
     public array $seeders = [];
 
@@ -69,7 +70,7 @@ class Setup extends Component
     }
 
     /**
-     * @return array<string, Seeder> in the order they run
+     * @return array<string, Seeder>
      */
     protected function getSeeders(): array
     {

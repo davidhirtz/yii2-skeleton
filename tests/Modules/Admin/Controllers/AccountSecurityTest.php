@@ -211,9 +211,8 @@ class AccountSecurityTest extends TestCase
     }
 
     /**
-     * The modal used to set the value through `hx-vars`, which htmx 4 dropped, so the button posted an empty body —
-     * and an empty value is skipped by every validator, so the stored timezone was cleared and the flash still read
-     * as a success (monorepo issue #191).
+     * `hx-vars`, which htmx 4 dropped, left the post empty, which every validator skips, so the timezone was cleared
+     * under a success flash (monorepo issue #191).
      */
     public function testAPostCarryingNoTimezoneIsRefused(): void
     {

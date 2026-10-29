@@ -17,12 +17,8 @@ use yii\web\Session;
 use yii\web\UploadedFile;
 
 /**
- * The `upload` application component: where a file attached to a record is kept, and where one is parked while the
- * record it belongs to is still being filled in.
- *
- * A file is uploaded before the record exists, so it lands in {@see Upload::$tempPath} under a token first and is
- * moved into place once the record has an id. The temporary files are collected by `upload/clear` and, with
- * {@see Upload::$gcProbability}, by the upload action itself.
+ * A file is uploaded before its record exists, so it waits in {@see Upload::$tempPath} under a token until the record
+ * has an id.
  *
  * @see \Hirtz\Skeleton\Models\CustomAttributes\UploadCustomAttribute
  */
@@ -34,80 +30,55 @@ class Upload extends Component
 
     private const string TOKEN_PATTERN = '/^[\w-]{' . self::TOKEN_LENGTH . '}_[\w-]+\.[a-zA-Z0-9]+$/';
 
-    /**
-     * @var string where the attached files are kept, an alias or an absolute path. It must be readable by the web
-     * server for {@see Upload::getUrl()} to resolve.
-     */
     public string $path = '@webroot/attachments';
 
-    /**
-     * @var string|null the URL the path is served under, defaults to the path's location below `@webroot`. A CDN
-     * serving the directory is named here.
-     */
     public ?string $baseUrl = null;
 
     /**
-     * @var string where an upload waits: the chunks {@see \Hirtz\Skeleton\Web\ChunkedUploadedFile} assembles, and
-     * the completed file an attachment parks until its record exists. One directory for both, so there is one place
-     * to look and one collector to reason about.
+     * Holds both the chunks {@see \Hirtz\Skeleton\Web\ChunkedUploadedFile} assembles and parked attachments, so there
+     * is one collector to reason about.
      */
     public string $tempPath = '@runtime/uploads';
 
-    /**
-     * @var int how long a file nobody claimed is kept, in seconds.
-     */
     public int $tempLifetime = 86400;
 
     /**
-     * @var bool whether an upload request also collects what earlier ones abandoned. A small installation has no
-     * cron to run `upload/clear` with, and an upload is the only moment at which the directory is known to matter.
+     * An upload request also collects what earlier ones abandoned, since a small installation has no cron for
+     * `upload/clear`.
+     *
      * @see Upload::collectGarbageOncePerSession()
      */
     public bool $enableGarbageCollection = true;
 
     /**
-     * @var int the ceiling no definition may raise, in bytes.
+     * A ceiling no definition may raise.
      */
     public int $maxSize = 67108864;
 
     /**
-     * @var bool whether a file may be imported from a URL at all {@see \Hirtz\Skeleton\Web\StreamUploadedFile}.
-     * The server, not the browser, issues that request, so an installation with no use for it turns it off here.
+     * The server, not the browser, issues the import request, so an installation with no use for it turns it off.
      */
     public bool $enableStreamUploads = true;
 
     /**
-     * @var bool whether an import may reach a loopback, private or reserved address. Off, because the URL comes
-     * from a form: a cloud metadata endpoint and the rest of the network are one request away otherwise.
+     * Off, since the URL comes from a form and a cloud metadata endpoint would be one request away.
      */
     public bool $allowPrivateStreamUploadHosts = false;
 
-    /**
-     * @var int how long an import may wait for the far end, in seconds.
-     */
     public int $streamUploadTimeout = 10;
 
-    /**
-     * @var int the largest body an import accepts, in bytes.
-     */
     public int $maxStreamUploadSize = 67108864;
 
     /**
-     * @var int how many redirect hops an import follows. Each is resolved and checked again, since an allow list
-     * applied to the submitted URL alone would not survive one.
+     * Each hop is resolved and checked again, since an allow list on the submitted URL alone would not survive one.
      */
     public int $maxStreamUploadRedirects = 5;
 
     /**
-     * @var int how many uploads one user may start per {@see Upload::$uploadLimitDuration}, `0` disables the limit.
-     * The endpoint is reached from every form that renders an upload field, and a definition declaring no
-     * permission lets any account that may open one write to the temporary directory.
+     * `0` disables the limit, which guards a temporary directory any account opening an upload field may write to.
      */
     public int $uploadLimit = 120;
 
-    /**
-     * @var int the window the limit is counted over, in seconds.
-     */
     public int $uploadLimitDuration = 3600;
 
     public static function getComponent(): self
@@ -135,8 +106,7 @@ class Upload extends Component
     }
 
     /**
-     * The attribute name is hashed rather than spelled out: the directory is public and the column it would
-     * otherwise name is not.
+     * The attribute name is hashed, since the directory is public and the column it would name is not.
      */
     public function getAttributePath(ActiveRecord $owner, string $attribute): string
     {
@@ -155,8 +125,7 @@ class Upload extends Component
     }
 
     /**
-     * Moves what the upload action parked under the token into the record's own directory, replacing whatever was
-     * there — an attribute holds one file.
+     * Replaces whatever was there, since an attribute holds one file.
      */
     public function store(ActiveRecord $owner, string $attribute, string $token): ?string
     {
@@ -194,16 +163,13 @@ class Upload extends Component
     }
 
     /**
-     * Removes every file the record holds, including those of attributes its current type no longer declares.
+     * Includes the files of attributes the record's current type no longer declares.
      */
     public function deleteRecord(ActiveRecord $owner): void
     {
         FileHelper::removeDirectory($this->getRecordPath($owner));
     }
 
-    /**
-     * @return string|null the token the field carries until the record is saved
-     */
     public function createTempFile(UploadedFile $upload): ?string
     {
         $token = Yii::$app->getSecurity()->generateRandomString(self::TOKEN_LENGTH)
@@ -237,9 +203,8 @@ class Upload extends Component
     }
 
     /**
-     * A token and a stored filename share the attribute, so they have to be told apart by shape: the random part is
-     * joined by an underscore, which {@see static::createFilename()} never writes at that position — a hyphen would
-     * make a slugged name such as `verbos-espanoles-tabelle.pdf` read as a token.
+     * The random part is joined by an underscore, which {@see static::createFilename()} never writes there, since a
+     * hyphen would make a slugged filename read as a token.
      */
     public function isToken(mixed $token): bool
     {
@@ -251,18 +216,13 @@ class Upload extends Component
         return substr($token, self::TOKEN_LENGTH + 1);
     }
 
-    /**
-     * @return string the name behind an attribute value, whichever of the two it is
-     */
     public function getFilename(string $value): string
     {
         return $this->isToken($value) ? $this->getFilenameFromToken($value) : $value;
     }
 
     /**
-     * The upload action is reached from every form that renders such a field, so what the field was allowed to offer
-     * travels with the request rather than being taken from it. The acting user is part of it: a signature is not a
-     * capability to hand on.
+     * Signs what the field may offer, the acting user included, since a signature is not a capability to hand on.
      */
     public function sign(string $modelClass, string $attribute, ?int $type = null): string
     {
@@ -315,9 +275,8 @@ class Upload extends Component
     }
 
     /**
-     * @return string the sanitized name the file is stored and offered for download under. A name that survives
-     * neither the slug nor an extension is answered as one {@see Upload::isToken()} refuses, so the upload is
-     * reported rather than silently dropped later.
+     * A name surviving neither the slug nor an extension is answered as one {@see Upload::isToken()} refuses, so the
+     * upload is reported rather than dropped later.
      */
     public function createFilename(UploadedFile $upload): string
     {
@@ -341,8 +300,7 @@ class Upload extends Component
     }
 
     /**
-     * Counted per account rather than per IP: the endpoint is behind a login, and an office behind one address
-     * would otherwise share one budget.
+     * Counted per account, since an office behind one IP would otherwise share one budget.
      *
      * @return list<string>
      */

@@ -17,10 +17,11 @@ class BatchInsertQueryBuild
     public readonly Command $command;
 
     /**
+     * `$columns` holds the rows when `$rows` is omitted.
+     *
      * @param class-string<ActiveRecord> $modelClass
-     * @param list<string>|list<array<string, mixed>> $columns the column names, or the rows when `$rows` is omitted
-     * @param list<array<string, mixed>>|null $rows the rows to be batch-inserted into the table
-     * @param bool $ignore whether records should be inserted regardless of previous errors or existing primary keys
+     * @param list<string>|list<array<string, mixed>> $columns
+     * @param list<array<string, mixed>>|null $rows
      */
     public function __construct(string $modelClass, array $columns, ?array $rows = null, bool $ignore = false)
     {

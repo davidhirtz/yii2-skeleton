@@ -15,7 +15,7 @@ class IconHelper
 
     /**
      * @param array<string, mixed> $options
-     * @return array<string, string> the humanized name per filename
+     * @return array<string, string>
      */
     public static function getIconFilenames(string $path, ?array $options = null): array
     {

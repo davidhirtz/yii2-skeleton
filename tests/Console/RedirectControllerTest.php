@@ -22,8 +22,7 @@ class RedirectControllerTest extends TestCase
     }
 
     /**
-     * The shape the cms writes: the request side names the tenant's host, the target is relative to it, so the
-     * two columns never compare equal as strings and only the host list makes the loop visible.
+     * The cms writes a host-qualified request URI and a relative target, so only the host list shows the loop.
      */
     public function testAHostQualifiedSelfRedirectIsDeleted(): void
     {
@@ -56,8 +55,7 @@ class RedirectControllerTest extends TestCase
     }
 
     /**
-     * A redirect into a cycle is broken too, but it is not the broken part: deleting it would throw away a
-     * request URI that works again the moment the cycle is gone.
+     * Deleting it would throw away a request URI that works again the moment the cycle is gone.
      */
     public function testARedirectLeadingIntoACycleIsReportedAndKept(): void
     {

@@ -8,8 +8,7 @@ use Hirtz\Skeleton\Upload\Upload;
 use Override;
 
 /**
- * An upload whose bytes arrived inside a request, such as an MCP call's base64 argument: the name is the caller's,
- * so only its basename is kept, and the size is held to {@see Upload::$maxStreamUploadSize} like a fetched URL's.
+ * The name is the caller's, so only its basename is kept; the size is held to {@see Upload::$maxStreamUploadSize}.
  */
 class ContentUploadedFile extends AbstractUploadedFile
 {

@@ -17,9 +17,8 @@ use yii\console\controllers\HelpController as BaseHelpController;
 class HelpController extends BaseHelpController
 {
     /**
-     * Yii reflects the controller classes it finds by scanning the filesystem, but adds every `controllerMap` key
-     * unchecked and lets `getCommands()` instantiate it to find out what it is. The admin module maps web
-     * controllers, which cannot be constructed while the console application has no `user` component.
+     * Yii instantiates every `controllerMap` entry to classify it, and the admin module maps web controllers that
+     * cannot be built without a `user` component.
      *
      * @return string[]
      */

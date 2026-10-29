@@ -38,16 +38,14 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property DateTime|null $email_confirmed_at
  * @property string|null $password_hash
- * @property string|null $password_scheme which scheme the hash was written with —
- *     {@see static::PASSWORD_PEPPER} or `null`
+ * @property string|null $password_scheme
  * @property string $language
  * @property string|null $timezone
  * @property bool|int $show_hints
- * @property string|null $color_scheme `light`, `dark`, or `null` to follow the browser
+ * @property string|null $color_scheme
  * @property string|null $auth_key
- * @property string|null $two_factor_secret the encrypted secret, reached through
- *     {@see static::getTwoFactorAuthenticationSecret()}
- * @property int|null $two_factor_timeslice the TOTP timeslice the last accepted code matched
+ * @property string|null $two_factor_secret
+ * @property int|null $two_factor_timeslice
  * @property bool|int $is_owner
  * @property int|null $created_by_user_id
  * @property int $login_count
@@ -55,7 +53,7 @@ use yii\web\IdentityInterface;
  * @property DateTime|null $updated_at
  * @property DateTime $created_at
  *
- * @property-read User|null $created {@see static::getCreated()}
+ * @property-read User|null $created
  *
  * @mixin TrailBehavior
  */
@@ -69,8 +67,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     use TrailModelTrait;
 
     /**
-     * The role markers of {@see \yii\filters\AccessRule}, which a permission name can be mixed with wherever
-     * roles are declared — an `AccessRule` and {@see \Hirtz\Skeleton\Widgets\Traits\VisibilityTrait} alike.
+     * A role marker of {@see \yii\filters\AccessRule}, mixable with permission names wherever roles are declared.
      */
     final public const string ROLE_ANY = '*';
     final public const string ROLE_AUTHENTICATED = '@';
@@ -80,32 +77,26 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     final public const string AUTH_ROLE_ADMIN = 'admin';
 
     /**
-     * Holds every permission the installation has but the installation-level ones — `system` and `tenant` are
-     * {@see static::AUTH_ROLE_ADMIN}'s alone. A role lists the permissions themselves, never another role, so
-     * the two are separate lists and neither inherits the other: a guard an administrator should also pass has
-     * to name both.
+     * Roles never inherit, and `system` and `tenant` are {@see static::AUTH_ROLE_ADMIN}'s alone: a guard an
+     * administrator should also pass names both roles.
      */
     final public const string AUTH_ROLE_MANAGER = 'manager';
 
     /**
-     * Recorded in `password_scheme` for a hash written with the `passwordPepper` param, which is what lets a
-     * pepper be added, removed or rotated on a running installation: a hash whose scheme disagrees with the
-     * configured pepper is outdated, not broken, and the next successful login rewrites it.
+     * A hash whose scheme disagrees with the configured `passwordPepper` is outdated, not broken: the next
+     * successful login rewrites it.
      */
     final public const string PASSWORD_PEPPER = 'pepper';
 
     /**
-     * The two schemes a request can pin. Anything else — `null`, an empty column, a cookie holding a value no
-     * longer offered — means the browser's own `prefers-color-scheme` decides, which is why there is no third
-     * constant: the absence *is* the third state.
+     * Anything else, `null` included, leaves the scheme to the browser's `prefers-color-scheme`.
      */
     final public const string COLOR_SCHEME_LIGHT = 'light';
     final public const string COLOR_SCHEME_DARK = 'dark';
     final public const array COLOR_SCHEMES = [self::COLOR_SCHEME_LIGHT, self::COLOR_SCHEME_DARK];
 
     /**
-     * Marks a secret written by {@see static::encryptTwoFactorAuthenticationSecret()}, so a row that predates the
-     * encryption is still readable.
+     * Marks an encrypted secret, so a row that predates the encryption is still readable.
      */
     private const string ENCRYPTED_PREFIX = 'enc:';
 
@@ -115,40 +106,23 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     final public const int RECOVERY_CODE_COUNT = 8;
 
-    /**
-     * @var int the minimum length for the username
-     */
     public int $nameMinLength = 3;
 
-    /**
-     * @var int the maximum length for the username
-     */
     public int $nameMaxLength = 32;
 
-    /**
-     * @var string|false the pattern for the username, set false to disable pattern validation
-     */
     public string|false $namePattern = '/^\d*[a-z][a-z0-9\.-]*[a-z0-9]$/si';
 
-    /**
-     * @var int the minimum length for the password
-     */
     public int $passwordMinLength = 8;
 
     /**
-     * @var int the maximum length for the password. bcrypt silently truncates at 72 bytes, so anything past it is
-     * not part of the password and must not be accepted as if it were.
+     * bcrypt silently truncates at 72 bytes, so nothing longer may be accepted as if it were the password.
      */
     public int $passwordMaxLength = 72;
 
-    /**
-     * @var bool whether the name is required
-     */
     public bool $requireName = true;
 
     /**
-     * @var int how long a verification or password reset token stays valid, in seconds. A token also lives in the
-     * user's inbox and in every mail archive along the way, so it must not be usable forever.
+     * A token lives on in every mail archive along the way, so it must not be usable forever.
      */
     public int $tokenLifetime = 86400;
 
@@ -257,9 +231,8 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
-     * True while the stored hash was written under a scheme the application no longer uses — a legacy per-user
-     * salt, a pepper that has since been added or removed, or a cost below the security component's current one.
-     * A successful login is where it gets rewritten.
+     * True for a legacy salt, a pepper added or removed since, or a cost below the security component's current
+     * one; a successful login rewrites it.
      */
     public function isPasswordHashOutdated(): bool
     {
@@ -297,8 +270,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
-     * A token was sent to the address the account had and proves nothing about a new one, and a reset link must
-     * not outlive the password it was meant to replace.
+     * A token proves nothing about a new address, and a reset link must not outlive the password it was to replace.
      *
      * @param array<string, mixed> $changedAttributes
      */
@@ -395,9 +367,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
 
     /**
      * The optional `passwordPepper` param is a secret the database does not hold, so a leaked hash cannot be
-     * attacked offline. Which scheme a given hash used is recorded in `password_scheme`, so adding, changing or
-     * removing the pepper never locks anyone out of an account they can still type the password for — it only
-     * marks the hash outdated.
+     * attacked offline.
      */
     private function getSeasonedPassword(string $password): string
     {
@@ -420,7 +390,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
-     * @return string the token in the clear, which is the only time it exists — the row keeps its HMAC
+     * The only time the token exists in the clear: the row keeps its HMAC.
      */
     public function createVerificationToken(): string
     {
@@ -428,7 +398,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
-     * @return string the token in the clear, which is the only time it exists — the row keeps its HMAC
+     * The only time the token exists in the clear: the row keeps its HMAC.
      */
     public function createPasswordResetToken(): string
     {
@@ -505,8 +475,9 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
-     * @return list<string> the codes in the clear, which is the only time they can be shown — only their hashes
-     *     are kept
+     * The only time the codes can be shown: only their hashes are kept.
+     *
+     * @return list<string>
      */
     public function generateTwoFactorAuthenticationRecoveryCodes(): array
     {
@@ -605,8 +576,8 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
-     * Deliberately unscoped to the record: the update action renders a user the acting one may not change
-     * read-only, so hiding the site owner from the results would only lose the link to them.
+     * Unscoped on purpose: the update action renders a user the acting one may not change read-only, so hiding the
+     * owner would only lose the link to them.
      */
     protected function isSearchResultVisible(): bool
     {
@@ -629,9 +600,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
-     * Creates the token as a side effect: only its HMAC is kept, so the URL cannot be rebuilt afterwards. The
-     * address is no longer a parameter — the token finds its own user, and the URL travels through mailboxes,
-     * archives and referrers where an address has no business being.
+     * Creates the token as a side effect: only its HMAC is kept, so the URL cannot be rebuilt afterwards.
      *
      * @see AccountController::actionConfirm()
      */
@@ -695,8 +664,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     }
 
     /**
-     * The owner's star is not a status, so there is nothing to cycle through, and disabling your own account would
-     * log you out. No `#[Override]`: the method comes from a trait this class uses itself.
+     * No `#[Override]`: the method comes from a trait this class uses itself.
      */
     public function isStatusUpdatable(): bool
     {
@@ -755,17 +723,14 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return (bool)$this->show_hints;
     }
 
-    /**
-     * The scheme this account pins, or `null` for the browser's own.
-     */
     public function getColorScheme(): ?string
     {
         return in_array($this->color_scheme, self::COLOR_SCHEMES, true) ? $this->color_scheme : null;
     }
 
     /**
-     * Read by {@see DynamicRangeValidator} and {@see \Hirtz\Skeleton\Widgets\Forms\Fields\SelectField}, both
-     * of which resolve `get<Plural>()` off the model. The empty value is the select's prompt, not an item here.
+     * Resolved as `get<Plural>()` by {@see DynamicRangeValidator} and the `SelectField`; the empty value is the
+     * select's prompt, not an item here.
      *
      * @noinspection PhpUnused
      * @return array<string, string>

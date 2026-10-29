@@ -9,8 +9,7 @@ use Override;
 trait UserFormTrait
 {
     /**
-     * A form that renders no field of its own — the account settings — is still loaded through the user, which is
-     * the only model the request carries.
+     * A form rendering no field of its own is still loaded through the user, the only model the request carries.
      *
      * @param array<string, mixed> $data
      */
@@ -57,10 +56,10 @@ trait UserFormTrait
     }
 
     /**
-     * A form that renders only some of the user's fields must name them here, or the others can still be set through
-     * a crafted request.
+     * A form rendering only some of the user's fields names them here, or a crafted request sets the others; `null`
+     * loads every safe attribute.
      *
-     * @return list<string>|null the loadable user attributes, `null` for every safe attribute
+     * @return list<string>|null
      */
     protected function getUserAttributeNames(): ?array
     {

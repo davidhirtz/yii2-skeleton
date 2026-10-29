@@ -18,41 +18,32 @@ class UrlManager extends \yii\web\UrlManager
     public const string EVENT_BEFORE_PARSE = 'beforeParse';
 
     /**
-     * @var string|false the subdomain indicating a draft version of the application. Further validation should
-     * be done on the controller level.
+     * Further validation is the controller's.
      */
     public string|false $draftSubdomain = 'draft';
 
     /**
-     * @var bool whether the draft subdomain serves logged-in users only. Off by default: the draft content is then
-     * protected by nothing but its host name, unless the web server guards it.
+     * Off by default, so the draft content is protected by nothing but its host name unless the web server guards it.
      */
     public bool $draftRequiresLogin = false;
 
-    /**
-     * @var bool whether the language should be added to the URL via `languageParam`.
-     */
     public bool $i18nUrl = false;
 
     /**
-     * @var array<string, string>|null containing the languages available for `i18nUrl`, the language identifier as key and the
-     * language param as value (e.g. ['en-US' ⇒ 'en']). Defaults to languages set in the I18n component.
+     * Language ⇒ URL param (`['en-US' => 'en']`); `null` takes the I18N component's languages.
+     *
+     * @var array<string, string>|null
      */
     public ?array $languages = null;
 
     /**
-     * @var string|null the language to fall back to when `i18nUrl` is disabled or no language prefix is present.
-     * With `i18nUrl` it is also the language for which no prefix is added to the path. When `null` (the default), the
-     * language is detected from the browser via `Request::getPreferredLanguage()`.
+     * Also the language without a path prefix under `i18nUrl`; `null` detects it from the browser.
      */
     public ?string $defaultLanguage = null;
 
     /**
-     * @var array<string, array{url?: string, request?: string, code?: int}|string> containing hard redirects, either as request URI ⇒ URL pairs, which generate regular 301 redirects
-     * or as arrays containing the request URIs as an array in array key `request`, the target URL as the key `url`
-     * and optional the redirect code (defaults to 301) as `status`.
-     *
-     * If dynamic redirects are necessary, please take a look at {@see \Hirtz\Skeleton\Models\Redirect}.
+     * @var array<string, array{url?: string, request?: string, code?: int}|string>
+     * @see \Hirtz\Skeleton\Models\Redirect
      */
     public array $redirectMap = [];
 
@@ -161,11 +152,6 @@ class UrlManager extends \yii\web\UrlManager
     }
 
     /**
-     * A host set in the configuration is the canonical one: the request's never replaces it.
-     *
-     * @param string|null $value
-     */
-    /**
      * @param string|null $value
      */
     #[Override]
@@ -178,6 +164,11 @@ class UrlManager extends \yii\web\UrlManager
         }
     }
 
+    /**
+     * A host set in the configuration is the canonical one: the request's never replaces it.
+     *
+     * @param string|null $value
+     */
     #[Override]
     public function setHostInfo($value): void
     {
@@ -191,8 +182,7 @@ class UrlManager extends \yii\web\UrlManager
     }
 
     /**
-     * Whether absolute URLs name the host the request claimed, since neither the configuration nor anything after
-     * it pinned one.
+     * True when nothing pinned a host, so absolute URLs name the one the request claimed.
      */
     public function isHostInfoFromRequest(): bool
     {
@@ -407,8 +397,6 @@ class UrlManager extends \yii\web\UrlManager
     }
 
     /**
-     * Generates a list of rule parameters at given position. This can be used to validate dynamic slugs, etc.
-     *
      * @return list<string>
      */
     public function getImmutableRuleParams(int $position = 0): array

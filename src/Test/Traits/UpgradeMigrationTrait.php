@@ -8,27 +8,12 @@ use Yii;
 use yii\db\Migration;
 
 /**
- * Loads a v2 → v3 migration from the `davidhirtz/yii2-upgrade` checkout beside this one.
- *
- * `v3-migration-squash.md` §4 moved those migrations out of the bundles: a bundle that keeps them carries v2
- * trivia in every release forever, and a new project should install one migration rather than a dozen. Their
- * **tests stay here**, because the thing that runs them is here — the application, the fixtures, a database
- * with the v3 schema — and the upgrade repository has none of it.
- *
- * So the test loads the file rather than autoloading the class. The import copies them verbatim, namespace
- * included, so the class name is the one it always was.
- *
- * It skips when the checkout is not there, the way the upgrade repository's own tests skip without this one.
+ * Loads the file rather than autoloading the class, and skips when the `davidhirtz/yii2-upgrade` checkout beside this
+ * one is absent.
  */
 trait UpgradeMigrationTrait
 {
-    /**
-     * Creates a v2 table the upgrade copies away, so a test can replay that copy.
-     *
-     * The baselines do not create these -- a fresh install has nothing to copy, and a baseline must not
-     * recreate a legacy table -- so the test that exercises the copy arranges its own source, the way it
-     * already arranges the count column beside it.
-     */
+    /** The baselines never create these v2 tables, so a test of the upgrade's copy arranges its own source. */
     protected function createLegacyTable(string $table): void
     {
         $db = Yii::$app->getDb();
@@ -53,8 +38,7 @@ trait UpgradeMigrationTrait
     }
 
     /**
-     * The class is named as a string, never `X::class`: a standalone bundle checkout has no upgrade checkout
-     * beside it, so PHPStan there does not know the class, while the monorepo scans it.
+     * Named as a string, never `X::class`, since PHPStan in a standalone checkout does not know the class.
      *
      * @param array<string, mixed> $config
      */
@@ -82,8 +66,8 @@ trait UpgradeMigrationTrait
     }
 
     /**
-     * Walked rather than counted: this trait is read from a bundle's tests, from the monorepo and from a
-     * standalone checkout, and the number of levels up is different in each.
+     * Walked rather than counted, since the trait is read from a bundle, the monorepo and a standalone checkout at
+     * different depths.
      */
     private function findUpgradeFile(string $path): string
     {

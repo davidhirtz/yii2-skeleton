@@ -16,7 +16,7 @@ use yii\helpers\ArrayHelper;
  * @property int $lft
  * @property int $depth
  *
- * @property-read static|null $parent {@see static::getParent()}
+ * @property-read static|null $parent
  *
  * @mixin ActiveRecord
  */
@@ -79,9 +79,6 @@ trait NestedTreeTrait
         }
     }
 
-    /**
-     * @return self|null
-     */
     public function getFirstAncestor(): ?self
     {
         if ($this->parent_id) {
@@ -143,8 +140,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * A record that is not in the tree yet has no `lft` / `rgt`, which made the division return a float and the
-     * declared `int` return type throw.
+     * A record not in the tree yet has no `lft` / `rgt`, which made the division a float and the `int` return throw.
      */
     public function getBranchCount(): int
     {
@@ -191,9 +187,6 @@ trait NestedTreeTrait
         $this->parent_id = $parent ? (int)$parent->getPrimaryKey() : null;
     }
 
-    /**
-     * Updates the tree before insert or update.
-     */
     public function updateTreeBeforeSave(): void
     {
         if ($this->getIsNewRecord()) {
@@ -286,8 +279,8 @@ trait NestedTreeTrait
     }
 
     /**
-     * Every insert and delete shifts the `lft` and `rgt` of the records to its right, so a record that has been held
-     * in memory since before one of those carries stale bounds — and a move computes every counter relative to them.
+     * Every insert and delete shifts the bounds of the records to its right, so a record held in memory since carries
+     * stale ones, which a move computes every counter from.
      */
     private function refreshTreeAttributes(): void
     {
@@ -302,9 +295,6 @@ trait NestedTreeTrait
         }
     }
 
-    /**
-     * Updates the tree after delete.
-     */
     public function updateNestedTreeAfterDelete(): void
     {
         // Update branch, then right side.
@@ -313,7 +303,7 @@ trait NestedTreeTrait
     }
 
     /**
-     * Deletes the nested records one by one, triggering all related active record events.
+     * One by one, so every related active record event is triggered.
      */
     public function deleteNestedTreeItems(): void
     {

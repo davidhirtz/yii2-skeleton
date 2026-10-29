@@ -86,9 +86,6 @@ class GrantGridView extends GridView
             ]);
     }
 
-    /**
-     * Names the address to connect with, which nothing else in the admin shows.
-     */
     #[Override]
     protected function getSummary(): ?GridSummary
     {

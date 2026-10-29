@@ -84,7 +84,7 @@ class DirectoryAlert extends Widget
     }
 
     /**
-     * @return list<string> the resolved paths, since that is what has to be created or chmodded.
+     * @return list<string>
      */
     protected function findUnwritableDirectories(): array
     {

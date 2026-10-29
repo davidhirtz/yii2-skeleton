@@ -10,15 +10,13 @@ use Yii;
 use yii\base\Component;
 
 /**
- * The `search` application component. Searchable classes are registered by each bundle's
- * `Bootstrap::getDefaultConfig()` (`search.models`), never discovered by scanning: a model nobody configured would be
- * missed either way.
+ * Searchable classes are registered through `search.models`, never discovered, since a scan would miss an
+ * unconfigured model anyway.
  */
 class Search extends Component
 {
     /**
-     * @var array<array-key, class-string<SearchableInterface>|float> the searchable classes, either as a list or
-     * keyed by class with a weight overriding {@see SearchableInterface::getSearchWeight()}
+     * @var array<array-key, class-string<SearchableInterface>|float>
      */
     public array $models = [];
 
@@ -72,8 +70,7 @@ class Search extends Component
     }
 
     /**
-     * Records are instantiated through the container, so the class asking is usually a project subclass of the
-     * class a bundle registered; the lookup walks up to it.
+     * Walks up to the registered class, since the container usually resolves a project subclass of it.
      *
      * @param class-string<SearchableInterface> $modelClass
      */
@@ -91,9 +88,6 @@ class Search extends Component
     }
 
     /**
-     * The class the documents of `$modelClass` are stored under: the registered class it is or extends, or itself when
-     * none is registered.
-     *
      * @param class-string<SearchableInterface> $modelClass
      * @return class-string<SearchableInterface>
      */

@@ -11,9 +11,8 @@ use yii\base\Configurable;
 use yii\base\InvalidConfigException;
 
 /**
- * Yii's container assigns a definition's properties from outside unless the class is `Configurable`, which a class
- * with protected options cannot survive: such a class implements it and passes its constructor's config to
- * `configureProperties()`.
+ * Yii's container assigns properties from outside unless the class is `Configurable`, so a class with protected
+ * options implements it and passes its constructor's config to `configureProperties()`.
  */
 trait ContainerConfigurationTrait
 {

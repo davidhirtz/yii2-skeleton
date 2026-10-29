@@ -13,24 +13,20 @@ use yii\validators\Validator;
 class RelationValidator extends Validator
 {
     /**
-     * @var string|null the relation name, leave empty to guess from attribute name.
+     * Guessed from the attribute name when empty.
      */
     public ?string $relation = null;
 
     /**
-     * @var bool whether validator should skip on empty. This defaults to `false` to typecast value and generate
-     * an error if `required` is `true`.
+     * Off, so an empty value is still typecast and `required` can add its error.
+     *
+     * @var bool
      */
     public $skipOnEmpty = false;
 
-    /**
-     * @var bool whether an error should be added when `attribute` is empty.
-     */
     public bool $required = false;
 
     /**
-     * Typecasts attribute and validates relation.
-     *
      * @param ActiveRecord $model
      * @param string $attribute
      */
@@ -66,9 +62,6 @@ class RelationValidator extends Validator
         }
     }
 
-    /**
-     * Not supported.
-     */
     #[\Override]
     public function validate($value, &$error = null): bool
     {

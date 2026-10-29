@@ -7,18 +7,16 @@ namespace Hirtz\Skeleton\Helpers;
 use yii\web\Cookie;
 
 /**
- * A cookie's identity is its name *and* its scope, so a `Domain` the installation has since gained, lost or changed
- * leaves a twin of the same name that no scoped write ever reaches — and `$_COOKIE` keeps the *first* of the two the
- * browser sends, which is the stale one. {@see \yii\web\CookieCollection} is keyed by name alone, so the deletion
- * cannot go through it and is sent as a header of its own.
+ * A twin under a stale `Domain` wins `$_COOKIE`, and `CookieCollection` is keyed by name alone, so its deletion is a
+ * header of its own.
  */
 class CookieHelper
 {
     /**
-     * A tenant writes `Domain=www.example.com`, a `cookieDomain` param `Domain=.example.com`, so the twin may sit
-     * on any parent domain of the host as well as host-only (monorepo issue #555).
+     * A tenant writes `Domain=www.example.com`, a `cookieDomain` param `.example.com`, so the twin may sit host-only
+     * or on any parent domain (#555); the scope `$cookie` is written under is left out.
      *
-     * @return list<string> a deletion for every scope at `$host` but the one `$cookie` is written under
+     * @return list<string>
      */
     public static function getExpiredTwinHeaders(Cookie $cookie, string $host): array
     {

@@ -90,9 +90,8 @@ class MigrationHistoryTest extends TestCase
     }
 
     /**
-     * A history naming a class that cannot be loaded is how a database that predates the v3 namespace rename
-     * is recognised. `Console\Controllers\MigrateController` refuses to run against one, because Yii would
-     * treat every migration as new and build the schema again over populated tables.
+     * `Console\Controllers\MigrateController` refuses such a history, since Yii would build the schema again over
+     * populated tables.
      */
     public function testAnAppliedMigrationWhoseClassIsGoneIsUnresolved(): void
     {
@@ -112,10 +111,8 @@ class MigrationHistoryTest extends TestCase
     }
 
     /**
-     * `class_exists()` returns false for a class that is simply absent and **throws** for one whose file is
-     * found and cannot be declared. That is the shape of a project migration still using a trait v3 removed,
-     * so the throw would come from inside the guard that exists to report it — and `./yii migrate` would die
-     * with a stack trace on the upgrade deploy, with maintenance mode left on.
+     * `class_exists()` throws for a file that cannot be declared, so `./yii migrate` would die on the upgrade deploy
+     * with maintenance mode left on.
      */
     public function testAnAppliedMigrationWhoseClassCannotBeDeclaredIsUnresolvedRatherThanFatal(): void
     {
@@ -133,8 +130,7 @@ class MigrationHistoryTest extends TestCase
     }
 
     /**
-     * A class whose file is on disk and whose trait is not. Autoloaded from `@runtime` rather than committed,
-     * so no fixture of this repository is a file PHP cannot declare.
+     * Autoloaded from `@runtime` rather than committed, so no fixture of this repository is a file PHP cannot declare.
      */
     private function registerUndeclarableClass(): string
     {

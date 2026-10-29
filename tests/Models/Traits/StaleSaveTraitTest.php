@@ -13,9 +13,6 @@ use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Override;
 use Yii;
 
-/**
- * Two editors on one record: the one saving second is told, instead of overwriting the first.
- */
 class StaleSaveTraitTest extends TestCase
 {
     use UserFixtureTrait;

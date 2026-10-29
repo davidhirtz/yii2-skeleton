@@ -65,14 +65,14 @@ use yii\web\JqueryAsset;
 trait ApplicationTrait
 {
     /**
-     * @var list<string> the params holding secrets, each bundle appending its own through its default config: a form
-     * editing one masks it ({@see \Hirtz\Skeleton\Validators\SensitiveAttributeValidator}), and so does the trail.
+     * Masked by a form editing one ({@see \Hirtz\Skeleton\Validators\SensitiveAttributeValidator}) and by the trail.
+     *
+     * @var list<string>
      */
     public array $sensitiveParams = [];
 
     /**
-     * Collected under both SAPIs, so `Db\MigrationHistory` can report pending migrations from a web request;
-     * `Console\Controllers\MigrateController` takes its namespaces from here.
+     * Collected under both SAPIs, so `Db\MigrationHistory` can report pending migrations from a web request.
      *
      * @var list<string>
      */
@@ -321,8 +321,7 @@ trait ApplicationTrait
     }
 
     /**
-     * Composer never lists the root package in `vendor/yiisoft/extensions.php`, so a bundle installed on its own
-     * — which is how a project's Composer sees every bundle but the one it is testing — has to be wired up here.
+     * Composer never lists the root package in `vendor/yiisoft/extensions.php`, so a bundle on its own is wired up here.
      *
      * @param array<string, mixed> $config
      */

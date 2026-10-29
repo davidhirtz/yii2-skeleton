@@ -9,12 +9,12 @@ use yii\base\BaseObject;
 abstract class AbstractSitemap extends BaseObject implements SitemapInterface
 {
     /**
-     * @var Sitemap|null the component this sitemap was created by, assigned by {@see Sitemap::getSitemaps()}.
+     * Assigned by {@see Sitemap::getSitemaps()}.
      */
     public ?Sitemap $sitemap = null;
 
     /**
-     * @var int|null the maximum number of URLs per page, defaults to {@see Sitemap::$maxUrlCount}.
+     * Defaults to {@see Sitemap::$maxUrlCount}.
      */
     public ?int $maxUrlCount = null;
 

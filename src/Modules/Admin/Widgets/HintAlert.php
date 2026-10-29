@@ -13,8 +13,7 @@ use Override;
 use Stringable;
 
 /**
- * Explains a page whose model is not self-evident — a block, a permission, a redirect. Every one of them is
- * switched off at once by the account's `show_hints`, so a view renders it unconditionally and never asks.
+ * The account's `show_hints` switches every one off, so a view renders it unconditionally.
  */
 class HintAlert extends Widget
 {

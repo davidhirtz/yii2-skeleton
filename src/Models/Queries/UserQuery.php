@@ -75,8 +75,7 @@ class UserQuery extends ActiveQuery
     }
 
     /**
-     * Overrides default implementation to not use `whereStatus` as this might trigger the draft modus on modules such
-     * as `yii2-cms` or `yii2-media`.
+     * Not `whereStatus()`, which might trigger the draft mode of modules such as `yii2-cms` or `yii2-media`.
      */
     #[\Override]
     public function enabled(): static

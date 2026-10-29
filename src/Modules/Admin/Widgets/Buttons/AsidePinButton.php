@@ -11,12 +11,8 @@ use Stringable;
 use Yii;
 
 /**
- * Collapses the aside to its icons from the `md` breakpoint up, where it is always in flow and costs a laptop
- * screen a good part of its width — below that the aside is a drawer {@see AsideToggleButton} opens, which is
- * why the two share a slot in the navbar and the breakpoint decides which one is drawn. It re-renders nothing:
- * the state is a cookie plus an attribute on `<html>`, both written by `includes/aside.ts` and rendered by the
- * layout, which is what keeps a collapsed aside from unfolding for a frame on every full load. Both labels
- * travel with the button so the script can swap them without a round trip.
+ * Re-renders nothing: the layout renders the state `includes/aside.ts` writes, so a collapsed aside never unfolds for a
+ * frame.
  */
 class AsidePinButton extends AbstractAsideButton
 {

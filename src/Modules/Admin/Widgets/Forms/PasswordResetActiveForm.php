@@ -60,8 +60,8 @@ class PasswordResetActiveForm extends ActiveForm
     }
 
     /**
-     * {@see PasswordResetForm} has no `email` of its own, so the field is bound to the user its code resolved. It is
-     * shown rather than edited, which is what `disabled` says — and what exempts it from the fieldset's safe check.
+     * Bound to the code's user, since {@see PasswordResetForm} has no `email`; `disabled` exempts it from the safe
+     * check.
      */
     protected function getEmailField(): ?Stringable
     {

@@ -18,8 +18,7 @@ use Override;
 use Yii;
 
 /**
- * A record whose custom attributes name other rows of its table, at the top level, translated and inside nested
- * groups. Its table is created by whichever test uses it.
+ * Its table is created by whichever test uses it.
  *
  * @property int $id
  * @property string|null $name

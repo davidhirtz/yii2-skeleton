@@ -16,9 +16,7 @@ use Stringable;
 use Yii;
 
 /**
- * An installation reporting nowhere but its own log file loses every error nobody happens to look for, which is
- * only worth saying on a production host. The check is the log target rather than `params.sentryDsn`, since a
- * project may configure the target itself.
+ * Checks the log target rather than `params.sentryDsn`, since a project may configure the target itself.
  */
 class SentryAlert extends Widget
 {
@@ -27,8 +25,7 @@ class SentryAlert extends Widget
     use IconTrait;
 
     /**
-     * @var bool|null a project reporting its errors some other way answers `false` from an `EVENT_CONFIGURE`
-     * listener.
+     * A project reporting its errors some other way sets `false` from an `EVENT_CONFIGURE` listener.
      */
     protected ?bool $unreported = null;
 

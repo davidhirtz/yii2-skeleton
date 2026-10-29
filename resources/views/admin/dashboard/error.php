@@ -2,7 +2,9 @@
 declare(strict_types=1);
 
 /**
- * @var View|ErrorHandler $this a PHP error renders the view without the view component, bound to the handler
+ * A PHP error renders the view without the view component, bound to the handler.
+ *
+ * @var View|ErrorHandler $this
  * @var Throwable $exception
  * @var ErrorHandler $handler
  */

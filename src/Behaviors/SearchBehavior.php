@@ -14,24 +14,23 @@ use yii\db\AfterSaveEvent;
 use Closure;
 
 /**
- * Attached by {@see \Hirtz\Skeleton\Db\ActiveRecord::behaviors()} to every {@see SearchableInterface}. Unlike the
- * translation write there is no ordering constraint against {@see TrailBehavior}, so a behavior is enough.
- *
- * Writes that bypass `save()` leave the index stale — `updateAll()`, `updateAttributes()`, `batchInsert()` and the
- * `parent_status` propagation in cms; `search/rebuild` reconciles.
+ * Writes bypassing `save()` (`updateAll()`, `updateAttributes()`, cms `parent_status`) leave the index stale until
+ * `search/rebuild`.
  *
  * @extends Behavior<ActiveRecord&SearchableInterface>
  */
 class SearchBehavior extends Behavior
 {
     /**
-     * @var class-string|null the class the documents are stored under; if not set, the registered class the owner
-     * extends, so a container subclass or a per-type class writes the rows `search/rebuild` writes
+     * Defaults to the registered class the owner extends, so a container subclass writes the rows `search/rebuild`
+     * writes.
+     *
+     * @var class-string|null
      */
     public ?string $modelClass = null;
 
     /**
-     * @var list<string> the attributes every searchable model reindexes on, whether it names them or not
+     * @var list<string>
      */
     final public const array STATE_ATTRIBUTES = [
         'status',
@@ -40,9 +39,9 @@ class SearchBehavior extends Behavior
     ];
 
     /**
-     * @var list<string> the attributes that change a document besides the searchable ones. A model whose searchable
-     * attribute is a getter has to name the columns behind it here — the media `File` indexes `filename`, which is
-     * `getFilename()`, so a rename would leave the index stale without `basename`.
+     * A searchable getter needs its columns named here, as the media `File` names `basename` behind `getFilename()`.
+     *
+     * @var list<string>
      */
     public array $attributes = self::STATE_ATTRIBUTES;
 

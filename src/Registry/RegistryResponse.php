@@ -11,8 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 final readonly class RegistryResponse
 {
     /**
-     * @param array<string, mixed> $data the decoded JSON body, empty where there was none
-     * @param string|null $error the transport error, for a request that never got an answer
+     * @param array<string, mixed> $data
      */
     public function __construct(
         public int $status,
@@ -42,10 +41,7 @@ final readonly class RegistryResponse
         return $this->error === null && $this->status >= 200 && $this->status < 300;
     }
 
-    /**
-     * The registry's own sentence where it sent one — Yii's JSON error response carries it as `message` — else
-     * the transport error, else the bare status.
-     */
+    /** The registry's own `message` where it sent one, else the transport error, else the bare status. */
     public function getMessage(): string
     {
         $message = $this->data['message'] ?? null;

@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Models\Interfaces;
 
 use Hirtz\Skeleton\Db\ActiveQuery;
-use Hirtz\Skeleton\Models\Traits\SearchableTrait;
 use Hirtz\Skeleton\Search\SearchDocument;
 use Hirtz\Skeleton\Search\SearchResult;
 use Hirtz\Skeleton\Db\ActiveRecord;
 
-/**
- * Implemented via {@see SearchableTrait}, which leaves only {@see static::getSearchAttributes()} to the model.
- */
 interface SearchableInterface extends AdminModelInterface
 {
     /**
-     * @return list<string> the names whose values are indexed — any readable property, so translated and custom
-     * attributes and plain getters are all allowed
+     * Any readable property: translated and custom attributes and plain getters are allowed.
+     *
+     * @return list<string>
      */
     public function getSearchAttributes(): array;
 
@@ -37,19 +34,20 @@ interface SearchableInterface extends AdminModelInterface
     public static function isSearchResultClassVisible(): bool;
 
     /**
-     * @return SearchResult|null `null` hides the hit from the current user
+     * `null` hides the hit from the current user.
      */
     public function getSearchResult(): ?SearchResult;
 
     /**
-     * @param class-string|null $modelClass defaults to the record's own class
-     * @return list<SearchDocument> one document per configured language
+     * One document per configured language.
+     *
+     * @param class-string|null $modelClass
+     * @return list<SearchDocument>
      */
     public function getSearchDocuments(?string $modelClass = null): array;
 
     /**
-     * The query the rebuild and the hit hydration load records with, so a model can eager load what its documents
-     * or its result need.
+     * The rebuild and the hit hydration load records with it, so a model can eager load what they need.
      *
      * @return ActiveQuery<covariant ActiveRecord>
      */

@@ -8,9 +8,8 @@ use Hirtz\Skeleton\Models\Types\Type;
 use Override;
 
 /**
- * Reloads the page whenever the type changes, because what a type decides is open ended: its custom attributes and
- * hidden fields, but also a field another bundle contributes and anything outside the form keyed on the type. A
- * fingerprint over the part the skeleton knows about only ever answered for that part.
+ * Reloads the page on every type change, since what a type decides reaches beyond the form and the fields the
+ * skeleton knows about.
  */
 class TypeSelectField extends SelectField
 {
@@ -37,9 +36,7 @@ class TypeSelectField extends SelectField
         }
     }
 
-    /**
-     * A single type is kept whether or not the attribute is required: an empty choice would retype the record.
-     */
+    /** A single type is kept even when not required, since an empty choice would retype the record. */
     #[Override]
     protected function isHiddenInput(): bool
     {
@@ -47,8 +44,8 @@ class TypeSelectField extends SelectField
     }
 
     /**
-     * A type the record cannot take is not offered, which is what {@see Type::available()} is for — except the
-     * one the record is stored with, or the form would silently retype it on the next save.
+     * The stored type stays offered even when {@see Type::available()} refuses it, or the next save would silently
+     * retype the record.
      *
      * @return array<int|string, mixed>
      */

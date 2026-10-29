@@ -29,8 +29,7 @@ class ServerInfo extends InfoList
     }
 
     /**
-     * The host name `php_uname()` reports is the machine rather than the site, so it is behind
-     * {@see Module::AUTH_SYSTEM} like the rest of the infrastructure facts.
+     * Behind {@see Module::AUTH_SYSTEM}, since `php_uname()` names the machine rather than the site.
      */
     protected function addServerRow(): void
     {
@@ -46,8 +45,7 @@ class ServerInfo extends InfoList
     }
 
     /**
-     * `Request::filterHeaders()` strips every `X-Forwarded-*` header while no host is trusted, so the forwarded
-     * header a proxy sent is only visible in `$_SERVER` — which is what makes the misconfiguration invisible.
+     * Reads `$_SERVER`, since `Request::filterHeaders()` strips every `X-Forwarded-*` header while no host is trusted.
      */
     protected function addTrustedHostsRow(): void
     {
@@ -80,9 +78,7 @@ class ServerInfo extends InfoList
     }
 
     /**
-     * `Request::$trustedHosts` lists a host either as a value (trusting every secure header) or as a key holding the
-     * headers trusted from it, the form to use behind a proxy that passes a client's own headers through. Hosts are
-     * grouped by the headers they are trusted for; the non-breaking space keeps a separator off the start of a line.
+     * A host is a value (every secure header trusted) or a key holding its trusted headers.
      *
      * @param array<int|string, mixed> $trustedHosts
      */
@@ -131,8 +127,7 @@ class ServerInfo extends InfoList
     }
 
     /**
-     * The DSN carries the credentials, so only its scheme, host and port are reported. A transport that cannot be
-     * built is flagged with Symfony's reason, which names the package to install.
+     * Only scheme, host and port, since the DSN carries the credentials.
      */
     protected function addMailerRow(): void
     {

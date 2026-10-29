@@ -14,8 +14,7 @@ use Yii;
 use yii\console\ExitCode;
 
 /**
- * `user/password` is the way back into an installation whose only administrator lost their password and whose
- * mailer is not an option, so it has to work without a session, a token or a mail.
+ * `user/password` is the way back in for a lost administrator password, so it works without a session, token or mail.
  */
 class UserControllerTest extends TestCase
 {
@@ -112,8 +111,7 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * A provisioning script gets no terminal, so every prompt has an option — and the password an environment
-     * variable beside it, which keeps it out of the shell history and the process list.
+     * A provisioning script gets no terminal, and the password's environment variable keeps it out of the process list.
      */
     public function testCreateTakesItsValuesFromTheOptions(): void
     {
@@ -156,8 +154,7 @@ class UserControllerTest extends TestCase
     }
 
     /**
-     * `confirm()` answers its default without a terminal, so an unguarded retry would recurse until the process
-     * died on the value the script gave it.
+     * `confirm()` answers its default without a terminal, so an unguarded retry would recurse forever.
      */
     public function testAScriptedCreateReportsItsErrorsInsteadOfRetrying(): void
     {

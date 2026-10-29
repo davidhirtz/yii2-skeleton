@@ -29,8 +29,8 @@ class NetworkHelper
     }
 
     /**
-     * IPv4-mapped and NAT64 addresses are checked as the IPv4 address they reach. `FILTER_FLAG_GLOBAL_RANGE` lets
-     * multicast, IPv4-compatible, local-use NAT64 and site-local IPv6 addresses through, so those are refused first.
+     * `FILTER_FLAG_GLOBAL_RANGE` lets multicast, IPv4-compatible, local-use NAT64 and site-local IPv6 addresses
+     * through, so those are refused first; mapped and NAT64 addresses are checked as the IPv4 they reach.
      */
     public static function isPublicIp(string $ip): bool
     {

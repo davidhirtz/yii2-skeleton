@@ -111,9 +111,6 @@ class UserAuthController extends Controller
         return $this->redirectToGrid($user);
     }
 
-    /**
-     * The button swaps the grid alone, which keeps the scroll position: the redirect is one it follows itself.
-     */
     protected function redirectToGrid(User $user): Response
     {
         Application::current()->getResponse()->setHtmxRedirectTarget(null);
@@ -121,8 +118,7 @@ class UserAuthController extends Controller
     }
 
     /**
-     * Nobody hands out what they do not hold themselves: an item the acting user cannot pass is refused, or
-     * `authUpdate` alone would be enough to assign the `admin` role and take the installation over.
+     * Refuses an item the acting user does not hold, or `authUpdate` alone could assign the `admin` role.
      */
     protected function getAuthItem(string $name, int $type): Permission|Role
     {

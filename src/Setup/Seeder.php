@@ -13,7 +13,9 @@ use yii\base\BaseObject;
 abstract class Seeder extends BaseObject
 {
     /**
-     * @var list<string> the keys whose seeders run first; a key no seeder reads is ignored
+     * A key no seeder reads is ignored.
+     *
+     * @var list<string>
      */
     public array $dependencies = [];
 
@@ -28,7 +30,9 @@ abstract class Seeder extends BaseObject
     private array $failed = [];
 
     /**
-     * @param array<array-key, mixed>|null $value `null` when the setup file does not name the key
+     * `$value` is `null` when the setup file does not name the key.
+     *
+     * @param array<array-key, mixed>|null $value
      */
     abstract public function run(?array $value): void;
 

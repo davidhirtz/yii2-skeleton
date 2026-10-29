@@ -16,12 +16,8 @@ use Stringable;
 use yii\base\Model;
 
 /**
- * The header of a page that belongs to one record. The H1 stays on the **base** record — the one that owns the
- * page — and every record between it and the page's own becomes the subtitle beneath, so an asset four levels
- * down still reads "About — Section #3 · Asset #1 · Hotspot #2 · Asset #1". Which record is the base is
- * {@see AdminModelInterface::getAdminSubtitle()}: a record that answers `null` owns its page, which is why an
- * entry filed under another entry is still its own base. No header knows another header's class, and the
- * complete map stays the breadcrumb bar's job.
+ * The H1 stays on the base record, the first whose {@see AdminModelInterface::getAdminSubtitle()} answers `null`;
+ * the records in between become the subtitle.
  *
  * @template TModel of (Model&AdminModelInterface)|null = (Model&AdminModelInterface)|null
  */
@@ -33,7 +29,7 @@ class ModelHeader extends Header
     use ModelTrait;
 
     /**
-     * @var list<Stringable> the chain below the base record, each item linked where it has a page of its own
+     * @var list<Stringable>
      */
     protected array $subtitleItems = [];
 
@@ -62,8 +58,9 @@ class ModelHeader extends Header
     }
 
     /**
-     * @return array{AdminModelInterface, list<AdminModelInterface>} the base record, and everything between it
-     *     and `$model` with `$model` itself last
+     * The base record, then everything between it and `$model`, `$model` last.
+     *
+     * @return array{AdminModelInterface, list<AdminModelInterface>}
      */
     protected function getModelChain(AdminModelInterface $model): array
     {
@@ -72,9 +69,7 @@ class ModelHeader extends Header
     }
 
     /**
-     * The subtitle is markup rather than a joined string: each record links to its own page where it has one,
-     * and the separator between them is the `.header-subtitle-item` rule rather than a character. The item wraps
-     * the link, so the separator it draws is not part of what can be clicked.
+     * Markup rather than a joined string: the separator is the `.header-subtitle-item` rule, outside the link.
      *
      * @param list<AdminModelInterface> $chain
      * @return list<Stringable>
@@ -105,9 +100,8 @@ class ModelHeader extends Header
     }
 
     /**
-     * Names the item after the record rather than after its place in the line, so a view transition matches the
-     * same record across two pages and leaves it alone: clicking a section's asset must not move the section.
-     * Built from the record's own route, which is what makes it both stable and unique.
+     * Named after the record's route rather than its position, so a view transition leaves a record shown on both pages
+     * in place.
      */
     protected function getSubtitleItemName(AdminModelInterface $model, int $index): string
     {

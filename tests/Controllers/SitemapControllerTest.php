@@ -106,9 +106,6 @@ class SitemapControllerTest extends TestCase
         self::assertNull($this->findPageCacheVariations());
     }
 
-    /**
-     * Every content change invalidates the page-cache tag, which is what clears the sitemap too.
-     */
     public function testTheSitemapCacheFollowsThePageCacheTag(): void
     {
         Yii::$app->sitemap->cache = 'cache';
@@ -158,8 +155,7 @@ class SitemapControllerTest extends TestCase
     }
 
     /**
-     * XMLWriter drops an attribute written after the first child, so the image namespace has to be declared before
-     * the URLs are written — the first one carrying images is rarely the first one.
+     * XMLWriter drops an attribute written after the first child, so the image namespace is declared before the URLs.
      */
     public function testIndexDeclaresTheImageNamespaceForALaterUrl(): void
     {

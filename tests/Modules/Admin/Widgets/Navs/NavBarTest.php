@@ -35,9 +35,8 @@ class NavBarTest extends TestCase
     }
 
     /**
-     * Every item is guarded, so a logged out view was left with an empty bar carrying a toggle for an aside that
-     * had already hidden itself (monorepo issue #190) — a bar holding nothing renders nothing at all. The one
-     * item a guest can still get is the language picker, which needs a second language to render.
+     * A bar holding nothing renders nothing, since every item is guarded and a guest was left with a toggle for a
+     * hidden aside (monorepo issue #190).
      */
     public function testAGuestGetsNoNavbarAtAll(): void
     {
@@ -66,10 +65,7 @@ class NavBarTest extends TestCase
         self::assertStringContainsString('aside-toggle', NavBar::make()->render());
     }
 
-    /**
-     * The drawer toggle and the pin share a slot, the breakpoint deciding which one is drawn — so both are in
-     * the markup and neither is the other's fallback.
-     */
+    /** The breakpoint decides whether the drawer toggle or the pin is drawn, so both are in the markup. */
     public function testTheLoggedInNavbarCarriesThePinBesideTheToggle(): void
     {
         $this->login();
@@ -81,8 +77,8 @@ class NavBarTest extends TestCase
     }
 
     /**
-     * The navbar survives every htmx swap while the id counter restarts on each request, so a generated id here
-     * would sooner or later shadow the element of the same id in a later `#wrap`.
+     * The navbar survives every swap while the id counter restarts per request, so a generated id would shadow one in a
+     * later `#wrap`.
      */
     public function testTheNavbarCarriesNoGeneratedId(): void
     {

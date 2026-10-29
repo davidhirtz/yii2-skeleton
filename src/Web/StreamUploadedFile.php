@@ -18,17 +18,16 @@ use Psr\Http\Message\StreamInterface;
 use Yii;
 
 /**
- * An upload the server fetches from a URL the request supplied, so what may be asked for is policy rather than a
- * detail of the transfer: {@see Upload::$enableStreamUploads} and the `streamUpload` settings beside it decide
- * whether it happens at all, how far it reaches and how much it may cost. A path the application names goes
- * through {@see CopiedUploadedFile} instead — none of this applies to one.
+ * The URL is the request's, so {@see Upload::$enableStreamUploads} and the `streamUpload` settings guard every fetch.
  */
 class StreamUploadedFile extends AbstractUploadedFile
 {
     public ?string $url = null;
 
     /**
-     * @var array<string, string> the address each host was checked at, which the transfer is pinned to
+     * The address each host was checked at, which the transfer is pinned to.
+     *
+     * @var array<string, string>
      */
     private array $checkedIps = [];
 
@@ -57,7 +56,7 @@ class StreamUploadedFile extends AbstractUploadedFile
     }
 
     /**
-     * @return string|null the URL to fetch, or `null` for one that must not be fetched at all
+     * `null` for a URL that must not be fetched at all.
      */
     protected function prepareUrl(): ?string
     {
@@ -71,8 +70,8 @@ class StreamUploadedFile extends AbstractUploadedFile
     }
 
     /**
-     * A refusal answers the same {@see UPLOAD_ERR_NO_FILE} as a target that said nothing, so the error code
-     * reports no more about the network than the account already knows.
+     * A refusal answers the same {@see UPLOAD_ERR_NO_FILE} as an empty target, so the error reveals nothing about the
+     * network.
      *
      * @return resource|null
      */

@@ -19,7 +19,6 @@ use yii\db\Migration;
 use yii\db\Query;
 
 /**
- * The round trip an upgrade and its rollback run: the `_de` columns move into the `translation` table and back.
  * Everything here is DDL, which commits the surrounding transaction, so the rows are cleaned up by hand.
  */
 class MigrationTraitTranslationsTest extends TestCase
@@ -157,8 +156,7 @@ class MigrationTraitTranslationsTest extends TestCase
     }
 
     /**
-     * The columns are discovered from the table rather than from the model, and a `_xx` column whose source
-     * column is gone is not one of them — the pair is what makes it a translation.
+     * The columns are discovered from the table, and a `_xx` column whose source column is gone is no translation.
      */
     public function testAColumnWithoutItsSourceColumnIsLeftAlone(): void
     {

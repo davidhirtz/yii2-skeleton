@@ -27,12 +27,12 @@ use yii\db\ActiveRecordInterface;
  * @property int $id
  * @property string|null $model_class
  * @property int|null $user_id
- * @property string|null $client the MCP client the change came through
+ * @property string|null $client
  * @property string|null $message
  * @property array<string, mixed>|null $data
  * @property DateTime $created_at
  *
- * @property-read User|null $user {@see Trail::getUser}
+ * @property-read User|null $user
  * @property list<int|string>|int|string|null $model_id
  */
 class Trail extends ActiveRecord implements TypeAttributeInterface
@@ -182,7 +182,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     }
 
     /**
-     * The `message` attribute holds the stored pointer, this returns the text it renders to.
+     * `message` holds the stored pointer; this is the text it renders to.
      */
     public function getMessage(): ?string
     {
@@ -261,8 +261,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
     }
 
     /**
-     * A type's `message` is a {@see Message} pointer, not text: it is rendered in the language of whoever reads the
-     * trail, by {@see TrailGridView}.
+     * A type's `message` is a {@see Message} pointer, rendered in the reader's language by {@see TrailGridView}.
      *
      * @return list<TrailType>
      */

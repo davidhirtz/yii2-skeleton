@@ -23,23 +23,16 @@ class SignupForm extends AbstractSignupForm
     public ?string $timezone = null;
 
     /**
-     * @var string|null honeypot text field to mess with bots, the text field will have a random value which will be
-     * removed by JavaScript before the form is submitted.
+     * A honeypot holding a random value JavaScript removes before the form is submitted.
      */
     public ?string $honeypot = null;
 
-    /**
-     * @var int the time in seconds in which a new signup is not allowed from the same IP address.
-     */
     public int $spamProtectionInSeconds = 60;
 
-    /**
-     * @var bool|string whether user has accepted the terms of service.
-     */
     public bool|string $terms = false;
 
     /**
-     * @var string|null token text field is set by ajax and checked against cookie.
+     * Set by JavaScript and checked against the session.
      */
     public ?string $token = null;
 
@@ -151,8 +144,7 @@ class SignupForm extends AbstractSignupForm
     }
 
     /**
-     * Validates the token against the session token and the time the token was set. If the token was generated less
-     * than 2 seconds ago or more than 30 minutes ago, the token is considered invalid.
+     * A token generated less than 2 seconds or more than 30 minutes ago is invalid.
      */
     protected function validateToken(): void
     {
@@ -204,8 +196,7 @@ class SignupForm extends AbstractSignupForm
     }
 
     /**
-     * Generates a random token saved in the user session. If the token is not set or expired, a new token is generated.
-     * Override this method to return null to disabled token check.
+     * An override returning `null` disables the token check.
      */
     public function getSessionToken(): ?string
     {

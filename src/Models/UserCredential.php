@@ -14,18 +14,17 @@ use Override;
 use Yii;
 
 /**
- * A user's own key for a third-party service, one or several values as the service's fields name them. Written once
- * and never shown again: only {@see static::findValues()} decrypts it, for the code that calls the service.
+ * Written once and never shown again: only {@see static::findValues()} decrypts it.
  *
  * @property int $id
  * @property int $user_id
  * @property string $provider
- * @property string $secret the encrypted values, never the values themselves
+ * @property string $secret
  * @property string $hint
  * @property DateTime|null $last_used_at
  * @property DateTime $created_at
  *
- * @property-read User $user {@see static::getUser()}
+ * @property-read User $user
  */
 class UserCredential extends ActiveRecord
 {

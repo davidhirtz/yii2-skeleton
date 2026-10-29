@@ -31,13 +31,12 @@ use yii\validators\UrlValidator;
 use yii\validators\Validator;
 
 /**
- * Describes the attributes a record of one type takes as a JSON Schema, read off the validators the record carries —
- * the same ones {@see AttributeTypecastBehavior} reads — and refined by the class of a custom attribute.
+ * Reads the types off the validators the record carries, the same ones {@see AttributeTypecastBehavior} reads.
  */
 class SchemaBuilder
 {
     /**
-     * @var list<string> never written by a caller: maintained by the record, its behaviors or a count updater
+     * @var list<string>
      */
     public array $excludedAttributes = [
         'created_at',
@@ -88,8 +87,9 @@ class SchemaBuilder
     }
 
     /**
-     * @return list<string> custom attributes a caller reads and never writes: an upload, answered as its URL, and a
-     * disabled or plain-text one
+     * An upload (answered as its URL) and a disabled or plain-text custom attribute are read, never written.
+     *
+     * @return list<string>
      */
     public function getReadOnlyAttributes(ActiveRecord $record): array
     {
@@ -221,8 +221,6 @@ class SchemaBuilder
     }
 
     /**
-     * Lists the values of an enum with their names, which the ids alone do not say.
-     *
      * @param array<int|string, string> $names
      */
     public static function describeEnum(array $names): string

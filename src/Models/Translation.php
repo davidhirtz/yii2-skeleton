@@ -10,11 +10,12 @@ use Override;
 use Yii;
 
 /**
- * One record per model, language and attribute; the source language stays in the model's own column.
+ * The source language stays in the model's own column, and `model_id` loads as a string, the column being an unsigned
+ * bigint.
  *
  * @property int $id
  * @property string $model_class
- * @property int|string $model_id a string once loaded, the column is an unsigned bigint
+ * @property int|string $model_id
  * @property string $language
  * @property string $attribute
  * @property string|null $value

@@ -14,11 +14,6 @@ use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
 
-/**
- * A card of label / value rows, each with an optional action button. It borrows the form row classes rather than a
- * table: unlike a grid it has no data provider, no sorting and no pagination, because the rows are facts about the
- * installation rather than records.
- */
 class InfoList extends Widget
 {
     use ContainerTrait;
@@ -45,8 +40,9 @@ class InfoList extends Widget
     }
 
     /**
-     * @param Closure(static): (void|static) $rows a closure, so a listener on `EVENT_CONFIGURE` can add to the rows
-     * another bundle contributed.
+     * A closure, so an `EVENT_CONFIGURE` listener can add to the rows another bundle contributed.
+     *
+     * @param Closure(static): (void|static) $rows
      */
     public function rows(Closure $rows): static
     {

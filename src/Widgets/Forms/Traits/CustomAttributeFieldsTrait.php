@@ -8,16 +8,14 @@ use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Widgets\Forms\Fields\Field;
 use yii\base\Model;
 
-/**
- * For an {@see \Hirtz\Skeleton\Widgets\Forms\ActiveForm} whose model is a {@see CustomAttributeInterface}.
- */
 trait CustomAttributeFieldsTrait
 {
     /**
-     * @param (Model&CustomAttributeInterface)|null $model the record behind the form, when the form's own model is
-     * a wrapper around it
-     * @param list<string> $except definitions the form renders itself, in a place of their own
-     * @return list<Field> one field per visible definition, in definition order
+     * `$model` is the record behind the form when the form's own model wraps it.
+     *
+     * @param (Model&CustomAttributeInterface)|null $model
+     * @param list<string> $except
+     * @return list<Field>
      */
     public function getCustomAttributeFields(
         (Model&CustomAttributeInterface)|null $model = null,
