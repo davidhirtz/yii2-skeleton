@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Helpers;
 
+use Hirtz\Skeleton\Helpers\FileHelper;
 use Hirtz\Skeleton\Helpers\VersionHelper;
 use Hirtz\Skeleton\Test\TestCase;
 use Yii;
@@ -49,26 +50,43 @@ class VersionHelperTest extends TestCase
     public function testTheApplicationPrefersGitOverComposer(): void
     {
         // `vendor/composer/installed.php` is only rewritten by `composer install`, so it lags behind the checkout
-        $head = trim((string)file_get_contents(Yii::getAlias('@root') . '/.git/HEAD'));
-
-        if (!str_starts_with($head, 'ref:')) {
-            self::markTestSkipped('The repository is in a detached HEAD state.');
-        }
-
-        $reference = trim((string)file_get_contents(Yii::getAlias('@root') . '/.git/' . trim(substr($head, 4))));
-
-        self::assertSame(substr($reference, 0, 8), VersionHelper::getApplicationReference());
+        self::assertSame(substr(self::git('rev-parse HEAD'), 0, 8), VersionHelper::getApplicationReference());
     }
 
     public function testTheBranchIsReadFromTheCheckout(): void
     {
-        $head = @file_get_contents(Yii::getAlias('@root') . '/.git/HEAD');
+        self::assertSame(self::git('symbolic-ref --short -q HEAD'), VersionHelper::getApplicationBranch());
+    }
 
-        if (!is_string($head) || !str_starts_with($head, 'ref: refs/heads/')) {
-            self::markTestSkipped('The repository is not on a branch.');
+    public function testALinkedWorktreeReadsItsBranchFromTheMainRepository(): void
+    {
+        $root = (string)Yii::getAlias('@root');
+        $path = Yii::getAlias('@runtime') . '/version-helper-' . uniqid();
+        $reference = sha1('loose');
+
+        FileHelper::createDirectory("$path/main/.git/refs/heads");
+        FileHelper::createDirectory("$path/main/.git/worktrees/linked");
+        FileHelper::createDirectory("$path/linked");
+
+        file_put_contents("$path/main/.git/refs/heads/main", "$reference\n");
+        file_put_contents("$path/main/.git/packed-refs", sha1('packed') . " refs/heads/packed\n");
+        file_put_contents("$path/main/.git/worktrees/linked/HEAD", "ref: refs/heads/main\n");
+        file_put_contents("$path/main/.git/worktrees/linked/commondir", "../..\n");
+        file_put_contents("$path/linked/.git", "gitdir: ../main/.git/worktrees/linked\n");
+
+        try {
+            Yii::setAlias('@root', "$path/linked");
+
+            self::assertSame(substr($reference, 0, 8), VersionHelper::getApplicationReference());
+            self::assertSame('main', VersionHelper::getApplicationBranch());
+
+            file_put_contents("$path/main/.git/worktrees/linked/HEAD", "ref: refs/heads/packed\n");
+
+            self::assertSame(substr(sha1('packed'), 0, 8), VersionHelper::getApplicationReference());
+        } finally {
+            Yii::setAlias('@root', $root);
+            FileHelper::removeDirectory($path);
         }
-
-        self::assertSame(trim(substr($head, 16)), VersionHelper::getApplicationBranch());
     }
 
     public function testTheInstalledExtensionsAreSortedAndVersioned(): void
@@ -97,5 +115,16 @@ class VersionHelperTest extends TestCase
 
         // a path repository records the checked out commit, so the skeleton's own reference is known here
         self::assertNotNull($extensions['davidhirtz/yii2-skeleton']['reference']);
+    }
+
+    private static function git(string $command): string
+    {
+        exec('git -C ' . escapeshellarg((string)Yii::getAlias('@root')) . " $command 2>/dev/null", $output, $code);
+
+        if ($code !== 0 || !isset($output[0])) {
+            self::markTestSkipped("`git $command` answers nothing here.");
+        }
+
+        return $output[0];
     }
 }

@@ -107,6 +107,18 @@ class StreamUploadedFileTest extends TestCase
         ]);
 
         self::assertEquals(UPLOAD_ERR_OK, $upload->error);
+        self::assertSame(self::UNENCODED_FILENAME, $upload->name);
+    }
+
+    public function testTheNameIsDecodedFromAnEncodedUrl(): void
+    {
+        $upload = $this->getStreamUploadedFile([
+            'url' => self::$baseUrl . rawurlencode(self::UNENCODED_FILENAME),
+            'allowedExtensions' => ['md', 'txt'],
+        ]);
+
+        self::assertEquals(UPLOAD_ERR_OK, $upload->error);
+        self::assertSame(self::UNENCODED_FILENAME, $upload->name);
     }
 
     public function testInvalidTempDirectory(): void

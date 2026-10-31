@@ -42,7 +42,7 @@ class StreamUploadedFile extends AbstractUploadedFile
         }
 
         $this->url = $url;
-        $this->name = basename((string)parse_url($url, PHP_URL_PATH));
+        $this->name = rawurldecode(basename((string)parse_url($url, PHP_URL_PATH)));
 
         $stream = $this->openUrl($url);
 

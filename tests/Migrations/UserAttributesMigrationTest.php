@@ -58,23 +58,32 @@ class UserAttributesMigrationTest extends TestCase
             ->execute();
     }
 
+    /**
+     * MariaDB drops a column instantly and keeps it in the row format, so the add and drop cycles of every run add
+     * up to `1118 Row size too large` until the table is rebuilt: the drop copies it.
+     */
     #[Override]
     protected function tearDown(): void
     {
-        $db = Yii::$app->getDb();
-        $schema = $db->getTableSchema(User::tableName(), true);
+        try {
+            $db = Yii::$app->getDb();
+            $schema = $db->getTableSchema(User::tableName(), true);
+            $specs = ['FORCE', 'ALGORITHM=COPY'];
 
-        foreach (array_keys(self::LEGACY_COLUMNS) as $column) {
-            if ($schema?->getColumn($column)) {
-                $db->createCommand()
-                    ->dropColumn(User::tableName(), $column)
-                    ->execute();
+            foreach (array_keys(self::LEGACY_COLUMNS) as $column) {
+                if ($schema?->getColumn($column)) {
+                    $specs[] = 'DROP COLUMN ' . $db->quoteColumnName($column);
+                }
             }
+
+            $db->createCommand('ALTER TABLE ' . $db->quoteTableName(User::tableName()) . ' ' . implode(', ', $specs))
+                ->execute();
+
+            $db->getSchema()->refreshTableSchema(User::tableName());
+        } finally {
+            InterruptedCommand::$drops = 0;
+            parent::tearDown();
         }
-
-        InterruptedCommand::$drops = 0;
-
-        parent::tearDown();
     }
 
     public function testTheProfileColumnsBecomeCustomAttributes(): void

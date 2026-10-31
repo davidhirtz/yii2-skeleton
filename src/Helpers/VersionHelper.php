@@ -125,15 +125,16 @@ class VersionHelper
         }
 
         $head = trim($head);
+        $commonPath = self::getGitCommonPath($path);
         $file = str_starts_with($head, 'ref:')
-            ? $path . '/' . trim(substr($head, 4))
+            ? $commonPath . '/' . trim(substr($head, 4))
             : "$path/HEAD";
 
         $reference = @file_get_contents($file);
         $time = @filemtime($file);
 
         if (!is_string($reference) || !is_int($time)) {
-            return self::getPackedRef($path, $head);
+            return self::getPackedRef($commonPath, $head);
         }
 
         return [
@@ -183,8 +184,26 @@ class VersionHelper
         // A linked worktree records the real directory in a `gitdir:` pointer file.
         $pointer = is_file($path) ? @file_get_contents($path) : false;
 
-        return is_string($pointer) && str_starts_with($pointer, 'gitdir:')
-            ? trim(substr($pointer, 7))
-            : null;
+        if (!is_string($pointer) || !str_starts_with($pointer, 'gitdir:')) {
+            return null;
+        }
+
+        $gitPath = trim(substr($pointer, 7));
+        return str_starts_with($gitPath, '/') ? $gitPath : dirname($path) . "/$gitPath";
+    }
+
+    /**
+     * A linked worktree's directory holds its `HEAD`, the main repository's (named by `commondir`) the branches.
+     */
+    private static function getGitCommonPath(string $path): string
+    {
+        $commonPath = @file_get_contents("$path/commondir");
+
+        if (!is_string($commonPath)) {
+            return $path;
+        }
+
+        $commonPath = trim($commonPath);
+        return str_starts_with($commonPath, '/') ? $commonPath : "$path/$commonPath";
     }
 }
