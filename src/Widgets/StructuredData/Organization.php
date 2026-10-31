@@ -63,6 +63,7 @@ class Organization extends Thing
         parent::configure();
     }
 
+    #[\Override]
     public function isVisible(): bool
     {
         return $this->name !== null && $this->name !== '' && parent::isVisible();

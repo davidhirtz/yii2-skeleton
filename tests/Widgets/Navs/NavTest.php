@@ -26,6 +26,7 @@ class NavTest extends TestCase
         parent::setUp();
 
         Yii::$app->controller = new class ('test', Yii::$app) extends Controller {
+            #[\Override]
             public function getRoute(): string
             {
                 return 'site/index';
@@ -161,6 +162,7 @@ class NavTest extends TestCase
     public function testActiveItemFromTheCurrentRouteWhenTheUrlDiffers(): void
     {
         Yii::$app->controller = new class ('test', Yii::$app) extends Controller {
+            #[\Override]
             public function getRoute(): string
             {
                 return 'site/test';

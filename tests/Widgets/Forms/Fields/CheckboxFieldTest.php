@@ -68,6 +68,7 @@ class CheckboxFieldTest extends TestCase
                 parent::__construct();
             }
 
+            #[\Override]
             public function formName(): string
             {
                 return 'F';

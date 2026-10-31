@@ -87,6 +87,7 @@ class TrailBehaviorTest extends TestCase
             /**
              * @return list<string>
              */
+            #[\Override]
             public function getTrailAttributes(): array
             {
                 return [];
@@ -166,6 +167,7 @@ class TrailBehaviorTest extends TestCase
     public function testFailedInsertTrail(): void
     {
         $model = new class () extends TrailActiveRecord {
+            #[\Override]
             public function behaviors(): array
             {
                 return [
@@ -196,6 +198,7 @@ class TrailBehaviorTest extends TestCase
         self::assertFalse($model->getAdminRoute());
 
         $model = new class () extends TrailActiveRecord {
+            #[\Override]
             public function getAdminRoute(): array
             {
                 return ['/admin/test'];
@@ -315,6 +318,7 @@ class TrailBehaviorTest extends TestCase
 
             public ?int $value = null;
 
+            #[\Override]
             public function behaviors(): array
             {
                 return [
@@ -322,6 +326,7 @@ class TrailBehaviorTest extends TestCase
                 ];
             }
 
+            #[\Override]
             public function rules(): array
             {
                 return [
@@ -476,6 +481,7 @@ class TrailBehaviorMock extends TrailBehavior
             /**
              * @param array<string, mixed> $attributes
              */
+            #[\Override]
             public function insert($runValidation = true, $attributes = null): bool
             {
                 throw new Exception("Mocked error message");

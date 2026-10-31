@@ -27,6 +27,7 @@ class SelectFieldTest extends TestCase
                 ];
             }
 
+            #[\Override]
             public function formName(): string
             {
                 return 'F';

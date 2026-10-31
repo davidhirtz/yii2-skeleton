@@ -158,6 +158,7 @@ class AttributeTypecastBehaviorTest extends TestCase
             public int|bool|null $bool = null;
             public string|null $string = null;
 
+            #[\Override]
             public function behaviors(): array
             {
                 return [
@@ -168,6 +169,7 @@ class AttributeTypecastBehaviorTest extends TestCase
                 ];
             }
 
+            #[\Override]
             public function rules(): array
             {
                 return [
@@ -254,6 +256,7 @@ class AttributeTypecastBehaviorTest extends TestCase
     public function testBeforeValidateEvent(): void
     {
         $model = new class () extends AttributeTypecastActiveRecord {
+            #[\Override]
             public function rules(): array
             {
                 return [
@@ -374,6 +377,7 @@ class AttributeTypecastBehaviorTest extends TestCase
         $model = new class () extends AttributeTypecastActiveRecord {
             use ModelTrait;
 
+            #[\Override]
             public function behaviors(): array
             {
                 $behaviors = parent::behaviors();
@@ -388,6 +392,7 @@ class AttributeTypecastBehaviorTest extends TestCase
                 return $behaviors;
             }
 
+            #[\Override]
             public function rules(): array
             {
                 return [];
@@ -398,6 +403,7 @@ class AttributeTypecastBehaviorTest extends TestCase
             /**
              * @return array<string, string|Closure>
              */
+            #[\Override]
             public function events(): array
             {
                 return [

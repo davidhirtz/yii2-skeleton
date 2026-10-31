@@ -15,6 +15,7 @@ class HexColorValidatorTest extends TestCase
         $model = new class () extends Model {
             public ?string $color = null;
 
+            #[\Override]
             public function rules(): array
             {
                 return [

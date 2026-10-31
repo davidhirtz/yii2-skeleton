@@ -30,6 +30,7 @@ class ModuleTest extends TestCase
 
     protected Module $module;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

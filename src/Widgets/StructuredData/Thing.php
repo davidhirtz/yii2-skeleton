@@ -84,6 +84,7 @@ class Thing extends Widget
         return $this->isVisible() ? $this->getNode() : null;
     }
 
+    #[\Override]
     public function isVisible(): bool
     {
         return $this->type !== null && parent::isVisible();

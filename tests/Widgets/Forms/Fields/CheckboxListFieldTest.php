@@ -76,6 +76,7 @@ class CheckboxListFieldTest extends TestCase
             /** @var list<int> */
             public array $tags = [2];
 
+            #[\Override]
             public function formName(): string
             {
                 return 'F';
@@ -84,6 +85,7 @@ class CheckboxListFieldTest extends TestCase
             /**
              * @return array<string, string>
              */
+            #[\Override]
             public function attributeLabels(): array
             {
                 return ['tags' => 'Tags'];

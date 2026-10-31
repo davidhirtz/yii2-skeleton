@@ -15,6 +15,7 @@ class TimeValidatorTest extends TestCase
         $model = new class () extends Model {
             public ?string $time = null;
 
+            #[\Override]
             public function rules(): array
             {
                 return [

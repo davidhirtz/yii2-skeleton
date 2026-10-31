@@ -90,6 +90,7 @@ class Event extends Thing
         return $this;
     }
 
+    #[\Override]
     public function isVisible(): bool
     {
         return $this->startDate !== null
