@@ -1,4 +1,4 @@
-## Unreleased
+## 3.25.0 (October 31, 2026)
 
 - Added the `setup` command and component, running the seeders bundles register in `setup.seeders`
 - Changed every message key to the `{DOMAIN}_{SUBJECT}_{KIND}` scheme; the `COMMON_*` keys are gone
