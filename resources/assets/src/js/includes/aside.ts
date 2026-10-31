@@ -62,10 +62,24 @@ document.addEventListener('click', (event: MouseEvent) => {
         return;
     }
 
-    const latch = !!$target?.closest('#aside');
+    const latch = !!$target?.closest('#aside') && !isLeafNavigation(event, $target);
 
     document.documentElement.toggleAttribute(OPEN_ATTRIBUTE, latch);
 });
+
+/**
+ * A link without a subnav leaves nothing in the menu to reach next, so the drawer would hide the page it loaded.
+ * A click opening another tab leaves this page as it was.
+ */
+const isLeafNavigation = (event: MouseEvent, $target: Element | null) => {
+    const $link = $target?.closest<HTMLAnchorElement>('a[href]');
+
+    return !!$link
+        && !$link.parentElement?.querySelector(':scope > .subnav')
+        && $link.target !== '_blank'
+        && !event.metaKey && !event.ctrlKey && !event.shiftKey
+        && event.button === 0;
+};
 
 document.addEventListener('keydown', (event: KeyboardEvent) => {
     if (event.key === 'Escape') {

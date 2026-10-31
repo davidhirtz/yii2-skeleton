@@ -58,7 +58,7 @@ carry `detail.ctx`; a container listener must check `event.target`; no history c
 - The aside: `data-aside-collapsed` and `data-aside-open` on `<html>` with a host-only `_aside` cookie; the collapsed
   rail is the part `.main` does not cover (negative margin, `--aside-open`, both widths on `:root`); the mobile
   drawer translates `.main` and `.aside`, never `.wrap`; `includes/aside.ts` holds one document-level click
-  listener; the pin and the drawer toggle share a navbar slot and extend `AbstractAsideButton`. The colour scheme
+  listener (a click inside latches it open, except a link without a `.subnav`); the pin and the drawer toggle share a navbar slot and extend `AbstractAsideButton`. The colour scheme
   is `user.color_scheme` on `<html>`, no cookie. A nav link is `.nav-link-icon` + `.nav-link-label`.
 - Every swap runs through the View Transitions API: `.aside`, `.breadcrumbs`, `.tabs`, `.header-content` and each
   `.header-subtitle-item` (named after the record) carry a `view-transition-name`; each must render at most once

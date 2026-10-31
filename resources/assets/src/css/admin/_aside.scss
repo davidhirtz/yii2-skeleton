@@ -44,13 +44,6 @@
   .nav-link-icon {
     min-width: 1rem;
   }
-
-  // A label of more than one word would wrap inside the collapsed rail, where the link is 3rem wide, and a
-  // faded label still takes its two lines — an item a word longer than the shipped ones would stand half
-  // again as tall as the rest.
-  .nav-link-label {
-    white-space: nowrap;
-  }
 }
 
 // The skeleton renders no header — the row is what a theme puts its logo in, as `Hirtz\Anakin` does.
