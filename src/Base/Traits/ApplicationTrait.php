@@ -34,6 +34,7 @@ use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Setup\Setup;
 use Hirtz\Skeleton\Sitemap\Sitemap;
 use Hirtz\Skeleton\Upload\Upload;
+use Hirtz\Skeleton\Web\Application as WebApplication;
 use Hirtz\Skeleton\Web\AssetManager;
 use Hirtz\Skeleton\Web\DbSession;
 use Hirtz\Skeleton\Web\UrlManager;
@@ -245,11 +246,12 @@ trait ApplicationTrait
                     TrimValidator::class => \Hirtz\Skeleton\Validators\TrimValidator::class,
                 ],
             ],
-            'controllerMap' => [
+            // The console takes the `consent` route for its own command
+            'controllerMap' => $this instanceof WebApplication ? [
                 'consent' => ConsentController::class,
                 'health' => HealthController::class,
                 'sitemap' => SitemapController::class,
-            ],
+            ] : [],
             'modules' => [
                 'admin' => [
                     'class' => Module::class,

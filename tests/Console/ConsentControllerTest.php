@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Console;
 
+use Hirtz\Skeleton\Console\Application;
 use Hirtz\Skeleton\Console\Controllers\ConsentController;
 use Hirtz\Skeleton\Models\Consent;
 use Hirtz\Skeleton\Modules\Admin\Module;
@@ -15,6 +16,8 @@ use yii\base\InvalidConfigException;
 
 class ConsentControllerTest extends TestCase
 {
+    protected string $applicationClass = Application::class;
+
     /**
      * `OPTIMIZE TABLE` commits the test's transaction.
      */
@@ -23,6 +26,20 @@ class ConsentControllerTest extends TestCase
     {
         Consent::deleteAll();
         parent::tearDown();
+    }
+
+    public function testRouteResolvesToConsoleController(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+        Application::current()->runAction('consent/clear');
+    }
+
+    public function testConsoleHasNoWebControllers(): void
+    {
+        $controllerMap = Application::current()->controllerMap;
+
+        self::assertArrayNotHasKey('health', $controllerMap);
+        self::assertArrayNotHasKey('sitemap', $controllerMap);
     }
 
     public function testActionClearWithoutLifetime(): void
