@@ -6,8 +6,8 @@ namespace Hirtz\Skeleton\Web;
 
 use Override;
 use Yii;
-use yii\base\InvalidRouteException;
 use yii\helpers\Json;
+use yii\web\BadRequestHttpException;
 use yii\web\Cookie;
 use Hirtz\Skeleton\Helpers\CookieHelper;
 use Hirtz\Skeleton\Helpers\Url;
@@ -146,8 +146,9 @@ class Response extends \yii\web\Response
         $request = Application::current()->getRequest();
         $url = Url::to($url);
 
-        if (preg_match('/\n/', $url)) {
-            throw new InvalidRouteException("Route with new line character detected '$url'.");
+        // PHP refuses a header with either, so a URL built from a request would end in an error instead of a 400
+        if (preg_match('/[\r\n]/', $url)) {
+            throw new BadRequestHttpException();
         }
 
         if (

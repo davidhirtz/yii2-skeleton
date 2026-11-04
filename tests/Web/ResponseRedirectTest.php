@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Web;
 
 use Hirtz\Skeleton\Test\TestCase;
+use PHPUnit\Framework\Attributes\TestWith;
+use yii\web\BadRequestHttpException;
 use yii\helpers\Json;
 
 /**
@@ -89,5 +91,13 @@ class ResponseRedirectTest extends TestCase
         self::assertSame(302, $response->getStatusCode());
         self::assertNull($headers->get('HX-Location'));
         self::assertStringEndsWith('/admin/dashboard/index', (string)$headers->get('Location'));
+    }
+
+    #[TestWith(["\r/oast.me"])]
+    #[TestWith(["\n/oast.me"])]
+    public function testALineBreakInTheUrlIsABadRequest(string $url): void
+    {
+        $this->expectException(BadRequestHttpException::class);
+        $this->getWebResponse()->redirect($url);
     }
 }
