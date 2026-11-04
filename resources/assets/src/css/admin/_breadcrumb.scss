@@ -23,6 +23,10 @@
     max-width: 30em;
   }
 
+  &:first-child {
+    max-width: none;
+  }
+
   &:not(:first-child)::before {
     color: var(--breadcrumb-divider-color);
     content: "/"
