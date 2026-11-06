@@ -1,4 +1,4 @@
-## Unreleased
+## 3.26.0 (November 6, 2026)
 
 - Added `FileUploadButton::dropZone()`: files dropped onto the element it names are uploaded
 
