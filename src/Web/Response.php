@@ -166,8 +166,10 @@ class Response extends \yii\web\Response
         }
 
         if ($request->isHtmxRequest() && $this->htmxRedirectTarget !== null) {
+            // htmx 4.0.1 sends the GET from the body unless told otherwise, which misses `#wrap`'s `hx-select-oob`
             $headers->set('HX-Location', Json::encode([
                 'path' => $url,
+                'source' => $this->htmxRedirectTarget,
                 'target' => $this->htmxRedirectTarget,
             ]));
 

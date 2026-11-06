@@ -30,7 +30,7 @@ class Flashes extends Widget
     {
         $this->alerts ??= Application::current()->getSession()->getAllFlashes();
 
-        // The container is page furniture, so it must not carry `hx-swap-oob`: the body's `hx-select-oob` delivers
+        // The container is page furniture, so it must not carry `hx-swap-oob`: `#wrap`'s `hx-select-oob` delivers
         // the alerts of every response, while an attribute that survives in the DOM is consumed out of the page
         // htmx restores from its history cache, leaving the next response without a target.
         // `polite` for every flash; a failure interrupts through its own `role="alert"`.

@@ -38,6 +38,7 @@ class ResponseRedirectTest extends TestCase
         $location = Json::decode((string)$headers->get('HX-Location'));
 
         self::assertIsArray($location);
+        self::assertSame('#wrap', $location['source']);
         self::assertSame('#wrap', $location['target']);
         self::assertStringEndsWith('/admin/dashboard/index', (string)$location['path']);
     }
