@@ -25,7 +25,12 @@ const getErrorMessage = (response: Response): string => {
     return (message ? decodeURIComponent(message) : response.statusText) || String(response.status);
 };
 
+// A file dragged in from the desktop, not a row of a sortable grid.
+const hasFiles = (event: DragEvent): boolean => !!event.dataTransfer?.types.includes('Files');
+
 window.customElements.get('file-upload') || window.customElements.define('file-upload', class extends HTMLElement {
+    private abortController: AbortController | null = null;
+
     // noinspection JSUnusedGlobalSymbols
     connectedCallback() {
         const $input = this.querySelector('input[type="file"]') as HTMLInputElement | null;
@@ -40,36 +45,107 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
         $input.addEventListener('change', async event => {
             const files = (event.target as HTMLInputElement).files;
 
-            if (!files) {
-                return;
-            }
-
-            // The swap replaces the target, not the dropdown the button sits in, which would stay open behind it.
-            const $popover = this.closest('[popover]') as HTMLElement | null;
-
-            if ($popover?.matches(':popover-open')) {
-                $popover.hidePopover();
-            }
-
-            let totalSize = 0;
-
-            for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
-                totalSize += files[fileIndex].size;
-            }
-
-            const $progress = startBusy(totalSize);
-
-            try {
-                await this.upload(files, $input, chunkSize, $progress);
-            } finally {
-                stopBusy();
-
-                // Picking the same file again after a failure would otherwise fire no `change`.
-                $input.value = '';
+            if (files) {
+                await this.uploadFiles(Array.from(files), $input, chunkSize);
             }
         });
 
         $btn.onclick = () => $input.click();
+
+        if (this.dataset.dropZone) {
+            this.listenForDrops($input, chunkSize);
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    disconnectedCallback() {
+        this.abortController?.abort();
+        this.abortController = null;
+    }
+
+    async uploadFiles(files: File[], $input: HTMLInputElement, chunkSize: number) {
+        if (!files.length) {
+            return;
+        }
+
+        // The swap replaces the target, not the dropdown the button sits in, which would stay open behind it.
+        const $popover = this.closest('[popover]') as HTMLElement | null;
+
+        if ($popover?.matches(':popover-open')) {
+            $popover.hidePopover();
+        }
+
+        const $progress = startBusy(files.reduce((total, file) => total + file.size, 0));
+
+        try {
+            await this.upload(files, $input, chunkSize, $progress);
+        } finally {
+            stopBusy();
+
+            // Picking the same file again after a failure would otherwise fire no `change`.
+            $input.value = '';
+        }
+    }
+
+    // The listeners sit on the document because the zone is replaced by every swap. `dragenter` and `dragleave` fire
+    // for every element crossed, the new one's `dragenter` before the old one's `dragleave`, so only a count of them
+    // tells when the pointer has left the zone, or the window.
+    listenForDrops($input: HTMLInputElement, chunkSize: number) {
+        this.abortController = new AbortController();
+        const signal = this.abortController.signal;
+
+        let depth = 0;
+        let $over: EventTarget | null = null;
+
+        const getDropZone = (): HTMLElement | null => document.querySelector(this.dataset.dropZone as string);
+
+        const isInDropZone = ($target: EventTarget | null): boolean => {
+            const $zone = getDropZone();
+            return !!$zone && $target instanceof Node && $zone.contains($target);
+        };
+
+        const update = () => getDropZone()?.classList.toggle('is-drop-target', depth > 0 && isInDropZone($over));
+
+        document.addEventListener('dragenter', (event: DragEvent) => {
+            if (hasFiles(event)) {
+                depth++;
+                $over = event.target;
+                update();
+            }
+        }, {signal});
+
+        document.addEventListener('dragleave', (event: DragEvent) => {
+            if (hasFiles(event)) {
+                depth = Math.max(0, depth - 1);
+                update();
+            }
+        }, {signal});
+
+        document.addEventListener('dragover', (event: DragEvent) => {
+            if (hasFiles(event) && isInDropZone(event.target)) {
+                event.preventDefault();
+                event.dataTransfer!.dropEffect = 'copy';
+            }
+        }, {signal});
+
+        document.addEventListener('drop', (event: DragEvent) => {
+            depth = 0;
+            update();
+
+            if (!hasFiles(event) || !isInDropZone(event.target)) {
+                return;
+            }
+
+            event.preventDefault();
+
+            // A dropped folder arrives as an empty file that cannot be read.
+            const files = Array.from(event.dataTransfer!.items)
+                .filter(item => item.kind === 'file' && item.webkitGetAsEntry?.()?.isDirectory !== true)
+                .map(item => item.getAsFile())
+                .filter((file): file is File => !!file);
+
+            void this.uploadFiles($input.multiple ? files : files.slice(0, 1), $input, chunkSize);
+        }, {signal});
     }
 
     // Looked up for every swap: the swap replaces the target, and a button outside it — the header, a dropdown — would
@@ -78,7 +154,7 @@ window.customElements.get('file-upload') || window.customElements.define('file-u
         return (this.dataset.target ? document.querySelector(this.dataset.target) : null) || document.body;
     }
 
-    async upload(files: FileList, $input: HTMLInputElement, chunkSize: number, $progress: HTMLProgressElement) {
+    async upload(files: File[], $input: HTMLInputElement, chunkSize: number, $progress: HTMLProgressElement) {
         for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
             const file = files[fileIndex];
             const totalChunks = Math.ceil(file.size / chunkSize);

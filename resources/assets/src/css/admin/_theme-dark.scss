@@ -114,6 +114,9 @@
   --input-caret: #{caret('#666666')};
   --input-caret-hover: #{caret('#EAEAEA')};
 
+  --upload-drop-bg: color-mix(in srgb, var(--color-indigo-500) 15%, transparent);
+  --upload-drop-border-color: var(--color-indigo-300);
+
   --checkbox-bg: var(--color-gray-950);
   --checkbox-checked-bg: var(--color-gray-950) #{checkmark('#EAEAEA')} no-repeat center;
 

@@ -35,6 +35,7 @@ class FileUploadButton extends Widget
 
     protected ?string $target = null;
     protected ?string $selectOob = null;
+    protected ?string $dropZone = null;
 
     /**
      * @var list<Closure>|null
@@ -96,6 +97,12 @@ class FileUploadButton extends Widget
         return $this;
     }
 
+    public function dropZone(?string $dropZone): static
+    {
+        $this->dropZone = $dropZone;
+        return $this;
+    }
+
     #[Override]
     protected function configure(): void
     {
@@ -113,6 +120,7 @@ class FileUploadButton extends Widget
             ->chunkSize($this->maxChunkSize)
             ->target($this->target)
             ->selectOob($this->selectOob)
+            ->dropZone($this->dropZone)
             ->content($this->getButton(), $this->getInput());
     }
 

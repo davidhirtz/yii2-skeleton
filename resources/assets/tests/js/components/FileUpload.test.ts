@@ -96,4 +96,82 @@ describe('file-upload', () => {
         expect(bodies[0].get('upload')).toBeInstanceOf(File);
         expect(bodies[0].get('preview')).toBeInstanceOf(Blob);
     });
+
+    describe('drop zone', () => {
+        let $zone: HTMLElement;
+        let $row: HTMLElement;
+
+        beforeEach(() => {
+            document.body.querySelector('file-upload')!.remove();
+
+            const $upload = document.createElement('file-upload');
+            $upload.dataset.url = '/admin/upload/create';
+            $upload.dataset.target = '#grid';
+            $upload.dataset.dropZone = '#grid';
+            $upload.innerHTML = '<button type="button"></button><input type="file" name="upload" multiple>';
+            Object.defineProperty($upload.querySelector('input')!, 'value', {set: (value: string) => values.push(value)});
+
+            document.getElementById('wrap')!.append($upload, Object.assign(document.createElement('div'), {
+                id: 'grid',
+                innerHTML: '<div class="row"></div>',
+            }));
+
+            $zone = document.getElementById('grid')!;
+            $row = $zone.querySelector('.row')!;
+        });
+
+        const drag = ($target: Element, type: string, files: File[], types = ['Files']) => {
+            const event = new Event(type, {bubbles: true, cancelable: true});
+
+            Object.defineProperty(event, 'dataTransfer', {
+                value: {
+                    types,
+                    dropEffect: 'none',
+                    items: files.map(file => ({kind: 'file', getAsFile: () => file})),
+                },
+            });
+
+            $target.dispatchEvent(event);
+            return event;
+        };
+
+        it('marks the zone while files are dragged over it, not a sortable row', () => {
+            drag($row, 'dragenter', [], ['text/plain']);
+            expect($zone.classList.contains('is-drop-target')).toBe(false);
+
+            drag($zone, 'dragenter', []);
+            drag($row, 'dragenter', []);
+            drag($zone, 'dragleave', []);
+            expect($zone.classList.contains('is-drop-target')).toBe(true);
+            expect(drag($row, 'dragover', []).defaultPrevented).toBe(true);
+
+            drag($row, 'dragleave', []);
+            expect($zone.classList.contains('is-drop-target')).toBe(false);
+        });
+
+        it('leaves a drop outside the zone to the browser', () => {
+            expect(drag(document.getElementById('flashes')!, 'dragover', []).defaultPrevented).toBe(false);
+        });
+
+        it('uploads every file dropped onto the zone', async () => {
+            const bodies: FormData[] = [];
+
+            vi.stubGlobal('fetch', vi.fn(async (_url: string, init: RequestInit) => {
+                bodies.push(init.body as FormData);
+                return new Response('', {status: 204});
+            }));
+
+            drag($row, 'dragenter', []);
+
+            const event = drag($row, 'drop', [new File(['a'], 'Å😀.jpg'), new File(['b'], 'Mu\u{308}ller.png')]);
+
+            for (let i = 0; i < 10; i++) {
+                await tick();
+            }
+
+            expect(event.defaultPrevented).toBe(true);
+            expect($zone.classList.contains('is-drop-target')).toBe(false);
+            expect(bodies.map(body => (body.get('upload') as File).name)).toEqual(['Å😀.jpg', 'Mu\u{308}ller.png']);
+        });
+    });
 });

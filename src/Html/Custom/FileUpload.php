@@ -31,6 +31,11 @@ class FileUpload extends Tag
         return $this->attribute('data-select-oob', $selectOob);
     }
 
+    public function dropZone(?string $dropZone): static
+    {
+        return $this->attribute('data-drop-zone', $dropZone);
+    }
+
     public function chunkSize(?int $size): static
     {
         return $this->attribute('data-chunk-size', $size);

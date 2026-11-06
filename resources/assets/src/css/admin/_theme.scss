@@ -212,6 +212,9 @@
   --input-caret: #{caret('#EAEAEA')};
   --input-caret-hover: #{caret('#000')};
 
+  --upload-drop-bg: var(--color-blue-50);
+  --upload-drop-border-color: var(--color-blue-600);
+
   --checkbox-bg: var(--color-white);
   --checkbox-checked-bg: var(--color-white) #{checkmark('#000')} no-repeat center;
 

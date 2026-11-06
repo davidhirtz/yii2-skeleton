@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added `FileUploadButton::dropZone()`: files dropped onto the element it names are uploaded
+
 ## 3.25.0 (October 31, 2026)
 
 - Added the `setup` command and component, running the seeders bundles register in `setup.seeders`

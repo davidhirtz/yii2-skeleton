@@ -26,3 +26,9 @@
   padding: 0;
   text-align: start;
 }
+
+.is-drop-target {
+  background-color: var(--upload-drop-bg);
+  outline: 2px dashed var(--upload-drop-border-color);
+  outline-offset: -2px;
+}
