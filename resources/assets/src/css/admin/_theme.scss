@@ -212,7 +212,7 @@
   --input-caret: #{caret('#EAEAEA')};
   --input-caret-hover: #{caret('#000')};
 
-  --upload-drop-bg: var(--color-blue-50);
+  --upload-drop-bg: color-mix(in srgb, var(--color-blue-200) 20%, transparent);
   --upload-drop-border-color: var(--color-blue-600);
 
   --checkbox-bg: var(--color-white);

@@ -27,8 +27,25 @@
   text-align: start;
 }
 
-.is-drop-target {
-  background-color: var(--upload-drop-bg);
-  outline: 2px dashed var(--upload-drop-border-color);
-  outline-offset: -2px;
+// An overlay, since rows and alerts paint over an outline. A grid marks its table, or the empty grid's alert, never
+// its header; the alert's mark reaches past its edges to stand apart from its colour.
+.is-drop-target:not(.grid),
+.grid.is-drop-target > .table-wrap,
+.grid.is-drop-target:not(:has(> .table-wrap)) > .alert {
+  position: relative;
+
+  &::after {
+    background-color: var(--upload-drop-bg);
+    border: 2px dashed var(--upload-drop-border-color);
+    border-radius: .25rem;
+    content: "";
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+  }
+}
+
+.grid.is-drop-target:not(:has(> .table-wrap)) > .alert::after {
+  inset: -.5rem;
 }
