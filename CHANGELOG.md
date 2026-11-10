@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Added dashboard panels: `Widgets\Panels\DashboardPanel` and `Dashboard::addPanel()`, with "recently edited", "latest changes" and "needs attention" (`ContentHealthPanel::addCheck()`)
+- Added `Modules\Admin\Module::$dashboardTrailModels`, the records "recently edited" lists
 - Added `Widgets\StructuredData\JobPosting` for Google's job listings
 
 ## 3.26.0 (November 6, 2026)

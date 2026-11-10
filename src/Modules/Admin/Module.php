@@ -6,10 +6,15 @@ namespace Hirtz\Skeleton\Modules\Admin;
 
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UserLoginController;
+use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\AuthItem;
+use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\DashboardController;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\ActivityPanel;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\ContentHealthPanel;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\RecentlyEditedPanel;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Web\User as WebUser;
@@ -79,6 +84,13 @@ class Module extends \Hirtz\Skeleton\Base\Module
      * data.
      */
     public int|false $userLoginLifetime = false;
+
+    /**
+     * An edit inside a listed record reaches it through the trail's parent rows.
+     *
+     * @var list<class-string<ActiveRecord&AdminModelInterface>>
+     */
+    public array $dashboardTrailModels = [];
 
     public bool $enableConsentLog = true;
 
@@ -280,6 +292,12 @@ class Module extends \Hirtz\Skeleton\Base\Module
                 ->link(fn (A $link) => $link->target('_blank'))
                 ->order(100)
                 ->url('/'),
+        );
+
+        $dashboard->addPanel(
+            health: ContentHealthPanel::make()->order(10),
+            recent: RecentlyEditedPanel::make()->order(30),
+            activity: ActivityPanel::make()->order(40),
         );
 
         foreach ($this->getSubmodules() as $module) {
