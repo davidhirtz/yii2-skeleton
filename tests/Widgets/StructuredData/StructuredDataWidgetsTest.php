@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Widgets\StructuredData;
 
+use DateTimeInterface;
 use Hirtz\Skeleton\Db\Date;
 use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Models\Breadcrumb;
@@ -11,6 +12,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\StructuredData\BreadcrumbList;
 use Hirtz\Skeleton\Widgets\StructuredData\Event;
+use Hirtz\Skeleton\Widgets\StructuredData\JobPosting;
 use Hirtz\Skeleton\Widgets\StructuredData\Organization;
 use Hirtz\Skeleton\Widgets\StructuredData\Thing;
 use Hirtz\Skeleton\Widgets\StructuredData\WebSite;
@@ -184,6 +186,112 @@ class StructuredDataWidgetsTest extends TestCase
 
         self::assertSame(['@type' => 'Place', 'name' => 'Hall'], $node['location'] ?? null);
         self::assertSame('https://schema.org/OfflineEventAttendanceMode', $node['eventAttendanceMode'] ?? null);
+    }
+
+    public function testAJobPostingNamesTheOrganizationAndItsPlace(): void
+    {
+        Yii::$container->set(Organization::class, ['name' => 'Å Example GmbH']);
+
+        $node = JobPosting::make()
+            ->title('Gärtner (m/w/d) 🌱')
+            ->description('<p>Mu' . "\u{308}" . 'ller sucht Verstärkung.</p>')
+            ->datePosted(new Date('2026-10-01'))
+            ->validThrough(new Date('2999-12-31'))
+            ->employmentTypes([JobPosting::EMPLOYMENT_FULL_TIME, JobPosting::EMPLOYMENT_PART_TIME])
+            ->address([
+                'streetAddress' => 'Müllerstraße 1',
+                'postalCode' => '10115',
+                'addressLocality' => 'Berlin',
+                'addressCountry' => 'DE',
+            ])
+            ->identifier('42')
+            ->build();
+
+        self::assertSame([
+            '@type' => 'JobPosting',
+            'title' => 'Gärtner (m/w/d) 🌱',
+            'description' => '<p>Mu' . "\u{308}" . 'ller sucht Verstärkung.</p>',
+            'datePosted' => '2026-10-01',
+            'validThrough' => '2999-12-31',
+            'employmentType' => ['FULL_TIME', 'PART_TIME'],
+            'hiringOrganization' => [
+                '@type' => 'Organization',
+                '@id' => 'https://www.test.localhost/#organization',
+                'name' => 'Å Example GmbH',
+                'url' => 'https://www.test.localhost/',
+            ],
+            'jobLocation' => [
+                '@type' => 'Place',
+                'address' => [
+                    '@type' => 'PostalAddress',
+                    'streetAddress' => 'Müllerstraße 1',
+                    'postalCode' => '10115',
+                    'addressLocality' => 'Berlin',
+                    'addressCountry' => 'DE',
+                ],
+            ],
+            'identifier' => ['@type' => 'PropertyValue', 'name' => 'Å Example GmbH', 'value' => '42'],
+        ], $node);
+    }
+
+    public function testARemoteJobPostingNeedsNoAddressButACountry(): void
+    {
+        $posting = fn (): JobPosting => JobPosting::make()
+            ->title('Developer')
+            ->description('<p>Remote</p>')
+            ->datePosted(new Date('2026-10-01'))
+            ->hiringOrganization(['@type' => 'Organization', 'name' => 'Client AG']);
+
+        self::assertNull($posting()->remote()->build());
+
+        $node = $posting()->remote(applicantCountry: 'CH')->build();
+
+        self::assertSame('Client AG', $node['hiringOrganization']['name'] ?? null);
+        self::assertSame('TELECOMMUTE', $node['jobLocationType'] ?? null);
+        self::assertSame(['@type' => 'Country', 'name' => 'CH'], $node['applicantLocationRequirements'] ?? null);
+        self::assertArrayNotHasKey('jobLocation', $node);
+
+        $node = $posting()->remote()->address(['streetAddress' => 'Hauptstraße 1', 'addressCountry' => 'AT'])->build();
+
+        self::assertSame(['@type' => 'Country', 'name' => 'AT'], $node['applicantLocationRequirements'] ?? null);
+        self::assertSame('Hauptstraße 1', $node['jobLocation']['address']['streetAddress'] ?? null);
+    }
+
+    public function testAnIncompleteJobPostingRendersNothing(): void
+    {
+        $posting = fn (): JobPosting => JobPosting::make()
+            ->title('Developer')
+            ->description('<p>Office</p>')
+            ->datePosted(new Date('2026-10-01'))
+            ->address(['streetAddress' => 'Hauptstraße 1']);
+
+        Yii::$container->set(Organization::class, ['name' => 'Example GmbH']);
+        self::assertNotNull($posting()->build());
+
+        self::assertNull($posting()->description('')->build());
+        self::assertNull($posting()->title(null)->build());
+        self::assertNull($posting()->datePosted(null)->build());
+        self::assertNull($posting()->address(['addressLocality' => 'Berlin'])->build());
+
+        Yii::$container->set(Organization::class, ['name' => null]);
+        self::assertNull($posting()->build());
+    }
+
+    public function testAnExpiredJobPostingRendersNothing(): void
+    {
+        Yii::$container->set(Organization::class, ['name' => 'Example GmbH']);
+
+        $posting = fn (DateTimeInterface $validThrough): ?array => JobPosting::make()
+            ->title('Developer')
+            ->description('<p>Office</p>')
+            ->datePosted(new Date('2026-01-01'))
+            ->address(['streetAddress' => 'Hauptstraße 1'])
+            ->validThrough($validThrough)
+            ->build();
+
+        self::assertNull($posting(new Date('-2 days')));
+        self::assertNotNull($posting(new DateTime('now')));
+        self::assertNotNull($posting(new Date('+2 days')));
     }
 
     private function getView(): View
