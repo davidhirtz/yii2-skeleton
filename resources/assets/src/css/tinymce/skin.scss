@@ -305,3 +305,30 @@ div.tox-tinymce {
     background-color: var(--dropdown-option-selected-bg, var(--input-group-bg));
   }
 }
+
+// The admin's tooltip: Oxide's weight of 600 is bold in the body font the sink now inherits.
+.tox .tox-tooltip__body {
+  background-color: var(--tooltip-bg);
+  border-radius: .25rem;
+  color: var(--tooltip-color);
+  font-size: .75rem;
+  font-weight: normal;
+  line-height: 1.125rem;
+  padding: .25rem .5rem;
+}
+
+.tox .tox-tooltip--down .tox-tooltip__arrow {
+  border-top-color: var(--tooltip-bg);
+}
+
+.tox .tox-tooltip--up .tox-tooltip__arrow {
+  border-bottom-color: var(--tooltip-bg);
+}
+
+.tox .tox-tooltip--right .tox-tooltip__arrow {
+  border-left-color: var(--tooltip-bg);
+}
+
+.tox .tox-tooltip--left .tox-tooltip__arrow {
+  border-right-color: var(--tooltip-bg);
+}
