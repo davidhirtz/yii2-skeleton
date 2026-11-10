@@ -32,6 +32,7 @@ echo Container::make()
         Card::make()
             ->content(SearchResultList::make()
                 ->attribute('id', SearchController::LIST_ID)
+                ->addClass('search-results-striped')
                 ->query($query)
                 ->results($results)
                 ->emptyText($query !== ''

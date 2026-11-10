@@ -114,6 +114,24 @@
   }
 }
 
+// The search page's rows read like a grid's.
+.search-results-striped {
+  .search-result {
+    --dropdown-option-bg: var(--table-bg);
+    --dropdown-option-color: var(--table-color);
+    padding: 1rem;
+  }
+
+  > .search-result-item:nth-of-type(odd) > .search-result {
+    --dropdown-option-bg: var(--table-striped-bg);
+  }
+
+  > .search-result-item > .search-result:is(:hover, :focus) {
+    --dropdown-option-bg: var(--table-hover-bg);
+    --dropdown-option-color: var(--table-hover-color);
+  }
+}
+
 .search-result-icon {
   flex: none;
   width: 1rem;
