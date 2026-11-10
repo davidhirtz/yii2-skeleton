@@ -127,9 +127,15 @@ class TrailBehavior extends Behavior
         return $value instanceof Date ? $value->format('Y-m-d') : $value;
     }
 
+    /**
+     * The name goes with the row, which is all that is left to show.
+     */
     protected function onAfterDelete(): void
     {
-        $this->insertTrail($this->createTrail(Trail::TYPE_DELETE));
+        $trail = $this->createTrail(Trail::TYPE_DELETE);
+        $trail->data = ['name' => $this->owner->getAdminName()];
+
+        $this->insertTrail($trail);
     }
 
     /**

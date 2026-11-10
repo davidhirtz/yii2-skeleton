@@ -8,6 +8,8 @@ use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Models\UserToken;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\ActivityPanel;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
@@ -62,6 +64,52 @@ class ActivityPanelTest extends TestCase
 
         self::assertStringContainsString(Yii::t('skeleton', 'DASHBOARD_ACTIVITY_COUNT_TEXT', ['count' => 2]), $html);
         self::assertStringContainsString(Yii::t('skeleton', 'TRAIL_DELETE_NAME'), $html);
+    }
+
+    public function testADeletedRecordKeepsItsName(): void
+    {
+        $redirect = $this->createRedirect('deleted');
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('owner'));
+
+        $name = $redirect->getAdminName();
+        self::assertSame(1, $redirect->delete());
+
+        $trail = Trail::find()
+            ->where(['model_class' => Redirect::class, 'model_id' => $redirect->id, 'type' => Trail::TYPE_DELETE])
+            ->one();
+
+        self::assertInstanceOf(Trail::class, $trail);
+        self::assertSame($name, $trail->getModelName());
+        self::assertStringContainsString('>' . $name . '</span>', ActivityPanel::make()->render());
+    }
+
+    public function testAChangeInsideAListedRecordIsShownOnIt(): void
+    {
+        $entry = $this->createRedirect('listed-parent');
+        $this->getWebUser()->setIdentity($this->getUserFromFixture('owner'));
+
+        $module = Yii::$app->getModule('admin');
+        self::assertInstanceOf(Module::class, $module);
+        $module->dashboardTrailModels = [Redirect::class];
+
+        $child = Trail::create();
+        $child->type = Trail::TYPE_DELETE;
+        $child->model_class = UserToken::class;
+        $child->model_id = 999_999;
+        $child->data = ['name' => 'Bild Å 東京 😀'];
+        self::assertTrue($child->insert());
+
+        $copy = Trail::create();
+        $copy->type = Trail::TYPE_CHILD_DELETE;
+        $copy->model_class = Redirect::class;
+        $copy->model_id = $entry->id;
+        $copy->data = ['model_class' => UserToken::class, 'model_id' => 999_999, 'trail_id' => $child->id];
+        self::assertTrue($copy->insert());
+
+        $html = ActivityPanel::make()->render();
+
+        self::assertStringContainsString($this->getHref($entry), $html);
+        self::assertStringContainsString(Yii::t('skeleton', 'TRAIL_CHILD_DELETE_TEXT', ['model' => 'Bild Å 東京 😀']), $html);
     }
 
     public function testSavesFarApartAreSeparateLines(): void

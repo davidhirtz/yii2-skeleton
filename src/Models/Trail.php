@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models;
 
+use Hirtz\Skeleton\Behaviors\TrailBehavior;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\I18n\Message;
 use Hirtz\Skeleton\Mcp\Mcp;
@@ -145,8 +146,17 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         return $query;
     }
 
+    /**
+     * A deleted record answers the name its delete row kept ({@see TrailBehavior::onAfterDelete()}).
+     */
     public function getModelName(): string
     {
+        $name = $this->data['name'] ?? null;
+
+        if ($this->type === static::TYPE_DELETE && is_string($name) && $name !== '') {
+            return $name;
+        }
+
         if ($model = $this->getModelRecord()) {
             return $model instanceof TrailModelInterface
                 ? $model->getAdminName()

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
 use Hirtz\Skeleton\Models\Trail;
-use Hirtz\Skeleton\Modules\Admin\Module;
 use Override;
 use Stringable;
 use Yii;
@@ -67,28 +66,5 @@ class RecentlyEditedPanel extends TrailPanel
         }
 
         return $this->getList($lines);
-    }
-
-    /**
-     * @return list<string>
-     */
-    protected function getModelClasses(): array
-    {
-        $module = Yii::$app->getModule('admin');
-        return $module instanceof Module ? $module->dashboardTrailModels : [];
-    }
-
-    /**
-     * @param list<string> $classes
-     */
-    protected function isListedClass(string $class, array $classes): bool
-    {
-        foreach ($classes as $listed) {
-            if (is_a($class, $listed, true)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

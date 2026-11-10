@@ -14,8 +14,10 @@ use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Widgets\Panels\DashboardPanel;
 use Stringable;
+use Yii;
 
 abstract class TrailPanel extends DashboardPanel
 {
@@ -25,6 +27,29 @@ abstract class TrailPanel extends DashboardPanel
     {
         $this->limit = $limit;
         return $this;
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function getModelClasses(): array
+    {
+        $module = Yii::$app->getModule('admin');
+        return $module instanceof Module ? $module->dashboardTrailModels : [];
+    }
+
+    /**
+     * @param list<string> $classes
+     */
+    protected function isListedClass(string $class, array $classes): bool
+    {
+        foreach ($classes as $listed) {
+            if (is_a($class, $listed, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
