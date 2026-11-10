@@ -90,3 +90,196 @@ div.tox-tinymce {
 .form-row:has(tinymce-editor) .label {
   padding: .5rem 0;
 }
+// Dialogs take the admin's modal, labels, inputs and buttons through its tokens, so dark mode follows.
+.tox .tox-dialog-wrap *:not(svg, path) {
+  font-family: inherit;
+}
+
+.tox .tox-dialog-wrap__backdrop {
+  background-color: var(--modal-backdrop-bg);
+}
+
+.tox .tox-dialog {
+  background-color: var(--modal-bg);
+  border: 0;
+  border-radius: .25rem;
+  box-shadow: none;
+  color: var(--modal-color, var(--body-color));
+}
+
+.tox .tox-dialog__header {
+  background-color: var(--modal-header-bg);
+  color: inherit;
+  padding: 1rem 1rem 0;
+}
+
+.tox .tox-dialog__title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.tox .tox-dialog__header .tox-button--naked {
+  background: var(--modal-btn-icon-bg, transparent);
+  border: 0;
+  border-radius: .25rem;
+  color: inherit;
+
+  &:hover {
+    background: var(--modal-btn-icon-hover-bg);
+  }
+
+  &:focus-visible {
+    background: var(--modal-btn-icon-focus-bg);
+    box-shadow: none;
+  }
+
+  svg {
+    fill: currentColor;
+  }
+}
+
+.tox .tox-dialog__body {
+  color: inherit;
+}
+
+.tox .tox-dialog__body-content {
+  padding: 1rem;
+}
+
+.tox .tox-form__group {
+  margin-bottom: 1rem;
+}
+
+.tox .tox-label {
+  color: var(--color-label);
+  font-family: "Bebas Neue", sans-serif !important;
+  font-size: .875rem;
+  letter-spacing: .0625em;
+  padding-bottom: .25rem;
+}
+
+.tox .tox-textfield,
+.tox .tox-textarea,
+.tox .tox-selectfield select,
+.tox .tox-listboxfield .tox-listbox--select {
+  background-color: var(--input-bg-color);
+  border: 1px solid var(--input-border-color);
+  border-radius: .25rem;
+  box-shadow: none;
+  color: var(--input-color);
+  font-size: .875rem;
+  line-height: 1.375rem;
+  min-height: 0;
+  padding: .5rem 1rem;
+
+  // Oxide's own `:focus` rule names the colours outright and outranks the shorthand above.
+  &:hover,
+  &:focus {
+    background-color: var(--input-focus-bg-color);
+    border-color: var(--input-focus-border-color);
+    box-shadow: none;
+    color: var(--input-focus-color);
+    outline: 0;
+  }
+}
+
+.tox .tox-listbox__select-label {
+  color: inherit;
+  font-size: .875rem;
+  line-height: 1.375rem;
+  margin: 0;
+}
+
+.tox .tox-listbox__select-chevron svg {
+  fill: currentColor;
+}
+
+.tox .tox-browse-url {
+  background-color: var(--input-group-bg);
+  border: 1px solid var(--input-border-color);
+  border-radius: .25rem;
+  color: var(--input-color);
+  height: 2.5rem;
+  margin-left: .5rem;
+  width: 2.5rem;
+
+  &:hover,
+  &:focus {
+    background-color: var(--input-group-btn-hover-bg);
+    box-shadow: none;
+  }
+
+  svg {
+    fill: currentColor;
+  }
+}
+
+.tox .tox-dialog__footer {
+  background-color: var(--modal-footer-bg, transparent);
+  border: 0;
+  gap: .5rem;
+  padding: 0 1rem 1rem;
+}
+
+.tox .tox-dialog__footer-end {
+  gap: .5rem;
+}
+
+.tox .tox-dialog__footer .tox-button {
+  --btn-bg: var(--btn-primary-bg);
+  --btn-border-color: var(--btn-primary-border-color);
+  --btn-color: var(--btn-primary-color);
+  --btn-hover-bg: var(--btn-primary-hover-bg);
+  --btn-hover-border-color: var(--btn-primary-hover-border-color);
+  --btn-hover-color: var(--btn-primary-hover-color);
+
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border-color);
+  border-radius: .25rem;
+  color: var(--btn-color);
+  font-family: "Bebas Neue", sans-serif !important;
+  font-size: .875rem;
+  font-weight: 400;
+  letter-spacing: .0625em;
+  margin: 0;
+  min-width: 3.125rem;
+  padding: .5rem 1rem;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--btn-hover-bg);
+    border-color: var(--btn-hover-border-color);
+    box-shadow: none;
+    color: var(--btn-hover-color);
+  }
+
+  &.tox-button--secondary {
+    --btn-bg: var(--btn-secondary-bg);
+    --btn-border-color: var(--btn-secondary-border-color);
+    --btn-color: var(--btn-secondary-color);
+    --btn-hover-bg: var(--btn-secondary-hover-bg);
+    --btn-hover-border-color: var(--btn-secondary-hover-border-color);
+    --btn-hover-color: var(--btn-secondary-hover-color);
+  }
+}
+
+// The listbox menu and the link list float in the aux sink, styled as the admin's dropdowns.
+.tox .tox-menu.tox-collection--list {
+  background-color: var(--dropdown-bg);
+  border: 1px solid var(--dropdown-border-color, transparent);
+  border-radius: .25rem;
+  box-shadow: none;
+
+  .tox-collection__item {
+    color: var(--dropdown-option-color, var(--dropdown-color));
+    font-size: .875rem;
+  }
+
+  .tox-collection__item--active {
+    background-color: var(--dropdown-option-hover-bg, var(--input-group-btn-hover-bg));
+  }
+
+  .tox-collection__item--enabled {
+    background-color: var(--dropdown-option-selected-bg, var(--input-group-bg));
+  }
+}
