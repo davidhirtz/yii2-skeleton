@@ -114,7 +114,7 @@ class SchemaBuilderTest extends TestCase
         self::assertSame(['title' => 'Email', 'type' => 'string', 'format' => 'email'], $properties['email']);
         self::assertSame(['title' => 'Website', 'type' => 'string', 'format' => 'uri'], $properties['website']);
         self::assertSame(['title' => 'Color', 'type' => 'string', 'pattern' => '^#(?:[0-9a-fA-F]{3}){1,2}$'], $properties['color']);
-        self::assertSame(['title' => 'Body', 'description' => 'Purified to the tags a[href|rel|target|title], br, li, ol, p, span, strong, ul.', 'type' => 'string', 'contentMediaType' => 'text/html'], $properties['body']);
+        self::assertSame(['title' => 'Body', 'description' => 'Purified to the tags a[aria-label|href|rel|target|title], br, li, ol, p, span, strong, ul.', 'type' => 'string', 'contentMediaType' => 'text/html'], $properties['body']);
     }
 
     public function testNumberValidatorsMapToNumbers(): void
@@ -191,7 +191,7 @@ class SchemaBuilderTest extends TestCase
         self::assertSame(['title' => 'Ratio', 'type' => 'number'], $properties['ratio']);
         self::assertSame(['title' => 'Layout', 'enum' => [1, 2]], $properties['layout']);
         self::assertSame(['title' => 'Tags', 'type' => 'array', 'items' => ['enum' => ['a', 'b']]], $properties['tags']);
-        self::assertSame(['title' => 'Intro', 'description' => 'Purified to the tags a[href|rel|target|title], br, li, ol, p, span, strong, ul.', 'type' => 'string', 'contentMediaType' => 'text/html', 'maxLength' => 65535], $properties['intro']);
+        self::assertSame(['title' => 'Intro', 'description' => 'Purified to the tags a[aria-label|href|rel|target|title], br, li, ol, p, span, strong, ul.', 'type' => 'string', 'contentMediaType' => 'text/html', 'maxLength' => 65535], $properties['intro']);
         self::assertSame(['title' => 'Contact', 'type' => 'string', 'maxLength' => 255, 'format' => 'email'], $properties['contact']);
         self::assertSame('string', $properties['link']['type'] ?? null);
         self::assertSame('string', $properties['target']['type'] ?? null);

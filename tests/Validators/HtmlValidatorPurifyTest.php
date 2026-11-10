@@ -26,6 +26,18 @@ class HtmlValidatorPurifyTest extends TestCase
         self::assertStringContainsString('<p>Hello</p>', $html);
     }
 
+    public function testALinkKeepsItsAriaLabelAndNoOtherAriaAttribute(): void
+    {
+        $html = $this->purify('<p><a href="/karriere" aria-label="Mehr: Ågot 東京 🚀" aria-hidden="true">Mehr</a></p>');
+
+        self::assertSame('<p><a href="/karriere" aria-label="Mehr: Ågot 東京 🚀">Mehr</a></p>', $html);
+    }
+
+    public function testAnAriaLabelIsKeptOnLinksOnly(): void
+    {
+        self::assertSame('<p>Text</p>', $this->purify('<p aria-label="Nope">Text</p>'));
+    }
+
     public function testAnEventHandlerAttributeIsRemoved(): void
     {
         $html = $this->purify('<p onclick="alert(1)">Hello</p>');

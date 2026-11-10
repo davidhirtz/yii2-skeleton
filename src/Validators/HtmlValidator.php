@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Validators;
 
 use Closure;
 use HTMLPurifier_Config;
+use HTMLPurifier_HTMLDefinition;
 use HTMLPurifier_URIScheme;
 use HTMLPurifier_URISchemeRegistry;
 use Hirtz\Skeleton\Validators\Interfaces\JsonSchemaInterface;
@@ -69,6 +70,13 @@ class HtmlValidator extends Validator implements JsonSchemaInterface
     public array $purifierOptions = [];
 
     public bool $removeUnnecessarySpanTags = false;
+
+    /**
+     * Attributes HTMLPurifier does not know, as tag => [attribute => HTMLPurifier type]; allowed wherever their tag is.
+     *
+     * @var array<string, array<string, string>>
+     */
+    public array $definedHtmlAttributes = ['a' => ['aria-label' => 'Text']];
 
     /**
      * Further schemes a link may use, on top of HTMLPurifier's own (`http`, `https`, `mailto`, `tel`, …).
@@ -182,6 +190,15 @@ class HtmlValidator extends Validator implements JsonSchemaInterface
             }
         }
 
+        foreach ($this->definedHtmlAttributes as $tag => $attributes) {
+            if (in_array($tag, $this->allowedHtmlTags, true)) {
+                $this->allowedHtmlAttributes[$tag] = array_values(array_unique([
+                    ...$this->allowedHtmlAttributes[$tag] ?? [],
+                    ...array_keys($attributes),
+                ]));
+            }
+        }
+
         $allowedHtmlTags = [];
 
         foreach ($this->allowedHtmlTags as $tag) {
@@ -254,6 +271,32 @@ class HtmlValidator extends Validator implements JsonSchemaInterface
     }
 
     /**
+     * A raw definition needs an id, by which HTMLPurifier caches it: a change to `definedHtmlAttributes` bumps the
+     * revision.
+     */
+    protected function configurePurifier(HTMLPurifier_Config $config): void
+    {
+        $config->loadArray($this->purifierOptions);
+
+        if (!$this->definedHtmlAttributes) {
+            return;
+        }
+
+        $config->set('HTML.DefinitionID', 'hirtz-skeleton-html-validator');
+        $config->set('HTML.DefinitionRev', 1);
+
+        $definition = $config->maybeGetRawHTMLDefinition();
+
+        if ($definition instanceof HTMLPurifier_HTMLDefinition) {
+            foreach ($this->definedHtmlAttributes as $tag => $attributes) {
+                foreach ($attributes as $attribute => $type) {
+                    $definition->addAttribute($tag, $attribute, $type);
+                }
+            }
+        }
+    }
+
+    /**
      * @param ActiveRecord $model
      * @param string $attribute
      */
@@ -281,8 +324,7 @@ class HtmlValidator extends Validator implements JsonSchemaInterface
 
         $this->registerUriSchemes();
 
-        // Process html.
-        $html = HtmlPurifier::process($html, $this->purifierOptions);
+        $html = HtmlPurifier::process($html, $this->configurePurifier(...));
 
         // Change invalid break tags.
         $html = preg_replace('#<br />#', '<br>', $html);

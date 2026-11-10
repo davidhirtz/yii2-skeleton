@@ -26,7 +26,8 @@ class LinkDialog extends Widget
     protected ?LinkField $field = null;
     protected string $href = '';
     protected string $text = '';
-    protected string $title = '';
+    protected string $label = '';
+    protected ?string $labelPlaceholder = null;
     protected bool $blank = false;
     protected string $cssClass = '';
 
@@ -53,9 +54,21 @@ class LinkDialog extends Widget
         return $this;
     }
 
-    public function title(?string $title): static
+    /**
+     * The `aria-label`, which screen readers announce in place of the text.
+     */
+    public function label(?string $label): static
     {
-        $this->title = (string)$title;
+        $this->label = (string)$label;
+        return $this;
+    }
+
+    /**
+     * The label the link gets without one, such as the cms's for an entry link.
+     */
+    public function labelPlaceholder(?string $labelPlaceholder): static
+    {
+        $this->labelPlaceholder = $labelPlaceholder;
         return $this;
     }
 
@@ -100,10 +113,12 @@ class LinkDialog extends Widget
                             ->attribute('value', $this->text)
                             ->label(Yii::t('skeleton', 'LINK_TEXT_LABEL')),
                         InputField::make()
-                            ->attribute('id', self::ID . '-title')
-                            ->attribute('name', 'title')
-                            ->attribute('value', $this->title)
-                            ->label(Yii::t('skeleton', 'LINK_TITLE_LABEL')),
+                            ->attribute('id', self::ID . '-label')
+                            ->attribute('name', 'label')
+                            ->attribute('value', $this->label)
+                            ->placeholder($this->labelPlaceholder)
+                            ->label(Yii::t('skeleton', 'LINK_ARIA_LABEL'))
+                            ->hint(Yii::t('skeleton', 'LINK_ARIA_HINT')),
                         $this->classes ? SelectField::make()
                             ->attribute('id', self::ID . '-class')
                             ->attribute('name', 'class')

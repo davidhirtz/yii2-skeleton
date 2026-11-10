@@ -21,7 +21,7 @@ window.customElements.get('tinymce-editor') || window.customElements.define('tin
     connectedCallback() {
         const $textarea = this.querySelector('textarea')!;
         // A function cannot travel in `data-config`, so the server names the link dialog's URL instead.
-        const {linkDialogUrl, linkDialogTitle, linkDialogCloseLabel, ...config} = JSON.parse(this.dataset.config!);
+        const {linkDialogUrl, linkDialogTitle, linkDialogCloseLabel, linkDialogLabelFormat, ...config} = JSON.parse(this.dataset.config!);
 
         // TinyMCE requires a unique ID for each editor instance (issues with HTMX swaps). A new one per connect also
         // tells a stale initialisation, still waiting for its timer when the element moved again, to stand down.
@@ -55,7 +55,13 @@ window.customElements.get('tinymce-editor') || window.customElements.define('tin
                         });
 
                         if (linkDialogUrl) {
-                            registerLinkDialog(editor, linkDialogUrl, linkDialogTitle ?? '', config.link_class_list ?? [], linkDialogCloseLabel);
+                            registerLinkDialog(editor, {
+                                url: linkDialogUrl,
+                                title: linkDialogTitle ?? '',
+                                classes: config.link_class_list ?? [],
+                                closeLabel: linkDialogCloseLabel,
+                                labelFormat: linkDialogLabelFormat,
+                            });
                         }
                     },
                 });

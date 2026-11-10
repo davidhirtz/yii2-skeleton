@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `HtmlValidator::$definedHtmlAttributes`, which keeps `aria-label` on links by default
 - Changed a delete trail to keep the record's name, which `Trail::getModelName()` answers once it is gone
 - Added dashboard panels: `Widgets\Panels\DashboardPanel` and `Dashboard::addPanel()`, with "recently edited", "latest changes" and "needs attention" (`ContentHealthPanel::addCheck()`)
 - Added `Modules\Admin\Module::$dashboardTrailModels`, the records "recently edited" lists

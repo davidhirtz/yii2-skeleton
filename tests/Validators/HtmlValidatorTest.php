@@ -18,7 +18,7 @@ class HtmlValidatorTest extends TestCase
      * @var array<string, list<string>>
      */
     protected array $defaultAllowedHtmlAttributes = [
-        'a' => ['href', 'title', 'target', 'rel'],
+        'a' => ['aria-label', 'href', 'title', 'target', 'rel'],
     ];
 
     public function testDefaultConfig(): void
@@ -28,7 +28,7 @@ class HtmlValidatorTest extends TestCase
         static::assertEqualsCanonicalizing($this->defaultAllowedHtmlTags, $validator->allowedHtmlTags);
         static::assertEqualsCanonicalizing($this->defaultAllowedHtmlAttributes, $validator->allowedHtmlAttributes);
 
-        static::assertStringContainsString('a[href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
+        static::assertStringContainsString('a[aria-label|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }
 
     public function testConfigWithAdditionalHtmlTags(): void
@@ -53,8 +53,8 @@ class HtmlValidatorTest extends TestCase
         $expectedAllowedHtmlTags = [...$this->defaultAllowedHtmlTags, 'h2'];
 
         static::assertEqualsCanonicalizing($expectedAllowedHtmlTags, $validator->allowedHtmlTags);
-        static::assertEqualsCanonicalizing(['href', 'rel', 'target'], $validator->allowedHtmlAttributes['a'] ?? []);
-        static::assertStringContainsString('a[href|rel|target]', $validator->purifierOptions['HTML.Allowed']);
+        static::assertEqualsCanonicalizing(['aria-label', 'href', 'rel', 'target'], $validator->allowedHtmlAttributes['a'] ?? []);
+        static::assertStringContainsString('a[aria-label|href|rel|target]', $validator->purifierOptions['HTML.Allowed']);
     }
 
     public function testConfigWithExcludedHtmlTags(): void
@@ -67,7 +67,7 @@ class HtmlValidatorTest extends TestCase
         ]);
 
         static::assertEqualsCanonicalizing($allowedHtmlTags, $validator->allowedHtmlTags);
-        static::assertStringNotContainsString('a[href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
+        static::assertStringNotContainsString('a[aria-label|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }
 
     public function testConfigWithAllowedClasses(): void
@@ -86,7 +86,7 @@ class HtmlValidatorTest extends TestCase
 
         static::assertEqualsCanonicalizing(['Named 1' => 'marked', 'Named 2' => 'highlight'], $validator->getAllowedClassesByTag()['span'] ?? []);
         static::assertEqualsCanonicalizing(['btn', 'cta', 'marked', 'highlight'], $validator->purifierOptions['Attr.AllowedClasses']);
-        static::assertStringContainsString('a[class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
+        static::assertStringContainsString('a[aria-label|class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
         static::assertStringContainsString('span[class]', $validator->purifierOptions['HTML.Allowed']);
     }
 
@@ -100,7 +100,7 @@ class HtmlValidatorTest extends TestCase
 
         static::assertEqualsCanonicalizing(['a' => ['ID' => 'btn']], $validator->getAllowedClassesByTag());
         static::assertEqualsCanonicalizing(['btn'], $validator->purifierOptions['Attr.AllowedClasses']);
-        static::assertStringContainsString('a[class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
+        static::assertStringContainsString('a[aria-label|class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }
 
     public function testConfigWithAllowedClassesLegacyLink(): void
@@ -113,7 +113,14 @@ class HtmlValidatorTest extends TestCase
 
         static::assertEqualsCanonicalizing($validator->getAllowedClassesByTag(), ['a' => $allowedClasses]);
         static::assertEqualsCanonicalizing($allowedClasses, $validator->purifierOptions['Attr.AllowedClasses']);
-        static::assertStringContainsString('a[class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
+        static::assertStringContainsString('a[aria-label|class|href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
+    }
+
+    public function testADefinedAttributeCanBeTurnedOff(): void
+    {
+        $validator = new HtmlValidator(['definedHtmlAttributes' => []]);
+
+        static::assertStringContainsString('a[href|rel|target|title]', $validator->purifierOptions['HTML.Allowed']);
     }
 
     public function testConfigWithAllowImagesWithAttributes(): void

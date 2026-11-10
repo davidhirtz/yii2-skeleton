@@ -14,7 +14,8 @@ class LinkDialogTest extends TestCase
         $html = LinkDialog::make()
             ->href('/kontakt#form')
             ->text('Ågot 東京 🚀')
-            ->title('Mu' . "\u{308}" . 'ller')
+            ->label('Mu' . "\u{308}" . 'ller')
+            ->labelPlaceholder('Ågot: Karriere')
             ->blank()
             ->render();
 
@@ -23,7 +24,9 @@ class LinkDialogTest extends TestCase
         self::assertStringContainsString('hx-boost="false"', $html);
         self::assertStringContainsString('name="href" value="/kontakt#form"', $html);
         self::assertStringContainsString('value="Ågot 東京 🚀"', $html);
-        self::assertStringContainsString('value="Mu' . "\u{308}" . 'ller"', $html);
+        self::assertStringContainsString('name="label" value="Mu' . "\u{308}" . 'ller"', $html);
+        self::assertStringContainsString('placeholder="Ågot: Karriere"', $html);
+        self::assertStringNotContainsString('name="title"', $html);
         self::assertMatchesRegularExpression('/name="target" value="_blank"[^>]*checked/', $html);
         self::assertStringNotContainsString('name="class"', $html);
     }

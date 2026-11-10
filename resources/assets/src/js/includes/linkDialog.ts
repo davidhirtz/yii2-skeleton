@@ -6,7 +6,7 @@ import {createModal} from './modals';
 export interface LinkValues {
     href: string;
     text: string;
-    title: string;
+    label: string;
     target: string;
     class: string;
 }
@@ -40,7 +40,7 @@ export const openLinkDialog = (url: string, title: string, values: LinkValues, c
         const data = new FormData($form);
         const get = (name: string) => String(data.get(name) ?? '').trim();
 
-        result = {href: get('href'), text: get('text'), title: get('title'), target: get('target'), class: get('class')};
+        result = {href: get('href'), text: get('text'), label: get('label'), target: get('target'), class: get('class')};
         $dialog.close();
     });
 
@@ -74,14 +74,33 @@ export const openLinkDialog = (url: string, title: string, values: LinkValues, c
     });
 });
 
-const getAttributes = (values: LinkValues): Record<string, string | null> => ({
+const normalize = (text: string) => text.normalize('NFC').replace(/\s+/g, ' ').trim().toLocaleLowerCase();
+
+/**
+ * The visible text stays in front of a label that does not contain it, so a voice-control user can say what they see
+ * (WCAG 2.5.3).
+ */
+export const composeLabel = (label: string, text: string, format: string): string | null => {
+    if (!label) {
+        return null;
+    }
+
+    if (!text || normalize(label).includes(normalize(text))) {
+        return label;
+    }
+
+    return format.replace('{text}', text).replace('{label}', label);
+};
+
+// A title the link has is kept: the dialog does not edit one, and dropping it would lose it silently.
+const getAttributes = (values: LinkValues, text: string, format: string): Record<string, string | null> => ({
     href: values.href,
-    title: values.title || null,
     target: values.target || null,
     class: values.class || null,
+    'aria-label': composeLabel(values.label, values.text || text, format),
 });
 
-const apply = (editor: Editor, $anchor: HTMLAnchorElement | null, values: LinkValues, text: string) => {
+const apply = (editor: Editor, $anchor: HTMLAnchorElement | null, values: LinkValues, text: string, format: string) => {
     if (!values.href) {
         if ($anchor) {
             editor.execCommand('unlink');
@@ -90,7 +109,7 @@ const apply = (editor: Editor, $anchor: HTMLAnchorElement | null, values: LinkVa
         return;
     }
 
-    const attributes = getAttributes(values);
+    const attributes = getAttributes(values, text, format);
 
     if ($anchor) {
         editor.dom.setAttribs($anchor, attributes);
@@ -112,10 +131,18 @@ const apply = (editor: Editor, $anchor: HTMLAnchorElement | null, values: LinkVa
     editor.execCommand('mceInsertLink', false, attributes);
 };
 
+export interface LinkDialogOptions {
+    url: string;
+    title: string;
+    classes?: LinkClass[];
+    closeLabel?: string;
+    labelFormat?: string;
+}
+
 /**
  * Stands in for the link plugin: its buttons, its command and its shortcut open {@see openLinkDialog}.
  */
-export const registerLinkDialog = (editor: Editor, url: string, title: string, classes: LinkClass[] = [], closeLabel?: string) => {
+export const registerLinkDialog = (editor: Editor, {url, title, classes = [], closeLabel, labelFormat = '{text}: {label}'}: LinkDialogOptions) => {
     const getAnchor = () => editor.dom.getParent(editor.selection.getNode(), 'a[href]') as HTMLAnchorElement | null;
 
     const open = async () => {
@@ -131,7 +158,7 @@ export const registerLinkDialog = (editor: Editor, url: string, title: string, c
         const values = await openLinkDialog(url, title, {
             href: $anchor?.getAttribute('href') ?? '',
             text,
-            title: $anchor?.getAttribute('title') ?? '',
+            label: $anchor?.getAttribute('aria-label') ?? '',
             target: $anchor?.getAttribute('target') ?? '',
             class: $anchor?.getAttribute('class') ?? '',
         }, classes, closeLabel);
@@ -140,7 +167,7 @@ export const registerLinkDialog = (editor: Editor, url: string, title: string, c
         editor.selection.moveToBookmark(bookmark);
 
         if (values) {
-            editor.undoManager.transact(() => apply(editor, $anchor, values, text));
+            editor.undoManager.transact(() => apply(editor, $anchor, values, text, labelFormat));
             editor.nodeChanged();
         }
     };

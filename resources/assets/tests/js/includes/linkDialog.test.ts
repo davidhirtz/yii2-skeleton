@@ -4,9 +4,9 @@ const ajax = vi.hoisted(() => vi.fn(async () => {}));
 
 vi.mock('htmx.org', () => ({default: {ajax}}));
 
-const {openLinkDialog} = await import('../../../src/js/includes/linkDialog');
+const {composeLabel, openLinkDialog} = await import('../../../src/js/includes/linkDialog');
 
-const values = {href: 'entry:12', text: 'Ångström 東京 🚀', title: '', target: '', class: ''};
+const values = {href: 'entry:12', text: 'Ångström 東京 🚀', label: '', target: '', class: ''};
 
 describe('linkDialog', () => {
     beforeEach(() => {
@@ -36,13 +36,13 @@ describe('linkDialog', () => {
 
         document.getElementById('link-dialog')!.outerHTML = `<form id="link-dialog" data-link-dialog>
             <input name="href" value="/kontakt#form"><input name="text" value=" Müller ">
-            <input name="title" value="Kontakt"><input name="target" type="checkbox" value="_blank" checked>
+            <input name="label" value="Kontakt"><input name="target" type="checkbox" value="_blank" checked>
             <select name="class"><option value="btn" selected>Button</option></select>
             <button type="submit"></button></form>`;
 
         document.querySelector<HTMLButtonElement>('[type="submit"]')!.click();
 
-        expect(await result).toEqual({href: '/kontakt#form', text: 'Müller', title: 'Kontakt', target: '_blank', class: 'btn'});
+        expect(await result).toEqual({href: '/kontakt#form', text: 'Müller', label: 'Kontakt', target: '_blank', class: 'btn'});
         expect(document.querySelector('dialog')).toBeNull();
     });
 
@@ -62,5 +62,22 @@ describe('linkDialog', () => {
         document.querySelector('dialog')!.close();
 
         expect(await result).toBeNull();
+    });
+
+    describe('composeLabel', () => {
+        const format = '{text}: {label}';
+
+        it('keeps the visible text in front of a label that lacks it', () => {
+            expect(composeLabel('Karriere 東京 🚀', 'Read more', format)).toBe('Read more: Karriere 東京 🚀');
+        });
+
+        it('leaves a label that already contains the text, compared normalised', () => {
+            expect(composeLabel('Mehr über Mu\u0308ller', 'mehr über Müller', format)).toBe('Mehr über Mu\u0308ller');
+        });
+
+        it('takes the label alone for a link without text and nothing without a label', () => {
+            expect(composeLabel('Ågot', '', format)).toBe('Ågot');
+            expect(composeLabel('', 'Read more', format)).toBeNull();
+        });
     });
 });
