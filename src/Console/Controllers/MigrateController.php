@@ -159,7 +159,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
     }
 
     /**
-     * The file's presence is the authorisation, since a deployment cannot be asked to confirm anything.
+     * The file's presence is the authorization, since a deployment cannot be asked to confirm anything.
      */
     protected function repairHistory(MigrationHistory $history): bool
     {
