@@ -28,6 +28,7 @@ describe('picker', () => {
 
         expect(ajax).toHaveBeenCalledWith('GET', '/admin/pick', expect.objectContaining({select: '#picker', target: '#picker', push: false}));
         expect($body.getAttribute('hx-target:inherited')).toBe('#picker');
+        expect($body.getAttribute('hx-swap:inherited')).toBe('outerHTML transition:false ignoreTitle:true');
         expect($body.getAttribute('hx-push-url:inherited')).toBe('false');
         expect($body.getAttribute('hx-select-oob:inherited')).toBe('');
     });
@@ -64,5 +65,51 @@ describe('picker', () => {
         expect($input.value).toBe('entry:7');
         expect(document.getElementById('link-hint')!.textContent).toBe('Karriere — /karriere');
         expect(changed).toHaveBeenCalledOnce();
+    });
+
+    it('creates the label after the input group when there is none yet', async () => {
+        document.body.innerHTML = '<div class="input-group"><input id="link"><button data-picker="/admin/pick" data-picker-input="link" data-picker-label="link-hint"></button></div>';
+
+        picker(document.querySelector('button')!);
+        document.querySelector('button')!.click();
+        fill('<button data-picker-value="entry:7" data-picker-title="Ågot 東京 🚀"></button>');
+        document.querySelector<HTMLElement>('[data-picker-value]')!.click();
+        await settle();
+
+        const $label = document.getElementById('link-hint')!;
+
+        expect($label.textContent).toBe('Ågot 東京 🚀');
+        expect($label.previousElementSibling!.classList.contains('input-group')).toBe(true);
+        expect(document.getElementById('link')!.getAttribute('aria-describedby')).toBe('link-hint');
+    });
+
+    it('keeps a request from inside out of the history while open', async () => {
+        const pick = openPicker('/admin/pick', 'Pick');
+        fill('<form></form>');
+
+        const inside = new CustomEvent('htmx:before:history:update', {cancelable: true, detail: {sourceElement: document.querySelector('#picker form')}});
+        const outside = new CustomEvent('htmx:before:history:update', {cancelable: true, detail: {sourceElement: document.body}});
+
+        expect(document.dispatchEvent(inside)).toBe(false);
+        expect(document.dispatchEvent(outside)).toBe(true);
+
+        document.querySelector('dialog')!.close();
+        await pick;
+
+        const after = new CustomEvent('htmx:before:history:update', {cancelable: true, detail: {sourceElement: document.body}});
+        expect(document.dispatchEvent(after)).toBe(true);
+    });
+
+    it('keeps the document head while open', async () => {
+        const pick = openPicker('/admin/pick', 'Pick');
+        const $source = document.querySelector('dialog .modal-body')!;
+        const merge = () => new CustomEvent('htmx:head:before:merge', {cancelable: true, detail: {ctx: {sourceElement: $source}}});
+
+        expect(document.body.dispatchEvent(merge())).toBe(false);
+
+        document.querySelector('dialog')!.close();
+        await pick;
+
+        expect(document.body.dispatchEvent(merge())).toBe(true);
     });
 });

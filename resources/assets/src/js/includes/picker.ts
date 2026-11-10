@@ -21,7 +21,8 @@ export const openPicker = (url: string, title: string): Promise<Pick | null> => 
 
     $body.setAttribute('hx-select:inherited', '#picker');
     $body.setAttribute('hx-target:inherited', '#picker');
-    $body.setAttribute('hx-swap:inherited', 'outerHTML');
+    // A view transition would morph the page's named regions over the modal.
+    $body.setAttribute('hx-swap:inherited', 'outerHTML transition:false ignoreTitle:true');
     $body.setAttribute('hx-push-url:inherited', 'false');
     $body.setAttribute('hx-select-oob:inherited', '');
 
@@ -35,20 +36,41 @@ export const openPicker = (url: string, title: string): Promise<Pick | null> => 
         }
     });
 
-    $dialog.addEventListener('close', () => resolve(pick));
+    // A form inside may ask for its URL itself (`hx-push-url="true"` on a grid's search), and the `hx-head`
+    // extension would merge the picker page's `<title>` into the document.
+    const stayInHistory = (event: Event) => {
+        if ($dialog.contains((event as CustomEvent).detail?.sourceElement ?? null)) {
+            event.preventDefault();
+        }
+    };
+
+    const keepHead = (event: Event) => {
+        if ($dialog.contains((event as CustomEvent).detail?.ctx?.sourceElement ?? null)) {
+            event.preventDefault();
+        }
+    };
+
+    document.addEventListener('htmx:before:history:update', stayInHistory);
+    document.body.addEventListener('htmx:head:before:merge', keepHead);
+
+    $dialog.addEventListener('close', () => {
+        document.removeEventListener('htmx:before:history:update', stayInHistory);
+        document.body.removeEventListener('htmx:head:before:merge', keepHead);
+        resolve(pick);
+    });
 
     void htmx.ajax('GET', url, {
         source: $body,
         target: '#picker',
         select: '#picker',
-        swap: 'outerHTML',
+        swap: 'outerHTML transition:false ignoreTitle:true',
         push: false,
     });
 });
 
 /**
  * A button carrying `data-picker` (the URL) and `data-picker-input` (the input's id) writes the pick into the input,
- * and its title into the element `data-picker-label` names, if there is one.
+ * and its title into the element `data-picker-label` names, created after the input if missing.
  */
 export default ($button: HTMLButtonElement) => {
     $button.addEventListener('click', async () => {
@@ -56,7 +78,16 @@ export default ($button: HTMLButtonElement) => {
         const pick = await openPicker($button.dataset.picker!, $button.dataset.pickerTitle ?? '');
 
         if ($input && pick) {
-            const $label = $button.dataset.pickerLabel ? document.getElementById($button.dataset.pickerLabel) : null;
+            const labelId = $button.dataset.pickerLabel;
+            let $label = labelId ? document.getElementById(labelId) : null;
+
+            if (labelId && !$label) {
+                $label = document.createElement('div');
+                $label.id = labelId;
+                $label.className = 'form-hint';
+                ($input.closest('.input-group') ?? $input).after($label);
+                $input.setAttribute('aria-describedby', [$input.getAttribute('aria-describedby'), labelId].filter(Boolean).join(' '));
+            }
 
             if ($label) {
                 $label.textContent = pick.title;
