@@ -304,6 +304,11 @@ div.tox-tinymce {
   .tox-collection__item--enabled {
     background-color: var(--dropdown-option-selected-bg, var(--input-group-bg));
   }
+
+  // The selected background says it already.
+  .tox-collection__item-checkmark {
+    display: none;
+  }
 }
 
 // The admin's tooltip: Oxide's weight of 600 is bold in the body font the sink now inherits.
