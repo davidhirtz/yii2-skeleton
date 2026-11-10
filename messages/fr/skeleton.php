@@ -363,6 +363,7 @@ return [
     'TINYMCE_BUTTON_NAME' => 'Bouton',
     'TINYMCE_CTA_NAME' => 'Appel à l’action',
     'TINYMCE_HEADING_NAME' => 'Titre {n}',
+    'TINYMCE_LINK_PICKER_TITLE' => 'Choisir la cible du lien',
     'TINYMCE_NONE_NAME' => 'Aucun',
     'TRAIL_ASSIGN_NAME' => 'Autorisation attribuée',
     'TRAIL_ASSIGN_TEXT' => 'Autorisation {permission} attribuée',

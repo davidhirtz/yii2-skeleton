@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Assets\TinyMceAssetBundle;
 use Hirtz\Skeleton\Assets\TinyMceLanguageAssetBundle;
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Textarea;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
 use Hirtz\Skeleton\Html\Traits\TagPlaceholderTrait;
@@ -44,6 +45,13 @@ class TinyMceField extends Field
 
     protected int $height = 400;
     protected ?string $languageUrl = null;
+
+    /**
+     * @var array<int|string, mixed>|string|null
+     */
+    protected array|string|null $linkPickerUrl = null;
+
+    protected ?string $linkPickerTitle = null;
 
     /**
      * @var list<string>
@@ -133,6 +141,23 @@ class TinyMceField extends Field
     public function languageUrl(?string $languageUrl): static
     {
         $this->languageUrl = $languageUrl;
+        return $this;
+    }
+
+    /**
+     * A page rendering its choices in `#picker`, each a `[data-picker-value]` button, opened by the link dialog.
+     *
+     * @param array<int|string, mixed>|string|null $linkPickerUrl
+     */
+    public function linkPickerUrl(array|string|null $linkPickerUrl): static
+    {
+        $this->linkPickerUrl = $linkPickerUrl;
+        return $this;
+    }
+
+    public function linkPickerTitle(?string $linkPickerTitle): static
+    {
+        $this->linkPickerTitle = $linkPickerTitle;
         return $this;
     }
 
@@ -431,6 +456,12 @@ class TinyMceField extends Field
                 ]);
 
                 $this->clientOptions['link_class_list'] ??= $linkClassList;
+            }
+
+            if ($this->linkPickerUrl !== null) {
+                $this->clientOptions['linkPickerUrl'] ??= Url::to($this->linkPickerUrl);
+                $this->clientOptions['linkPickerTitle'] ??= $this->linkPickerTitle
+                    ?? Yii::t('skeleton', 'TINYMCE_LINK_PICKER_TITLE');
             }
         }
     }

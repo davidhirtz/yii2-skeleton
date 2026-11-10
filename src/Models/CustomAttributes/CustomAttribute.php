@@ -239,6 +239,14 @@ abstract class CustomAttribute
         return is_scalar($value) ? (string)$value : Json::encode($value);
     }
 
+    /**
+     * What `getVisibleAttribute()` answers for the value, e.g. a stored reference resolved for rendering.
+     */
+    public function formatVisibleValue(Model $owner, mixed $value, ?string $language): mixed
+    {
+        return $value;
+    }
+
     abstract public function createField(Model $owner): Field;
 
     public function getField(Model $owner): Field

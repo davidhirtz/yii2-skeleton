@@ -91,6 +91,24 @@ class TinyMceFieldTest extends TestCase
         );
     }
 
+    public function testTheLinkDialogOpensAPickerOnlyWhenOneIsNamed(): void
+    {
+        self::assertArrayNotHasKey('linkPickerUrl', $this->getEditorConfig());
+
+        Yii::$container->set(TinyMceField::class, [
+            'linkPickerUrl' => ['/admin/pick', 'tenant' => 2],
+        ]);
+
+        try {
+            $config = $this->getEditorConfig();
+        } finally {
+            Yii::$container->clear(TinyMceField::class);
+        }
+
+        self::assertStringEndsWith('/admin/pick?tenant=2', (string)($config['linkPickerUrl'] ?? ''));
+        self::assertNotEmpty($config['linkPickerTitle'] ?? null);
+    }
+
     /**
      * @param class-string<TestContentFieldActiveForm> $formClass
      * @return array<string, mixed>

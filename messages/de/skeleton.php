@@ -363,6 +363,7 @@ return [
     'TINYMCE_BUTTON_NAME' => 'Button',
     'TINYMCE_CTA_NAME' => 'Call to action',
     'TINYMCE_HEADING_NAME' => 'Überschrift {n}',
+    'TINYMCE_LINK_PICKER_TITLE' => 'Linkziel auswählen',
     'TINYMCE_NONE_NAME' => 'Keine',
     'TRAIL_ASSIGN_NAME' => 'Benutzerrecht erteilt',
     'TRAIL_ASSIGN_TEXT' => 'Benutzerrecht {permission} erteilt',

@@ -1,5 +1,7 @@
 import tinymce, {Editor} from 'tinymce';
 
+import {openPicker} from '../includes/picker';
+
 import 'tinymce/icons/default/icons.min.js';
 
 import 'tinymce/themes/silver/theme.min.js';
@@ -18,7 +20,19 @@ window.customElements.get('tinymce-editor') || window.customElements.define('tin
     // noinspection JSUnusedGlobalSymbols
     connectedCallback() {
         const $textarea = this.querySelector('textarea')!;
-        const config = JSON.parse(this.dataset.config!);
+        const {linkPickerUrl, linkPickerTitle, ...config} = JSON.parse(this.dataset.config!);
+
+        // A function cannot travel in `data-config`, so the server names the picker's URL instead.
+        if (linkPickerUrl) {
+            config.file_picker_types = 'file';
+            config.file_picker_callback = async (callback: (value: string, meta?: Record<string, string>) => void) => {
+                const pick = await openPicker(linkPickerUrl, linkPickerTitle ?? '');
+
+                if (pick) {
+                    callback(pick.value, {text: pick.title, title: pick.title});
+                }
+            };
+        }
 
         // TinyMCE requires a unique ID for each editor instance (issues with HTMX swaps). A new one per connect also
         // tells a stale initialisation, still waiting for its timer when the element moved again, to stand down.

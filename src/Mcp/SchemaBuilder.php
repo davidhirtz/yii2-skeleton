@@ -9,6 +9,8 @@ use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Models\CustomAttributes\CustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\GroupCustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\HtmlCustomAttribute;
+use Hirtz\Skeleton\Models\CustomAttributes\LinkCustomAttribute;
+use Hirtz\Skeleton\Models\CustomAttributes\RecordCustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\SelectCustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\UploadCustomAttribute;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
@@ -314,6 +316,14 @@ class SchemaBuilder
 
         if ($definition instanceof HtmlCustomAttribute) {
             return ['type' => 'string', 'contentMediaType' => 'text/html'];
+        }
+
+        if ($definition instanceof LinkCustomAttribute) {
+            return ['type' => 'string', '$comment' => $definition->getJsonSchemaComment()];
+        }
+
+        if ($definition instanceof RecordCustomAttribute) {
+            return ['type' => ['integer', 'null'], '$comment' => 'The id of the related record.'];
         }
 
         if ($definition instanceof GroupCustomAttribute) {

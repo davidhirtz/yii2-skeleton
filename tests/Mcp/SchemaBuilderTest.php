@@ -17,6 +17,7 @@ use Hirtz\Skeleton\Models\CustomAttributes\EmailCustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\GroupCustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\HexColorCustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\HtmlCustomAttribute;
+use Hirtz\Skeleton\Models\CustomAttributes\LinkCustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\NumberCustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\SelectCustomAttribute;
 use Hirtz\Skeleton\Models\CustomAttributes\TextCustomAttribute;
@@ -193,6 +194,9 @@ class SchemaBuilderTest extends TestCase
         self::assertSame(['title' => 'Intro', 'description' => 'Purified to the tags a[href|rel|target|title], br, li, ol, p, span, strong, ul.', 'type' => 'string', 'contentMediaType' => 'text/html', 'maxLength' => 65535], $properties['intro']);
         self::assertSame(['title' => 'Contact', 'type' => 'string', 'maxLength' => 255, 'format' => 'email'], $properties['contact']);
         self::assertSame('string', $properties['link']['type'] ?? null);
+        self::assertSame('string', $properties['target']['type'] ?? null);
+        self::assertStringContainsString('starting with /', $properties['target']['$comment'] ?? '');
+        self::assertArrayNotHasKey('format', $properties['target']);
         self::assertSame('^#(?:[0-9a-fA-F]{3}){1,2}$', $properties['tint']['pattern'] ?? null);
         self::assertSame('date', $properties['birthday']['format'] ?? null);
         self::assertSame('date-time', $properties['starts_at']['format'] ?? null);
@@ -344,6 +348,7 @@ class SchemaRecord extends ActiveRecord implements
                     HtmlCustomAttribute::make('intro'),
                     EmailCustomAttribute::make('contact'),
                     UrlCustomAttribute::make('link'),
+                    LinkCustomAttribute::make('target'),
                     HexColorCustomAttribute::make('tint'),
                     DateCustomAttribute::make('birthday'),
                     DateTimeCustomAttribute::make('starts_at'),

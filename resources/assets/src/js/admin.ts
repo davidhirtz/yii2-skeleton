@@ -16,6 +16,7 @@ import collapse from './includes/collapse';
 import filter from './includes/filter';
 import {closeModal, createModal} from './includes/modals';
 import multiselect from './includes/multiselect';
+import picker from './includes/picker';
 import scrollActiveIntoView from './includes/scrollActiveIntoView';
 import search from './includes/search';
 import selectLink from './includes/selectLink';
@@ -67,6 +68,7 @@ onLoad(($container) => {
     queryAll('[data-filter]', filter);
     queryAll('[data-modal]', closeModal);
     queryAll('select[data-multiselect]', multiselect);
+    queryAll('button[data-picker]', picker);
     queryAll('[data-scroll-active]', scrollActiveIntoView);
     queryAll('[data-search]', search);
     queryAll('[data-select-link]', selectLink);

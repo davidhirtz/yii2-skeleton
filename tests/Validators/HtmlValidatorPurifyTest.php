@@ -7,6 +7,11 @@ namespace Hirtz\Skeleton\Tests\Validators;
 use Hirtz\Skeleton\Models\Translation;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Validators\HtmlValidator;
+use HTMLPurifier_Config;
+use HTMLPurifier_Context;
+use HTMLPurifier_URI;
+use HTMLPurifier_URIScheme;
+use Override;
 
 /**
  * Covers what the validator does to the value; {@see HtmlValidatorTest} covers how it is configured.
@@ -63,6 +68,24 @@ class HtmlValidatorPurifyTest extends TestCase
 
         self::assertStringContainsString('target="_blank"', $html);
         self::assertStringContainsString('rel="noreferrer noopener"', $html);
+    }
+
+    public function testAnUnknownSchemeIsRemoved(): void
+    {
+        $html = $this->purify('<a href="record:12">Link</a>');
+
+        self::assertSame('<p><a>Link</a></p>', $html);
+    }
+
+    public function testARegisteredSchemeIsKeptBesideTheDefaultOnes(): void
+    {
+        $config = ['uriSchemes' => ['record' => new RecordUriScheme()]];
+
+        $html = $this->purify('<a href="record:12#team">Ångström 東京 🚀</a> <a href="https://example.test">Link</a>', $config);
+
+        self::assertSame('<p><a href="record:12#team">Ångström 東京 🚀</a> <a href="https://example.test" target="_blank" rel="noreferrer noopener">Link</a></p>', $html);
+        self::assertSame('<p><a>Link</a></p>', $this->purify('<a href="record:abc">Link</a>', $config));
+        self::assertSame('<p><a>Link</a></p>', $this->purify('<a href="other:12">Link</a>', $config));
     }
 
     public function testOnlyTheAllowedClassesSurvive(): void
@@ -163,5 +186,29 @@ class HtmlValidatorPurifyTest extends TestCase
         (new HtmlValidator($config))->validateAttribute($translation, 'value');
 
         return (string)$translation->value;
+    }
+}
+
+class RecordUriScheme extends HTMLPurifier_URIScheme
+{
+    /**
+     * @var bool
+     */
+    public $browsable = false;
+
+    /**
+     * @var bool
+     */
+    public $may_omit_host = true;
+
+    /**
+     * @param HTMLPurifier_URI $uri
+     * @param HTMLPurifier_Config $config
+     * @param HTMLPurifier_Context $context
+     */
+    #[Override]
+    public function doValidate(&$uri, $config, $context): bool
+    {
+        return $uri->host === null && $uri->query === null && preg_match('/^[1-9]\\d*$/', (string)$uri->path) === 1;
     }
 }

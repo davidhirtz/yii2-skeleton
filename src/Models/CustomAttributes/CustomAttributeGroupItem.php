@@ -7,8 +7,10 @@ namespace Hirtz\Skeleton\Models\CustomAttributes;
 use Hirtz\Skeleton\Base\Traits\ModelTrait;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
+use Hirtz\Skeleton\Models\Traits\VisibleAttributeTrait;
 use Override;
 use yii\base\Model;
 use yii\db\BaseActiveRecord;
@@ -17,11 +19,12 @@ use yii\db\BaseActiveRecord;
  * Its form name carries the owner's, so `Html::getInputName()` produces `Section[links][0][label]` and nesting works
  * by recursion.
  */
-class CustomAttributeGroupItem extends Model implements CustomAttributeInterface, I18nAttributeInterface
+class CustomAttributeGroupItem extends Model implements CustomAttributeInterface, I18nAttributeInterface, VisibleAttributeInterface
 {
     use CustomAttributesTrait;
     use I18nAttributesTrait;
     use ModelTrait;
+    use VisibleAttributeTrait;
 
     /**
      * @var array<string, mixed>

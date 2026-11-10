@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Models\Traits;
 
+use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\TypeAttributeInterface;
 
 trait VisibleAttributeTrait
@@ -14,9 +15,14 @@ trait VisibleAttributeTrait
      */
     public function getVisibleAttribute(string $attribute, ?string $language = null): mixed
     {
-        return in_array($attribute, $this->attributes(), true) && $this->isAttributeVisible($attribute)
-            ? $this->getI18nAttribute($attribute, $language)
-            : null;
+        if (!in_array($attribute, $this->attributes(), true) || !$this->isAttributeVisible($attribute)) {
+            return null;
+        }
+
+        $value = $this->getI18nAttribute($attribute, $language);
+        $definition = $this instanceof CustomAttributeInterface ? $this->getCustomAttribute($attribute) : null;
+
+        return $definition ? $definition->formatVisibleValue($this, $value, $language) : $value;
     }
 
     public function isAttributeVisible(string $attribute): bool

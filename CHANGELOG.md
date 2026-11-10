@@ -4,6 +4,10 @@
 - Added dashboard panels: `Widgets\Panels\DashboardPanel` and `Dashboard::addPanel()`, with "recently edited", "latest changes" and "needs attention" (`ContentHealthPanel::addCheck()`)
 - Added `Modules\Admin\Module::$dashboardTrailModels`, the records "recently edited" lists
 - Added `Widgets\StructuredData\JobPosting` for Google's job listings
+- Added `LinkCustomAttribute`, one field for an absolute or a partial URL
+- Added `CustomAttribute::formatVisibleValue()`, which `getVisibleAttribute()` answers through
+- Added `HtmlValidator::$uriSchemes` for further link schemes
+- Added `TinyMceField::linkPickerUrl()`, a picker the link dialog opens in a modal
 
 ## 3.26.0 (November 6, 2026)
 

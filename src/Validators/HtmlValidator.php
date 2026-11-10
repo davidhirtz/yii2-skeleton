@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Validators;
 
 use Closure;
+use HTMLPurifier_Config;
+use HTMLPurifier_URIScheme;
+use HTMLPurifier_URISchemeRegistry;
 use Hirtz\Skeleton\Validators\Interfaces\JsonSchemaInterface;
 use yii\base\Model;
 use yii\db\ActiveRecord;
@@ -67,6 +70,13 @@ class HtmlValidator extends Validator implements JsonSchemaInterface
 
     public bool $removeUnnecessarySpanTags = false;
 
+    /**
+     * Further schemes a link may use, on top of HTMLPurifier's own (`http`, `https`, `mailto`, `tel`, …).
+     *
+     * @var array<string, HTMLPurifier_URIScheme>
+     */
+    public array $uriSchemes = [];
+
     #[\Override]
     public function init(): void
     {
@@ -76,6 +86,7 @@ class HtmlValidator extends Validator implements JsonSchemaInterface
         $this->setHtmlAllowed();
         $this->setAllowedClasses();
         $this->setAllowedCssProperties();
+        $this->setAllowedSchemes();
 
         parent::init();
     }
@@ -218,6 +229,30 @@ class HtmlValidator extends Validator implements JsonSchemaInterface
         }
     }
 
+    protected function setAllowedSchemes(): void
+    {
+        if ($this->uriSchemes) {
+            /** @var array<string, bool> $schemes */
+            $schemes = $this->purifierOptions['URI.AllowedSchemes']
+                ?? HTMLPurifier_Config::createDefault()->get('URI.AllowedSchemes');
+
+            $this->purifierOptions['URI.AllowedSchemes'] = [
+                ...$schemes,
+                ...array_fill_keys(array_keys($this->uriSchemes), true),
+            ];
+        }
+    }
+
+    /**
+     * The registry is process-wide, so registering a scheme again is harmless.
+     */
+    protected function registerUriSchemes(): void
+    {
+        foreach ($this->uriSchemes as $name => $scheme) {
+            HTMLPurifier_URISchemeRegistry::instance()->register($name, $scheme);
+        }
+    }
+
     /**
      * @param ActiveRecord $model
      * @param string $attribute
@@ -243,6 +278,8 @@ class HtmlValidator extends Validator implements JsonSchemaInterface
                 $html = preg_replace('#<span>(.*?)(?=</span>)</span>#', '$1', (string) $html);
             }
         }
+
+        $this->registerUriSchemes();
 
         // Process html.
         $html = HtmlPurifier::process($html, $this->purifierOptions);
