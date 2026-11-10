@@ -20,6 +20,7 @@ final readonly class SearchResult
         public ?string $icon = null,
         public ?DateTime $updated = null,
         public array $subtitles = [],
+        public ?string $type = null,
     ) {
     }
 }

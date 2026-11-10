@@ -97,7 +97,7 @@
 }
 
 .search-result {
-  align-items: center;
+  align-items: flex-start;
   background-color: var(--dropdown-option-bg, transparent);
   color: var(--dropdown-option-color);
   display: flex;
@@ -115,7 +115,6 @@
 }
 
 .search-result-icon {
-  color: var(--muted-color);
   flex: none;
   width: 1rem;
 }

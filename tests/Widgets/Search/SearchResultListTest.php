@@ -31,4 +31,15 @@ class SearchResultListTest extends TestCase
         self::assertStringContainsString('<span class="model-heading-title">About</span>', $html);
         self::assertStringNotContainsString('class="model-heading"', $html);
     }
+
+    public function testTheTypeStandsInForAMissingDescription(): void
+    {
+        $html = (string)SearchResultList::make()->results([
+            new SearchResult('About', type: 'Entry'),
+            new SearchResult('Contact', description: 'Write to us', type: 'Entry'),
+        ]);
+
+        self::assertSame(1, substr_count($html, '<span class="search-result-description">Entry</span>'));
+        self::assertStringContainsString('<span class="search-result-description">Write to us</span>', $html);
+    }
 }

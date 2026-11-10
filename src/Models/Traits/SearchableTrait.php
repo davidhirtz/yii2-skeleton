@@ -138,6 +138,7 @@ trait SearchableTrait
             icon: $this->getAdminIcon(),
             updated: $updated instanceof DateTime ? $updated : null,
             subtitles: $chain->subtitles,
+            type: $this->getAdminType(),
         );
     }
 

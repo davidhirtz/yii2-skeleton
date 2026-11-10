@@ -105,10 +105,15 @@ class SearchResultList extends Widget
             ->class('search-result-text')
             ->content($this->getHeading($result));
 
+        // Without a description the type takes the second line, so every result has the same height.
         if ($result->description) {
             $text->addContent(Span::make()
                 ->class('search-result-description')
                 ->content($this->markKeywords($this->getSnippet($result->description))));
+        } elseif ($result->type) {
+            $text->addContent(Span::make()
+                ->class('search-result-description')
+                ->text($result->type));
         }
 
         $link->addContent($text);
