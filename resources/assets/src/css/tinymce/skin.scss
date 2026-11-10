@@ -90,7 +90,9 @@ div.tox-tinymce {
 .form-row:has(tinymce-editor) .label {
   padding: .5rem 0;
 }
-// Dialogs take the admin's modal, labels, inputs and buttons through its tokens, so dark mode follows.
+// Dialogs take the admin's modal, labels, inputs and buttons through its tokens, so dark mode follows. The sink
+// holding them sets Oxide's system font, so it inherits the body's first.
+.tox.tox-silver-sink,
 .tox .tox-dialog-wrap *:not(svg, path) {
   font-family: inherit;
 }
@@ -114,8 +116,9 @@ div.tox-tinymce {
 }
 
 .tox .tox-dialog__title {
-  font-size: 1rem;
+  font-size: .875rem;
   font-weight: 700;
+  line-height: 1.375rem;
 }
 
 .tox .tox-dialog__header .tox-button--naked {
@@ -159,7 +162,7 @@ div.tox-tinymce {
 }
 
 .tox .tox-textfield,
-.tox .tox-textarea,
+.tox .tox-textarea-wrap,
 .tox .tox-selectfield select,
 .tox .tox-listboxfield .tox-listbox--select {
   background-color: var(--input-bg-color);
@@ -174,13 +177,32 @@ div.tox-tinymce {
 
   // Oxide's own `:focus` rule names the colours outright and outranks the shorthand above.
   &:hover,
-  &:focus {
+  &:focus,
+  &:focus-within {
     background-color: var(--input-focus-bg-color);
     border-color: var(--input-focus-border-color);
     box-shadow: none;
     color: var(--input-focus-color);
     outline: 0;
   }
+}
+
+// The source dialog draws the field on the wrapper; the textarea inside it stays bare.
+.tox .tox-textarea-wrap {
+  padding: 0;
+}
+
+.tox .tox-textarea-wrap .tox-textarea,
+.tox .tox-textarea-wrap .tox-textarea:focus {
+  background: transparent;
+  border: 0;
+  border-radius: .25rem;
+  box-shadow: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: .875rem;
+  line-height: 1.375rem;
+  padding: .5rem 1rem;
 }
 
 .tox .tox-listbox__select-label {
