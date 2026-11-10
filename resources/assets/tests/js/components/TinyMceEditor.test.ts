@@ -80,27 +80,37 @@ describe('tinymce-editor', () => {
         expect(live()).toBe(0);
     });
 
-    it('opens the link picker from the file picker, which the config only names', async () => {
+    it('hands the link dialog to its own setup, never to TinyMCE', async () => {
         $editor.remove();
         await wait();
         configs.length = 0;
 
-        const $picked = document.createElement('tinymce-editor');
-        $picked.dataset.config = JSON.stringify({linkPickerUrl: '/admin/pick', linkPickerTitle: 'Pick'});
-        $picked.append(document.createElement('textarea'));
-        $list.append($picked);
+        const $linked = document.createElement('tinymce-editor');
+        $linked.dataset.config = JSON.stringify({linkDialogUrl: '/admin/link', linkDialogTitle: 'Link'});
+        $linked.append(document.createElement('textarea'));
+        $list.append($linked);
         await wait();
 
-        const config = configs[0]!;
+        const config = configs[0]! as Record<string, unknown> & {setup: (editor: unknown) => void};
+        const registry = {addToggleButton: vi.fn(), addButton: vi.fn()};
+        const editor = {on: vi.fn(), addCommand: vi.fn(), addShortcut: vi.fn(), ui: {registry}};
 
-        expect(config.linkPickerUrl).toBeUndefined();
-        expect(config.file_picker_types).toBe('file');
-        expect(config.file_picker_callback).toBeTypeOf('function');
+        config.setup(editor);
+
+        expect(config.linkDialogUrl).toBeUndefined();
+        expect(registry.addToggleButton).toHaveBeenCalledWith('link', expect.any(Object));
+        expect(registry.addButton).toHaveBeenCalledWith('unlink', expect.any(Object));
+        expect(editor.addCommand).toHaveBeenCalledWith('mceLink', expect.any(Function));
     });
 
-    it('sets no file picker without a picker URL', async () => {
+    it('registers no link buttons without a dialog URL', async () => {
         await wait();
 
-        expect(configs[0]!.file_picker_callback).toBeUndefined();
+        const config = configs[0]! as Record<string, unknown> & {setup: (editor: unknown) => void};
+        const registry = {addToggleButton: vi.fn(), addButton: vi.fn()};
+
+        config.setup({on: vi.fn(), addCommand: vi.fn(), addShortcut: vi.fn(), ui: {registry}});
+
+        expect(registry.addToggleButton).not.toHaveBeenCalled();
     });
 });

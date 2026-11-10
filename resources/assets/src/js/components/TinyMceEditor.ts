@@ -1,6 +1,6 @@
 import tinymce, {Editor} from 'tinymce';
 
-import {openPicker} from '../includes/picker';
+import {registerLinkDialog} from '../includes/linkDialog';
 
 import 'tinymce/icons/default/icons.min.js';
 
@@ -20,19 +20,8 @@ window.customElements.get('tinymce-editor') || window.customElements.define('tin
     // noinspection JSUnusedGlobalSymbols
     connectedCallback() {
         const $textarea = this.querySelector('textarea')!;
-        const {linkPickerUrl, linkPickerTitle, ...config} = JSON.parse(this.dataset.config!);
-
-        // A function cannot travel in `data-config`, so the server names the picker's URL instead.
-        if (linkPickerUrl) {
-            config.file_picker_types = 'file';
-            config.file_picker_callback = async (callback: (value: string, meta?: Record<string, string>) => void) => {
-                const pick = await openPicker(linkPickerUrl, linkPickerTitle ?? '');
-
-                if (pick) {
-                    callback(pick.value, {text: pick.title, title: pick.title});
-                }
-            };
-        }
+        // A function cannot travel in `data-config`, so the server names the link dialog's URL instead.
+        const {linkDialogUrl, linkDialogTitle, ...config} = JSON.parse(this.dataset.config!);
 
         // TinyMCE requires a unique ID for each editor instance (issues with HTMX swaps). A new one per connect also
         // tells a stale initialisation, still waiting for its timer when the element moved again, to stand down.
@@ -56,13 +45,19 @@ window.customElements.get('tinymce-editor') || window.customElements.define('tin
                     ...config,
                     selector: `#${id}`,
                     // The iframe's document follows the admin's colour scheme, not only the browser's.
-                    setup: (editor: Editor) => editor.on('PreInit', () => {
-                        const theme = document.documentElement.dataset.theme;
+                    setup: (editor: Editor) => {
+                        editor.on('PreInit', () => {
+                            const theme = document.documentElement.dataset.theme;
 
-                        if (theme) {
-                            editor.getDoc().documentElement.dataset.theme = theme;
+                            if (theme) {
+                                editor.getDoc().documentElement.dataset.theme = theme;
+                            }
+                        });
+
+                        if (linkDialogUrl) {
+                            registerLinkDialog(editor, linkDialogUrl, linkDialogTitle ?? '', config.link_class_list ?? []);
                         }
-                    }),
+                    },
                 });
 
                 // Typing happens in the editor's iframe, so the form learns of it from the textarea it stands for.

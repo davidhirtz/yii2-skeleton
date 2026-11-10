@@ -7,7 +7,8 @@
 - Added `LinkCustomAttribute`, one field for an absolute or a partial URL
 - Added `CustomAttribute::formatVisibleValue()`, which `getVisibleAttribute()` answers through
 - Added `HtmlValidator::$uriSchemes` for further link schemes
-- Added `TinyMceField::linkPickerUrl()`, a picker the link dialog opens in a modal
+- Added `Widgets\Forms\Fields\LinkField`, suggestions while typing and a picked record shown by name
+- Added `TinyMceField::linkDialogUrl()`, an admin dialog in place of the link plugin's (`Widgets\Forms\LinkDialog`)
 
 ## 3.26.0 (November 6, 2026)
 

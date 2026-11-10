@@ -71,6 +71,16 @@ export default ($container: HTMLElement) => {
         $results.innerHTML = '';
         close();
         $input.focus();
+
+        $container.dispatchEvent(new CustomEvent('autocomplete:select', {
+            bubbles: true,
+            detail: {
+                value: $option.dataset.autocompleteValue,
+                text: $option.dataset.autocompleteText ?? $option.textContent?.trim() ?? '',
+                description: $option.dataset.autocompleteDescription ?? '',
+                url: $option.dataset.autocompleteUrl,
+            },
+        }));
     };
 
     // The input's name carries the model and the attribute, and `hx-vals` cannot reach the element it sits on —

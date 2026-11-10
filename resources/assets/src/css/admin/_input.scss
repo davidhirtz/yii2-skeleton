@@ -209,3 +209,21 @@
   height: 1lh;
   place-content: center;
 }
+// A picked link, drawn like a filled upload: the name, then its URL in muted text.
+.link-field-name {
+  background-color: var(--input-bg-color);
+  display: flex;
+  gap: .5rem;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+
+  > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  > span:empty {
+    display: none;
+  }
+}

@@ -70,6 +70,7 @@ class AutocompleteList extends Widget
             ->attribute('data-autocomplete-value', (string)$option['value'])
             ->attribute('data-autocomplete-text', $option['text'])
             ->attribute('data-autocomplete-url', $option['url'] ?? null)
+            ->attribute('data-autocomplete-description', $option['description'] ?? null)
             ->attribute('role', 'option')
             ->attribute('tabindex', '-1');
 

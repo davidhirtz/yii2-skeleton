@@ -49,9 +49,7 @@ class TinyMceField extends Field
     /**
      * @var array<int|string, mixed>|string|null
      */
-    protected array|string|null $linkPickerUrl = null;
-
-    protected ?string $linkPickerTitle = null;
+    protected array|string|null $linkDialogUrl = null;
 
     /**
      * @var list<string>
@@ -145,19 +143,13 @@ class TinyMceField extends Field
     }
 
     /**
-     * A page rendering its choices in `#picker`, each a `[data-picker-value]` button, opened by the link dialog.
+     * The page `includes/linkDialog.ts` opens in a modal in place of the link plugin's dialog.
      *
-     * @param array<int|string, mixed>|string|null $linkPickerUrl
+     * @param array<int|string, mixed>|string|null $linkDialogUrl
      */
-    public function linkPickerUrl(array|string|null $linkPickerUrl): static
+    public function linkDialogUrl(array|string|null $linkDialogUrl): static
     {
-        $this->linkPickerUrl = $linkPickerUrl;
-        return $this;
-    }
-
-    public function linkPickerTitle(?string $linkPickerTitle): static
-    {
-        $this->linkPickerTitle = $linkPickerTitle;
+        $this->linkDialogUrl = $linkDialogUrl;
         return $this;
     }
 
@@ -458,10 +450,9 @@ class TinyMceField extends Field
                 $this->clientOptions['link_class_list'] ??= $linkClassList;
             }
 
-            if ($this->linkPickerUrl !== null) {
-                $this->clientOptions['linkPickerUrl'] ??= Url::to($this->linkPickerUrl);
-                $this->clientOptions['linkPickerTitle'] ??= $this->linkPickerTitle
-                    ?? Yii::t('skeleton', 'TINYMCE_LINK_PICKER_TITLE');
+            if ($this->linkDialogUrl !== null) {
+                $this->clientOptions['linkDialogUrl'] ??= Url::to($this->linkDialogUrl);
+                $this->clientOptions['linkDialogTitle'] ??= Yii::t('skeleton', 'LINK_DIALOG_TITLE');
             }
         }
     }
@@ -494,6 +485,11 @@ class TinyMceField extends Field
             'numlist' => 'lists',
             'table' => 'table',
         ];
+
+        // The dialog's own buttons and command stand in for the plugin, which would register them over it.
+        if ($this->linkDialogUrl !== null) {
+            unset($toolbars['link']);
+        }
 
         foreach ($toolbars as $toolbar => $plugin) {
             if (in_array($toolbar, $this->toolbar, true)) {

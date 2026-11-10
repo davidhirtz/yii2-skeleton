@@ -206,3 +206,25 @@ form[data-pristine] [type="submit"] {
     }
   }
 }
+
+// The editor's link dialog sits in a modal too narrow for a label column.
+.link-dialog {
+  .form-rows {
+    gap: 1rem;
+  }
+
+  .form-row {
+    display: block;
+  }
+
+  .form-label {
+    margin-bottom: .25rem;
+  }
+}
+
+.link-dialog-buttons {
+  display: flex;
+  gap: .5rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
