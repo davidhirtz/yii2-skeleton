@@ -20,8 +20,8 @@ interface LinkClass {
  * Opens the page at `url` (`Widgets\Forms\LinkDialog`) in a modal, filled with `values`, and answers what its form held
  * on submit, `null` when closed otherwise. Nothing posts the form.
  */
-export const openLinkDialog = (url: string, title: string, values: LinkValues, classes: LinkClass[] = []): Promise<LinkValues | null> => new Promise((resolve) => {
-    const $dialog = createModal(title, '<div id="link-dialog"></div>');
+export const openLinkDialog = (url: string, title: string, values: LinkValues, classes: LinkClass[] = [], closeLabel?: string): Promise<LinkValues | null> => new Promise((resolve) => {
+    const $dialog = createModal(title, '<div id="link-dialog"></div>', closeLabel);
     const $body = $dialog.querySelector<HTMLElement>('.modal-body')!;
     let result: LinkValues | null = null;
 
@@ -115,7 +115,7 @@ const apply = (editor: Editor, $anchor: HTMLAnchorElement | null, values: LinkVa
 /**
  * Stands in for the link plugin: its buttons, its command and its shortcut open {@see openLinkDialog}.
  */
-export const registerLinkDialog = (editor: Editor, url: string, title: string, classes: LinkClass[] = []) => {
+export const registerLinkDialog = (editor: Editor, url: string, title: string, classes: LinkClass[] = [], closeLabel?: string) => {
     const getAnchor = () => editor.dom.getParent(editor.selection.getNode(), 'a[href]') as HTMLAnchorElement | null;
 
     const open = async () => {
@@ -134,7 +134,7 @@ export const registerLinkDialog = (editor: Editor, url: string, title: string, c
             title: $anchor?.getAttribute('title') ?? '',
             target: $anchor?.getAttribute('target') ?? '',
             class: $anchor?.getAttribute('class') ?? '',
-        }, classes);
+        }, classes, closeLabel);
 
         editor.focus();
         editor.selection.moveToBookmark(bookmark);

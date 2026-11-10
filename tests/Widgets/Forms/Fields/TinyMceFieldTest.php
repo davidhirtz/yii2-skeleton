@@ -110,6 +110,7 @@ class TinyMceFieldTest extends TestCase
 
         self::assertStringEndsWith('/admin/link?tenant=2', (string)($config['linkDialogUrl'] ?? ''));
         self::assertNotEmpty($config['linkDialogTitle'] ?? null);
+        self::assertNotEmpty($config['linkDialogCloseLabel'] ?? null);
         self::assertNotContains('link', explode(' ', (string)($config['plugins'] ?? '')));
     }
 

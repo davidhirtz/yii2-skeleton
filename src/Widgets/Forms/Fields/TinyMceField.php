@@ -453,6 +453,7 @@ class TinyMceField extends Field
             if ($this->linkDialogUrl !== null) {
                 $this->clientOptions['linkDialogUrl'] ??= Url::to($this->linkDialogUrl);
                 $this->clientOptions['linkDialogTitle'] ??= Yii::t('skeleton', 'LINK_DIALOG_TITLE');
+                $this->clientOptions['linkDialogCloseLabel'] ??= Yii::t('skeleton', 'MODAL_CLOSE_LABEL');
             }
         }
     }

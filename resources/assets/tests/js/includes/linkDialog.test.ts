@@ -46,6 +46,17 @@ describe('linkDialog', () => {
         expect(document.querySelector('dialog')).toBeNull();
     });
 
+    it('has a close button when given its label, answering null', async () => {
+        const result = openLinkDialog('/admin/link', 'Link', values, [], 'Schließen');
+        const $close = document.querySelector<HTMLButtonElement>('dialog .modal-header button')!;
+
+        expect($close.getAttribute('aria-label')).toBe('Schließen');
+
+        $close.click();
+
+        expect(await result).toBeNull();
+    });
+
     it('answers null when closed without a submit', async () => {
         const result = openLinkDialog('/admin/link', 'Link', values);
         document.querySelector('dialog')!.close();

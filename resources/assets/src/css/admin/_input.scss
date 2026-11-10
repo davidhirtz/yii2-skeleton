@@ -209,10 +209,20 @@
   height: 1lh;
   place-content: center;
 }
+// A grid or flex item keeps its content's width unless told otherwise, and a long name would widen the whole form.
+.link-field {
+  min-width: 0;
+}
+
+.link-field-selected {
+  flex-wrap: nowrap;
+}
+
 // A picked link, drawn like a filled upload: the name, then its URL in muted text.
 .link-field-name {
   background-color: var(--input-bg-color);
   display: flex;
+  flex: 1 1 auto;
   gap: .5rem;
   min-width: 0;
   overflow: hidden;

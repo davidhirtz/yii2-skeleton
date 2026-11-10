@@ -208,8 +208,23 @@ htmx.on('htmx:before:swap', (event: Event) => {
 // Within a navigation, `#wrap` carries the depth the header computed, so comparing the incoming one with the
 // current says whether the user went deeper or back up — which is the direction the header's subtitle slides.
 htmx.on('htmx:before:swap', (event: Event) => {
-    const {ctx} = (event as CustomEvent).detail;
+    const {ctx, tasks} = (event as CustomEvent).detail;
     const $wrap = document.getElementById('wrap');
+
+    // A transition would capture the page behind the modal's top layer and flash it at every keystroke of a search.
+    const $target = typeof ctx.target === 'string' ? document.querySelector(ctx.target) : ctx.target;
+
+    if ([$target, ctx.sourceElement].some(($el) => $el instanceof Element && $el.closest('dialog[open]'))) {
+        (tasks ?? []).forEach((task: {swapSpec?: {transition?: boolean}, transition?: boolean}) => {
+            task.transition = false;
+
+            if (task.swapSpec) {
+                task.swapSpec.transition = false;
+            }
+        });
+
+        return;
+    }
 
     if (ctx.target !== $wrap && ctx.target !== document.body) {
         document.documentElement.dataset.navigate = 'none';
