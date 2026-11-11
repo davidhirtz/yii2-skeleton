@@ -73,6 +73,8 @@ answer `null` there instead.
 | `cookieDomain` | none | the `Domain` of the session and auth cookies |
 | `cacheKeyPrefix` | none | `keyPrefix` of the cache component |
 | `sentryDsn` | none | adds `Log\SentryTarget` under `components.log.targets.sentry` |
+| `googleSearchConsoleProperty` | none | a dashboard shortcut to the Search Console property (`sc-domain:example.com`) |
+| `googleAnalyticsPropertyId` | none | a dashboard shortcut to the numeric Google Analytics property |
 | `twoFactorAuthenticationIssuer` | the application name | shown in the authenticator app |
 | `registryUrl`, `registryKey` | none | where `./yii registry/push` reports the installation |
 | `registryHostname` | `gethostname()` | the host name reported to the registry, pinned where shell sessions land on changing nodes of one shared file system |
@@ -106,7 +108,7 @@ Other components the skeleton configures: `request` (`Web\Request`, `environment
 `['173.245.48.0/20' => ['X-Forwarded-For', 'X-Forwarded-Proto']]`), `urlManager` (`Web\UrlManager`: `i18nUrl`, `defaultLanguage`, `draftSubdomain`,
 `redirectMap`), `i18n` (`I18n\I18N::$languages`), `db` (`Db\Connection`: `backupOnMigration`, `backupPath`, `maxBackups`, `ignoredBackupTables`, `lockWaitTimeout`),
 `session` (`Web\DbSession`, its own `cookieSecure`), `search` (`Search\Search::$models`, `$driver`), `sitemap` (`Sitemap\Sitemap::$sitemaps`, `urls`,
-`views`, `useSitemapIndex`), `upload` (`Upload\Upload`: `path`, `baseUrl`, `maxSize`, `uploadLimit`, `uploadLimitDuration`, `tempPath`,
+`views`, `useSitemapIndex`; once one is set, the admin lists its URLs under System), `upload` (`Upload\Upload`: `path`, `baseUrl`, `maxSize`, `uploadLimit`, `uploadLimitDuration`, `tempPath`,
 `tempLifetime`, `enableGarbageCollection`, and for uploads from a URL `enableStreamUploads`, `streamUploadTimeout`,
 `maxStreamUploadSize`, `maxStreamUploadRedirects`, `allowPrivateStreamUploadHosts`),
 `view` (`Web\View::$titleTemplate`), `log` (targets `file` and `sentry`).
@@ -357,7 +359,7 @@ another role. A project adds a permission with `Db\Traits\MigrationTrait::addPer
 message key, guards a controller with `AccessControl` naming `Model::AUTH_<MODEL>`, and never passes a record to `can()`.
 
 Extension points: a bundle module implementing `Modules\Admin\ModuleInterface` contributes `aside(Nav)` items and
-`dashboard(Dashboard)` panels; any widget is changed from the outside through `Widgets\Widget::EVENT_CONFIGURE`
+`dashboard(Dashboard)` panels and shortcuts (`Dashboard::addItem()`); any widget is changed from the outside through `Widgets\Widget::EVENT_CONFIGURE`
 (`Helpers\EventHelper::on(NavBar::class, Widget::EVENT_CONFIGURE, fn (NavBar $navBar) => ...)`), any web controller
 through `Web\Controller::EVENT_CONFIGURE`; `Modules\Admin\Controllers\DashboardController::addRoles()` widens the
 dashboard's access rule. Models opt into features by interface plus trait: `AdminModelInterface`, `TypeAttributeInterface`,

@@ -3,7 +3,9 @@
 - Added `ModelReferenceInterface`, `ModelReferenceTrait` and `ModelReferenceGridTrait` for a record naming an owner and its attributes
 - Added `HtmlValidator::$definedHtmlAttributes`, which keeps `aria-label` on links by default
 - Changed a delete trail to keep the record's name, which `Trail::getModelName()` answers once it is gone
-- Added dashboard panels: `Widgets\Panels\DashboardPanel` and `Dashboard::addPanel()`, with "recently edited", "latest changes" and "needs attention" (`ContentHealthPanel::addCheck()`)
+- Added dashboard panels: `Widgets\Panels\DashboardPanel` and `Dashboard::addPanel()`, with "shortcuts" (the dashboard items), "needs attention" (`ContentHealthPanel::addCheck()`), "recently edited by you" and "latest changes by others"
+- Added `params.googleSearchConsoleProperty` and `params.googleAnalyticsPropertyId` for dashboard shortcuts
+- Added an admin sitemap page (`admin/sitemap`) listing what `sitemap.xml` serves, and `Sitemap\Sitemap::isEnabled()`
 - Added `Modules\Admin\Module::$dashboardTrailModels`, the records "recently edited" lists
 - Added `Widgets\StructuredData\JobPosting` for Google's job listings
 - Added `LinkCustomAttribute`, one field for an absolute or a partial URL

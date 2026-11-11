@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Panels;
 
 use Hirtz\Skeleton\Html\A;
-use Hirtz\Skeleton\Html\Div;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Traits\OrderTrait;
 use Hirtz\Skeleton\Widgets\Traits\TitleTrait;
+use Hirtz\Skeleton\Widgets\Traits\UrlTrait;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -18,27 +20,11 @@ use Stringable;
  */
 class DashboardPanel extends Widget
 {
+    use IconTrait;
     use OrderTrait;
     use TagContentTrait;
     use TitleTrait;
-
-    protected ?string $footerLabel = null;
-
-    /**
-     * @var array<int|string, mixed>|string|null
-     */
-    protected array|string|null $footerUrl = null;
-
-    /**
-     * @param array<int|string, mixed>|string|null $url
-     */
-    public function footer(?string $label, array|string|null $url): static
-    {
-        $this->footerLabel = $label;
-        $this->footerUrl = $url;
-
-        return $this;
-    }
+    use UrlTrait;
 
     #[Override]
     protected function renderContent(): string|Stringable
@@ -50,9 +36,9 @@ class DashboardPanel extends Widget
         }
 
         return Card::make()
-            ->title($this->title)
-            ->addClass('dashboard-panel')
-            ->content($body, $this->getFooter());
+            ->title($this->getTitle())
+            ->addClass('dashboard-item')
+            ->content($body);
     }
 
     protected function getBody(): string|Stringable
@@ -60,16 +46,19 @@ class DashboardPanel extends Widget
         return implode('', $this->content);
     }
 
-    protected function getFooter(): ?Stringable
+    protected function getTitle(): ?Stringable
     {
-        if ($this->footerLabel === null || $this->footerUrl === null) {
+        if ($this->title === null || $this->title === false || (string)$this->title === '') {
             return null;
         }
 
-        return Div::make()
-            ->class('dashboard-panel-footer')
-            ->content(A::make()
-                ->href($this->footerUrl)
-                ->text($this->footerLabel));
+        $content = [
+            $this->getIcon()?->addClass('dashboard-item-icon'),
+            Span::make()->text($this->title),
+        ];
+
+        return $this->url !== null
+            ? A::make()->class('dashboard-item-title')->href($this->url)->content(...$content)
+            : Span::make()->class('dashboard-item-title')->content(...$content);
     }
 }

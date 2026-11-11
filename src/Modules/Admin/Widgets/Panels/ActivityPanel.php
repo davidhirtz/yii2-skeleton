@@ -12,11 +12,10 @@ use Stringable;
 use Yii;
 
 /**
- * The team's last changes: original rows only, since each parent row repeats one of them.
+ * The others' last changes: original rows only, since each parent row repeats one of them.
  */
 class ActivityPanel extends TrailPanel
 {
-    protected int $limit = 10;
     protected int $scanLimit = 100;
 
     /**
@@ -37,8 +36,8 @@ class ActivityPanel extends TrailPanel
     protected function configure(): void
     {
         $this->title ??= Yii::t('skeleton', 'DASHBOARD_ACTIVITY_TITLE');
-        $this->footerLabel ??= Yii::t('skeleton', 'DASHBOARD_ACTIVITY_SHOW_ALL_LINK');
-        $this->footerUrl ??= ['/admin/trail/index'];
+        $this->icon ??= 'users';
+        $this->url ??= ['/admin/trail/index'];
 
         parent::configure();
     }
@@ -46,10 +45,18 @@ class ActivityPanel extends TrailPanel
     #[Override]
     protected function getBody(): string|Stringable
     {
-        /** @var Trail[] $trails */
-        $trails = Trail::find()
+        $query = Trail::find()
             ->where(['type' => [Trail::TYPE_CREATE, Trail::TYPE_UPDATE, Trail::TYPE_DELETE, Trail::TYPE_ORDER]])
-            ->andWhere(['not', ['model_class' => null]])
+            ->andWhere(['not', ['model_class' => null]]);
+
+        $userId = $this->webuser->getId();
+
+        if ($userId !== null) {
+            $query->andWhere(['or', ['user_id' => null], ['!=', 'user_id', $userId]]);
+        }
+
+        /** @var Trail[] $trails */
+        $trails = $query
             ->with('user')
             ->orderBy(['id' => SORT_DESC])
             ->limit($this->scanLimit)

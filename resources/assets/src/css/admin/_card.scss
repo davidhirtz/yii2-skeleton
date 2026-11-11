@@ -31,8 +31,9 @@
   align-items: center;
   color: var(--heading-color, currentColor);
   display: flex;
-  font-weight: 700;
+  font-family: "Bebas Neue", sans-serif;
   justify-content: space-between;
+  letter-spacing: .0625em;
 
   .btn-link {
     font: inherit;

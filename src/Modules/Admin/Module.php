@@ -15,11 +15,13 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\DashboardController;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\ActivityPanel;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\ContentHealthPanel;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\RecentlyEditedPanel;
+use Hirtz\Skeleton\Sitemap\Sitemap;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Request;
 use Hirtz\Skeleton\Web\User as WebUser;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
+use Hirtz\Skeleton\Widgets\Panels\ShortcutsPanel;
 use Override;
 use Yii;
 use yii\web\Cookie;
@@ -292,9 +294,17 @@ class Module extends \Hirtz\Skeleton\Base\Module
                 ->link(fn (A $link) => $link->target('_blank'))
                 ->order(100)
                 ->url('/'),
+            Sitemap::getComponent()->isEnabled() ? DashboardItem::make()
+                ->icon('sitemap')
+                ->label(Yii::t('skeleton', 'SITEMAP_VIEW_BUTTON'))
+                ->order(85)
+                ->roles([User::ROLE_AUTHENTICATED])
+                ->url(['/admin/sitemap/index']) : null,
+            ...$this->getGoogleDashboardItems(),
         );
 
         $dashboard->addPanel(
+            shortcuts: ShortcutsPanel::make()->order(0),
             health: ContentHealthPanel::make()->order(10),
             recent: RecentlyEditedPanel::make()->order(30),
             activity: ActivityPanel::make()->order(40),
@@ -307,6 +317,37 @@ class Module extends \Hirtz\Skeleton\Base\Module
         }
 
         return $dashboard;
+    }
+
+    /**
+     * @return array<string, DashboardItem>
+     */
+    protected function getGoogleDashboardItems(): array
+    {
+        $items = [];
+        $property = Yii::$app->params['googleSearchConsoleProperty'] ?? null;
+
+        if (is_string($property) && $property !== '') {
+            $items['search-console'] = DashboardItem::make()
+                ->icon('magnifying-glass-chart')
+                ->label(Yii::t('skeleton', 'DASHBOARD_SEARCH_CONSOLE_BUTTON'))
+                ->link(fn (A $link) => $link->target('_blank'))
+                ->order(90)
+                ->url('https://search.google.com/search-console?resource_id=' . rawurlencode($property));
+        }
+
+        $propertyId = Yii::$app->params['googleAnalyticsPropertyId'] ?? null;
+
+        if ((is_string($propertyId) || is_int($propertyId)) && $propertyId !== '') {
+            $items['analytics'] = DashboardItem::make()
+                ->icon('chart-line')
+                ->label(Yii::t('skeleton', 'DASHBOARD_ANALYTICS_BUTTON'))
+                ->link(fn (A $link) => $link->target('_blank'))
+                ->order(91)
+                ->url("https://analytics.google.com/analytics/web/#/p$propertyId/reports/intelligenthome");
+        }
+
+        return $items;
     }
 
     /**

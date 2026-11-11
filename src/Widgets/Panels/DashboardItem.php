@@ -33,7 +33,6 @@ class DashboardItem extends Widget
     {
         return Li::make()
             ->attributes($this->attributes)
-            ->addClass('dashboard-item')
             ->content($this->getContent());
     }
 

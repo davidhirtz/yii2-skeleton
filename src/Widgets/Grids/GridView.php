@@ -35,7 +35,7 @@ use yii\helpers\Inflector;
 use yii\data\DataProviderInterface;
 
 /**
- * @template T of Model
+ * @template T of array<string, mixed>|Model
  */
 class GridView extends Widget
 {

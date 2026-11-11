@@ -6,7 +6,6 @@ namespace Hirtz\Skeleton\Widgets\Panels;
 
 use Closure;
 use Hirtz\Skeleton\Html\Div;
-use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Widgets\Navs\Traits\ItemTrait;
 use Hirtz\Skeleton\Widgets\Traits\ContainerTrait;
@@ -22,7 +21,11 @@ class Dashboard extends Widget
 {
     use ContainerTrait;
 
-    /** @use ItemTrait<DashboardItem> */
+    /**
+     * The links of the panel named `shortcuts`.
+     *
+     * @use ItemTrait<DashboardItem>
+     */
     use ItemTrait;
 
     protected Module $module;
@@ -79,29 +82,23 @@ class Dashboard extends Widget
     protected function configure(): void
     {
         $this->module->dashboard($this);
-
         parent::configure();
     }
 
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        usort($this->items, fn (DashboardItem $a, DashboardItem $b) => $a->getOrder() <=> $b->getOrder());
+        $shortcuts = $this->panels['shortcuts'] ?? null;
 
-        $items = implode('', array_map(strval(...), $this->items));
+        if ($shortcuts instanceof ShortcutsPanel) {
+            $shortcuts->items(fn (array $items): array => [...$items, ...$this->items]);
+        }
 
-        return ($items !== '' ? Ul::make()->class('dashboard')->content($items) : '') . $this->getPanelsContent();
-    }
-
-    protected function getPanelsContent(): string
-    {
         $panels = array_values($this->panels);
         usort($panels, fn (DashboardPanel $a, DashboardPanel $b) => $a->getOrder() <=> $b->getOrder());
 
         $content = implode('', array_map(strval(...), $panels));
 
-        return $content !== ''
-            ? (string)Div::make()->class('dashboard-panels')->content($content)
-            : '';
+        return $content !== '' ? Div::make()->class('dashboard')->content($content) : '';
     }
 }

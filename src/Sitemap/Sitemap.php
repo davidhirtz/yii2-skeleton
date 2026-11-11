@@ -83,6 +83,14 @@ class Sitemap extends Component
     }
 
     /**
+     * Reads the configuration alone, so it builds no sitemap and runs no query.
+     */
+    public function isEnabled(): bool
+    {
+        return $this->urls || $this->views || $this->sitemaps;
+    }
+
+    /**
      * @return list<string>
      */
     public function getVariations(): array

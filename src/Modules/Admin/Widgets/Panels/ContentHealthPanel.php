@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 use Closure;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Li;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Ul;
 use Hirtz\Skeleton\Widgets\Panels\DashboardPanel;
 use Override;
@@ -24,7 +25,8 @@ class ContentHealthPanel extends DashboardPanel
     protected array $checks = [];
 
     /**
-     * The count is called only for a user holding one of the roles, since the link leads behind them.
+     * The count is called only for a user holding one of the roles, since the link leads behind them. The text
+     * follows the count, which the panel renders in bold, so it leaves the number out.
      *
      * @param Closure(): int $count
      * @param Closure(int): string $text
@@ -56,6 +58,8 @@ class ContentHealthPanel extends DashboardPanel
     protected function configure(): void
     {
         $this->title ??= Yii::t('skeleton', 'DASHBOARD_HEALTH_TITLE');
+        $this->icon ??= 'list-check';
+
         parent::configure();
     }
 
@@ -75,7 +79,11 @@ class ContentHealthPanel extends DashboardPanel
             if ($count > 0) {
                 $list->addContent(Li::make()->content(A::make()
                     ->href($check['url'])
-                    ->text($check['text']($count))));
+                    ->content(
+                        Span::make()->class('strong')->text(Yii::$app->getFormatter()->asInteger($count)),
+                        ' ',
+                        Span::make()->text($check['text']($count)),
+                    )));
 
                 $isEmpty = false;
             }

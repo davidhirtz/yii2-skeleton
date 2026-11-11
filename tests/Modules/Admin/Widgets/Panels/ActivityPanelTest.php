@@ -33,7 +33,27 @@ class ActivityPanelTest extends TestCase
 
         self::assertStringContainsString($this->getHref($original), $html);
         self::assertStringNotContainsString($this->getHref($child), $html);
-        self::assertStringContainsString(Url::to(['/admin/trail/index']), $html);
+        self::assertStringContainsString('href="' . Url::to(['/admin/trail/index']) . '"', $html);
+    }
+
+    public function testTheUsersOwnChangesAreLeftOutButSystemChangesAreNot(): void
+    {
+        $own = $this->createRedirect('own');
+        $system = $this->createRedirect('system');
+        $other = $this->createRedirect('other');
+
+        $owner = $this->getUserFromFixture('owner');
+        $this->getWebUser()->setIdentity($owner);
+
+        $this->insertTrail($own, Trail::TYPE_UPDATE, userId: $owner->id);
+        $this->insertTrail($system, Trail::TYPE_UPDATE)->updateAttributes(['user_id' => null]);
+        $this->insertTrail($other, Trail::TYPE_UPDATE);
+
+        $html = ActivityPanel::make()->render();
+
+        self::assertStringNotContainsString($this->getHref($own), $html);
+        self::assertStringContainsString($this->getHref($system), $html);
+        self::assertStringContainsString($this->getHref($other), $html);
     }
 
     public function testRepeatedSavesOfOneRecordReadAsOneLine(): void
@@ -80,6 +100,8 @@ class ActivityPanelTest extends TestCase
 
         self::assertInstanceOf(Trail::class, $trail);
         self::assertSame($name, $trail->getModelName());
+
+        $trail->updateAttributes(['user_id' => $this->getUserFromFixture('admin')->id]);
         self::assertStringContainsString('>' . $name . '</span>', ActivityPanel::make()->render());
     }
 
@@ -105,6 +127,8 @@ class ActivityPanelTest extends TestCase
         $copy->model_id = $entry->id;
         $copy->data = ['model_class' => UserToken::class, 'model_id' => 999_999, 'trail_id' => $child->id];
         self::assertTrue($copy->insert());
+
+        Trail::updateAll(['user_id' => $this->getUserFromFixture('admin')->id], ['id' => [$child->id, $copy->id]]);
 
         $html = ActivityPanel::make()->render();
 
@@ -150,9 +174,10 @@ class ActivityPanelTest extends TestCase
     }
 
     /**
-     * `Trail::beforeSave()` stamps the time, so an earlier one is written afterwards.
+     * `Trail::beforeSave()` stamps the time and the logged-in user, so the row is moved to another user and an
+     * earlier time afterwards.
      */
-    private function insertTrail(Redirect $redirect, int $type, ?DateTime $createdAt = null): void
+    private function insertTrail(Redirect $redirect, int $type, ?DateTime $createdAt = null, ?int $userId = null): Trail
     {
         $trail = Trail::create();
         $trail->type = $type;
@@ -161,9 +186,12 @@ class ActivityPanelTest extends TestCase
 
         self::assertTrue($trail->insert());
 
-        if ($createdAt !== null) {
-            $trail->updateAttributes(['created_at' => $createdAt]);
-        }
+        $trail->updateAttributes(array_filter([
+            'created_at' => $createdAt,
+            'user_id' => $userId ?? $this->getUserFromFixture('admin')->id,
+        ]));
+
+        return $trail;
     }
 
     private function getHref(Redirect $redirect): string

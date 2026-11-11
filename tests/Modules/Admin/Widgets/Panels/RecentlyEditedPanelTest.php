@@ -73,6 +73,25 @@ class RecentlyEditedPanelTest extends TestCase
         self::assertStringNotContainsString($goneHref, $html);
     }
 
+    public function testTheTitleLinksToTheUsersTrailAndAtMostFiveRecordsAreListed(): void
+    {
+        $owner = $this->getUserFromFixture('owner');
+        $this->getWebUser()->setIdentity($owner);
+
+        $redirects = [];
+
+        for ($i = 1; $i <= 6; $i++) {
+            $redirects[$i] = $this->createRedirect("limit-$i");
+            $this->insertTrail($redirects[$i], Trail::TYPE_UPDATE);
+        }
+
+        $html = RecentlyEditedPanel::make()->render();
+
+        self::assertStringContainsString('href="' . Url::to(['/admin/user-trail/index', 'id' => $owner->id]) . '"', $html);
+        self::assertStringContainsString($this->getHref($redirects[6]), $html);
+        self::assertStringNotContainsString($this->getHref($redirects[1]), $html);
+    }
+
     public function testNothingRendersWithoutListedClassesOrRows(): void
     {
         $redirect = $this->createRedirect('unlisted');
@@ -103,6 +122,7 @@ class RecentlyEditedPanelTest extends TestCase
 
         self::assertStringContainsString($redirect->getAdminName(), $html);
         self::assertStringNotContainsString($this->getHref($redirect), $html);
+        self::assertStringNotContainsString('user-trail', $html);
     }
 
     private function createRedirect(string $name): Redirect

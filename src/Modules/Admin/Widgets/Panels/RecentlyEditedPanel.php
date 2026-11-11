@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
 use Hirtz\Skeleton\Models\Trail;
+use Hirtz\Skeleton\Models\User;
 use Override;
 use Stringable;
 use Yii;
@@ -17,7 +18,22 @@ class RecentlyEditedPanel extends TrailPanel
     protected function configure(): void
     {
         $this->title ??= Yii::t('skeleton', 'DASHBOARD_RECENT_TITLE');
+        $this->icon ??= 'user-pen';
+        $this->url ??= $this->getUserTrailRoute();
+
         parent::configure();
+    }
+
+    /**
+     * @return array<int|string, mixed>|null
+     */
+    protected function getUserTrailRoute(): ?array
+    {
+        $user = $this->webuser->getIdentity();
+
+        return $user instanceof User && $this->webuser->can(Trail::AUTH_TRAIL_INDEX, ['user' => $user])
+            ? ['/admin/user-trail/index', 'id' => $user->id]
+            : null;
     }
 
     #[Override]

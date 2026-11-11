@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Models\Redirect;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Sitemap\Sitemap;
 use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Override;
 use Yii;
@@ -42,8 +43,23 @@ class SystemNavItem extends NavItem
             log: $this->getLogIndexItem(),
             trail: $this->getTrailIndexItem(),
             redirect: $this->getRedirectIndexItem(),
+            sitemap: $this->getSitemapIndexItem(),
             consent: $this->getConsentIndexItem(),
         );
+    }
+
+    protected function getSitemapIndexItem(): ?NavItem
+    {
+        if (!Sitemap::getComponent()->isEnabled()) {
+            return null;
+        }
+
+        return NavItem::make()
+            ->label(Yii::t('skeleton', 'SITEMAP_TITLE'))
+            ->url(['/admin/sitemap/index'])
+            ->order(70)
+            ->roles([User::ROLE_AUTHENTICATED])
+            ->routes(['admin/sitemap']);
     }
 
     protected function getConsentIndexItem(): ?NavItem
@@ -77,7 +93,7 @@ class SystemNavItem extends NavItem
             //->icon('forward')
             ->label(Yii::t('skeleton', 'REDIRECT_PLURAL'))
             ->url(['/admin/redirect/index'])
-            ->order(40)
+            ->order(50)
             ->roles([Redirect::AUTH_REDIRECT])
             ->routes(['admin/redirect']);
     }
@@ -88,7 +104,7 @@ class SystemNavItem extends NavItem
             //->icon('history')
             ->label(Yii::t('skeleton', 'TRAIL_TITLE'))
             ->url(['/admin/trail/index'])
-            ->order(60)
+            ->order(40)
             ->roles([Trail::AUTH_TRAIL_INDEX])
             ->routes(['admin/trail']);
     }

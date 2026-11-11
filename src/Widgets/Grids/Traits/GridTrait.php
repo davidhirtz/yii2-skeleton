@@ -10,12 +10,12 @@ use yii\base\Model;
 trait GridTrait
 {
     /**
-     * @var GridView<covariant Model>
+     * @var GridView<covariant array<string, mixed>|Model>
      */
     protected GridView $grid;
 
     /**
-     * @param GridView<covariant Model> $grid
+     * @param GridView<covariant array<string, mixed>|Model> $grid
      */
     public function grid(GridView $grid): static
     {

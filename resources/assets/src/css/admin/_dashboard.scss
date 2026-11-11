@@ -2,44 +2,43 @@
 
 .dashboard {
   --cols: 1;
+  --card-border-color: var(--dashboard-item-border-color);
+
   display: grid;
+  gap: 1rem;
   grid-template-columns: repeat(var(--cols), 1fr);
   padding: 1rem;
-  gap: 1rem;
 
   @include media-breakpoint-up(sm) {
     --cols: 2;
   }
 
-  @include media-breakpoint-up(md) {
+  @include media-breakpoint-up(xl) {
     --cols: 3;
   }
 }
 
-.dashboard-link {
-  display: flex;
+.dashboard-item-title {
   align-items: center;
-  gap: 1rem;
-  border: 1px solid var(--border-color);
-  padding: 1rem;
-  border-radius: 0.25rem;
+  color: inherit;
+  display: inline-flex;
+  gap: .5rem;
 }
 
-.dashboard-panels {
-  --card-border-color: var(--dashboard-panel-border-color);
-
-  display: grid;
-  align-items: start;
-  gap: 1rem;
-  padding: 1rem;
-
-  @include media-breakpoint-up(lg) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.dashboard-item-icon {
+  width: 1.25em;
+  text-align: center;
 }
 
-.dashboard-panel-footer {
-  margin-top: 1rem;
+.dashboard-link {
+  align-items: center;
+  display: flex;
+  gap: .75rem;
+}
+
+.dashboard-link-icon {
+  width: 1.25em;
+  text-align: center;
 }
 
 .dashboard-list {

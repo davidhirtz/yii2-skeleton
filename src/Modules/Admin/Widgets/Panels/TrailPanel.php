@@ -21,7 +21,7 @@ use Yii;
 
 abstract class TrailPanel extends DashboardPanel
 {
-    protected int $limit = 8;
+    protected int $limit = 5;
 
     public function limit(int $limit): static
     {
