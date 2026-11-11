@@ -1,6 +1,6 @@
 /**
  * Keyboard shortcuts (monorepo #760). Always on: ⌘S / Ctrl+S submits the page's form, ⌘K / Ctrl+K opens the search.
- * Letter shortcuts, which the account can turn off (WCAG 2.1.4): `m`, `n` or `a` labels the aside's links, the tabs or
+ * Letter shortcuts, which the account can turn off (WCAG 2.1.4): `m`, `t` or `a` labels the aside's links, the tabs or
  * the header's actions with a letter each, typed next; `?` lists them, `/` searches, holding Ctrl shows every label.
  * A letter comes from the element's own label (a word's initial first), so nothing is declared per link; an element
  * may name its own with `data-shortcut`.
@@ -17,7 +17,7 @@ const ACTIONS_TOGGLE = '#wrap .header .dropdown-actions > [popovertarget]';
 
 const GROUPS: Group[] = [
     {key: 'm', selector: '.aside .nav-link[href]'},
-    {key: 'n', selector: '#wrap .tabs:not(.translation-tabs) .nav-link'},
+    {key: 't', selector: '#wrap .tabs:not(.translation-tabs) .nav-link'},
     {
         key: 'a',
         selector: '#wrap .header .btn:not([popovertarget]):not(dialog *)',
@@ -93,6 +93,9 @@ let hints: HTMLElement | null = null;
 let pending: {keys: Map<string, Element>; close?: () => void} | null = null;
 let revealTimer: number | undefined;
 
+// A label covers the element's icon, which the collapsed aside still shows; without one, it goes before the text.
+const getIcon = ($el: Element): Element | null => $el.querySelector('.nav-link-icon, .fas, .far, .fab');
+
 const showHints = (entries: [string, Element][]): void => {
     hideHints();
 
@@ -101,12 +104,13 @@ const showHints = (entries: [string, Element][]): void => {
     hints.setAttribute('aria-hidden', 'true');
 
     entries.forEach(([label, $el]) => {
-        const rect = $el.getBoundingClientRect();
+        const $icon = getIcon($el);
+        const rect = ($icon ?? $el.querySelector('.nav-link-label') ?? $el).getBoundingClientRect();
         const $hint = document.createElement('kbd');
 
-        $hint.className = 'shortcut-hint';
+        $hint.className = $icon ? 'shortcut-hint' : 'shortcut-hint shortcut-hint-before';
         $hint.textContent = label;
-        $hint.style.left = `${Math.max(0, rect.left)}px`;
+        $hint.style.left = `${Math.max(0, $icon ? rect.left + rect.width / 2 : rect.left)}px`;
         $hint.style.top = `${Math.max(0, rect.top + rect.height / 2)}px`;
         hints!.appendChild($hint);
     });
@@ -152,9 +156,16 @@ const start = (group: Group): boolean => {
 const reveal = (): void => {
     const entries: [string, Element][] = [];
 
-    GROUPS.filter((group) => !group.open).forEach((group) => {
+    GROUPS.forEach((group) => {
         assignKeys(getGroupElements(group)).forEach(($el, key) => entries.push([`${group.key} ${key}`, $el]));
     });
+
+    // The dropdown's items stay hidden, so its toggle shows the key that opens it.
+    const $toggle = document.querySelector(ACTIONS_TOGGLE);
+
+    if ($toggle && isVisible($toggle)) {
+        entries.push(['a', $toggle]);
+    }
 
     showHints(entries);
 };

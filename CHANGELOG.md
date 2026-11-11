@@ -1,6 +1,6 @@
 ## Unreleased
 
-- Added admin keyboard shortcuts (`⌘S`, `⌘K`, `m`/`n`/`a` sequences, `?`) and the `user.keyboard_shortcuts` setting
+- Added admin keyboard shortcuts (`⌘S`, `⌘K`, `m`/`t`/`a` sequences, `?`) and the `user.keyboard_shortcuts` setting
 - Added `DashboardPanel::lazy()`, a panel loaded after the page through `admin/dashboard/panel`
 - Added `Models\Breadcrumb::$boost` and `Widgets\Navs\Breadcrumbs::getHomeBreadcrumb()`
 - Added `ModelReferenceInterface`, `ModelReferenceTrait` and `ModelReferenceGridTrait` for a record naming an owner and its attributes

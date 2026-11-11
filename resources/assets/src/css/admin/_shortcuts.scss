@@ -16,13 +16,19 @@
   border-radius: .25rem;
   color: var(--shortcut-hint-color);
   font-family: Bebas Neue, sans-serif;
-  font-size: .75rem ;
+  font-size: .75rem;
   letter-spacing: .0625em;
   line-height: 1;
+  min-width: 1.25rem;
   padding: .25rem .375rem;
   position: absolute;
-  translate:-50% -50%;
+  text-align: center;
+  translate: -50% -50%;
   white-space: nowrap;
+}
+
+.shortcut-hint-before {
+  translate: calc(-100% - .25rem) -50%;
 }
 
 .shortcut-list {

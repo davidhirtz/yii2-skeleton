@@ -20,6 +20,7 @@ describe('shortcuts', () => {
             <aside class="aside">${link('Einträge', '/entries')}${link('Entwürfe', '/drafts')}${link('Ålesund', '/a')}</aside>
             <div id="wrap">
                 <template id="keyboard-shortcuts" data-letters="1" data-title="Keyboard shortcuts" data-close-label="Close"><table><tr><th><kbd data-modifier>Ctrl</kbd> S</th></tr></table></template>
+                <div class="header"><button class="btn" data-shortcut="v">View</button><div class="dropdown-actions"><button class="btn" popovertarget="menu">…</button><div id="menu" popover><button class="btn">Delete</button></div></div></div>
                 <ul class="tabs">${link('Page', '/page')}${link('Sections', '/sections', 'data-shortcut="x"')}</ul>
                 <form class="form" method="get"><button type="submit">Filter</button></form>
                 <form class="form" method="post"><input name="name"><button type="submit">Save</button></form>
@@ -67,13 +68,28 @@ describe('shortcuts', () => {
     });
 
     it('ends the sequence on Escape or a letter without a target', () => {
-        press('n');
+        press('t');
         expect(press('Escape').defaultPrevented).toBe(true);
         expect(document.querySelector('.shortcut-hints')).toBeNull();
 
-        press('n');
+        press('t');
         press('q');
         expect(document.querySelector('.shortcut-hints')).toBeNull();
+    });
+
+    it('labels every group while Ctrl is held, the dropdown by its toggle', () => {
+        vi.useFakeTimers();
+        Element.prototype.checkVisibility = function (this: Element) {
+            return !this.closest('[popover]');
+        };
+
+        press('Control', {ctrlKey: true});
+        vi.advanceTimersByTime(600);
+        vi.useRealTimers();
+
+        expect([...document.querySelectorAll('.shortcut-hint')].map(($hint) => $hint.textContent)).toEqual([
+            'm e', 'm n', 'm a', 't x', 't p', 'a v', 'a',
+        ]);
     });
 
     it('ignores letters while typing, with a modifier or when the account turned them off', () => {

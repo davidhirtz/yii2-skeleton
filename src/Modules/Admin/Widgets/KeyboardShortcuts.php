@@ -33,7 +33,7 @@ class KeyboardShortcuts extends Widget
             $rows = [
                 ...$rows,
                 [$this->key('M'), Yii::t('skeleton', 'SHORTCUT_ASIDE_TEXT')],
-                [$this->key('N'), Yii::t('skeleton', 'SHORTCUT_TABS_TEXT')],
+                [$this->key('T'), Yii::t('skeleton', 'SHORTCUT_TABS_TEXT')],
                 [$this->key('A'), Yii::t('skeleton', 'SHORTCUT_ACTIONS_TEXT')],
                 [Yii::t('skeleton', 'SHORTCUT_HOLD_FORMAT', ['key' => $this->key('Ctrl')]), Yii::t('skeleton', 'SHORTCUT_REVEAL_TEXT')],
                 [$this->key('?'), Yii::t('skeleton', 'SHORTCUT_HELP_TEXT')],
