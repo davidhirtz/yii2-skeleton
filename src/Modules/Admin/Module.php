@@ -292,7 +292,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
                 ->icon('globe')
                 ->label(Yii::t('skeleton', 'NAV_HOMEPAGE_LABEL'))
                 ->link(fn (A $link) => $link->target('_blank'))
-                ->order(100)
+                ->order(10)
                 ->url('/'),
             sitemap: Sitemap::getComponent()->isEnabled() ? DashboardItem::make()
                 ->icon('sitemap')

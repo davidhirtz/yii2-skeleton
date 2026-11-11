@@ -289,7 +289,7 @@ return [
     'REDIRECT_DELETE_SELECTED_CONFIRM' => 'Tem a certeza de que pretende eliminar todos os redirecionamentos selecionados?',
     'REDIRECT_DELETE_SELECTED_SUCCESS' => 'As regras de redirecionamento selecionadas foram eliminadas.',
     'REDIRECT_DELETE_SUCCESS' => 'O redirecionamento foi eliminado.',
-    'REDIRECT_INDEX_HINT' => 'Um redirecionamento envia um endereço antigo para um novo, para que uma ligação já partilhada continue a funcionar depois de uma página ser renomeada. Renomear cria um automaticamente; as entradas aqui listadas foram acrescentadas à mão.',
+    'REDIRECT_INDEX_HINT' => 'Um redirecionamento envia um endereço antigo para um novo, para que uma ligação já partilhada continue a funcionar depois de uma página ser renomeada. Renomear cria um automaticamente; outros podem ser acrescentados à mão.',
     'REDIRECT_PLURAL' => 'Redirecionamentos',
     'REDIRECT_REQUEST_URI_LABEL' => 'Pedido',
     'REDIRECT_SINGULAR' => 'Redirecionamento',

@@ -77,7 +77,7 @@ class LoginTest extends TestCase
         $this->assignAdminRole($user->id);
 
         $this->submitLoginForm($user->email, 'password');
-        self::assertSelectorTextSame('.card-title', 'Two-Factor Authentication');
+        self::assertSelectorTextSame('.card-title', 'Two-factor authentication');
 
         $this->submitLoginForm(code: '');
         self::assertAnyValidationErrorSame('Code should contain 6 characters.');

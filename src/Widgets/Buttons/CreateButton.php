@@ -20,6 +20,8 @@ class CreateButton extends Widget
     use LabelTrait;
     use UrlTrait;
 
+    protected bool $primary = false;
+
     /**
      * @param array<string, mixed> $config
      */
@@ -32,12 +34,18 @@ class CreateButton extends Widget
         parent::__construct($config);
     }
 
+    public function primary(bool $primary = true): static
+    {
+        $this->primary = $primary;
+        return $this;
+    }
+
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        return Button::make()
-            ->attributes($this->attributes)
-            ->accent()
+        $button = Button::make()->attributes($this->attributes);
+
+        return ($this->primary ? $button->primary() : $button->accent())
             ->url($this->url)
             ->text($this->label)
             ->icon($this->icon);

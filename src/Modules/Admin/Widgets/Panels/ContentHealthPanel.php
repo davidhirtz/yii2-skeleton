@@ -18,7 +18,7 @@ use Yii;
 class ContentHealthPanel extends DashboardPanel
 {
     /**
-     * @var array<int|string, array{count: Closure(): int, text: Closure(int): string, url: array<int|string, mixed>|string, roles: list<string>, icon: string}>
+     * @var array<int|string, array{count: Closure(): int, text: Closure(int): string, url: array<int|string, mixed>|string, roles: list<string>, icon: string, order: int}>
      */
     protected array $checks = [];
 
@@ -38,6 +38,7 @@ class ContentHealthPanel extends DashboardPanel
         array|string $url,
         array $roles = [],
         string $icon = 'circle-exclamation',
+        int $order = 50,
     ): static {
         $this->checks[$name] = [
             'count' => $count,
@@ -45,6 +46,7 @@ class ContentHealthPanel extends DashboardPanel
             'url' => $url,
             'roles' => $roles,
             'icon' => $icon,
+            'order' => $order,
         ];
 
         return $this;
@@ -74,7 +76,10 @@ class ContentHealthPanel extends DashboardPanel
         $list = Ul::make()->class('dashboard-list');
         $isEmpty = true;
 
-        foreach ($this->checks as $check) {
+        $checks = $this->checks;
+        uasort($checks, fn (array $a, array $b): int => $a['order'] <=> $b['order']);
+
+        foreach ($checks as $check) {
             if (!$this->canAccess($check['roles'])) {
                 continue;
             }

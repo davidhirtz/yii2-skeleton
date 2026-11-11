@@ -289,7 +289,7 @@ return [
     'REDIRECT_DELETE_SELECTED_CONFIRM' => 'Sind Sie sich sicher, dass Sie alle ausgewählten Weiterleitungen löschen wollen?',
     'REDIRECT_DELETE_SELECTED_SUCCESS' => 'Die ausgewählten Weiterleitungen wurden gelöscht.',
     'REDIRECT_DELETE_SUCCESS' => 'Die Weiterleitung wurde gelöscht.',
-    'REDIRECT_INDEX_HINT' => 'Eine Weiterleitung schickt eine alte Adresse auf eine neue, damit ein bereits geteilter Link nach dem Umbenennen einer Seite weiter funktioniert. Beim Umbenennen wird sie automatisch angelegt; hier stehen die von Hand ergänzten Einträge.',
+    'REDIRECT_INDEX_HINT' => 'Eine Weiterleitung schickt eine alte Adresse auf eine neue, damit ein bereits geteilter Link nach dem Umbenennen einer Seite weiter funktioniert. Beim Umbenennen wird sie automatisch angelegt; weitere lassen sich von Hand ergänzen.',
     'REDIRECT_PLURAL' => 'Weiterleitungen',
     'REDIRECT_REQUEST_URI_LABEL' => 'Anfrage',
     'REDIRECT_SINGULAR' => 'Weiterleitung',

@@ -122,6 +122,18 @@ class DashboardTest extends TestCase
             ->render());
     }
 
+    public function testContentHealthChecksAreListedByOrder(): void
+    {
+        $html = ContentHealthPanel::make()
+            ->addCheck('late', fn (): int => 1, fn (int $count): string => 'Ålesund late', '/late')
+            ->addCheck('early', fn (): int => 2, fn (int $count): string => '東京 early', '/early', order: 10)
+            ->render();
+
+        self::assertNotFalse($early = strpos($html, '東京 early'));
+        self::assertNotFalse($late = strpos($html, 'Ålesund late'));
+        self::assertLessThan($late, $early);
+    }
+
     public function testAContentHealthCheckBehindARoleIsNotCountedForAGuest(): void
     {
         $counted = false;

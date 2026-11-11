@@ -289,7 +289,7 @@ return [
     'REDIRECT_DELETE_SELECTED_CONFIRM' => 'Voulez-vous vraiment supprimer toutes les redirections sélectionnées ?',
     'REDIRECT_DELETE_SELECTED_SUCCESS' => 'Les règles de redirection sélectionnées ont été supprimées.',
     'REDIRECT_DELETE_SUCCESS' => 'La redirection a été supprimée.',
-    'REDIRECT_INDEX_HINT' => 'Une redirection envoie une ancienne adresse vers une nouvelle, afin qu’un lien déjà partagé continue de fonctionner après le renommage d’une page. Le renommage en crée une automatiquement ; les entrées listées ici ont été ajoutées à la main.',
+    'REDIRECT_INDEX_HINT' => 'Une redirection envoie une ancienne adresse vers une nouvelle, afin qu’un lien déjà partagé continue de fonctionner après le renommage d’une page. Le renommage en crée une automatiquement ; d’autres peuvent être ajoutées à la main.',
     'REDIRECT_PLURAL' => 'Redirections',
     'REDIRECT_REQUEST_URI_LABEL' => 'Requête',
     'REDIRECT_SINGULAR' => 'Redirection',
