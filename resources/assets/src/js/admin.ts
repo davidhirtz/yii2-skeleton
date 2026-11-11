@@ -34,6 +34,7 @@ import characterCounter from './includes/characterCounter';
 
 import './includes/dropdown';
 import './includes/FlashAlert';
+import './includes/modifierClick';
 import './includes/submitOnEnter';
 
 declare global {
