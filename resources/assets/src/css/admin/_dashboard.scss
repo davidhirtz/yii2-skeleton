@@ -26,6 +26,8 @@
 }
 
 .dashboard-panels {
+  --card-border-color: var(--dashboard-panel-border-color);
+
   display: grid;
   align-items: start;
   gap: 1rem;

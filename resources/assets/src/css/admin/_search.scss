@@ -93,6 +93,10 @@
   &:popover-open {
     display: block;
   }
+
+  .search-result-item:not(:first-child) {
+    border-top: 1px solid var(--dropdown-border-color);
+  }
 }
 
 .search-results {
