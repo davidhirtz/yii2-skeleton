@@ -93,8 +93,29 @@ let hints: HTMLElement | null = null;
 let pending: {keys: Map<string, Element>; close?: () => void} | null = null;
 let revealTimer: number | undefined;
 
-// A label covers the element's icon, which the collapsed aside still shows; without one, it goes before the text.
+// A label sits at the end of an aside link and elsewhere covers the element's icon (the collapsed aside shows only
+// that), or without one goes before the text.
 const getIcon = ($el: Element): Element | null => $el.querySelector('.nav-link-icon, .fas, .far, .fab');
+
+const isAsideNarrow = (): boolean => document.documentElement.matches('[data-aside-collapsed]:not([data-aside-open])');
+
+const placeHint = ($hint: HTMLElement, $el: Element): void => {
+    const atEnd = $el.closest('.aside') !== null && !isAsideNarrow();
+    const $icon = atEnd ? null : getIcon($el);
+    const rect = (atEnd || $icon ? ($icon ?? $el) : $el.querySelector('.nav-link-label') ?? $el).getBoundingClientRect();
+
+    if (atEnd) {
+        $hint.classList.add('shortcut-hint-end');
+        $hint.style.left = `${rect.right}px`;
+    } else if ($icon) {
+        $hint.style.left = `${rect.left + rect.width / 2}px`;
+    } else {
+        $hint.classList.add('shortcut-hint-before');
+        $hint.style.left = `${Math.max(0, rect.left)}px`;
+    }
+
+    $hint.style.top = `${Math.max(0, rect.top + rect.height / 2)}px`;
+};
 
 const showHints = (entries: [string, Element][]): void => {
     hideHints();
@@ -104,15 +125,11 @@ const showHints = (entries: [string, Element][]): void => {
     hints.setAttribute('aria-hidden', 'true');
 
     entries.forEach(([label, $el]) => {
-        const $icon = getIcon($el);
-        const rect = ($icon ?? $el.querySelector('.nav-link-label') ?? $el).getBoundingClientRect();
         const $hint = document.createElement('kbd');
 
-        $hint.className = $icon ? 'shortcut-hint' : 'shortcut-hint shortcut-hint-before';
+        $hint.className = 'shortcut-hint';
         $hint.textContent = label;
-
-        $hint.style.left = `${Math.max(0, $icon ? rect.left + rect.width / 2 : rect.left)}px`;
-        $hint.style.top = `${Math.max(0, rect.top + rect.height / 2)}px`;
+        placeHint($hint, $el);
         hints!.appendChild($hint);
     });
 
@@ -158,7 +175,7 @@ const reveal = (): void => {
     const entries: [string, Element][] = [];
 
     GROUPS.forEach((group) => {
-        assignKeys(getGroupElements(group)).forEach(($el, key) => entries.push([`${group.key} ${key}`, $el]));
+        assignKeys(getGroupElements(group)).forEach(($el, key) => entries.push([`${group.key}${key}`, $el]));
     });
 
     // The dropdown's items stay hidden, so its toggle shows the key that opens it.
