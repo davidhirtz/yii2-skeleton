@@ -1,4 +1,4 @@
-## Unreleased
+## 3.27.0 (November 11, 2026)
 
 - Added admin keyboard shortcuts (`⌘S`, `⌘K`, `m`/`t`/`a` sequences, `?`) and the `user.keyboard_shortcuts` setting
 - Added `DashboardPanel::lazy()`, a panel loaded after the page through `admin/dashboard/panel`
