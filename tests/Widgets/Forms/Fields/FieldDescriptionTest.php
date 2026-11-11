@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Widgets\Forms\Fields;
 
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Widgets\Forms\Fields\CheckboxField;
 use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
+use Stringable;
 use yii\base\DynamicModel;
 
 /**
@@ -29,6 +31,18 @@ class FieldDescriptionTest extends TestCase
         self::assertStringContainsString('aria-invalid="true"', $content);
         self::assertMatchesRegularExpression('/<div id="[\w-]+-error" class="form-error">Name cannot be blank\./', $content);
         self::assertMatchesRegularExpression('/<div id="[\w-]+-hint" class="form-hint">Shown in the menu\./', $content);
+    }
+
+    public function testAStringableHintIsHtmlAndAStringIsText(): void
+    {
+        $field = fn (string|Stringable $hint): string => InputField::make()
+            ->model(new DynamicModel(['name' => '']))
+            ->property('name')
+            ->hint($hint)
+            ->render();
+
+        self::assertStringContainsString('<span>Å <kbd>?</kbd> {count}</span>', $field(Span::make()->content('Å <kbd>?</kbd> {count}')));
+        self::assertStringContainsString('Å &lt;kbd&gt;', $field('Å <kbd>'));
     }
 
     public function testAHintHoldingACountCountsTheCharacters(): void

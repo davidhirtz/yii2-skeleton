@@ -465,7 +465,7 @@ return [
     'USER_EMAIL_UNCONFIRMED_TOOLTIP' => 'E-mail não confirmado',
     'USER_EMAIL_UNIQUE_ERROR' => 'Este endereço de e-mail já é utilizado por outro utilizador.',
     'USER_IS_OWNER_LABEL' => 'Proprietário do site',
-    'USER_KEYBOARD_SHORTCUTS_HINT' => 'Letras premidas fora de um campo abrem itens do menu, separadores e ações; ? lista-os. Guardar e pesquisar pelo teclado continuam ativos.',
+    'USER_KEYBOARD_SHORTCUTS_HINT' => 'Letras premidas fora de um campo abrem itens do menu, separadores e ações; {key} lista-os. Guardar e pesquisar pelo teclado continuam ativos.',
     'USER_KEYBOARD_SHORTCUTS_LABEL' => 'Atalhos de letras',
     'USER_LANGUAGE_LABEL' => 'Idioma',
     'USER_LAST_LOGIN_LABEL' => 'Último início de sessão',

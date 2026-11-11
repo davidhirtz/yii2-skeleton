@@ -465,7 +465,7 @@ return [
     'USER_EMAIL_UNCONFIRMED_TOOLTIP' => 'Unbestätigte E-Mail',
     'USER_EMAIL_UNIQUE_ERROR' => 'Diese E-Mail-Adresse wird bereits von einem anderen Benutzer verwendet.',
     'USER_IS_OWNER_LABEL' => 'Besitzer',
-    'USER_KEYBOARD_SHORTCUTS_HINT' => 'Einzelne Buchstaben außerhalb eines Feldes öffnen Menüpunkte, Reiter und Aktionen; ? listet sie auf. Speichern und Suchen per Tastatur bleiben aktiv.',
+    'USER_KEYBOARD_SHORTCUTS_HINT' => 'Einzelne Buchstaben außerhalb eines Feldes öffnen Menüpunkte, Reiter und Aktionen; {key} listet sie auf. Speichern und Suchen per Tastatur bleiben aktiv.',
     'USER_KEYBOARD_SHORTCUTS_LABEL' => 'Buchstabenkürzel',
     'USER_LANGUAGE_LABEL' => 'Sprache',
     'USER_LAST_LOGIN_LABEL' => 'Letzter Login',

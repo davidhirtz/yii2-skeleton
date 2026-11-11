@@ -49,7 +49,7 @@ abstract class Field extends Widget
     protected string $language;
 
     protected ?string $error = null;
-    protected ?string $hint = null;
+    protected string|Stringable|null $hint = null;
 
     /**
      * @param array<string, mixed> $config
@@ -82,7 +82,8 @@ abstract class Field extends Widget
         return $this;
     }
 
-    public function hint(?string $hint): static
+    /** A `Stringable` hint is HTML, a string text. */
+    public function hint(string|Stringable|null $hint): static
     {
         $this->hint = $hint;
         return $this;
@@ -189,6 +190,10 @@ abstract class Field extends Widget
             ->attribute('id', $this->getHintId())
             ->addClass('form-hint');
 
+        if ($this->hint instanceof Stringable) {
+            return $hint->content($this->hint);
+        }
+
         if (!$this->hasCharacterCounter()) {
             return $hint->text($this->hint);
         }
@@ -207,7 +212,7 @@ abstract class Field extends Widget
 
     protected function hasCharacterCounter(): bool
     {
-        return $this->hint !== null && str_contains($this->hint, '{count}');
+        return is_string($this->hint) && str_contains($this->hint, '{count}');
     }
 
     /** At render time rather than in `configure()`, so a hint a `prepare()` closure added is linked as well. */

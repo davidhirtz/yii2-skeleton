@@ -465,7 +465,7 @@ return [
     'USER_EMAIL_UNCONFIRMED_TOOLTIP' => 'Unconfirmed email',
     'USER_EMAIL_UNIQUE_ERROR' => 'This email address is already used by another user.',
     'USER_IS_OWNER_LABEL' => 'Website owner',
-    'USER_KEYBOARD_SHORTCUTS_HINT' => 'Single letters typed outside a field open menu items, tabs and actions; ? lists them. Saving and searching by keyboard stay on.',
+    'USER_KEYBOARD_SHORTCUTS_HINT' => 'Single letters typed outside a field open menu items, tabs and actions; {key} lists them. Saving and searching by keyboard stay on.',
     'USER_KEYBOARD_SHORTCUTS_LABEL' => 'Letter shortcuts',
     'USER_LANGUAGE_LABEL' => 'Language',
     'USER_LAST_LOGIN_LABEL' => 'Last login',

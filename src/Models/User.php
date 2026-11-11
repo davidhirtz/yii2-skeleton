@@ -810,7 +810,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return [
             ...parent::attributeHints(),
             'show_hints' => Yii::t('skeleton', 'USER_SHOW_HINTS_HINT'),
-            'keyboard_shortcuts' => Yii::t('skeleton', 'USER_KEYBOARD_SHORTCUTS_HINT'),
+            'keyboard_shortcuts' => Yii::t('skeleton', 'USER_KEYBOARD_SHORTCUTS_HINT', ['key' => '?']),
             'color_scheme' => Yii::t('skeleton', 'USER_COLOR_SCHEME_HINT'),
         ];
     }

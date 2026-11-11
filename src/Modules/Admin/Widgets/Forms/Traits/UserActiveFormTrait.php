@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits;
 
+use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\Statuses\Status;
 use Hirtz\Skeleton\Modules\ModuleTrait;
 use Hirtz\Skeleton\Widgets\Forms\Fields\CheckboxField;
@@ -116,6 +118,9 @@ trait UserActiveFormTrait
         return CheckboxField::make()
             ->model($this->model->user)
             ->property('keyboard_shortcuts')
+            ->hint(Span::make()->content(Yii::t('skeleton', 'USER_KEYBOARD_SHORTCUTS_HINT', [
+                'key' => Html::tag('kbd', '?'),
+            ])))
             ->uncheckedValue('0');
     }
 }
