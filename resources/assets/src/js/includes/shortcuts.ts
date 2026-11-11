@@ -109,7 +109,8 @@ const showHints = (entries: [string, Element][]): void => {
         const $hint = document.createElement('kbd');
 
         $hint.className = $icon ? 'shortcut-hint' : 'shortcut-hint shortcut-hint-before';
-        $hint.textContent = label;
+        $hint.textContent = label.toUpperCase();
+
         $hint.style.left = `${Math.max(0, $icon ? rect.left + rect.width / 2 : rect.left)}px`;
         $hint.style.top = `${Math.max(0, rect.top + rect.height / 2)}px`;
         hints!.appendChild($hint);
@@ -328,15 +329,16 @@ export const onKeydown = (event: KeyboardEvent): void => {
         return;
     }
 
-    if (event.shiftKey) {
-        return;
-    }
-
+    // Before the Shift check: a German keyboard types `/` with Shift.
     if (event.key === '/') {
         if (focusSearch()) {
             event.preventDefault();
         }
 
+        return;
+    }
+
+    if (event.shiftKey) {
         return;
     }
 

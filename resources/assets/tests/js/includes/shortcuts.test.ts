@@ -88,7 +88,7 @@ describe('shortcuts', () => {
         vi.useRealTimers();
 
         expect([...document.querySelectorAll('.shortcut-hint')].map(($hint) => $hint.textContent)).toEqual([
-            'm e', 'm n', 'm a', 't x', 't p', 'a v', 'a',
+            'M E', 'M N', 'M A', 'T X', 'T P', 'A V', 'A',
         ]);
     });
 
@@ -100,6 +100,13 @@ describe('shortcuts', () => {
 
         expect(press('k', {ctrlKey: true}).defaultPrevented).toBe(true);
         expect(toggled).toHaveBeenCalledOnce();
+        expect(document.activeElement).toBe(document.querySelector('[data-search] input'));
+    });
+
+    it('searches on /, typed with Shift on a German keyboard', () => {
+        document.body.insertAdjacentHTML('beforeend', '<div data-search><input type="search"></div>');
+
+        expect(press('/', {shiftKey: true}).defaultPrevented).toBe(true);
         expect(document.activeElement).toBe(document.querySelector('[data-search] input'));
     });
 
