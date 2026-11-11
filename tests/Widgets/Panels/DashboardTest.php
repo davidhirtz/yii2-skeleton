@@ -28,6 +28,12 @@ class DashboardTest extends TestCase
         self::assertStringContainsString('Body', $html);
     }
 
+    public function testAWidePanelSpansTwoColumns(): void
+    {
+        self::assertStringContainsString('dashboard-item-wide', DashboardPanel::make()->wide()->content('Chart')->render());
+        self::assertStringNotContainsString('dashboard-item-wide', DashboardPanel::make()->content('Chart')->render());
+    }
+
     public function testATitleWithAUrlIsALinkLeadByItsIcon(): void
     {
         $html = DashboardPanel::make()

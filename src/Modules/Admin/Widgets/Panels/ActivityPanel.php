@@ -158,7 +158,7 @@ class ActivityPanel extends TrailPanel
         $record = $this->getTrailRecord($target);
 
         $title = $record
-            ? $this->getRecordLink($record)
+            ? Span::make()->text($record->getAdminName())
             : Span::make()->class('text-muted')->text($target->getModelName());
 
         return $this->getLine($title, [
@@ -166,7 +166,7 @@ class ActivityPanel extends TrailPanel
             $count > 1 ? Yii::t('skeleton', 'DASHBOARD_ACTIVITY_COUNT_TEXT', ['count' => $count]) : null,
             $trail === $target ? $record?->getAdminParent()?->getAdminName() : null,
             $trail->user?->getUsername(),
-        ], $trail);
+        ], $trail, $record ? $this->getRecordUrl($record) : null);
     }
 
     protected function getChildText(Trail $trail): ?string

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Override;
@@ -73,7 +74,12 @@ class RecentlyEditedPanel extends TrailPanel
             $record = $this->getTrailRecord($trail);
 
             if ($record) {
-                $lines[] = $this->getLine($this->getRecordLink($record), [$record->getAdminType()], $trail);
+                $lines[] = $this->getLine(
+                    Span::make()->text($record->getAdminName()),
+                    [$record->getAdminType()],
+                    $trail,
+                    $this->getRecordUrl($record),
+                );
             }
 
             if (count($lines) >= $this->limit) {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Widgets\Panels;
 
 use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
@@ -42,16 +43,16 @@ class DashboardItem extends Widget
             return implode('', $this->content);
         }
 
-        $link = A::make()
-            ->class('dashboard-link')
-            ->href($this->url);
+        $row = Div::make()
+            ->class('dashboard-list-row')
+            ->content(
+                $this->getIcon()?->addClass('dashboard-list-icon'),
+                $this->label ? Span::make()->text($this->label) : null,
+            );
 
-        $link->addContent($this->getIcon()?->addClass('dashboard-link-icon'));
-
-        if ($this->label) {
-            $link->addContent(Span::make()->text($this->label));
-        }
-
-        return $this->getLink($link);
+        return $this->getLink(A::make()
+            ->class('dashboard-list-item', 'dashboard-list-link')
+            ->href($this->url)
+            ->content($row));
     }
 }

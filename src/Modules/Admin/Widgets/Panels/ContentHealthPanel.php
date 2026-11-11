@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Panels;
 
 use Closure;
-use Hirtz\Skeleton\Html\A;
-use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Ul;
-use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Panels\DashboardPanel;
 use Override;
 use Stringable;
@@ -85,17 +82,14 @@ class ContentHealthPanel extends DashboardPanel
             $count = $check['count']();
 
             if ($count > 0) {
-                $list->addContent(Li::make()->content(A::make()
-                    ->class('dashboard-list-row')
-                    ->href($check['url'])
-                    ->content(
-                        Icon::make()->name($check['icon'])->addClass('dashboard-list-icon'),
-                        Span::make()->content(
-                            Span::make()->class('strong')->text(Yii::$app->getFormatter()->asInteger($count)),
-                            ' ',
-                            Span::make()->text($check['text']($count)),
-                        ),
-                    )));
+                $list->addContent($this->getListItem($this->getListRow(
+                    $check['icon'],
+                    Span::make()->content(
+                        Span::make()->class('strong')->text(Yii::$app->getFormatter()->asInteger($count)),
+                        ' ',
+                        Span::make()->text($check['text']($count)),
+                    ),
+                ), $check['url']));
 
                 $isEmpty = false;
             }
