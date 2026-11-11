@@ -333,7 +333,7 @@ class UrlManager extends \yii\web\UrlManager
         Yii::$app->language = $this->defaultLanguage ?: $request->getPreferredLanguage(array_keys($this->getLanguages()));
     }
 
-    private function getUrlWithoutLanguage(Request $request, string $pathInfo, string $code): string
+    protected function getUrlWithoutLanguage(Request $request, string $pathInfo, string $code): string
     {
         $baseUrl = $request->getBaseUrl();
         [$path, $query] = [...explode('?', $request->getUrl(), 2), ''];
