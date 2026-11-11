@@ -92,6 +92,17 @@ describe('shortcuts', () => {
         ]);
     });
 
+    it('opens the collapsed search on Ctrl+K', () => {
+        document.body.insertAdjacentHTML('beforeend', '<div data-search><button data-search-toggle aria-expanded="false"></button><input type="search"></div>');
+        const $toggle = document.querySelector<HTMLElement>('[data-search-toggle]')!;
+        const toggled = vi.fn();
+        $toggle.addEventListener('click', toggled);
+
+        expect(press('k', {ctrlKey: true}).defaultPrevented).toBe(true);
+        expect(toggled).toHaveBeenCalledOnce();
+        expect(document.activeElement).toBe(document.querySelector('[data-search] input'));
+    });
+
     it('ignores letters while typing, with a modifier or when the account turned them off', () => {
         const $input = document.querySelector('input')!;
 

@@ -206,8 +206,11 @@ export const focusSearch = (): boolean => {
         return false;
     }
 
-    if (!isVisible($input)) {
-        document.querySelector<HTMLElement>('[data-search-toggle]')?.click();
+    // The collapsed box keeps its input rendered, a sliver at no opacity, so only the toggle says it is closed.
+    const $toggle = $input.closest('[data-search]')?.querySelector<HTMLElement>('[data-search-toggle]');
+
+    if ($toggle?.getAttribute('aria-expanded') === 'false') {
+        $toggle.click();
     }
 
     $input.focus();
