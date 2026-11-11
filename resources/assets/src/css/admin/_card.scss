@@ -20,7 +20,7 @@
   background: var(--card-header-bg);
   border-bottom: 1px solid var(--card-border-color);
   color: var(--card-header-color);
-  padding: 0.8125rem 1rem;
+  padding: 1rem;
 
   .collapsed &, &:last-child {
     border-bottom: 0;
@@ -33,7 +33,6 @@
   display: flex;
   font-weight: 700;
   justify-content: space-between;
-  line-height: 1.2;
 
   .btn-link {
     font: inherit;
