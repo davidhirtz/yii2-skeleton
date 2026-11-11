@@ -54,6 +54,12 @@ window.customElements.get('tinymce-editor') || window.customElements.define('tin
                             }
                         });
 
+                        // Keys typed in the iframe never reach the page's own shortcuts.
+                        editor.addShortcut('meta+s', '', () => {
+                            const $form = $textarea.form;
+                            $form?.requestSubmit($form.querySelector<HTMLElement>('[type="submit"]:not(:disabled)'));
+                        });
+
                         if (linkDialogUrl) {
                             registerLinkDialog(editor, {
                                 url: linkDialogUrl,

@@ -1,0 +1,52 @@
+// The labels `includes/shortcuts.ts` puts beside the elements a key leads to; the layer is a popover for the top layer.
+.shortcut-hints {
+  background: none;
+  border: 0;
+  height: 100%;
+  inset: 0;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  pointer-events: none;
+  width: 100%;
+}
+
+.shortcut-hint {
+  background-color: var(--shortcut-hint-bg);
+  border-radius: .25rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / .3);
+  color: var(--shortcut-hint-color);
+  font-size: .75rem;
+  font-weight: bold;
+  line-height: 1;
+  padding: .25rem .375rem;
+  position: absolute;
+  text-transform: uppercase;
+  transform: translate(-.25rem, -50%);
+  white-space: nowrap;
+}
+
+.shortcut-list {
+  border-collapse: collapse;
+  width: 100%;
+
+  th {
+    font-weight: normal;
+    padding: .375rem 1rem .375rem 0;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: .375rem 0;
+  }
+}
+
+kbd {
+  background-color: var(--kbd-bg);
+  border: 1px solid var(--kbd-border-color);
+  border-radius: .25rem;
+  font-family: inherit;
+  font-size: .875em;
+  padding: .125rem .375rem;
+}

@@ -62,6 +62,7 @@ class UserActiveForm extends ActiveForm
             ],
             [
                 $this->getShowHintsField(),
+                $this->getKeyboardShortcutsField(),
             ],
             [
                 $this->sendEmailField(),

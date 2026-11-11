@@ -42,6 +42,7 @@ use yii\web\IdentityInterface;
  * @property string $language
  * @property string|null $timezone
  * @property bool|int $show_hints
+ * @property bool|int $keyboard_shortcuts
  * @property string|null $color_scheme
  * @property string|null $auth_key
  * @property string|null $two_factor_secret
@@ -163,7 +164,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
                 'integerOnly' => false,
             ],
             [
-                ['show_hints'],
+                ['show_hints', 'keyboard_shortcuts'],
                 'boolean',
             ],
             [
@@ -723,6 +724,11 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return (bool)$this->show_hints;
     }
 
+    public function usesKeyboardShortcuts(): bool
+    {
+        return (bool)$this->keyboard_shortcuts;
+    }
+
     public function getColorScheme(): ?string
     {
         return in_array($this->color_scheme, self::COLOR_SCHEMES, true) ? $this->color_scheme : null;
@@ -804,6 +810,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return [
             ...parent::attributeHints(),
             'show_hints' => Yii::t('skeleton', 'USER_SHOW_HINTS_HINT'),
+            'keyboard_shortcuts' => Yii::t('skeleton', 'USER_KEYBOARD_SHORTCUTS_HINT'),
             'color_scheme' => Yii::t('skeleton', 'USER_COLOR_SCHEME_HINT'),
         ];
     }
@@ -820,6 +827,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
             'language' => Yii::t('skeleton', 'USER_LANGUAGE_LABEL'),
             'timezone' => Yii::t('skeleton', 'USER_TIMEZONE_LABEL'),
             'show_hints' => Yii::t('skeleton', 'USER_SHOW_HINTS_LABEL'),
+            'keyboard_shortcuts' => Yii::t('skeleton', 'USER_KEYBOARD_SHORTCUTS_LABEL'),
             'color_scheme' => Yii::t('skeleton', 'USER_COLOR_SCHEME_LABEL'),
             'login_count' => Yii::t('skeleton', 'USER_LOGIN_COUNT_LABEL'),
             'last_login' => Yii::t('skeleton', 'USER_LAST_LOGIN_LABEL'),

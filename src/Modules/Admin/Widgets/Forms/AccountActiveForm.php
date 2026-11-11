@@ -33,6 +33,7 @@ class AccountActiveForm extends ActiveForm
             ],
             [
                 $this->getShowHintsField(),
+                $this->getKeyboardShortcutsField(),
             ],
             [
                 ...$this->getUserCustomAttributeFields(),

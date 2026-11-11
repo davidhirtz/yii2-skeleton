@@ -56,6 +56,7 @@ class NavBarSearch extends Widget
             ->placeholder(Yii::t('skeleton', 'SEARCH_PLACEHOLDER'))
             ->addAttributes([
                 'aria-label' => Yii::t('skeleton', 'SEARCH_LABEL'),
+                'aria-keyshortcuts' => 'Meta+K Control+K',
                 'hx-get' => Url::toRoute(['/admin/search/suggest']),
                 'hx-push-url' => 'false',
                 'hx-select' => '#' . SearchController::LIST_ID,

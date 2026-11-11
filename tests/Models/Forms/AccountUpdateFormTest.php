@@ -83,16 +83,19 @@ class AccountUpdateFormTest extends TestCase
         ]);
 
         self::assertTrue($form->user->showsHints());
+        self::assertTrue($form->user->usesKeyboardShortcuts());
 
         $form->load([
             $form->user->formName() => [
                 'show_hints' => '0',
+                'keyboard_shortcuts' => '0',
             ],
         ]);
 
         self::assertTrue($form->save(), print_r($form->getErrors(), true));
         self::assertFalse($form->user->showsHints());
         self::assertFalse(User::findOne(3)->showsHints());
+        self::assertFalse(User::findOne(3)?->usesKeyboardShortcuts());
     }
 
     public function testUpdateUnsafeAttributes(): void

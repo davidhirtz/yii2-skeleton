@@ -65,6 +65,8 @@ class AccountTest extends TestCase
 
         self::assertSelectorExists('input[type="hidden"][name="User[show_hints]"][value="0"]');
         self::assertSelectorExists('#user-show-hints[name="User[show_hints]"][value="1"]');
+        self::assertSelectorExists('input[type="hidden"][name="User[keyboard_shortcuts]"][value="0"]');
+        self::assertSelectorExists('#user-keyboard-shortcuts[name="User[keyboard_shortcuts]"][value="1"]');
     }
 
     public function testCredentials(): void

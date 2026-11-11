@@ -110,4 +110,12 @@ trait UserActiveFormTrait
             ->property('show_hints')
             ->uncheckedValue('0');
     }
+
+    protected function getKeyboardShortcutsField(): string|Stringable
+    {
+        return CheckboxField::make()
+            ->model($this->model->user)
+            ->property('keyboard_shortcuts')
+            ->uncheckedValue('0');
+    }
 }
