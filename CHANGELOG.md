@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `DashboardPanel::lazy()`, a panel loaded after the page through `admin/dashboard/panel`
 - Added `Models\Breadcrumb::$boost` and `Widgets\Navs\Breadcrumbs::getHomeBreadcrumb()`
 - Added `ModelReferenceInterface`, `ModelReferenceTrait` and `ModelReferenceGridTrait` for a record naming an owner and its attributes
 - Added `HtmlValidator::$definedHtmlAttributes`, which keeps `aria-label` on links by default

@@ -136,4 +136,49 @@ class DashboardTest extends TestCase
         self::assertSame('', $html);
         self::assertFalse($counted);
     }
+
+    public function testALazyPanelRendersAPlaceholderThatLoadsItByName(): void
+    {
+        $html = Dashboard::make()
+            ->addPanel(slow: DashboardPanel::make()->title('Slow')->lazy()->content('Slow body'))
+            ->render();
+
+        self::assertStringContainsString('hx-get="/admin/dashboard/panel?name=slow"', $html);
+        self::assertStringContainsString('hx-trigger="load"', $html);
+        self::assertStringContainsString('hx-select=""', $html);
+        self::assertStringContainsString('hx-select-oob=""', $html);
+        self::assertStringContainsString('<span>Slow</span>', $html);
+        self::assertStringContainsString('dashboard-item-placeholder', $html);
+        self::assertStringNotContainsString('Slow body', $html);
+    }
+
+    public function testALazyPanelWithoutANameRendersInline(): void
+    {
+        $html = Dashboard::make()
+            ->prepare(fn (Dashboard $dashboard) => $dashboard->panels(fn (array $panels): array => [
+                DashboardPanel::make()->lazy()->content('Inline body'),
+            ]))
+            ->render();
+
+        self::assertStringContainsString('Inline body', $html);
+        self::assertStringNotContainsString('hx-get', $html);
+    }
+
+    public function testRenderPanelAnswersTheOnePanelByItsName(): void
+    {
+        $dashboard = fn (): Dashboard => Dashboard::make()->prepare(fn (Dashboard $dashboard) => $dashboard->addPanel(
+            slow: DashboardPanel::make()->lazy()->content('Slow body'),
+            other: DashboardPanel::make()->content('Other body'),
+            secret: DashboardPanel::make()->lazy()->roles(['role-the-guest-lacks'])->content('Secret body'),
+        ));
+
+        $html = $dashboard()->renderPanel('slow');
+
+        self::assertStringContainsString('Slow body', $html);
+        self::assertStringNotContainsString('hx-get', $html);
+        self::assertStringNotContainsString('Other body', $html);
+
+        self::assertSame('', $dashboard()->renderPanel('secret'));
+        self::assertSame('', $dashboard()->renderPanel('missing'));
+    }
 }

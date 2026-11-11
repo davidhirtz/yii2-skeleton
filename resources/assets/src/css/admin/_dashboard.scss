@@ -35,6 +35,23 @@
   padding: calc(.5rem - 1px);
 }
 
+// A lazy panel's body until it loads, as tall as its five rows.
+.dashboard-item-placeholder {
+  background-color: var(--dashboard-placeholder-bg);
+  border-radius: .25rem;
+  min-height: 12.5rem;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: dashboard-placeholder 1.5s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes dashboard-placeholder {
+  to {
+    opacity: .4;
+  }
+}
+
 @include media-breakpoint-up(sm) {
   .dashboard-item-wide {
     grid-column: span 2;

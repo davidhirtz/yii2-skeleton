@@ -5,14 +5,53 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Controllers;
 
 use ArrayObject;
+use Exception;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Controllers\DashboardController;
 use Hirtz\Skeleton\Test\TestCase;
+use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
+use Hirtz\Skeleton\Widgets\Panels\Dashboard;
+use Hirtz\Skeleton\Widgets\Panels\DashboardPanel;
+use Hirtz\Skeleton\Widgets\Widget;
 use Yii;
+use yii\base\Event;
 use yii\filters\AccessControl;
+use yii\web\ForbiddenHttpException;
 
 class DashboardControllerTest extends TestCase
 {
+    use UserFixtureTrait;
+
+    public function testPanelAnswersALazyPanelBehindTheDashboardsRoles(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+        $this->getWebUser()->setIdentity($user);
+
+        $denial = null;
+
+        try {
+            Yii::$app->runAction('admin/dashboard/panel', ['name' => 'slow']);
+        } catch (Exception $exception) {
+            $denial = $exception;
+        }
+
+        self::assertInstanceOf(ForbiddenHttpException::class, $denial);
+
+        // A fresh application, since `can()` remembers the denial; it also drops class-level handlers.
+        $this->assignPermission($user->id, User::AUTH_USER);
+        $this->reloadApplication();
+        $this->getWebUser()->setIdentity($user);
+
+        Event::on(Dashboard::class, Widget::EVENT_CONFIGURE, static function (Event $event): void {
+            /** @var Dashboard $dashboard */
+            $dashboard = $event->sender;
+            $dashboard->addPanel(slow: DashboardPanel::make()->lazy()->content('Slow body'));
+        });
+
+        self::assertStringContainsString('Slow body', (string)Yii::$app->runAction('admin/dashboard/panel', ['name' => 'slow']));
+        self::assertSame('', Yii::$app->runAction('admin/dashboard/panel', ['name' => 'missing']));
+    }
+
     public function testDefaultRoles(): void
     {
         $roles = $this->getAccessRoles();

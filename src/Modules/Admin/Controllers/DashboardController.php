@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Controller;
+use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Override;
 use yii\filters\AccessControl;
 use yii\web\Response;
@@ -38,7 +39,7 @@ class DashboardController extends Controller
             ...parent::behaviors(),
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['index'],
+                'only' => ['index', 'panel'],
                 'rules' => [
                     [
                         'allow' => true,
@@ -52,6 +53,11 @@ class DashboardController extends Controller
     public function actionIndex(): Response|string
     {
         return $this->render('index');
+    }
+
+    public function actionPanel(string $name): string
+    {
+        return Dashboard::make()->renderPanel($name);
     }
 
     /**

@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Traits\TagContentTrait;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Traits\IconTrait;
 use Hirtz\Skeleton\Widgets\Traits\OrderTrait;
@@ -30,6 +31,23 @@ class DashboardPanel extends Widget
     use UrlTrait;
 
     protected bool $wide = false;
+    protected bool $lazy = false;
+    protected ?string $name = null;
+
+    /**
+     * Renders a placeholder that loads the panel after the page, by the name {@see Dashboard} gives it.
+     */
+    public function lazy(bool $lazy = true): static
+    {
+        $this->lazy = $lazy;
+        return $this;
+    }
+
+    public function name(?string $name): static
+    {
+        $this->name = $name;
+        return $this;
+    }
 
     /**
      * Two columns from the `sm` breakpoint, where the grid has two.
@@ -43,16 +61,30 @@ class DashboardPanel extends Widget
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        $body = (string)$this->getBody();
-
-        if ($body === '') {
-            return '';
+        if ($this->lazy && $this->name !== null) {
+            return $this->getCard()
+                ->addAttributes([
+                    'aria-busy' => 'true',
+                    'hx-get' => Url::toRoute(['/admin/dashboard/panel', 'name' => $this->name]),
+                    'hx-select' => '',
+                    'hx-select-oob' => '',
+                    'hx-swap' => 'outerHTML',
+                    'hx-target' => 'this',
+                    'hx-trigger' => 'load',
+                ])
+                ->content(Div::make()->class('dashboard-item-placeholder'));
         }
 
+        $body = (string)$this->getBody();
+
+        return $body !== '' ? $this->getCard()->content($body) : '';
+    }
+
+    protected function getCard(): Card
+    {
         return Card::make()
             ->title($this->getTitle())
-            ->addClass('dashboard-item', $this->wide ? 'dashboard-item-wide' : null)
-            ->content($body);
+            ->addClass('dashboard-item', $this->wide ? 'dashboard-item-wide' : null);
     }
 
     protected function getBody(): string|Stringable

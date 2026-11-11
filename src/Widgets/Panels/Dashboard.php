@@ -78,11 +78,26 @@ class Dashboard extends Widget
         return $this->panels;
     }
 
+    /**
+     * The answer to a lazy panel's request: empty when the panel is gone or hidden, which removes its placeholder.
+     */
+    public function renderPanel(string $name): string
+    {
+        $this->configure();
+        return $this->isVisible() ? ($this->getPanel($name)?->lazy(false)->render() ?? '') : '';
+    }
+
     #[Override]
     protected function configure(): void
     {
         $this->module->dashboard($this);
         parent::configure();
+
+        foreach ($this->panels as $name => $panel) {
+            if (is_string($name)) {
+                $panel->name($name);
+            }
+        }
     }
 
     #[Override]
