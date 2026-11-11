@@ -23,8 +23,8 @@ class ContentHealthPanel extends DashboardPanel
     protected array $checks = [];
 
     /**
-     * The count is called only for a user holding one of the roles, since the link leads behind them. The text
-     * follows the count, which the panel renders in bold, so it leaves the number out.
+     * The count is called only for a user holding one of the roles, since the link leads behind them. The text is
+     * HTML and carries the count itself.
      *
      * @param Closure(): int $count
      * @param Closure(int): string $text
@@ -89,11 +89,7 @@ class ContentHealthPanel extends DashboardPanel
             if ($count > 0) {
                 $list->addContent($this->getListItem($this->getListRow(
                     $check['icon'],
-                    Span::make()->content(
-                        Span::make()->class('strong')->text(Yii::$app->getFormatter()->asInteger($count)),
-                        ' ',
-                        Span::make()->text($check['text']($count)),
-                    ),
+                    Span::make()->content($check['text']($count)),
                 ), $check['url']));
 
                 $isEmpty = false;

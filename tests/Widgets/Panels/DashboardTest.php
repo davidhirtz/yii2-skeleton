@@ -111,11 +111,11 @@ class DashboardTest extends TestCase
     {
         $panel = ContentHealthPanel::make()
             ->addCheck('none', fn (): int => 0, fn (int $count): string => "$count none", '/none')
-            ->addCheck('some', fn (): int => 3, fn (int $count): string => "$count some", '/some');
+            ->addCheck('some', fn (): int => 3, fn (int $count): string => "<span class=\"strong\">$count</span> Å some", '/some');
 
         $html = $panel->render();
 
-        self::assertStringContainsString('<span class="strong">3</span> <span>3 some</span>', $html);
+        self::assertStringContainsString('<span><span class="strong">3</span> Å some</span>', $html);
         self::assertStringNotContainsString('none', $html);
         self::assertSame('', ContentHealthPanel::make()
             ->addCheck('none', fn (): int => 0, fn (int $count): string => '', '/none')
