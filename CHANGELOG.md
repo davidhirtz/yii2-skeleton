@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Added `Models\Breadcrumb::$boost` and `Widgets\Navs\Breadcrumbs::getHomeBreadcrumb()`
 - Added `ModelReferenceInterface`, `ModelReferenceTrait` and `ModelReferenceGridTrait` for a record naming an owner and its attributes
 - Added `HtmlValidator::$definedHtmlAttributes`, which keeps `aria-label` on links by default
 - Changed a delete trail to keep the record's name, which `Trail::getModelName()` answers once it is gone

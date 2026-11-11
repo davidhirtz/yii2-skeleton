@@ -282,30 +282,31 @@ class Module extends \Hirtz\Skeleton\Base\Module
     public function dashboard(Dashboard $dashboard): Dashboard
     {
         $dashboard->addItem(
-            DashboardItem::make()
+            user: DashboardItem::make()
                 ->icon('user-plus')
                 ->label(Yii::t('skeleton', 'USER_CREATE_BUTTON'))
                 ->order(60)
                 ->roles([User::AUTH_USER])
                 ->url(['/admin/user/create']),
-            DashboardItem::make()
+            homepage: DashboardItem::make()
                 ->icon('globe')
                 ->label(Yii::t('skeleton', 'NAV_HOMEPAGE_LABEL'))
                 ->link(fn (A $link) => $link->target('_blank'))
                 ->order(100)
                 ->url('/'),
-            Sitemap::getComponent()->isEnabled() ? DashboardItem::make()
+            sitemap: Sitemap::getComponent()->isEnabled() ? DashboardItem::make()
                 ->icon('sitemap')
                 ->label(Yii::t('skeleton', 'SITEMAP_VIEW_BUTTON'))
                 ->order(85)
                 ->roles([User::ROLE_AUTHENTICATED])
                 ->url(['/admin/sitemap/index']) : null,
-            ...$this->getGoogleDashboardItems(),
         );
+
+        $dashboard->addItem(...$this->getGoogleDashboardItems());
 
         $dashboard->addPanel(
             shortcuts: ShortcutsPanel::make()->order(0),
-            health: ContentHealthPanel::make()->order(10),
+            health: ContentHealthPanel::make()->order(50),
             recent: RecentlyEditedPanel::make()->order(30),
             activity: ActivityPanel::make()->order(40),
         );

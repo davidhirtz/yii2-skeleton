@@ -38,6 +38,11 @@ class Breadcrumbs extends Widget
         return $this;
     }
 
+    public function getHomeBreadcrumb(): ?Breadcrumb
+    {
+        return $this->homeBreadcrumb ?: null;
+    }
+
     public function showAdminBreadcrumb(bool $showAdminBreadcrumb = true): static
     {
         $this->showAdminBreadcrumb = $showAdminBreadcrumb;
@@ -85,7 +90,7 @@ class Breadcrumbs extends Widget
             $tag = $breadcrumb->url ? A::make()->href($breadcrumb->url) : Span::make();
             $tag->class('breadcrumbs-link')->text($breadcrumb->label);
 
-            if ($breadcrumb === $this->homeBreadcrumb) {
+            if (!$breadcrumb->boost || $breadcrumb === $this->homeBreadcrumb) {
                 $tag->attribute('hx-boost', 'false');
             }
 
@@ -97,12 +102,13 @@ class Breadcrumbs extends Widget
         return $list;
     }
 
-    /**
-     * The home page is the frontend, which has no `#wrap` to swap, so its link is never boosted.
-     */
     protected function addHomeBreadcrumb(): void
     {
-        $this->homeBreadcrumb ??= new Breadcrumb($this->getApplicationName(), Application::current()->getHomeUrl());
+        $this->homeBreadcrumb ??= new Breadcrumb(
+            $this->getApplicationName(),
+            Application::current()->getHomeUrl(),
+            boost: false,
+        );
         $this->breadcrumbs = [$this->homeBreadcrumb, ...$this->breadcrumbs];
     }
 
