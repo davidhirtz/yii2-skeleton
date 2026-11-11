@@ -32,6 +32,6 @@ class ShortcutsPanel extends DashboardPanel
 
         $content = implode('', array_map(strval(...), $items));
 
-        return $content !== '' ? Ul::make()->class('dashboard-list')->content($content) : '';
+        return $content !== '' ? Ul::make()->class('dashboard-links')->content($content) : '';
     }
 }

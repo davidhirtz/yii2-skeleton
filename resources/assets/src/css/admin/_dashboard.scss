@@ -30,10 +30,29 @@
   text-align: center;
 }
 
+// The nav link's height: its vertical padding and a border, transparent here. The negative margin keeps the
+// icons in line with the card title.
+.dashboard-links {
+  display: grid;
+  list-style: none;
+  margin: -.5rem calc(-.5rem - 1px);
+  padding: 0;
+}
+
 .dashboard-link {
   align-items: center;
+  border: 1px solid transparent;
+  border-radius: .25rem;
   display: flex;
   gap: .75rem;
+  padding: .5rem;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--dashboard-link-hover-bg);
+    color: var(--dashboard-link-hover-color);
+    outline: 0;
+  }
 }
 
 .dashboard-link-icon {
