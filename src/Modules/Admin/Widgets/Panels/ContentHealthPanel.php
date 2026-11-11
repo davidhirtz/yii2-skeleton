@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Ul;
+use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Panels\DashboardPanel;
 use Override;
 use Stringable;
@@ -20,7 +21,7 @@ use Yii;
 class ContentHealthPanel extends DashboardPanel
 {
     /**
-     * @var array<int|string, array{count: Closure(): int, text: Closure(int): string, url: array<int|string, mixed>|string, roles: list<string>}>
+     * @var array<int|string, array{count: Closure(): int, text: Closure(int): string, url: array<int|string, mixed>|string, roles: list<string>, icon: string}>
      */
     protected array $checks = [];
 
@@ -33,13 +34,20 @@ class ContentHealthPanel extends DashboardPanel
      * @param array<int|string, mixed>|string $url
      * @param list<string> $roles
      */
-    public function addCheck(string $name, Closure $count, Closure $text, array|string $url, array $roles = []): static
-    {
+    public function addCheck(
+        string $name,
+        Closure $count,
+        Closure $text,
+        array|string $url,
+        array $roles = [],
+        string $icon = 'circle-exclamation',
+    ): static {
         $this->checks[$name] = [
             'count' => $count,
             'text' => $text,
             'url' => $url,
             'roles' => $roles,
+            'icon' => $icon,
         ];
 
         return $this;
@@ -78,11 +86,15 @@ class ContentHealthPanel extends DashboardPanel
 
             if ($count > 0) {
                 $list->addContent(Li::make()->content(A::make()
+                    ->class('dashboard-list-row')
                     ->href($check['url'])
                     ->content(
-                        Span::make()->class('strong')->text(Yii::$app->getFormatter()->asInteger($count)),
-                        ' ',
-                        Span::make()->text($check['text']($count)),
+                        Icon::make()->name($check['icon'])->addClass('dashboard-list-icon'),
+                        Span::make()->content(
+                            Span::make()->class('strong')->text(Yii::$app->getFormatter()->asInteger($count)),
+                            ' ',
+                            Span::make()->text($check['text']($count)),
+                        ),
                     )));
 
                 $isEmpty = false;

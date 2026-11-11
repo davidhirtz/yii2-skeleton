@@ -15,6 +15,7 @@ use Hirtz\Skeleton\Models\Collections\TrailModelCollection;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Modules\Admin\Module;
+use Hirtz\Skeleton\Widgets\Icon;
 use Hirtz\Skeleton\Widgets\Panels\DashboardPanel;
 use Stringable;
 use Yii;
@@ -116,20 +117,26 @@ abstract class TrailPanel extends DashboardPanel
      */
     protected function getLine(string|Stringable $title, array $meta, Trail $trail): Stringable
     {
+        $icon = $trail->getType()?->getIcon();
+
         return Div::make()
+            ->class('dashboard-list-row')
             ->content(
-                Div::make()
-                    ->class('dashboard-list-title')
-                    ->content($title),
-                Div::make()
-                    ->class('dashboard-list-meta small text-muted')
-                    ->content(...[
-                        ...array_map(
-                            fn (string|Stringable $item): Stringable => Span::make()->content($item),
-                            array_values(array_filter($meta, fn ($item) => $item !== null && (string)$item !== '')),
-                        ),
-                        Span::make()->content(RelativeTime::make()->value($trail->created_at)),
-                    ]),
+                $icon ? Icon::make()->name($icon)->addClass('dashboard-list-icon') : null,
+                Div::make()->content(
+                    Div::make()
+                        ->class('dashboard-list-title')
+                        ->content($title),
+                    Div::make()
+                        ->class('dashboard-list-meta small text-muted')
+                        ->content(...[
+                            ...array_map(
+                                fn (string|Stringable $item): Stringable => Span::make()->content($item),
+                                array_values(array_filter($meta, fn ($item) => $item !== null && (string)$item !== '')),
+                            ),
+                            Span::make()->content(RelativeTime::make()->value($trail->created_at)),
+                        ]),
+                ),
             );
     }
 }
