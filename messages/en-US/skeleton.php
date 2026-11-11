@@ -120,7 +120,7 @@ return [
     'DASHBOARD_LAST_LOGIN_TEXT' => 'Last login {timestamp}',
     'DASHBOARD_MIDDAY_TITLE' => 'Hello {user}, good to have you back!',
     'DASHBOARD_MORNING_TITLE' => 'Good morning {user}, good to have you back!',
-    'DASHBOARD_NIGHT_TITLE' => 'Burning the midnight oil, {user}?',
+    'DASHBOARD_NIGHT_TITLE' => 'Working late, {user}?',
     'DASHBOARD_RECENT_TITLE' => 'Recently edited by you',
     'DASHBOARD_SEARCH_CONSOLE_BUTTON' => 'Open Search Console',
     'DASHBOARD_SHORTCUTS_TITLE' => 'Shortcuts',
