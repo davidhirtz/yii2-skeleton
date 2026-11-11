@@ -34,6 +34,10 @@
 // With the rows' padding and border, content lines up with the card title again.
 .dashboard-item .card-body {
   padding: calc(.5rem - 1px);
+
+  > .form-rows {
+    padding: calc(.5rem + 1px);
+  }
 }
 
 // A lazy panel's body until it loads, as tall as its five rows.
