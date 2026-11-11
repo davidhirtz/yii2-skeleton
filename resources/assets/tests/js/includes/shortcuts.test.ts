@@ -88,7 +88,7 @@ describe('shortcuts', () => {
         vi.useRealTimers();
 
         expect([...document.querySelectorAll('.shortcut-hint')].map(($hint) => $hint.textContent)).toEqual([
-            'M E', 'M N', 'M A', 'T X', 'T P', 'A V', 'A',
+            'm e', 'm n', 'm a', 't x', 't p', 'a v', 'a',
         ]);
     });
 

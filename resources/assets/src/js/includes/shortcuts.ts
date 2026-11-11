@@ -109,7 +109,7 @@ const showHints = (entries: [string, Element][]): void => {
         const $hint = document.createElement('kbd');
 
         $hint.className = $icon ? 'shortcut-hint' : 'shortcut-hint shortcut-hint-before';
-        $hint.textContent = label.toUpperCase();
+        $hint.textContent = label;
 
         $hint.style.left = `${Math.max(0, $icon ? rect.left + rect.width / 2 : rect.left)}px`;
         $hint.style.top = `${Math.max(0, rect.top + rect.height / 2)}px`;
