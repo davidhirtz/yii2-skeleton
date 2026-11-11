@@ -6,6 +6,7 @@
 
   display: grid;
   gap: 1rem;
+  grid-auto-flow: dense;
   grid-template-columns: repeat(var(--cols), 1fr);
   padding: 1rem;
 
