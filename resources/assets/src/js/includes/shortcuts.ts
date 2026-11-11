@@ -30,7 +30,19 @@ const GROUPS: Group[] = [
                 return;
             }
 
+            // Room for the labels at the items' end, made before the toggle positions the menu and kept while it is open.
+            $menu.dataset.shortcutHints = '';
+
+            const onToggle = (event: Event) => {
+                if ((event as ToggleEvent).newState === 'closed') {
+                    delete $menu.dataset.shortcutHints;
+                    $menu.removeEventListener('toggle', onToggle);
+                }
+            };
+
+            $menu.addEventListener('toggle', onToggle);
             $toggle.click();
+
             return () => $menu.matches(':popover-open') && $menu.hidePopover();
         },
     },
@@ -93,14 +105,14 @@ let hints: HTMLElement | null = null;
 let pending: {keys: Map<string, Element>; close?: () => void} | null = null;
 let revealTimer: number | undefined;
 
-// A label sits at the end of an aside link and elsewhere covers the element's icon (the collapsed aside shows only
+// A label sits at the end of an aside link or a dropdown item and elsewhere covers the element's icon (the collapsed aside shows only
 // that), or without one goes before the text.
 const getIcon = ($el: Element): Element | null => $el.querySelector('.nav-link-icon, .fas, .far, .fab');
 
 const isAsideNarrow = (): boolean => document.documentElement.matches('[data-aside-collapsed]:not([data-aside-open])');
 
 const placeHint = ($hint: HTMLElement, $el: Element): void => {
-    const atEnd = $el.closest('.aside') !== null && !isAsideNarrow();
+    const atEnd = $el.closest('[data-shortcut-hints]') !== null || ($el.closest('.aside') !== null && !isAsideNarrow());
     const $icon = atEnd ? null : getIcon($el);
     const rect = (atEnd || $icon ? ($icon ?? $el) : $el.querySelector('.nav-link-label') ?? $el).getBoundingClientRect();
 
