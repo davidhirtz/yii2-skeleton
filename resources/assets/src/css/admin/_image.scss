@@ -30,9 +30,8 @@
   top: .3125rem;
 }
 
-// A video is centred in its box, so the play badge in the middle of the box lands on the picture in any orientation.
 .thumbnail-video .img-thumbnail {
-  object-position: center;
+  object-fit: cover;
 }
 
 .thumbnail-play {

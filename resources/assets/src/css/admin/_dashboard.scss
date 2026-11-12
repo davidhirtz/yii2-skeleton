@@ -21,7 +21,6 @@
 
 .dashboard-item-title {
   align-items: center;
-  color: inherit;
   display: inline-flex;
   gap: .5rem;
 }
@@ -32,12 +31,8 @@
 }
 
 // With the rows' padding and border, content lines up with the card title again.
-.dashboard-item .card-body {
+.card-body:has(.dashboard-list) {
   padding: calc(.5rem - 1px);
-
-  > .form-rows {
-    padding: calc(.5rem + 1px);
-  }
 }
 
 // A lazy panel's body until it loads, as tall as its five rows.
@@ -94,6 +89,10 @@
   display: flex;
   flex-grow: 1;
   gap: .75rem;
+
+  &:not(.dashboard-list-link) {
+    cursor: pointer;
+  }
 }
 
 // Font Awesome's `line-height: 1` would sit the icon above the first line of its row.
