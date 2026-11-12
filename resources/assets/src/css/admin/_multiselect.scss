@@ -1,17 +1,18 @@
 .multiselect {
   align-items: center;
-  background-color: var(--input-bg-color);
+  background: var(--input-bg-color) var(--input-caret) no-repeat right 1rem center / .875rem;
   cursor: text;
   display: flex;
   flex-wrap: wrap;
   gap: .25rem;
   min-height: calc(2.5rem + 2px);
-  padding: .3125rem .5rem;
+  padding: .3125rem 2.5rem .3125rem .5rem;
 
   &:hover:not(:has(.multiselect-search:disabled)),
   &:focus-within {
     --input-bg-color: var(--input-focus-bg-color);
     --input-border-color: var(--input-focus-border-color);
+    --input-caret: var(--input-caret-hover);
     --input-color: var(--input-focus-color);
   }
 
