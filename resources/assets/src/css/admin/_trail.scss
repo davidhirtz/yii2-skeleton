@@ -1,5 +1,6 @@
 @use "sass:color";
 @use "../shared/breakpoints" as *;
+@use "../shared/typography" as *;
 
 .trail-table {
   --table-td-border-color: var(--card-bg);
@@ -82,9 +83,8 @@
 
 .trail-property-col {
   --table-bg: var(--trail-property-bg);
-  font-family: Bebas Neue, sans-serif;
+  @include font-display;
   hyphens: auto;
-  letter-spacing: .0625em;
   width: 10rem;
 }
 

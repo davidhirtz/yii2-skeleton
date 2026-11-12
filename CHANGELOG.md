@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added the admin font tokens `--font-family-base`, `--font-family-display`, `--letter-spacing-display` and `--text-transform-display`
+
 ## 3.27.0 (November 11, 2026)
 
 - Added admin keyboard shortcuts (`⌘S`, `⌘K`, `m`/`t`/`a` sequences, `?`) and the `user.keyboard_shortcuts` setting

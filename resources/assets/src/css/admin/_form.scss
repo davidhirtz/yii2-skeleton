@@ -1,4 +1,5 @@
 @use "../shared/breakpoints" as *;
+@use "../shared/typography" as *;
 
 
 .form,
@@ -33,8 +34,7 @@
 }
 
 .form-label {
-  font-family: "Bebas Neue", sans-serif;
-  letter-spacing: .0625em;
+  @include font-display;
 
   @include media-breakpoint-up(sm) {
     .form-row:not(.form-checkbox-row):has(.input, .upload, .custom-attribute-group) & {

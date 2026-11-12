@@ -1,14 +1,15 @@
+@use "../shared/typography" as *;
+
 .badge {
   align-items: center;
   background: var(--badge-bg);
   border-radius: .25rem;
   color: var(--badge-color);
   display: inline-flex;
-  font-family: Bebas Neue, sans-serif;
+  @include font-display;
   font-size: .75rem ;
   gap: .25rem;
   height: 1.25rem;
-  letter-spacing: .0625em;
   line-height: 1;
   padding: 0 .5rem;
   text-align: center;

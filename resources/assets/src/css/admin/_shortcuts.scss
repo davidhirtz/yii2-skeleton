@@ -1,3 +1,5 @@
+@use "../shared/typography" as *;
+
 // The labels `includes/shortcuts.ts` puts beside the elements a key leads to; the layer is a popover for the top layer.
 .shortcut-hints {
   background: none;
@@ -15,9 +17,8 @@
   background-color: var(--shortcut-hint-bg);
   border-radius: .25rem;
   color: var(--shortcut-hint-color);
-  font-family: Bebas Neue, sans-serif;
+  @include font-display;
   font-size: .75rem;
-  letter-spacing: .0625em;
   line-height: 1;
   min-width: 1.25rem;
   padding: 0.25rem 0.375rem;

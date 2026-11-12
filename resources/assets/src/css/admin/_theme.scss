@@ -60,6 +60,11 @@
 
   color-scheme: light;
 
+  --font-family-base: "ATC Overlook", sans-serif;
+  --font-family-display: "Bebas Neue", sans-serif;
+  --letter-spacing-display: .0625em;
+  --text-transform-display: none;
+
   --body-bg: var(--color-white);
   --body-color: var(--color-black);
   --scroll-padding: 4rem;

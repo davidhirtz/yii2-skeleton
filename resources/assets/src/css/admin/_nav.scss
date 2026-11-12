@@ -1,4 +1,5 @@
 @use "../shared/svg" as *;
+@use "../shared/typography" as *;
 
 .nav {
   display: flex;
@@ -14,8 +15,7 @@
   border-radius: .25rem;
   color: var(--link-color); // Needed for buttons
   display: flex;
-  font-family: "Bebas Neue", sans-serif;
-  letter-spacing: .0625em;
+  @include font-display;
   min-width: 3rem;
   padding: 0.5rem 1rem;
   position: relative;

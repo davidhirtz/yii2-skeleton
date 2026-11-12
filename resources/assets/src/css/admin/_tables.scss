@@ -1,3 +1,5 @@
+@use "../shared/typography" as *;
+
 .table {
   width: 100%;
   vertical-align: top;
@@ -30,8 +32,7 @@
   }
 
   th {
-    font-family: 'Bebas Neue', sans-serif;
-    letter-spacing: .0625em;
+    @include font-display;
     padding-bottom: .5rem;
     white-space: nowrap;
 

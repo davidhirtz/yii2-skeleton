@@ -1,0 +1,11 @@
+// `$important` beats TinyMCE's own skin.
+@mixin font-display($important: false) {
+  @if $important {
+    font-family: var(--font-family-display) !important;
+  } @else {
+    font-family: var(--font-family-display);
+  }
+
+  letter-spacing: var(--letter-spacing-display);
+  text-transform: var(--text-transform-display);
+}

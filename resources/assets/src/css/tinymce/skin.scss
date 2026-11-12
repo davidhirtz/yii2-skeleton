@@ -1,4 +1,5 @@
 @use "../node_modules/tinymce/skins/ui/oxide/skin.min.css";
+@use "../shared/typography" as *;
 
 div.tox-tinymce {
   border: 1px solid var(--input-border-color);
@@ -155,9 +156,8 @@ div.tox-tinymce {
 
 .tox .tox-label {
   color: var(--color-label);
-  font-family: "Bebas Neue", sans-serif !important;
+  @include font-display(true);
   font-size: .875rem;
-  letter-spacing: .0625em;
   padding-bottom: .25rem;
 }
 
@@ -259,10 +259,9 @@ div.tox-tinymce {
   border: 1px solid var(--btn-border-color);
   border-radius: .25rem;
   color: var(--btn-color);
-  font-family: "Bebas Neue", sans-serif !important;
+  @include font-display(true);
   font-size: .875rem;
   font-weight: 400;
-  letter-spacing: .0625em;
   margin: 0;
   min-width: 3.125rem;
   padding: .5rem 1rem;
