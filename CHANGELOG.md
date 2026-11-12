@@ -1,4 +1,4 @@
-## Unreleased
+## 3.28.0 (November 12, 2026)
 
 - Added `Filters\SameOriginFilter`, a token-free CSRF check for forms on cached pages
 - Added `ConsentManager::$services`, through which a bundle adds consent services to the project's categories
