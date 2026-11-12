@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Added `Filters\SameOriginFilter`, a token-free CSRF check for forms on cached pages
+- Added `ConsentManager::$services`, through which a bundle adds consent services to the project's categories
 - Added the admin font tokens `--font-family-base`, `--font-family-display`, `--letter-spacing-display` and `--text-transform-display`
 
 ## 3.27.0 (November 11, 2026)

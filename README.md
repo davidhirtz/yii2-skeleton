@@ -187,10 +187,36 @@ form that sets the CSRF cookie adds `CsrfCookie` to the required category.
 ],
 ```
 
+A bundle adds its own services through `services`, keyed by category id, from its `getDefaultConfig()`. They join
+the project's category of that id (and are dropped when the project has none); a closure may answer `null`, and a
+service the project already declares by name and provider is not added twice:
+
+```php
+'consent' => [
+    'services' => [
+        RequiredCategory::ID => [static fn (): ?Service => BotProtection::current()->getConsentService()],
+    ],
+],
+```
+
 A default service is changed through the container (`YouTube::class => ['purpose' => …]`) or `make([...])`. The
 version a decision is stored and logged with is `version` plus a fingerprint of every category, provider and cookie:
 a changed service asks every visitor again on its own, a reworded text does not. Raise `version` for a change of
 wording that should.
+
+### Forms on cached pages
+
+A page-cached page cannot carry a per-visitor CSRF token. `Filters\SameOriginFilter` replaces it for a frontend form's
+action: it refuses a cross-origin POST by the headers the browser sends (`Sec-Fetch-Site`, else `Origin`), lets a
+request without either through (no browser, so no CSRF) and turns the controller's token check off. `trustedOrigins`
+lists further origins allowed to post. The admin keeps its token.
+
+```php
+public function behaviors(): array
+{
+    return [...parent::behaviors(), ['class' => SameOriginFilter::class, 'only' => ['contact']]];
+}
+```
 
 ### API keys per user
 
