@@ -26,6 +26,13 @@ class ConsentManager extends Component
     public array|Closure|null $categories = null;
 
     /**
+     * Services a bundle adds to the category of that id, if the project's categories hold one.
+     *
+     * @var array<string, list<Service|Closure(): (Service|null)>>
+     */
+    public array $services = [];
+
+    /**
      * At most 23 characters: the log's column holds 32 including the fingerprint.
      */
     public string $version = '1';
@@ -70,6 +77,10 @@ class ConsentManager extends Component
             $categories = $this->categories instanceof Closure
                 ? ($this->categories)($this)
                 : $this->categories ?? $this->getDefaultCategories();
+
+            foreach ($categories as $category) {
+                $this->addServices($category);
+            }
 
             $this->resolvedCategories = array_values(array_filter(
                 $categories,
@@ -148,5 +159,24 @@ class ConsentManager extends Component
             'declared' => $declared,
             'debug' => $this->debug || User::current()?->getIsGuest() === false,
         ];
+    }
+
+    private function addServices(Category $category): void
+    {
+        $existing = array_map($this->getServiceKey(...), $category->getServices());
+
+        foreach ($this->services[$category->getId()] ?? [] as $service) {
+            $service = $service instanceof Closure ? $service() : $service;
+
+            if ($service && !in_array($this->getServiceKey($service), $existing, true)) {
+                $category->addService($service);
+                $existing[] = $this->getServiceKey($service);
+            }
+        }
+    }
+
+    private function getServiceKey(Service $service): string
+    {
+        return $service->getName() . '|' . $service->getProvider();
     }
 }

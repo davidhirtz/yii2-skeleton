@@ -160,6 +160,49 @@ class ConsentManagerTest extends TestCase
         self::assertSame('End of session', $category->getServices()[1]->getCookies()[0]->getDurationLabel());
     }
 
+    public function testABundleAddsServicesToTheProjectsCategories(): void
+    {
+        $turnstile = Service::make()->name('Cloudflare Turnstile')->provider('Cloudflare, Inc.');
+
+        $consent = new ConsentManager([
+            'categories' => fn (): array => [
+                RequiredCategory::make(),
+                ExternalCategory::make(),
+            ],
+            'services' => [
+                RequiredCategory::ID => [$turnstile, fn (): ?Service => null],
+                ExternalCategory::ID => [fn (): Service => YouTube::make()],
+                MarketingCategory::ID => [Service::make()->name('Dropped')],
+            ],
+        ]);
+
+        self::assertSame(['required', 'external'], $this->getCategoryIds($consent));
+        self::assertSame(['Cookie settings', 'Cloudflare Turnstile'], $this->getServiceNames($consent->getCategories()[0]));
+        self::assertSame(['YouTube'], $this->getServiceNames($consent->getCategories()[1]));
+    }
+
+    public function testAServiceTheProjectDeclaredIsNotAddedTwice(): void
+    {
+        $consent = new ConsentManager([
+            'services' => [
+                ExternalCategory::ID => [YouTube::make()],
+            ],
+        ]);
+
+        self::assertSame(['YouTube'], $this->getServiceNames($consent->getCategories()[1]));
+    }
+
+    public function testAnAddedServiceChangesTheVersion(): void
+    {
+        $added = new ConsentManager([
+            'services' => [
+                RequiredCategory::ID => [Service::make()->name('Cloudflare Turnstile')->provider('Cloudflare, Inc.')],
+            ],
+        ]);
+
+        self::assertNotSame((new ConsentManager())->getVersion(), $added->getVersion());
+    }
+
     /**
      * @return list<string>
      */
