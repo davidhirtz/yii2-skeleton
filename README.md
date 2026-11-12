@@ -209,7 +209,7 @@ wording that should.
 A page-cached page cannot carry a per-visitor CSRF token. `Filters\SameOriginFilter` replaces it for a frontend form's
 action: it refuses a cross-origin POST by the headers the browser sends (`Sec-Fetch-Site`, else `Origin`), lets a
 request without either through (no browser, so no CSRF) and turns the controller's token check off. `trustedOrigins`
-lists further origins allowed to post. The admin keeps its token.
+lists further origins allowed to post, such as a sibling host, which the browser reports as `same-site`. The admin keeps its token.
 
 ```php
 public function behaviors(): array

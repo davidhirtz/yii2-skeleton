@@ -48,17 +48,24 @@ class SameOriginFilter extends ActionFilter
 
         $headers = $request->getHeaders();
         $site = $headers->get('Sec-Fetch-Site');
+        $site = is_string($site) ? $site : '';
 
-        if (is_string($site) && $site !== '') {
-            return in_array($site, ['same-origin', 'none'], true);
-        }
-
-        $origin = $headers->get('Origin');
-
-        if (!is_string($origin) || $origin === '') {
+        if (in_array($site, ['same-origin', 'none'], true)) {
             return true;
         }
 
-        return in_array($origin, [$request->getHostInfo(), ...$this->trustedOrigins], true);
+        $origin = $headers->get('Origin');
+        $origin = is_string($origin) ? $origin : '';
+
+        // A sibling host sends `same-site`, so a trusted origin is checked before Fetch Metadata refuses it.
+        if ($origin !== '' && in_array($origin, $this->trustedOrigins, true)) {
+            return true;
+        }
+
+        if ($site !== '') {
+            return false;
+        }
+
+        return $origin === '' || $origin === $request->getHostInfo();
     }
 }

@@ -53,6 +53,27 @@ class SameOriginFilterTest extends TestCase
         self::assertTrue($filter->isSameOrigin());
     }
 
+    public function testATrustedOriginPassesDespiteFetchMetadata(): void
+    {
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $headers = $this->getWebRequest()->getHeaders();
+        $filter = new SameOriginFilter(['trustedOrigins' => ['https://shop.example.com']]);
+
+        $headers->set('Sec-Fetch-Site', 'same-site');
+        $headers->set('Origin', 'https://shop.example.com');
+        self::assertTrue($filter->isSameOrigin());
+
+        $headers->set('Origin', 'https://blog.example.com');
+        self::assertFalse($filter->isSameOrigin());
+
+        $headers->remove('Origin');
+        self::assertFalse($filter->isSameOrigin());
+
+        $headers->set('Sec-Fetch-Site', 'cross-site');
+        $headers->set('Origin', 'https://shop.example.com.evil.example');
+        self::assertFalse($filter->isSameOrigin());
+    }
+
     public function testARequestWithNeitherHeaderIsNoBrowserAndPasses(): void
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
