@@ -6,9 +6,11 @@ namespace Hirtz\Skeleton\Search;
 
 use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Models\Search;
+use Override;
 
 class MysqlDriver implements SearchDriverInterface
 {
+    #[Override]
     public function index(SearchDocument ...$documents): void
     {
         if (!$documents) {
@@ -45,6 +47,7 @@ class MysqlDriver implements SearchDriverInterface
         Search::batchInsert($rows);
     }
 
+    #[Override]
     public function delete(string $modelClass, int $modelId): void
     {
         Search::deleteAll([
@@ -53,6 +56,7 @@ class MysqlDriver implements SearchDriverInterface
         ]);
     }
 
+    #[Override]
     public function search(SearchRequest $request): SearchResultSet
     {
         $rows = $this->createQuery($request)
@@ -73,11 +77,13 @@ class MysqlDriver implements SearchDriverInterface
         return new SearchResultSet($hits);
     }
 
+    #[Override]
     public function count(SearchRequest $request): int
     {
         return (int)$this->createQuery($request)->count();
     }
 
+    #[Override]
     public function clear(?string $modelClass = null): void
     {
         Search::deleteAll($modelClass !== null ? ['model_class' => $modelClass] : null);

@@ -37,11 +37,13 @@ class TestMailer extends Mailer
     {
         if ($this->isFailing) {
             $this->setTransport(new class () implements TransportInterface {
+                #[Override]
                 public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
                 {
                     throw new TransportException('The test transport refuses every message.');
                 }
 
+                #[Override]
                 public function __toString(): string
                 {
                     return 'failing://';

@@ -225,16 +225,19 @@ class SearchableActiveRecord extends ActiveRecord implements SearchableInterface
 
     public bool $isSearchable = true;
 
+    #[Override]
     public function getAdminRoute(): array|false
     {
         return false;
     }
 
+    #[Override]
     public function getPermissionName(): string
     {
         return 'test';
     }
 
+    #[Override]
     public function getSearchAttributes(): array
     {
         return ['name', 'content'];
@@ -252,11 +255,13 @@ class SearchableActiveRecord extends ActiveRecord implements SearchableInterface
         ];
     }
 
+    #[Override]
     public function getSearchWeight(): float
     {
         return 0.5;
     }
 
+    #[Override]
     public function isSearchable(): bool
     {
         return $this->isSearchable;

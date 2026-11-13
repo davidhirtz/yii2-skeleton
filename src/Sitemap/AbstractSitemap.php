@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Sitemap;
 
+use Override;
 use yii\base\BaseObject;
 
 abstract class AbstractSitemap extends BaseObject implements SitemapInterface
@@ -18,6 +19,7 @@ abstract class AbstractSitemap extends BaseObject implements SitemapInterface
      */
     public ?int $maxUrlCount = null;
 
+    #[Override]
     public function getLastModified(int $offset = 0): ?string
     {
         return null;

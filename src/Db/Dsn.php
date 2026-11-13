@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Db;
 
+use Override;
 use Stringable;
 use yii\base\InvalidArgumentException;
 
@@ -18,6 +19,7 @@ readonly class Dsn implements Stringable
     ) {
     }
 
+    #[Override]
     public function __toString(): string
     {
         $dsn = "$this->driver:host=$this->host;dbname=$this->database";

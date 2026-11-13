@@ -310,6 +310,7 @@ class TestI18nActiveRecord extends ActiveRecord implements I18nAttributeInterfac
         ]);
     }
 
+    #[Override]
     public function getTranslationModelClass(): string
     {
         return self::class;

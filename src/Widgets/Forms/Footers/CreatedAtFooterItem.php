@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Base\Traits\ContainerConfigurationTrait;
 use Hirtz\Skeleton\Html\Custom\RelativeTime;
 use Hirtz\Skeleton\Html\Li;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
+use Override;
 use Stringable;
 use Yii;
 use yii\base\Model;
@@ -51,6 +52,7 @@ class CreatedAtFooterItem implements Stringable
             : null;
     }
 
+    #[Override]
     public function __toString(): string
     {
         return (string)$this->getItem();

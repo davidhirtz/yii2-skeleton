@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Navs\Header;
 use Hirtz\Skeleton\Widgets\Navs\ModelHeader;
+use Override;
 use Yii;
 use yii\base\Model;
 
@@ -304,31 +305,37 @@ class ModelHeaderNode extends Model implements AdminModelInterface
     public ?Breadcrumb $indexBreadcrumb = null;
     public ?string $adminSubtitle = null;
 
+    #[Override]
     public function getAdminName(): string
     {
         return $this->name;
     }
 
+    #[Override]
     public function getAdminRoute(): array|false
     {
         return $this->hasRoute ? ['/admin/test/update', 'name' => $this->name] : false;
     }
 
+    #[Override]
     public function getAdminParent(): ?ModelHeaderNode
     {
         return $this->adminParent;
     }
 
+    #[Override]
     public function getAdminIndexBreadcrumb(): ?Breadcrumb
     {
         return $this->indexBreadcrumb;
     }
 
+    #[Override]
     public function getAdminSubtitle(): ?string
     {
         return $this->adminSubtitle;
     }
 
+    #[Override]
     public function getPermissionName(): string
     {
         return 'test';

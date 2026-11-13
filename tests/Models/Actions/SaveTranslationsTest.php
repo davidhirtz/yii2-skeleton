@@ -219,11 +219,13 @@ class TranslatedActiveRecord extends ActiveRecord implements TrailModelInterface
     use TrailModelTrait;
     use TranslationTrait;
 
+    #[Override]
     public function getAdminRoute(): array|false
     {
         return false;
     }
 
+    #[Override]
     public function getPermissionName(): string
     {
         return 'test';
@@ -260,6 +262,7 @@ class TranslatedActiveRecord extends ActiveRecord implements TrailModelInterface
         ]);
     }
 
+    #[Override]
     public function getTranslationModelClass(): string
     {
         return self::class;

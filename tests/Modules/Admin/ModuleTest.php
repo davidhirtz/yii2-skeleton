@@ -18,6 +18,7 @@ use Hirtz\Skeleton\Widgets\Navs\NavItem;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
 use Hirtz\Skeleton\Widgets\Widget;
+use Override;
 use Yii;
 use yii\base\ErrorException;
 use yii\base\Event;
@@ -30,7 +31,7 @@ class ModuleTest extends TestCase
 
     protected Module $module;
 
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -139,11 +140,13 @@ class ModuleTest extends TestCase
 
 class TestModule extends \Hirtz\Skeleton\Base\Module implements ModuleInterface
 {
+    #[Override]
     public function aside(Nav $nav): Nav
     {
         return $nav->addItem(NavItem::make()->label('Test Module'));
     }
 
+    #[Override]
     public function dashboard(Dashboard $dashboard): Dashboard
     {
         return $dashboard->addItem(DashboardItem::make()

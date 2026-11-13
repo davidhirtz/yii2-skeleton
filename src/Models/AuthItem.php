@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Models\Queries\AuthItemQuery;
 use Hirtz\Skeleton\Models\Queries\UserQuery;
 use Hirtz\Skeleton\Models\Traits\TypeAttributeTrait;
 use Hirtz\Skeleton\Models\Types\Type;
+use Override;
 use Yii;
 use yii\rbac\Item;
 
@@ -56,7 +57,7 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
         return $query;
     }
 
-    #[\Override]
+    #[Override]
     public static function find(): AuthItemQuery
     {
         return Yii::createObject(AuthItemQuery::class, [static::class]);
@@ -88,6 +89,7 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
     /**
      * @return list<Type>
      */
+    #[Override]
     public function getTypes(): array
     {
         return [
@@ -100,7 +102,7 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function attributeLabels(): array
     {
         return [
@@ -110,7 +112,7 @@ class AuthItem extends ActiveRecord implements TypeAttributeInterface
         ];
     }
 
-    #[\Override]
+    #[Override]
     public static function tableName(): string
     {
         return '{{%auth_item}}';

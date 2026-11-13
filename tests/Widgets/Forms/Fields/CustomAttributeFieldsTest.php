@@ -760,6 +760,7 @@ class FieldRecord extends ActiveRecord implements
         ];
     }
 
+    #[Override]
     public function getTranslationModelClass(): string
     {
         return self::class;

@@ -39,16 +39,19 @@ class WeightedActiveRecord extends ActiveRecord implements SearchableInterface
     use AdminModelTrait;
     use SearchableTrait;
 
+    #[Override]
     public function getAdminRoute(): array|false
     {
         return false;
     }
 
+    #[Override]
     public function getPermissionName(): string
     {
         return 'test';
     }
 
+    #[Override]
     public function getSearchAttributes(): array
     {
         return ['name'];

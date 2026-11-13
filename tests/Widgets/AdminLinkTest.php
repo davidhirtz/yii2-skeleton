@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Widgets\AdminLink;
+use Override;
 use Yii;
 use yii\base\Model;
 
@@ -47,11 +48,13 @@ class AdminLinkTest extends TestCase
         $model = new class () extends Model implements AdminModelInterface {
             use AdminModelTrait;
 
+            #[Override]
             public function getAdminRoute(): array|false
             {
                 return false;
             }
 
+            #[Override]
             public function getPermissionName(): string
             {
                 return User::AUTH_USER;

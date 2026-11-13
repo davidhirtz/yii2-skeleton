@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\User;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Traits\VisibilityTrait;
+use Override;
 use Stringable;
 use Yii;
 use yii\base\Configurable;
@@ -59,6 +60,7 @@ abstract class Widget implements Configurable, Stringable, ViewContextInterface
         return $this;
     }
 
+    #[Override]
     public function getViewPath(): ?string
     {
         return $this->viewPath ??= '@views/' . Yii::$app->controller->id . '/';
@@ -92,6 +94,7 @@ abstract class Widget implements Configurable, Stringable, ViewContextInterface
         }
     }
 
+    #[Override]
     final public function __toString(): string
     {
         return $this->render();

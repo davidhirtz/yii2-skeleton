@@ -257,6 +257,7 @@ class TranslatedMigrationRecord extends ActiveRecord implements TranslationInter
         parent::init();
     }
 
+    #[Override]
     public function getTranslationModelClass(): string
     {
         return self::class;

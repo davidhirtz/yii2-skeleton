@@ -355,12 +355,14 @@ class TestTransport implements TransportInterface
     /** @var list<Event> */
     public array $events = [];
 
+    #[Override]
     public function send(Event $event): Result
     {
         $this->events[] = $event;
         return new Result(ResultStatus::success(), $event);
     }
 
+    #[Override]
     public function close(?int $timeout = null): Result
     {
         return new Result(ResultStatus::success());

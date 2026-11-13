@@ -220,6 +220,7 @@ class I18nActiveRecord extends ActiveRecord implements TranslationInterface
         ]);
     }
 
+    #[Override]
     public function getTranslationModelClass(): string
     {
         return self::class;

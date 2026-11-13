@@ -296,6 +296,7 @@ class TestActiveRecord extends ActiveRecord implements I18nAttributeInterface, T
         parent::init();
     }
 
+    #[Override]
     public function getTranslationModelClass(): string
     {
         return self::class;
@@ -304,6 +305,7 @@ class TestActiveRecord extends ActiveRecord implements I18nAttributeInterface, T
     /**
      * @return list<string>
      */
+    #[Override]
     public function getI18nLanguages(): array
     {
         return $this->i18nLanguages ?? Yii::$app->getI18n()->getLanguages();

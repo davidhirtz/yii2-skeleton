@@ -52,6 +52,7 @@ class ModelSitemap extends AbstractSitemap
         parent::init();
     }
 
+    #[Override]
     public function generateUrls(?int $offset = null): array
     {
         $query = $this->getQuery();
@@ -86,6 +87,7 @@ class ModelSitemap extends AbstractSitemap
         return $urls;
     }
 
+    #[Override]
     public function getPageCount(): int
     {
         return (int)ceil($this->getRecordCount() / $this->getRecordsPerPage());

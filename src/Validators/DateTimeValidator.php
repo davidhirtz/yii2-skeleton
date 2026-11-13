@@ -31,6 +31,7 @@ class DateTimeValidator extends Validator implements AttributeTypeInterface
         parent::init();
     }
 
+    #[Override]
     public function getAttributeType(): string
     {
         return $this->type;

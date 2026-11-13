@@ -145,6 +145,7 @@ class TranslatableAttributeRecord extends ActiveRecord implements CustomAttribut
     use I18nAttributesTrait;
     use TranslatableAttributesTrait;
 
+    #[Override]
     public function getCustomAttributes(): array
     {
         return [

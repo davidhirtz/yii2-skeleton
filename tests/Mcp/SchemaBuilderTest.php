@@ -425,6 +425,7 @@ class SchemaRecord extends ActiveRecord implements
         return $query;
     }
 
+    #[Override]
     public function getTranslationModelClass(): string
     {
         return self::class;

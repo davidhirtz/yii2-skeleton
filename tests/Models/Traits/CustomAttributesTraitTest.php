@@ -495,11 +495,13 @@ class CustomAttributeRecord extends ActiveRecord implements
     final public const int TYPE_INVALID_NAME = 5;
     final public const int TYPE_DUPLICATE_NAME = 6;
 
+    #[Override]
     public function getAdminRoute(): array|false
     {
         return false;
     }
 
+    #[Override]
     public function getPermissionName(): string
     {
         return 'test';
@@ -594,6 +596,7 @@ class CustomAttributeRecord extends ActiveRecord implements
         ];
     }
 
+    #[Override]
     public function getTranslationModelClass(): string
     {
         return self::class;

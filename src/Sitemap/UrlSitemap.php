@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Sitemap;
 use DateTimeInterface;
 use Hirtz\Skeleton\Helpers\ArrayHelper;
 use Hirtz\Skeleton\Helpers\FileHelper;
+use Override;
 use Yii;
 
 class UrlSitemap extends AbstractSitemap
@@ -30,6 +31,7 @@ class UrlSitemap extends AbstractSitemap
      */
     private ?array $generatedUrls = null;
 
+    #[Override]
     public function generateUrls(?int $offset = null): array
     {
         $urls = $this->getUrls();
@@ -39,11 +41,13 @@ class UrlSitemap extends AbstractSitemap
             : array_slice($urls, $offset * $this->getMaxUrlCount(), $this->getMaxUrlCount());
     }
 
+    #[Override]
     public function getPageCount(): int
     {
         return (int)ceil(count($this->getUrls()) / $this->getMaxUrlCount());
     }
 
+    #[Override]
     public function getLastModified(int $offset = 0): ?string
     {
         $lastModified = null;

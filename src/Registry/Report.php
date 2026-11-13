@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Db\MigrationHistory;
 use Hirtz\Skeleton\Helpers\VersionHelper;
 use Hirtz\Skeleton\Log\SentryTarget;
 use JsonSerializable;
+use Override;
 use Yii;
 use yii\base\InvalidConfigException;
 
@@ -159,6 +160,7 @@ class Report implements JsonSerializable
     /**
      * @return array<string, mixed>
      */
+    #[Override]
     public function jsonSerialize(): array
     {
         return $this->toArray();

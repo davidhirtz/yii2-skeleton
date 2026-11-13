@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\I18n;
 
 use JsonSerializable;
+use Override;
 use Stringable;
 use Yii;
 
@@ -81,6 +82,7 @@ class Message implements JsonSerializable, Stringable
     /**
      * @return array<string, mixed>
      */
+    #[Override]
     public function jsonSerialize(): array
     {
         $data = [
@@ -95,6 +97,7 @@ class Message implements JsonSerializable, Stringable
         return $data;
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->isLiteral()

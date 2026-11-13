@@ -275,6 +275,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
      *
      * @return list<TrailType>
      */
+    #[Override]
     public function getTypes(): array
     {
         return [
@@ -331,6 +332,7 @@ class Trail extends ActiveRecord implements TypeAttributeInterface
         return TrailType::class;
     }
 
+    #[Override]
     public function getType(): ?TrailType
     {
         /** @var TrailType|null */

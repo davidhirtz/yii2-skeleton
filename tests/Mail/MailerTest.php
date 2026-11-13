@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Tests\Mail;
 use Hirtz\Skeleton\Mail\Mailer;
 use Hirtz\Skeleton\Mail\Message;
 use Hirtz\Skeleton\Test\TestCase;
+use Override;
 use Symfony\Component\Mailer\Bridge\Resend\Transport\ResendApiTransport;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\Exception\TransportException;
@@ -108,11 +109,13 @@ class MailerTest extends TestCase
         $this->logger->isRecording = true;
 
         $mailer = new Mailer(['transport' => new class () implements TransportInterface {
+            #[Override]
             public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage
             {
                 throw new TransportException('Refused');
             }
 
+            #[Override]
             public function __toString(): string
             {
                 return 'failing://';

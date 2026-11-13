@@ -16,6 +16,7 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Traits\ModelTrait;
 use Hirtz\Skeleton\Widgets\Username;
+use Override;
 use Stringable;
 use Yii;
 use yii\base\Model;
@@ -98,6 +99,7 @@ class UpdatedAtFooterItem implements Stringable
         return $relation?->one();
     }
 
+    #[Override]
     public function __toString(): string
     {
         return (string)$this->getItem();

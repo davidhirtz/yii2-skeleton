@@ -219,6 +219,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     /**
      * A record without a key matches nothing.
      */
+    #[Override]
     public function validateAuthKey($authKey): bool
     {
         $key = $this->getAuthKey();
@@ -324,6 +325,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return Yii::createObject(UserQuery::class, [static::class]);
     }
 
+    #[Override]
     public static function findIdentity($id): ?static
     {
         /** @var static|null $identity */
@@ -339,6 +341,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return $identity;
     }
 
+    #[Override]
     public static function findIdentityByAccessToken($token, $type = null): ?static
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
@@ -551,26 +554,31 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return strtoupper(trim($code));
     }
 
+    #[Override]
     public function getAdminRoute(): array
     {
         return $this->id ? ['/admin/user/update', 'id' => $this->id] : ['/admin/user/index'];
     }
 
+    #[Override]
     public function getAdminIndexBreadcrumb(): Breadcrumb
     {
         return new Breadcrumb(Yii::t('skeleton', 'USER_PLURAL'), ['/admin/user/index']);
     }
 
+    #[Override]
     public function getPermissionName(): string
     {
         return self::AUTH_USER;
     }
 
+    #[Override]
     public function getSearchAttributes(): array
     {
         return ['name', 'email'];
     }
 
+    #[Override]
     public function getSearchWeight(): float
     {
         return 0.5;
@@ -585,11 +593,13 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return WebUser::current()?->can(static::AUTH_USER) ?? false;
     }
 
+    #[Override]
     public function getAuthKey(): ?string
     {
         return $this->auth_key;
     }
 
+    #[Override]
     public function getId(): mixed
     {
         return $this->getPrimaryKey();
@@ -650,6 +660,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         ];
     }
 
+    #[Override]
     public function getStatusName(): string
     {
         if ($this->isOwner()) {
@@ -659,6 +670,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return $this->getStatus()?->getName() ?? '';
     }
 
+    #[Override]
     public function getStatusIcon(): string
     {
         return !$this->isOwner() ? ($this->getStatus()?->getIcon() ?? '') : 'star';
@@ -667,6 +679,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     /**
      * No `#[Override]`: the method comes from a trait this class uses itself.
      */
+    #[Override]
     public function isStatusUpdatable(): bool
     {
         $userId = WebUser::current()?->getId();
@@ -676,6 +689,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     /**
      * @return list<string>
      */
+    #[Override]
     public function getTrailAttributes(): array
     {
         return array_values(array_diff($this->attributes(), [
@@ -699,6 +713,7 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         return trim((string)$this->getUsername());
     }
 
+    #[Override]
     public function getAdminType(): string
     {
         return Yii::t('skeleton', 'USER_SINGULAR');

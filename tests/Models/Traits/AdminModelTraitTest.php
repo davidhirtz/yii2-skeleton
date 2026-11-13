@@ -97,11 +97,13 @@ class AdminModelTraitTest extends TestCase
         $model = new class () extends Model implements AdminModelInterface {
             use AdminModelTrait;
 
+            #[Override]
             public function getAdminRoute(): array|false
             {
                 return false;
             }
 
+            #[Override]
             public function getPermissionName(): string
             {
                 return 'test';
@@ -129,11 +131,13 @@ class AdminModelTraitTest extends TestCase
         $model = new class () extends Model implements AdminModelInterface {
             use AdminModelTrait;
 
+            #[Override]
             public function getAdminRoute(): array|false
             {
                 return false;
             }
 
+            #[Override]
             public function getPermissionName(): string
             {
                 return 'test';
@@ -165,11 +169,13 @@ class AdminModelTraitTest extends TestCase
         $model = new class () extends Model implements AdminModelInterface {
             use AdminModelTrait;
 
+            #[Override]
             public function getAdminRoute(): array|false
             {
                 return false;
             }
 
+            #[Override]
             public function getPermissionName(): string
             {
                 return 'test';
@@ -241,11 +247,13 @@ class AdminModelRecord extends ActiveRecord implements
         ];
     }
 
+    #[Override]
     public function getAdminRoute(): array|false
     {
         return $this->id ? ['/admin/test', 'id' => $this->id] : false;
     }
 
+    #[Override]
     public function getPermissionName(): string
     {
         return 'test';

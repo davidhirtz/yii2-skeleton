@@ -131,21 +131,25 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
         }
     }
 
+    #[Override]
     public function getAdminRoute(): array|false
     {
         return $this->id ? ['/admin/redirect/update', 'id' => $this->id] : false;
     }
 
+    #[Override]
     public function getAdminIndexBreadcrumb(): Breadcrumb
     {
         return new Breadcrumb(Yii::t('skeleton', 'REDIRECT_PLURAL'), ['/admin/redirect/index']);
     }
 
+    #[Override]
     public function getPermissionName(): string
     {
         return self::AUTH_REDIRECT;
     }
 
+    #[Override]
     public function getAdminType(): string
     {
         return Yii::t('skeleton', 'REDIRECT_SINGULAR');
@@ -159,6 +163,7 @@ class Redirect extends ActiveRecord implements TrailModelInterface, TypeAttribut
     /**
      * @return list<Type>
      */
+    #[Override]
     public function getTypes(): array
     {
         return [

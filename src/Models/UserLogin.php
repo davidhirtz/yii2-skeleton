@@ -70,6 +70,7 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
     /**
      * @return list<Type>
      */
+    #[Override]
     public function getTypes(): array
     {
         return [

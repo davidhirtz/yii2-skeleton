@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Hirtz\Skeleton\Web\Controller;
+use Override;
 use Stringable;
 use Yii;
 use yii\base\Model;
@@ -128,6 +129,7 @@ class ControllerTest extends TestCase
     {
         $controller = new Controller('test', Yii::$app);
         $controller->success(new class () implements Stringable {
+            #[Override]
             public function __toString(): string
             {
                 return '<a href="/admin">Link</a>';

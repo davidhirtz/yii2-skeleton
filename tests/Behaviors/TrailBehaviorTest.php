@@ -33,7 +33,7 @@ class TrailBehaviorTest extends TestCase
 
     private int $trailId = 0;
 
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -87,7 +87,7 @@ class TrailBehaviorTest extends TestCase
             /**
              * @return list<string>
              */
-            #[\Override]
+            #[Override]
             public function getTrailAttributes(): array
             {
                 return [];
@@ -167,7 +167,7 @@ class TrailBehaviorTest extends TestCase
     public function testFailedInsertTrail(): void
     {
         $model = new class () extends TrailActiveRecord {
-            #[\Override]
+            #[Override]
             public function behaviors(): array
             {
                 return [
@@ -198,7 +198,7 @@ class TrailBehaviorTest extends TestCase
         self::assertFalse($model->getAdminRoute());
 
         $model = new class () extends TrailActiveRecord {
-            #[\Override]
+            #[Override]
             public function getAdminRoute(): array
             {
                 return ['/admin/test'];
@@ -306,11 +306,13 @@ class TrailBehaviorTest extends TestCase
             use AdminModelTrait;
             use TrailModelTrait;
 
+            #[Override]
             public function getAdminRoute(): array|false
             {
                 return false;
             }
 
+            #[Override]
             public function getPermissionName(): string
             {
                 return 'test';
@@ -318,7 +320,7 @@ class TrailBehaviorTest extends TestCase
 
             public ?int $value = null;
 
-            #[\Override]
+            #[Override]
             public function behaviors(): array
             {
                 return [
@@ -326,7 +328,7 @@ class TrailBehaviorTest extends TestCase
                 ];
             }
 
-            #[\Override]
+            #[Override]
             public function rules(): array
             {
                 return [
@@ -385,11 +387,13 @@ class TrailActiveRecord extends ActiveRecord implements TrailModelInterface
     use AdminModelTrait;
     use TrailModelTrait;
 
+    #[Override]
     public function getAdminRoute(): array|false
     {
         return false;
     }
 
+    #[Override]
     public function getPermissionName(): string
     {
         return 'test';
@@ -481,7 +485,7 @@ class TrailBehaviorMock extends TrailBehavior
             /**
              * @param array<string, mixed> $attributes
              */
-            #[\Override]
+            #[Override]
             public function insert($runValidation = true, $attributes = null): bool
             {
                 throw new Exception("Mocked error message");

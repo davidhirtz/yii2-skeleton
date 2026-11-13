@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Html\Base;
 use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Html\Traits\TagIdTrait;
+use Override;
 use Stringable;
 
 abstract class AbstractTag implements Stringable
@@ -43,6 +44,7 @@ abstract class AbstractTag implements Stringable
         return new static();
     }
 
+    #[Override]
     final public function __toString(): string
     {
         return $this->render();
