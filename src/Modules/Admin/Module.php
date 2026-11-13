@@ -98,6 +98,11 @@ class Module extends \Hirtz\Skeleton\Base\Module
 
     public int|false $consentLifetime = false;
 
+    /**
+     * @var array<int|string, mixed>|string|null
+     */
+    public array|string|null $privacyUrl = null;
+
     public $defaultRoute = 'dashboard';
     public $layout = 'main';
 

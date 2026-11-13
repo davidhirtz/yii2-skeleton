@@ -90,6 +90,7 @@ answer `null` there instead.
 | `translationLayout` | `inline` | translated fields side by side (`inline`) or one language at a time (`tabs`) |
 | `trailLifetime`, `userLoginLifetime`, `consentLifetime` | `false` | seconds `trail/clear`, `user-login/clear` and `consent/clear` keep rows for |
 | `enableConsentLog` | `true` | the cookie consent log: `POST application-consent` and its list under "System" |
+| `privacyUrl` | `null` | the privacy policy linked from the cookie and login notice under the login and signup forms (URL or route) |
 
 The consent log takes `id` (a UUID the banner keeps in its cookie), `version` and `categories` (comma-separated) from the
 frontend's banner and stores them with a timestamp, no IP address. It answers `204`, `400` for an invalid decision and

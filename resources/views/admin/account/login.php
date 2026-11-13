@@ -52,5 +52,6 @@ echo Container::make()
                 ->label(Yii::t('skeleton', 'PASSWORD_RECOVER_BUTTON'))
                 ->icon('key')
                 ->url(['recover'])
-                ->visible(Application::current()->getUser()->isPasswordResetEnabled()))
+                ->visible(Application::current()->getUser()->isPasswordResetEnabled())),
+        $this->render('_privacy')
     );

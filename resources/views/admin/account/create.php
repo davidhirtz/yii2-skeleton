@@ -36,5 +36,6 @@ echo Container::make()
             ->addItem(StackItem::make()
                 ->label(Yii::t('skeleton', 'LOGIN_BACK_BUTTON'))
                 ->url(['login'])
-                ->icon('sign-in-alt'))
+                ->icon('sign-in-alt')),
+        $this->render('_privacy')
     );

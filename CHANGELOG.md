@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added a cookie and login notice under the login and signup forms, linking `Modules\Admin\Module::$privacyUrl` when set
+
 ## 3.28.0 (November 12, 2026)
 
 - Added `Filters\SameOriginFilter`, a token-free CSRF check for forms on cached pages
