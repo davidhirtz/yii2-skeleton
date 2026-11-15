@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Strong;
 use Hirtz\Skeleton\Html\Button;
 use Hirtz\Skeleton\Html\Checkbox;
 use Hirtz\Skeleton\Html\Div;
@@ -41,13 +42,13 @@ echo Container::make()
         ->title($this->title)
         ->content(
             P::make()->content(Yii::t('skeleton', 'GRANT_AUTHORIZE_TEXT', [
-                'client' => Html::tag('strong', Html::encode($client)),
+                'client' => Strong::make()->text($client)->render(),
                 'host' => Html::encode($request->client->getHost()),
                 'site' => Html::encode(Yii::$app->name),
                 'user' => Html::encode($user->getUsername()),
             ])),
             P::make()->content(Yii::t('skeleton', 'GRANT_AUTHORIZE_REDIRECT_TEXT', [
-                'host' => Html::tag('strong', Html::encode($redirectHost)),
+                'host' => Strong::make()->text($redirectHost)->render(),
             ])),
             RedirectUri::isLoopback($request->redirectUri)
                 ? Alert::make()

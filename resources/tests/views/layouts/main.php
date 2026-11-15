@@ -8,7 +8,7 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Web\View;
-use yii\helpers\Html;
+use Hirtz\Skeleton\Helpers\Html;
 
 ?>
 <?php $this->beginPage() ?>

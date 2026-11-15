@@ -9,7 +9,7 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Models\User;
-use yii\helpers\Html;
+use Hirtz\Skeleton\Helpers\Html;
 use yii\mail\MessageInterface;
 use yii\web\View;
 

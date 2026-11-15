@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Grids;
 
-use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Mark;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Span;
@@ -96,7 +96,7 @@ class AuthItemGridView extends GridView
             $label = $child->getLabel();
             $isActive = $this->user && !$authItem->isAssigned && ($child->isAssigned || $child->isInherited);
 
-            $items[] = $isActive ? Html::tag('mark', $label) : $label;
+            $items[] = $isActive ? Mark::make()->content($label)->render() : $label;
         }
 
         return Ul::make()->items(...array_filter($items));

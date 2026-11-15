@@ -38,5 +38,6 @@ echo Container::make()
                 ->emptyText($query !== ''
                     ? Yii::t('skeleton', 'SEARCH_EMPTY')
                     : Yii::t('skeleton', 'SEARCH_PLACEHOLDER'))),
-        LinkPager::widget(['pagination' => $pagination]),
+        LinkPager::make()
+            ->pagination($pagination),
     );

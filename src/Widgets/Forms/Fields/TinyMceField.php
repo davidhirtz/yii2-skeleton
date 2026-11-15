@@ -7,7 +7,7 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Assets\TinyMceAssetBundle;
 use Hirtz\Skeleton\Assets\TinyMceLanguageAssetBundle;
-use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Custom\TinyMceEditor;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Textarea;
 use Hirtz\Skeleton\Html\Traits\TagInputTrait;
@@ -222,15 +222,12 @@ class TinyMceField extends Field
 
     protected function getInput(): string|Stringable
     {
-        $content = Textarea::make()
-            ->attributes($this->attributes)
-            ->addStyle(['height' => "{$this->height}px"])
-            ->value($this->value)
-            ->render();
-
-        return Html::tag('tinymce-editor', $content, [
-            'data-config' => $this->clientOptions,
-        ]);
+        return TinyMceEditor::make()
+            ->attribute('data-config', $this->clientOptions)
+            ->content(Textarea::make()
+                ->attributes($this->attributes)
+                ->addStyle(['height' => "{$this->height}px"])
+                ->value($this->value));
     }
 
     protected function setDefaultOptions(): void

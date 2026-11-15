@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Widgets\Forms\Fields;
 
 use Hirtz\Skeleton\Assets\CustomAttributesAssetBundle;
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Template;
 use Hirtz\Skeleton\Html\Base\Tag;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Input;
@@ -406,7 +407,10 @@ class GroupField extends Field
         // script writes once it knows where the row landed, and it is never the only row there is.
         $content = (string)$this->getItem($item, $control, self::POSITION_PLACEHOLDER, true, true);
 
-        return Html::tag('template', $content, ['data-group-template' => true]);
+        return Template::make()
+            ->attribute('data-group-template', true)
+            ->content($content)
+            ->render();
     }
 
     protected function getFooter(int $count): Stringable

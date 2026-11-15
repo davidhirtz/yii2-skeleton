@@ -17,9 +17,9 @@ class LinkPagerTest extends TestCase
 {
     public function testThePagerSwapsTheWrapItself(): void
     {
-        $html = LinkPager::widget([
-            'pagination' => new Pagination(['totalCount' => 100, 'pageSize' => 10, 'route' => 'admin/user/index']),
-        ]);
+        $html = LinkPager::make()
+            ->pagination(new Pagination(['totalCount' => 100, 'pageSize' => 10, 'route' => 'admin/user/index']))
+            ->render();
 
         self::assertStringContainsString('hx-swap:inherited="outerHTML scroll:top"', $html);
     }

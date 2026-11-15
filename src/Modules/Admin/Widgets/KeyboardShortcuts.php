@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets;
 
-use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Kbd;
+use Hirtz\Skeleton\Html\Table;
+use Hirtz\Skeleton\Html\Tbody;
+use Hirtz\Skeleton\Html\Template;
+use Hirtz\Skeleton\Html\Tr;
+use Hirtz\Skeleton\Html\Th;
+use Hirtz\Skeleton\Html\Td;
 use Hirtz\Skeleton\Widgets\Widget;
 use Override;
 use Stringable;
@@ -22,7 +28,7 @@ class KeyboardShortcuts extends Widget
     {
         $letters = $this->webuser->getIdentity()?->usesKeyboardShortcuts() ?? false;
 
-        $modifier = fn (string $key): string => Html::tag('kbd', 'Ctrl', ['data-modifier' => true]) . ' ' . $this->key($key);
+        $modifier = fn (string $key): string => Kbd::make()->attribute('data-modifier', true)->content('Ctrl') . ' ' . $this->key($key);
 
         $rows = [
             [$modifier('S'), Yii::t('skeleton', 'SHORTCUT_SAVE_TEXT')],
@@ -40,17 +46,21 @@ class KeyboardShortcuts extends Widget
             ];
         }
 
-        $content = implode('', array_map(
-            fn (array $row): string => Html::tag('tr', Html::tag('th', $row[0]) . Html::tag('td', Html::encode($row[1]))),
+        $body = Tbody::make()->rows(...array_map(
+            fn (array $row): Tr => Tr::make()->cells(Th::make()->content($row[0]), Td::make()->text($row[1])),
             $rows,
         ));
 
-        return Html::tag('template', Html::tag('table', $content, ['class' => 'shortcut-list']), [
-            'id' => self::ID,
-            'data-letters' => $letters ? '1' : '0',
-            'data-title' => Yii::t('skeleton', 'SHORTCUT_LIST_TITLE'),
-            'data-close-label' => Yii::t('skeleton', 'MODAL_CLOSE_LABEL'),
-        ]);
+        return Template::make()
+            ->attributes([
+                'id' => self::ID,
+                'data-letters' => $letters ? '1' : '0',
+                'data-title' => Yii::t('skeleton', 'SHORTCUT_LIST_TITLE'),
+                'data-close-label' => Yii::t('skeleton', 'MODAL_CLOSE_LABEL'),
+            ])
+            ->content(Table::make()
+                ->class('shortcut-list')
+                ->body($body));
     }
 
     #[Override]
@@ -61,6 +71,6 @@ class KeyboardShortcuts extends Widget
 
     private function key(string $key): string
     {
-        return Html::tag('kbd', Html::encode($key));
+        return Kbd::make()->text($key)->render();
     }
 }

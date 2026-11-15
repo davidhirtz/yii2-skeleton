@@ -4,173 +4,184 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets\Grids\Pagers;
 
-use Hirtz\Skeleton\Helpers\ArrayHelper;
-use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\A;
+use Hirtz\Skeleton\Html\Li;
+use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
+use Hirtz\Skeleton\Html\Ul;
+use Hirtz\Skeleton\Widgets\Widget;
+use Override;
+use Stringable;
+use yii\data\Pagination;
 
-class LinkPager extends \yii\widgets\LinkPager
+class LinkPager extends Widget
 {
-    /**
-     * @var array<string, mixed>
-     */
-    public array $pageOptions = [];
-    public string $linkCssClass = 'page-link';
-    public bool $renderDisabledLink = true;
+    use TagAttributesTrait;
 
-    public $maxButtonCount = 5;
-    public $pageCssClass = 'page-item';
-    public $firstPageLabel = true;
-    public $lastPageLabel = true;
+    protected Pagination $pagination;
+    protected int $maxButtonCount = 5;
+    protected bool $hideOnSinglePage = true;
+    protected bool $showFirstAndLastPage = true;
+    protected ?string $prevPageLabel = '&laquo;';
+    protected ?string $nextPageLabel = '&raquo;';
+
+    public function pagination(Pagination $pagination): static
+    {
+        $this->pagination = $pagination;
+        return $this;
+    }
+
+    public function maxButtonCount(int $maxButtonCount): static
+    {
+        $this->maxButtonCount = $maxButtonCount;
+        return $this;
+    }
+
+    public function hideOnSinglePage(bool $hideOnSinglePage = true): static
+    {
+        $this->hideOnSinglePage = $hideOnSinglePage;
+        return $this;
+    }
+
+    public function showFirstAndLastPage(bool $showFirstAndLastPage = true): static
+    {
+        $this->showFirstAndLastPage = $showFirstAndLastPage;
+        return $this;
+    }
 
     /**
-     * @var array<string, mixed>
+     * The labels are HTML, `null` hides the button.
      */
-    public $options = [
-        'class' => 'pagination',
+    public function prevAndNextPageLabels(?string $prevPageLabel, ?string $nextPageLabel): static
+    {
+        $this->prevPageLabel = $prevPageLabel;
+        $this->nextPageLabel = $nextPageLabel;
+
+        return $this;
+    }
+
+    #[Override]
+    protected function configure(): void
+    {
+        $this->addClass('pagination');
+
         // `:inherited`: these sit on the pagination list, its links are what issue the request. A swap without a
         // style falls back to `innerHTML`, which nests the response's `#wrap` inside the page's.
-        'hx-boost:inherited' => 'true',
-        'hx-swap:inherited' => 'outerHTML scroll:top',
-    ];
+        $this->attributes['hx-boost:inherited'] ??= 'true';
+        $this->attributes['hx-swap:inherited'] ??= 'outerHTML scroll:top';
 
-    #[\Override]
-    public function init(): void
-    {
-        if ($this->pageCssClass) {
-            Html::addCssClass($this->pageOptions, $this->pageCssClass);
-        }
-
-        if ($this->linkCssClass) {
-            Html::addCssClass($this->linkOptions, $this->linkCssClass);
-        }
-
-        parent::init();
+        parent::configure();
     }
 
-    #[\Override]
-    protected function renderPageButtons(): string
+    #[Override]
+    public function isVisible(): bool
     {
-        if ($this->pagination->getPageCount() > 1 || !$this->hideOnSinglePage) {
-            $currentPage = $this->pagination->getPage();
-            $lastPage = $this->pagination->getPageCount() - 1;
-            [$beginPage, $endPage] = $this->getPageRange();
+        return (!$this->hideOnSinglePage || $this->pagination->getPageCount() > 1) && parent::isVisible();
+    }
 
-            $buttons = [];
-            $buttons[] = $this->renderPrevPageButton();
+    #[Override]
+    protected function renderContent(): string|Stringable
+    {
+        $currentPage = $this->pagination->getPage();
+        $lastPage = $this->pagination->getPageCount() - 1;
+        [$beginPage, $endPage] = $this->getPageRange();
 
-            if ($beginPage > 0) {
-                $buttons[] = $this->renderFirstPageButton();
-                $buttons[] = $this->renderRangeButton(0, $beginPage);
-            }
+        $items = [$this->getPrevPageItem()];
 
-            for ($i = $beginPage; $i <= $endPage; ++$i) {
-                $buttons[] = $this->renderPageButton((string)($i + 1), $i, '', false, $i === $currentPage);
-            }
-
-            if ($endPage < $lastPage) {
-                $buttons[] = $this->renderRangeButton($endPage, $lastPage);
-                $buttons[] = $this->renderLastPageButton();
-            }
-
-            $buttons[] = $this->renderNextPageButton();
-
-            return Html::tag('ul', implode('', $buttons), $this->options);
+        if ($beginPage > 0) {
+            $items[] = $this->getFirstPageItem();
+            $items[] = $this->getRangeItem(0, $beginPage);
         }
 
-        return '';
+        for ($i = $beginPage; $i <= $endPage; ++$i) {
+            $items[] = $this->getPageItem((string)($i + 1), $i, active: $i === $currentPage);
+        }
+
+        if ($endPage < $lastPage) {
+            $items[] = $this->getRangeItem($endPage, $lastPage);
+            $items[] = $this->getLastPageItem();
+        }
+
+        $items[] = $this->getNextPageItem();
+
+        return Ul::make()
+            ->attributes($this->attributes)
+            ->content(...$items);
+    }
+
+    protected function getPageItem(string $label, int $page, ?string $class = null, bool $disabled = false, bool $active = false): Li
+    {
+        return Li::make()
+            ->class('page-item', $class, $active ? 'active' : null, $disabled ? 'disabled' : null)
+            ->content(A::make()
+                ->class('page-link')
+                ->href($this->pagination->createUrl($page))
+                ->content($label));
+    }
+
+    protected function getFirstPageItem(): ?Li
+    {
+        return $this->showFirstAndLastPage && $this->pagination->getPage() > 0
+            ? $this->getPageItem('1', 0, 'first')
+            : null;
+    }
+
+    protected function getLastPageItem(): ?Li
+    {
+        $pageCount = $this->pagination->getPageCount();
+
+        return $this->showFirstAndLastPage
+            ? $this->getPageItem((string)$pageCount, $pageCount - 1, 'last', $this->pagination->getPage() >= $pageCount - 1)
+            : null;
+    }
+
+    protected function getPrevPageItem(): ?Li
+    {
+        if ($this->prevPageLabel === null) {
+            return null;
+        }
+
+        $currentPage = $this->pagination->getPage();
+
+        return $this->getPageItem($this->prevPageLabel, max(0, $currentPage - 1), 'prev', $currentPage <= 0);
+    }
+
+    protected function getNextPageItem(): ?Li
+    {
+        if ($this->nextPageLabel === null) {
+            return null;
+        }
+
+        $currentPage = $this->pagination->getPage();
+        $lastPage = $this->pagination->getPageCount() - 1;
+
+        return $this->getPageItem($this->nextPageLabel, min($lastPage, $currentPage + 1), 'next', $currentPage >= $lastPage);
+    }
+
+    protected function getRangeItem(int $start, int $stop): ?Li
+    {
+        if ($start >= $stop - 1) {
+            return null;
+        }
+
+        $ellipsis = $start < $stop - 2;
+
+        return $this->getPageItem($ellipsis ? '...' : (string)($start + 2), $start + 1, disabled: $ellipsis);
     }
 
     /**
-     * @param int|string $label
+     * @return array{int, int}
      */
-    #[\Override]
-    protected function renderPageButton($label, $page, $class, $disabled, $active): string
-    {
-        $label = (string)$label;
-        $options = $this->pageOptions;
-        $tag = ArrayHelper::remove($options, 'tag', 'li');
-
-        if ($class) {
-            Html::addCssClass($options, $class);
-        }
-
-        if ($active) {
-            Html::addCssClass($options, $this->activePageCssClass);
-        }
-
-        if ($disabled) {
-            Html::addCssClass($options, $this->disabledPageCssClass);
-
-            if (!$this->renderDisabledLink) {
-                return Html::tag($tag, Html::tag('span', $label), $options);
-            }
-        }
-
-        $linkOptions = $this->linkOptions;
-
-        return Html::tag($tag, Html::a($label, $this->pagination->createUrl($page), $linkOptions), $options);
-    }
-
-    public function renderFirstPageButton(): string
-    {
-        $label = $this->firstPageLabel === true ? '1' : $this->firstPageLabel;
-
-        return ($label !== false && $this->pagination->getPage() > 0)
-            ? $this->renderPageButton($label, 0, $this->firstPageCssClass, false, false)
-            : '';
-    }
-
-    public function renderLastPageButton(): string
+    protected function getPageRange(): array
     {
         $pageCount = $this->pagination->getPageCount();
-        $label = $this->lastPageLabel === true ? $pageCount : $this->lastPageLabel;
+        $beginPage = max(0, $this->pagination->getPage() - intdiv($this->maxButtonCount, 2));
+        $endPage = $beginPage + $this->maxButtonCount - 1;
 
-        return $label !== false
-            ? $this->renderPageButton($label, $pageCount - 1, $this->lastPageCssClass, $this->pagination->getPage() >= $pageCount - 1, false)
-            : '';
-    }
-
-    public function renderPrevPageButton(string|false|null $label = null, ?string $cssClass = null): string
-    {
-        $label ??= $this->prevPageLabel;
-
-        if (!is_string($label)) {
-            return '';
+        if ($endPage >= $pageCount) {
+            $endPage = $pageCount - 1;
+            $beginPage = max(0, $endPage - $this->maxButtonCount + 1);
         }
 
-        $currentPage = $this->pagination->getPage();
-
-        if (($page = $currentPage - 1) < 0) {
-            $page = 0;
-        }
-
-        return $this->renderPageButton($label, $page, $cssClass ?: $this->prevPageCssClass, $currentPage <= 0, false);
-    }
-
-    public function renderNextPageButton(string|false|null $label = null, ?string $cssClass = null): string
-    {
-        $label ??= $this->nextPageLabel;
-
-        if (!is_string($label)) {
-            return '';
-        }
-
-        $currentPage = $this->pagination->getPage();
-        $pageCount = $this->pagination->getPageCount();
-
-        if (($page = $currentPage + 1) >= $pageCount - 1) {
-            $page = $pageCount - 1;
-        }
-
-        return $this->renderPageButton($label, $page, $cssClass ?: $this->nextPageCssClass, $currentPage >= $pageCount - 1, false);
-    }
-
-    public function renderRangeButton(int $start, int $stop): string
-    {
-        if ($start < $stop - 1) {
-            $ellipsis = $start < $stop - 2;
-            return $this->renderPageButton($ellipsis ? '...' : $start + 2, $start + 1, '', $ellipsis, false);
-        }
-
-        return '';
+        return [$beginPage, $endPage];
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits;
 
-use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Kbd;
 use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Models\Statuses\Status;
 use Hirtz\Skeleton\Modules\ModuleTrait;
@@ -119,7 +119,7 @@ trait UserActiveFormTrait
             ->model($this->model->user)
             ->property('keyboard_shortcuts')
             ->hint(Span::make()->content(Yii::t('skeleton', 'USER_KEYBOARD_SHORTCUTS_HINT', [
-                'key' => Html::tag('kbd', '?'),
+                'key' => Kbd::make()->content('?'),
             ])))
             ->uncheckedValue('0');
     }

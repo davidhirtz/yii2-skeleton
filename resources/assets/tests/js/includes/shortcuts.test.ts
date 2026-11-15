@@ -19,7 +19,7 @@ describe('shortcuts', () => {
         document.body.innerHTML = `
             <aside class="aside">${link('Einträge', '/entries')}${link('Entwürfe', '/drafts')}${link('Ålesund', '/a')}</aside>
             <div id="wrap">
-                <template id="keyboard-shortcuts" data-letters="1" data-title="Keyboard shortcuts" data-close-label="Close"><table><tr><th><kbd data-modifier>Ctrl</kbd> S</th></tr></table></template>
+                <template id="keyboard-shortcuts" data-letters="1" data-title="Keyboard shortcuts" data-close-label="Close"><table><tbody><tr><th><kbd data-modifier>Ctrl</kbd> S</th></tr></tbody></table></template>
                 <div class="header"><button class="btn" data-shortcut="v">View</button><div class="dropdown-actions"><button class="btn" popovertarget="menu">…</button><div id="menu" popover><button class="btn">Delete</button></div></div></div>
                 <ul class="tabs">${link('Page', '/page')}${link('Sections', '/sections', 'data-shortcut="x"')}</ul>
                 <form class="form" method="get"><button type="submit">Filter</button></form>

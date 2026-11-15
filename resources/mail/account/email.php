@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Models\Forms\AccountCredentialsForm;
-use yii\helpers\Html;
+use Hirtz\Skeleton\Helpers\Html;
 use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_EMAIL_TITLE');

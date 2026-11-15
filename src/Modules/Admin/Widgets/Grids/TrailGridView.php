@@ -9,6 +9,8 @@ use Hirtz\Skeleton\Modules\Admin\Controllers\TrailController;
 use Hirtz\Skeleton\Models\Actions\RestoreTrail;
 use Hirtz\Skeleton\Db\ActiveRecord;
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Del;
+use Hirtz\Skeleton\Html\Ins;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Div;
@@ -141,10 +143,9 @@ class TrailGridView extends GridView
     protected function getAuthPermissionContent(Trail $trail): string
     {
         $params = [
-            'permission' => Html::tag(
-                $trail->isAuthPermissionAssignType() ? 'ins' : 'del',
-                $this->getAuthItemLabel($trail)
-            ),
+            'permission' => ($trail->isAuthPermissionAssignType() ? Ins::make() : Del::make())
+                ->content($this->getAuthItemLabel($trail))
+                ->render(),
         ];
 
         return $trail->isAuthPermissionAssignType() ? Yii::t('skeleton', 'TRAIL_ASSIGN_TEXT', $params) :
@@ -466,7 +467,7 @@ class TrailGridView extends GridView
         if ($trailId = ($trail->data['trail_id'] ?? false)) {
             $isOnPage = in_array((int)$trailId, array_map(fn (Trail $model): int => $model->id, $this->provider->getModels()), true);
             $link = $isOnPage ? Url::current(['#' => 'trail-' . $trailId]) : ['/admin/trail/index', 'id' => $trailId];
-            return Html::a('(#' . $trailId . ')', $link);
+            return A::make()->content('(#' . $trailId . ')')->href($link)->render();
         }
 
         return '';

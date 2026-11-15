@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Widgets;
 
-use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Custom\FlashAlert;
+use Hirtz\Skeleton\Html\Details;
+use Hirtz\Skeleton\Html\Summary;
+use Hirtz\Skeleton\Html\Template;
+use Hirtz\Skeleton\Html\Ul;
+use Hirtz\Skeleton\Html\Span;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Buttons\Button;
@@ -51,9 +56,10 @@ class Flashes extends Widget
      */
     protected function renderErrorTemplate(): string
     {
-        return Html::tag('template', (string)$this->getAlerts('danger', ''), [
-            'id' => 'error-flash',
-        ]);
+        return Template::make()
+            ->attribute('id', 'error-flash')
+            ->content($this->getAlerts('danger', ''))
+            ->render();
     }
 
     /**
@@ -62,9 +68,10 @@ class Flashes extends Widget
      */
     protected function renderNetworkErrorTemplate(): string
     {
-        return Html::tag('template', (string)$this->getAlerts('danger', Yii::t('skeleton', 'FLASH_NETWORK_ERROR')), [
-            'id' => 'network-error-flash',
-        ]);
+        return Template::make()
+            ->attribute('id', 'network-error-flash')
+            ->content($this->getAlerts('danger', Yii::t('skeleton', 'FLASH_NETWORK_ERROR')))
+            ->render();
     }
 
     /**
@@ -83,12 +90,15 @@ class Flashes extends Widget
             : [];
 
         if ($folded) {
-            $alerts[] = Html::tag('details', Html::tag('summary', Yii::t('skeleton', 'FLASH_MORE_TEXT', [
-                'count' => count($folded),
-            ])) . Html::tag('ul', implode('', array_map(fn (string $message): string => Html::tag('li', $message), $folded))));
+            $alerts[] = Details::make()
+                ->content(
+                    Summary::make()->content(Yii::t('skeleton', 'FLASH_MORE_TEXT', ['count' => count($folded)])),
+                    Ul::make()->items(...$folded),
+                )
+                ->render();
         }
 
-        return implode('', array_map(fn (string $message): string => Html::tag('flash-alert', (string)$this->renderAlert($status, $message)), $alerts));
+        return implode('', array_map(fn (string $message): string => FlashAlert::make()->content($this->renderAlert($status, $message))->render(), $alerts));
     }
 
     /**
@@ -114,7 +124,7 @@ class Flashes extends Widget
 
     protected function renderMessage(string $message, int $count): string
     {
-        return $count > 1 ? $message . ' ' . Html::tag('span', (string)$count, ['class' => 'alert-count']) : $message;
+        return $count > 1 ? $message . ' ' . Span::make()->class('alert-count')->content((string)$count) : $message;
     }
 
     protected function renderAlert(string $status, string $message): string|Stringable

@@ -504,12 +504,10 @@ class GridView extends Widget
             return '';
         }
 
-        $class = ArrayHelper::remove($this->pagerOptions, 'class', LinkPager::class);
+        $options = $this->pagerOptions;
+        $class = ArrayHelper::remove($options, 'class', LinkPager::class);
 
-        return $class::widget([
-            'pagination' => $pagination,
-            'view' => Yii::$app->getView(),
-        ]);
+        return $class::make([...$options, 'pagination' => $pagination])->render();
     }
 
     protected function getFooter(): ?GridFooter

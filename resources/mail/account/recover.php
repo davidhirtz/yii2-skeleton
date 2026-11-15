@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @var string $url
  */
 
-use yii\helpers\Html;
+use Hirtz\Skeleton\Helpers\Html;
 use yii\mail\MessageInterface;
 
 $this->title = Yii::t('skeleton', 'MAIL_ACCOUNT_RECOVER_TITLE');

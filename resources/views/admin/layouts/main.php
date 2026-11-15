@@ -18,7 +18,7 @@ use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Flashes;
 use Hirtz\Skeleton\Widgets\Navs\Breadcrumbs;
-use yii\helpers\Html;
+use Hirtz\Skeleton\Helpers\Html;
 
 AdminAssetBundle::register($this);
 

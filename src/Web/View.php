@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
-use Hirtz\Skeleton\Helpers\Html;
 use Hirtz\Skeleton\Helpers\StructuredData;
 use Hirtz\Skeleton\Html\Script;
 use Hirtz\Skeleton\Widgets\Traits\BreadcrumbTrait;
@@ -127,7 +126,10 @@ class View extends \yii\web\View
      */
     public function renderScript(string $js, array $options = []): string
     {
-        return Html::script($js, [...$options, 'nonce' => $this->nonce]);
+        return Script::make()
+            ->content($js)
+            ->attributes([...$this->scriptOptions, ...$options, 'nonce' => $this->nonce])
+            ->render();
     }
 
     /**

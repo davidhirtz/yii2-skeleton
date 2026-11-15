@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @var string $content
  */
 
-use yii\helpers\Html;
+use Hirtz\Skeleton\Helpers\Html;
 
 ?>
 <?php $this->beginPage() ?>

@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Changed `Widgets\Grids\Pagers\LinkPager` to a skeleton widget configured by setters (`LinkPager::make()->pagination()`)
+- Added the tag classes `Html\Del`, `Details`, `Ins`, `Kbd`, `Mark`, `Strong`, `Summary`, `Template`, `Custom\FlashAlert` and `Custom\TinyMceEditor`
 - Added a cookie and login notice under the login and signup forms, linking `Modules\Admin\Module::$privacyUrl` when set
 
 ## 3.28.0 (November 12, 2026)

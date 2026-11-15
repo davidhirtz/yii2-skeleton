@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Widgets\Forms;
 
 use Closure;
 use Hirtz\Skeleton\Helpers\Html;
+use Hirtz\Skeleton\Html\Input;
 use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\Div;
 use Hirtz\Skeleton\Html\Form;
@@ -325,7 +326,11 @@ class ActiveForm extends Widget
         $loaded = $this->model->getLoadedVersion();
         $value = $loaded !== null && !$this->model->hasErrors('loadedAt') ? $loaded : $this->model->getStaleSaveVersion();
 
-        return Html::hiddenInput(Html::getInputName($this->model, 'loadedVersion'), (string)$value);
+        return Input::make()
+            ->type('hidden')
+            ->name(Html::getInputName($this->model, 'loadedVersion'))
+            ->value((string)$value)
+            ->render();
     }
 
     /** Driven by `includes/translationLayout.ts`; the rows it hides carry `data-language` ({@see Fieldset}). */

@@ -13,7 +13,7 @@ use Hirtz\Skeleton\Assets\AdminAssetBundle;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\View;
 use yii\base\UserException;
-use yii\helpers\Html;
+use Hirtz\Skeleton\Helpers\Html;
 use yii\web\ErrorHandler;
 
 $code = $exception instanceof \yii\web\HttpException
