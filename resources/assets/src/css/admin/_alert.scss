@@ -77,6 +77,10 @@
     }
   }
 
+  .card-body > &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
   .dismissed & {
     opacity: 0;
     translate: 100%;
