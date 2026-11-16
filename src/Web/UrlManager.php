@@ -51,6 +51,7 @@ class UrlManager extends \yii\web\UrlManager
     public $showScriptName = false;
 
     private ?string $configuredHostInfo = null;
+    private ?string $contentLanguage = null;
     private bool $isBaseUrlConfigured = false;
     private bool $isHostInfoFromRequest = false;
     private bool $isInitialized = false;
@@ -103,12 +104,18 @@ class UrlManager extends \yii\web\UrlManager
     public function createUrl($params): string
     {
         $request = Request::current();
-        $language = Yii::$app->language;
+        $language = $this->contentLanguage ?? Yii::$app->language;
 
         $params = (array)$params;
 
+        // An admin URL is the same in every language: `language` stays a query parameter there.
+        $isAdminRoute = $this->isAdminRoute(is_string($params[0] ?? null) ? $params[0] : '');
+
         if ($this->i18nUrl) {
-            $language = ArrayHelper::remove($params, $request->languageParam ?? 'language', $language);
+            if (!$isAdminRoute) {
+                $language = ArrayHelper::remove($params, $request->languageParam ?? 'language', $language);
+            }
+
             $defaultLanguage = ArrayHelper::remove($params, 'defaultLanguage');
         }
 
@@ -121,7 +128,7 @@ class UrlManager extends \yii\web\UrlManager
             $url = $event->url;
         }
 
-        if (!$language) {
+        if (!$language || $isAdminRoute) {
             return $url;
         }
 
@@ -133,6 +140,41 @@ class UrlManager extends \yii\web\UrlManager
         }
 
         return $url;
+    }
+
+    /**
+     * `null` follows the application language, as on the frontend; the admin sets the one its links to the site use.
+     */
+    public function getContentLanguage(): ?string
+    {
+        return $this->contentLanguage;
+    }
+
+    public function setContentLanguage(?string $language): void
+    {
+        $this->contentLanguage = $language;
+    }
+
+    /**
+     * Keys the admin's content language per site.
+     */
+    public function getContentLanguageScope(): string
+    {
+        return '';
+    }
+
+    public function isAdminRoute(string $route): bool
+    {
+        $route = trim($route, '/');
+        return $route === 'admin' || str_starts_with($route, 'admin/');
+    }
+
+    protected function isAdminPath(string $pathInfo): bool
+    {
+        $alias = Yii::$app->getAdminAlias();
+        $pathInfo = trim($pathInfo, '/');
+
+        return $pathInfo === $alias || str_starts_with($pathInfo, "$alias/");
     }
 
     /**
@@ -321,7 +363,7 @@ class UrlManager extends \yii\web\UrlManager
             if ($language !== false) {
                 $request->setPathInfo(ltrim(mb_substr($pathInfo, mb_strlen($code)), '/'));
 
-                if ($language === $this->defaultLanguage) {
+                if ($language === $this->defaultLanguage || $this->isAdminPath($request->getPathInfo())) {
                     throw new UrlNormalizerRedirectException($this->getUrlWithoutLanguage($request, $originalPathInfo, $code), 301);
                 }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\I18n;
 
+use Hirtz\Skeleton\Web\UrlManager;
 use Override;
 use Yii;
 use yii\i18n\PhpMessageSource;
@@ -50,15 +51,27 @@ class I18N extends \yii\i18n\I18N
         parent::init();
     }
 
+    /**
+     * Also switches the URL manager's content language, which the admin sets apart from the application's.
+     *
+     * @template T
+     * @param callable(string): T $callback
+     * @return T
+     */
     public function callback(string $language, callable $callback): mixed
     {
+        $manager = $this->getUrlManager();
         $original = Yii::$app->language;
+        $contentLanguage = $manager->getContentLanguage();
+
         Yii::$app->language = $language;
+        $manager->setContentLanguage($contentLanguage !== null ? $language : null);
 
         try {
             return $callback($language);
         } finally {
             Yii::$app->language = $original;
+            $manager->setContentLanguage($contentLanguage);
         }
     }
 
@@ -98,11 +111,12 @@ class I18N extends \yii\i18n\I18N
     }
 
     /**
-     * The admin can be in a language the content is not kept in, which then reads the source language.
+     * The URL manager's content language, the application's on the frontend. The admin can be in a language the
+     * content is not kept in, which then reads the source language.
      */
     public function getContentLanguage(?string $language = null): string
     {
-        $language ??= (string)Yii::$app->language;
+        $language ??= $this->getUrlManager()->getContentLanguage() ?? (string)Yii::$app->language;
         return in_array($language, $this->getLanguages(), true) ? $language : (string)Yii::$app->sourceLanguage;
     }
 
@@ -135,5 +149,10 @@ class I18N extends \yii\i18n\I18N
     public function getTableName(string $tableName, ?string $language = null): string
     {
         return '{{%' . $this->getAttributeName($tableName, $language) . '}}';
+    }
+
+    private function getUrlManager(): UrlManager
+    {
+        return Yii::$app->getUrlManager();
     }
 }

@@ -115,18 +115,18 @@ class AdminLanguageTest extends TestCase
 
     public function testThePickedLanguageOutlivesTheRequestThatSetIt(): void
     {
-        $this->login();
+        $this->open('admin/account/login');
 
         $this->postLanguage('de');
         self::assertSame('de', self::getAdminModule()->getSessionLanguage());
 
-        $this->open('admin');
+        $this->open('admin/account/login');
         self::assertResponseIsSuccessful();
         self::assertLanguageSame('de');
 
         $this->postLanguage('en-US');
 
-        $this->open('admin');
+        $this->open('admin/account/login');
         self::assertLanguageSame('en');
     }
 
@@ -186,7 +186,7 @@ class AdminLanguageTest extends TestCase
     /**
      * A guest has no account to fall back to, and the login page is where the language is picked first.
      */
-    public function testTheLoginPageSwitchesTheLanguage(): void
+    public function testTheLoginPageSwitchesTheLanguageUntilTheLogin(): void
     {
         $this->open('admin/account/login');
         $this->postLanguage('de');
@@ -199,8 +199,7 @@ class AdminLanguageTest extends TestCase
             'password' => 'password',
         ]));
 
-        // the account's language is only the fallback, so the pick outlives the login
-        self::assertLanguageSame('de');
+        self::assertLanguageSame('en');
     }
 
     /**
@@ -208,8 +207,7 @@ class AdminLanguageTest extends TestCase
      */
     public function testTheDropdownPostsTheLanguageToTheFixedRoute(): void
     {
-        $this->login();
-        $this->open('admin/user/index');
+        $this->open('admin/account/login');
 
         self::assertSelectorExists('button.dropdown-option[hx-post="/admin/account/language"][hx-vals=\'{"language":"de"}\']');
         self::assertSelectorExists('button.dropdown-option[hx-post="/admin/account/language"][hx-vals=\'{"language":"en-US"}\']');

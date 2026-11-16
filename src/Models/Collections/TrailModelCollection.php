@@ -52,7 +52,7 @@ class TrailModelCollection
             return null;
         }
 
-        return Yii::$app->getI18n()->callback($language, function () use ($modelClass, $modelId) {
+        return Yii::$app->getI18n()->callback($language, function () use ($modelClass, $modelId): ?Model {
             /** @var class-string $class */
             $class = $modelClass[0];
 
@@ -69,9 +69,11 @@ class TrailModelCollection
                 $instance = null;
             }
 
-            return $instance instanceof ActiveRecord && $modelId
-                ? self::getOrFindActiveRecord($instance, $modelId)
-                : $instance;
+            if ($instance instanceof ActiveRecord && $modelId) {
+                return self::getOrFindActiveRecord($instance, $modelId);
+            }
+
+            return $instance instanceof Model ? $instance : null;
         });
     }
 

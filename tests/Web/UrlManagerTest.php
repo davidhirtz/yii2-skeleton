@@ -327,6 +327,91 @@ class UrlManagerTest extends TestCase
         self::assertSame('https://www.test.localhost/test', $manager->createCanonicalUrl(['test']));
     }
 
+    public function testAnAdminUrlHasNoLanguagePrefix(): void
+    {
+        $manager = $this->getUrlManager([
+            'i18nUrl' => true,
+            'languages' => [
+                'en-US' => 'en',
+                'de' => 'de',
+            ],
+        ]);
+
+        Yii::$app->language = 'de';
+        $alias = Yii::$app->getAdminAlias();
+
+        self::assertSame('/de/test', $manager->createUrl(['test']));
+        self::assertSame("/$alias/user/index", $manager->createUrl(['/admin/user/index']));
+        self::assertSame("/$alias/cms/entry/index?language=de", $manager->createUrl(['admin/cms/entry/index', 'language' => 'de']));
+        self::assertSame('https://www.test.localhost/en/test', $manager->createAbsoluteUrl(['test', 'language' => 'en-US']));
+    }
+
+    public function testAPrefixedAdminPathIsRedirected(): void
+    {
+        $manager = $this->getUrlManager([
+            'i18nUrl' => true,
+            'languages' => [
+                'en-US' => 'en',
+                'de' => 'de',
+            ],
+        ]);
+
+        $alias = Yii::$app->getAdminAlias();
+
+        foreach (["/de/$alias" => "/$alias", "/de/$alias/user/index?page=2" => "/$alias/user/index?page=2"] as $url => $location) {
+            try {
+                $manager->parseRequest($this->getRequest([
+                    'hostInfo' => 'https://www.test.localhost',
+                    'url' => $url,
+                ]));
+
+                self::fail("$url was not redirected");
+            } catch (UrlNormalizerRedirectException $e) {
+                self::assertSame("https://www.test.localhost$location", $e->url, $url);
+                self::assertSame(301, $e->statusCode, $url);
+            }
+        }
+
+        // A page whose slug merely begins with the alias is the site's
+        $request = $this->getRequest([
+            'hostInfo' => 'https://www.test.localhost',
+            'url' => "/de/{$alias}istration",
+        ]);
+
+        $manager->parseRequest($request);
+        self::assertSame('de', Yii::$app->language);
+    }
+
+    public function testTheContentLanguageReplacesTheApplicationLanguage(): void
+    {
+        $manager = $this->getUrlManager([
+            'i18nUrl' => true,
+            'languages' => [
+                'en-US' => 'en',
+                'de' => 'de',
+                'fr' => 'fr',
+            ],
+        ]);
+
+        Yii::$app->getI18n()->setLanguages(['en-US', 'de', 'fr']);
+        Yii::$app->language = 'en-US';
+        $manager->setContentLanguage('de');
+
+        self::assertSame('/de/test', $manager->createUrl(['test']));
+        self::assertSame('/fr/test', $manager->createUrl(['test', 'language' => 'fr']));
+        self::assertSame('de', Yii::$app->getI18n()->getContentLanguage());
+
+        // Rendering in another language switches both
+        $url = Yii::$app->getI18n()->callback('fr', fn (): string => $manager->createUrl(['test']));
+
+        self::assertSame('/fr/test', $url);
+        self::assertSame('de', $manager->getContentLanguage());
+        self::assertSame('en-US', Yii::$app->language);
+
+        $manager->setContentLanguage(null);
+        self::assertSame('/en/test', $manager->createUrl(['test']));
+    }
+
     public function testLanguageFromBrowser(): void
     {
         $manager = $this->getUrlManager([

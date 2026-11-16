@@ -1,7 +1,8 @@
 /**
  * A form's languages as tabs: "All fields" shows every translated row (`data-language`) beneath the other, a
  * language button only that language's. The server names the project's default (`data-translation-layout`:
- * `inline` for every field, `tabs` for the first language); the choice is remembered per browser. Switching only
+ * `inline` for every field, `tabs` for a language); the choice is remembered per browser, but a language tab always
+ * opens on the admin's content language (`data-content-language`), which clicking another tab leaves alone. Switching only
  * hides rows, so nothing typed is lost and every language still posts. A rejected field in a language that does not
  * show brings every field back. The tabs sit inside the form or, placed by `FormContainer`, in a container of their own before it.
  */
@@ -50,14 +51,16 @@ const translationLayout = ($form: HTMLFormElement): void => {
     $toolbar.dataset.translationBound = '';
 
     const codes = $languages.map(($button) => $button.dataset.translationLanguage!);
-    const fallback = $form.dataset.translationLayout === 'tabs' ? codes[0] : ALL;
+    const content = $toolbar.dataset.contentLanguage;
+    const first = content && codes.includes(content) ? content : codes[0];
+    const fallback = $form.dataset.translationLayout === 'tabs' ? first : ALL;
     const invalid = [...$form.querySelectorAll<HTMLElement>('[data-language]:has([aria-invalid="true"])')]
         .map(($row) => $row.dataset.language!);
 
     let choice = read() ?? fallback;
 
-    if (choice !== ALL && !codes.includes(choice)) {
-        choice = fallback;
+    if (choice !== ALL) {
+        choice = first;
     }
 
     // A rejected field in a language that does not show would go unseen: every field shows until the next choice.

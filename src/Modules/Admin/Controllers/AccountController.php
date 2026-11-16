@@ -51,6 +51,7 @@ class AccountController extends Controller
                     [
                         'allow' => true,
                         'actions' => [
+                            'content-language',
                             'credentials',
                             'delete',
                             'disable-authenticator',
@@ -81,6 +82,7 @@ class AccountController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
+                    'content-language' => ['post'],
                     'delete' => ['post'],
                     'disable-authenticator' => ['post'],
                     'enable-authenticator' => ['post'],
@@ -535,6 +537,23 @@ class AccountController extends Controller
     }
 
     /**
+     * @see \Hirtz\Skeleton\Modules\Admin\Widgets\Buttons\ContentLanguageDropdownButton
+     */
+    public function actionContentLanguage(): Response
+    {
+        $language = $this->request->post('language');
+        $module = static::getModule();
+
+        if (!is_string($language) || !$module->hasContentLanguage($language)) {
+            throw new BadRequestHttpException();
+        }
+
+        $module->setSessionContentLanguage($language);
+
+        return $this->reloadReferrer();
+    }
+
+    /**
      * An empty timezone is skipped, since every validator skips it and assigning it would wipe the stored one.
      */
     public function actionTimezone(?string $redirect = null): Response|string
@@ -556,10 +575,18 @@ class AccountController extends Controller
     }
 
     /**
-     * A flash set on logging in is read on the next page, which the account's language renders from now on.
+     * A flash set on logging in is read on the next page, which the account's language renders from now on. The
+     * language picked as a guest goes to an account without an offered one.
      */
     private function useAccountLanguage(User $user): void
     {
-        Yii::$app->language = $this->module->getOfferedLanguage($this->module->getSessionLanguage() ?? $user->language);
+        $language = $this->module->getSessionLanguage();
+
+        if ($language !== null && !$this->module->hasLanguage($user->language)) {
+            $user->updateAttributes(['language' => $language]);
+        }
+
+        $this->module->setSessionLanguage(null);
+        Yii::$app->language = $this->module->getOfferedLanguage($user->language);
     }
 }

@@ -370,6 +370,7 @@ class ActiveForm extends Widget
             ->class('nav tabs translation-tabs')
             ->attribute('id', $this->getTranslationTabsId())
             ->attribute('data-translation-toolbar', $this->getId())
+            ->attribute('data-content-language', $i18n->getContentLanguage())
             ->attribute('aria-label', Yii::t('skeleton', 'FORM_TRANSLATION_LABEL'))
             ->content(...$items);
     }

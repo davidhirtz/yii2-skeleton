@@ -18,6 +18,7 @@ use Hirtz\Skeleton\Modules\Admin\Widgets\Panels\RecentlyEditedPanel;
 use Hirtz\Skeleton\Sitemap\Sitemap;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Request;
+use Hirtz\Skeleton\Web\UrlManager;
 use Hirtz\Skeleton\Web\User as WebUser;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Hirtz\Skeleton\Widgets\Panels\DashboardItem;
@@ -65,6 +66,11 @@ class Module extends \Hirtz\Skeleton\Base\Module
     public ?array $languages = null;
 
     public string $languageSessionKey = 'language';
+
+    /**
+     * Holds one content language per {@see UrlManager::getContentLanguageScope()}.
+     */
+    public string $contentLanguageSessionKey = 'contentLanguage';
 
     /**
      * Unsigned, since `includes/aside.ts` writes it — see {@see isAsideCollapsed()}.
@@ -174,6 +180,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
         }
 
         $this->setLanguage();
+        $this->setContentLanguage();
 
         return parent::beforeAction($action);
     }
@@ -194,7 +201,7 @@ class Module extends \Hirtz\Skeleton\Base\Module
     protected function setLanguage(): void
     {
         $identity = WebUser::current()?->getIdentity();
-        $language = $this->getSessionLanguage() ?? $identity?->language;
+        $language = $identity ? $identity->language : $this->getSessionLanguage();
 
         Yii::$app->language = $language && $this->hasLanguage($language)
             ? $language
@@ -242,6 +249,71 @@ class Module extends \Hirtz\Skeleton\Base\Module
         }
 
         $session?->set($this->languageSessionKey, $language);
+    }
+
+    protected function setContentLanguage(): void
+    {
+        $this->getUrlManager()->setContentLanguage($this->getContentLanguage());
+    }
+
+    public function getContentLanguage(): string
+    {
+        $languages = $this->getContentLanguages();
+        $candidates = [$this->getSessionContentLanguage(), Yii::$app->language, $this->getUrlManager()->defaultLanguage];
+
+        foreach ($candidates as $language) {
+            if ($language !== null && in_array($language, $languages, true)) {
+                return $language;
+            }
+        }
+
+        return $languages[0] ?? (string)Yii::$app->language;
+    }
+
+    /**
+     * The URL manager's, so the current tenant's with `yii2-tenant`.
+     *
+     * @return list<string>
+     */
+    public function getContentLanguages(): array
+    {
+        return array_map(strval(...), array_keys($this->getUrlManager()->getLanguages()));
+    }
+
+    public function hasContentLanguage(string $language): bool
+    {
+        return in_array($language, $this->getContentLanguages(), true);
+    }
+
+    /**
+     * `null` also when the site no longer offers the picked one.
+     */
+    public function getSessionContentLanguage(): ?string
+    {
+        $languages = $this->getSession()?->get($this->contentLanguageSessionKey);
+        $language = is_array($languages) ? ($languages[$this->getContentLanguageScope()] ?? null) : null;
+
+        return is_string($language) && $this->hasContentLanguage($language) ? $language : null;
+    }
+
+    public function setSessionContentLanguage(string $language): void
+    {
+        $session = $this->getSession();
+        $languages = $session?->get($this->contentLanguageSessionKey);
+        $languages = is_array($languages) ? $languages : [];
+        $languages[$this->getContentLanguageScope()] = $language;
+
+        $session?->set($this->contentLanguageSessionKey, $languages);
+    }
+
+    protected function getContentLanguageScope(): string
+    {
+        return $this->getUrlManager()->getContentLanguageScope();
+    }
+
+    private function getUrlManager(): UrlManager
+    {
+        return Yii::$app->getUrlManager();
     }
 
     /**

@@ -23,14 +23,14 @@ class LanguageDropdownButton extends Widget
 
     protected function renderContent(): string|Stringable
     {
-        $languages = static::getModule()->getLanguages();
+        $languages = $this->getLanguages();
 
         if (count($languages) < 2) {
             return '';
         }
 
         $i18n = Yii::$app->getI18n();
-        $current = Yii::$app->language;
+        $current = $this->getCurrentLanguage();
 
         $button = Button::make()
             ->class('btn btn-border')
@@ -56,8 +56,29 @@ class LanguageDropdownButton extends Widget
             ->addClass('dropdown-option', $language === $current ? 'selected' : null)
             ->type('button')
             ->text($label)
-            ->post(['/admin/account/language'])
+            ->post($this->getRoute())
             ->attribute('hx-vals', (string)json_encode(['language' => $language]));
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getLanguages(): array
+    {
+        return static::getModule()->getLanguages();
+    }
+
+    protected function getCurrentLanguage(): string
+    {
+        return Yii::$app->language;
+    }
+
+    /**
+     * @return array<int|string, mixed>
+     */
+    protected function getRoute(): array
+    {
+        return ['/admin/account/language'];
     }
 
     protected function getCsrfHeaders(): string

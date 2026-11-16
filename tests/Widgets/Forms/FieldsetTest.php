@@ -99,6 +99,12 @@ class FieldsetTest extends TestCase
         self::assertStringContainsString('<button type="button" class="nav-link" data-translation-all>All fields</button>', $html);
         self::assertMatchesRegularExpression('/data-translation-language="en-US"[^>]*>EN</', $html);
         self::assertMatchesRegularExpression('/data-translation-language="de" data-missing><div class="icon-text"><span class="fas fa-exclamation-triangle"><\/span><div>DE</', $html);
+        self::assertStringContainsString('data-content-language="en-US"', $html);
+
+        // The tabs open on the admin's content language.
+        Yii::$app->getUrlManager()->setContentLanguage('de');
+        self::assertStringContainsString('data-content-language="de"', ActiveForm::make()->model($model)->rows(['name'])->render());
+        Yii::$app->getUrlManager()->setContentLanguage(null);
 
         // In a form container the tabs stand before the card, aligned with the submenu, and name their form.
         $html = FormContainer::make()->form(ActiveForm::make()->model($model)->rows(['name']))->render();

@@ -1,5 +1,8 @@
 ## Unreleased
 
+- Added the admin content language: `UrlManager::getContentLanguage()`, picked per site in the navbar (`ContentLanguageDropdownButton`, `account/content-language`)
+- Changed admin URLs to carry no language prefix; a prefixed admin path redirects without it
+- Changed the logged-in admin language to the account's alone
 - Changed `Widgets\Grids\Pagers\LinkPager` to a skeleton widget configured by setters (`LinkPager::make()->pagination()`)
 - Added the tag classes `Html\Del`, `Details`, `Ins`, `Kbd`, `Mark`, `Strong`, `Summary`, `Template`, `Custom\FlashAlert` and `Custom\TinyMceEditor`
 - Added a cookie and login notice under the login and signup forms, linking `Modules\Admin\Module::$privacyUrl` when set

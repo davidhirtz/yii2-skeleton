@@ -4,6 +4,30 @@ Class names below are relative to `Hirtz\Skeleton\` (v3) and `davidhirtz\yii2\sk
 namespace. The v2 → v3 database migrations do not ship with the bundle: `davidhirtz/yii2-upgrade` generates them into the
 project (see *Data and schema*), and the bundle itself carries one baseline migration for a fresh install.
 
+## 3.29 — The admin's content language
+
+`Yii::$app->language` in the admin is the editor's language, and the URL manager used to read it for the language
+prefix: an admin URL became `/de/admin/…` under `i18nUrl`, its `language` parameter was swallowed as the prefix, and every
+link to the site built in the admin followed the editor's language. Now:
+
+- **Admin URLs carry no language prefix.** `UrlManager::createUrl()` leaves `language` as a query parameter on an
+  `admin/…` route, and a prefixed admin path (`/de/admin/…`) answers a 301 without the prefix.
+- **The URL manager has a content language of its own** (`getContentLanguage()`, `setContentLanguage()`), which
+  `createUrl()` and `I18N::getContentLanguage()` read before `Yii::$app->language`; `null`, the frontend's, follows the
+  application language. `I18N::callback()` switches both, so render a link in another language through it rather than
+  by assigning `Yii::$app->language`.
+- **The admin sets it on every request** (`Modules\Admin\Module::getContentLanguage()`): the editor's pick, stored per site
+  in the session (`$contentLanguageSessionKey`, keyed by `UrlManager::getContentLanguageScope()`, the tenant with
+  `yii2-tenant`) and dropped once the site no longer offers it; else the editor's language when the site offers it, the
+  site's default language, or the first it offers. Every link to the site, every translated title and the translation
+  tabs follow it; the tabs still switch only what shows.
+- **`modules.admin.languages` and the content languages are independent.** The first is the admin's interface
+  (`account/language`, the account's `language`), the second the URL manager's `languages`, narrowed per tenant.
+- **The navbar picks the content language once logged in** (`ContentLanguageDropdownButton`, `account/content-language`),
+  shown only for more than one. The interface language is the account's alone: the session language picked on the login
+  page is cleared at login, and stored on an account without an offered language first. A project overriding
+  `NavBar::getLanguageDropdownItem()` or calling `Module::getSessionLanguage()` for a logged-in user follows.
+
 ## 3.22 — Drag reordering is "reorder"
 
 "Sort" is left to column sorting (`yii\data\Sort`, a provider's `getSort()`). A project overriding or calling the

@@ -1,9 +1,9 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import translationLayout, {initTranslationTabs} from '../../../src/js/includes/translationLayout';
 
-const render = (layout = 'inline', invalid = '') => {
+const render = (layout = 'inline', invalid = '', content = '') => {
     document.body.innerHTML = `<form data-translation-layout="${layout}">
-        <ul data-translation-toolbar>
+        <ul data-translation-toolbar${content ? ` data-content-language="${content}"` : ''}>
             <li><button data-translation-all>All fields</button></li>
             <li><button data-translation-language="en-US">EN</button></li>
             <li><button data-translation-language="de">DE</button></li>
@@ -53,14 +53,35 @@ describe('translationLayout', () => {
         expect(hidden('name')).toBe(false);
     });
 
-    it('remembers the choice for the next form', () => {
-        render();
-        click('[data-translation-language="de"]');
-
-        render();
+    it('starts on the content language where the project says so', () => {
+        render('tabs', '', 'de');
 
         expect(hidden('name')).toBe(true);
         expect(active()).toEqual(['DE']);
+    });
+
+    it('remembers a language tab for the next form, which opens on the content language', () => {
+        render('inline', '', 'en-US');
+        click('[data-translation-language="de"]');
+
+        render('inline', '', 'en-US');
+
+        expect(hidden('name')).toBe(false);
+        expect(hidden('name-de')).toBe(true);
+        expect(active()).toEqual(['EN']);
+
+        render('inline', '', 'de');
+
+        expect(active()).toEqual(['DE']);
+    });
+
+    it('remembers every field for the next form', () => {
+        render('tabs', '', 'de');
+        click('[data-translation-all]');
+
+        render('tabs', '', 'de');
+
+        expect(active()).toEqual(['All fields']);
     });
 
     it('finds tabs placed before the form, and tells the styles what shows', () => {
@@ -125,7 +146,7 @@ describe('translationLayout', () => {
 
     it('keeps the language when its own field was rejected', () => {
         window.localStorage.setItem('translationLanguage', 'de');
-        render('inline', 'aria-invalid="true"');
+        render('inline', 'aria-invalid="true"', 'de');
 
         expect(active()).toEqual(['DE']);
     });

@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\FunctionalTestTrait;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
 use Override;
+use Yii;
 
 /**
  * `UrlManager::$i18nUrl` is the language of the frontend URL, the admin keeps its own.
@@ -42,33 +43,59 @@ class AdminLanguageUrlTest extends TestCase
         self::assertLanguageSame('en');
     }
 
-    /**
-     * The language travels in the body rather than as `Request::$languageParam`, which the URL manager would turn
-     * into the path prefix of the frontend language.
-     */
-    public function testTheDropdownPostsToTheAdminsOwnRoute(): void
+    public function testAnAdminUrlHasNoLanguagePrefix(): void
     {
-        $this->login();
+        $this->open('admin/account/login');
+
+        self::assertSelectorExists('button.dropdown-option[hx-post="/admin/account/language"][hx-vals=\'{"language":"de"}\']');
+
+        $this->login(false);
         $this->open('admin/user/index');
 
-        self::assertSelectorExists('button.dropdown-option[hx-post="/en/admin/account/language"][hx-vals=\'{"language":"de"}\']');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorExists('button.dropdown-option[hx-post="/admin/account/content-language"][hx-vals=\'{"language":"en-US"}\']');
+        self::assertSelectorExists('a[href="/admin/user/create"]');
+    }
+
+    public function testAPrefixedAdminPathIsRedirected(): void
+    {
+        $this->login();
+
+        self::$client->followRedirects(false);
+        self::$crawler = self::$client->request('GET', 'https://www.test.localhost/en/admin/user/index?page=1');
+
+        self::assertResponseStatusCodeSame(301);
+        self::assertResponseHeaderSame('location', 'https://www.test.localhost/admin/user/index?page=1');
+    }
+
+    /**
+     * Links to the site follow the content language, not the admin's.
+     */
+    public function testALinkToTheSiteFollowsTheContentLanguage(): void
+    {
+        $this->getUserFromFixture('owner')->updateAttributes(['language' => 'de']);
+        $this->login();
 
         $request = $this->getWebRequest();
 
-        self::$crawler = self::$client->request('POST', 'https://www.test.localhost/en/admin/account/language', [
-            'language' => 'de',
+        self::$crawler = self::$client->request('POST', 'https://www.test.localhost/admin/account/content-language', [
+            'language' => 'en-US',
             $request->csrfParam => $request->getCsrfToken(),
         ]);
 
-        $this->open('admin/user/index');
+        $this->open('admin/dashboard/index');
+
         self::assertLanguageSame('de');
+        self::assertSame('/en/test', Yii::$app->getUrlManager()->createUrl(['test']));
     }
 
-    private function login(): User
+    private function login(bool $open = true): User
     {
         $user = $this->getUserFromFixture('owner');
 
-        $this->open('admin/account/login');
+        if ($open) {
+            $this->open('admin/account/login');
+        }
 
         $this->submit(values: $this->prefixFormValues(LoginForm::instance()->formName(), [
             'email' => $user->email,

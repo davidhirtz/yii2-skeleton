@@ -68,20 +68,15 @@ class ModelSitemap extends AbstractSitemap
         }
 
         $languages = $this->getLanguages();
-        $previousLanguage = Yii::$app->language;
+        $previousLanguage = (string)Yii::$app->language;
+        $i18n = Yii::$app->getI18n();
         $urls = [];
 
-        try {
-            foreach ($query->each($this->batchSize) as $record) {
-                foreach ($languages as $language) {
-                    // the language is switched per record so the translated attributes resolve, and whatever renders
-                    // the sitemap runs in the request's own language again
-                    Yii::$app->language = $language ?? $previousLanguage;
-                    $urls = [...$urls, ...$this->getRecordUrls($record, $language)];
-                }
+        foreach ($query->each($this->batchSize) as $record) {
+            foreach ($languages as $language) {
+                // the language is switched per record so the translated attributes resolve
+                $urls = [...$urls, ...$i18n->callback($language ?? $previousLanguage, fn (): array => $this->getRecordUrls($record, $language))];
             }
-        } finally {
-            Yii::$app->language = $previousLanguage;
         }
 
         return $urls;
