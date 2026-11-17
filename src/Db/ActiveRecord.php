@@ -9,6 +9,7 @@ use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Behaviors\SearchBehavior;
 use Hirtz\Skeleton\Db\Commands\BatchInsertQueryBuild;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
+use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Upload\Upload;
@@ -269,6 +270,10 @@ class ActiveRecord extends \yii\db\ActiveRecord
     {
         if ($this instanceof CustomAttributeInterface && $this->getIsNewRecord()) {
             $this->applyCustomAttributeDefaults();
+        }
+
+        if ($this instanceof I18nAttributeInterface) {
+            $this->fillI18nSourceAttributes();
         }
 
         return parent::beforeValidate();

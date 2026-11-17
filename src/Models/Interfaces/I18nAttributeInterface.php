@@ -44,4 +44,5 @@ interface I18nAttributeInterface
      */
     public function getI18nRules(array $rules): array;
     public function isI18nAttribute(string $attribute): bool;
+    public function fillI18nSourceAttributes(): void;
 }

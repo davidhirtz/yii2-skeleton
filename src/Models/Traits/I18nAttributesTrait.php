@@ -8,6 +8,7 @@ use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Validators\UniqueValidator;
 use Yii;
+use yii\db\BaseActiveRecord;
 use yii\validators\UniqueValidator as BaseUniqueValidator;
 
 trait I18nAttributesTrait
@@ -237,10 +238,38 @@ trait I18nAttributesTrait
     }
 
     /**
+     * Records whose languages leave out the source language keep its columns a copy of their first language, which
+     * the required rules and every fallback read. An empty one left unchanged copies nothing, so code writing the
+     * source column alone keeps it.
+     */
+    public function fillI18nSourceAttributes(): void
+    {
+        $attributes = $this->getI18nAttributes();
+        $languages = $attributes ? $this->getI18nLanguages() : [];
+
+        if (!$languages || in_array(Yii::$app->sourceLanguage, $languages, true)) {
+            return;
+        }
+
+        $i18n = Yii::$app->getI18n();
+
+        foreach ($attributes as $attribute) {
+            $name = $i18n->getAttributeName($attribute, $languages[0]);
+            $value = $this->$name;
+
+            if (($value !== null && $value !== '') || ($this instanceof BaseActiveRecord && $this->isAttributeChanged($name))) {
+                $this->$attribute = $value;
+            }
+        }
+    }
+
+    /**
      * A required attribute left empty in a translation takes the source language's value.
      */
     protected function ensureRequiredI18nAttributes(): void
     {
+        $this->fillI18nSourceAttributes();
+
         foreach ($this->getI18nAttributes() as $attribute) {
             if (!$this->isAttributeRequired($attribute)) {
                 continue;
