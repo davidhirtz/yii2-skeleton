@@ -7,6 +7,7 @@ namespace Hirtz\Skeleton\Modules\Admin;
 use Hirtz\Skeleton\Console\Controllers\TrailController;
 use Hirtz\Skeleton\Console\Controllers\UserLoginController;
 use Hirtz\Skeleton\Db\ActiveRecord;
+use Hirtz\Skeleton\Helpers\Url;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Models\AuthItem;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
@@ -71,6 +72,11 @@ class Module extends \Hirtz\Skeleton\Base\Module
      * Holds one content language per {@see UrlManager::getContentLanguageScope()}.
      */
     public string $contentLanguageSessionKey = 'contentLanguage';
+
+    /**
+     * The query parameter a link names its content language with, see {@see switchContentLanguage()}.
+     */
+    public string $contentLanguageParam = 'contentLanguage';
 
     /**
      * Unsigned, since `includes/aside.ts` writes it — see {@see isAsideCollapsed()}.
@@ -180,9 +186,39 @@ class Module extends \Hirtz\Skeleton\Base\Module
         }
 
         $this->setLanguage();
+
+        if ($request instanceof Request && $this->switchContentLanguage($request)) {
+            return false;
+        }
+
         $this->setContentLanguage();
 
         return parent::beforeAction($action);
+    }
+
+    /**
+     * Keeps a link's content language and redirects without it; a guest keeps the parameter for after the login.
+     */
+    protected function switchContentLanguage(Request $request): bool
+    {
+        $language = $request->getIsGet() ? $request->get($this->contentLanguageParam) : null;
+
+        if (!is_string($language) || (WebUser::current()?->getIsGuest() ?? true)) {
+            return false;
+        }
+
+        $response = Application::current()->getResponse();
+
+        if ($this->hasContentLanguage($language) && $this->getContentLanguage() !== $language) {
+            $this->setSessionContentLanguage($language);
+
+            // The navbar outside `#wrap` shows the content language.
+            $response->setHtmxReload();
+        }
+
+        $response->redirect(Url::current([$this->contentLanguageParam => null]));
+
+        return true;
     }
 
     /**

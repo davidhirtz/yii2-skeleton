@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added `Modules\Admin\Module::$contentLanguageParam`, the query parameter that switches the admin's content language
+
 ## 3.29.0 (November 17, 2026)
 
 - Added `I18nAttributesTrait::fillI18nSourceAttributes()`

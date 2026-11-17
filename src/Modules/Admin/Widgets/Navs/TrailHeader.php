@@ -77,10 +77,7 @@ class TrailHeader extends Header
             return null;
         }
 
-        $route = $this->model->getAdminRoute();
-        $language = explode('::', (string)$this->model->getTrailBehavior()->modelClass)[1] ?? null;
-
-        return $route ? [...$route, 'language' => $language] : null;
+        return $this->model->getAdminRoute() ?: null;
     }
 
     protected function addSystemBreadcrumb(): void

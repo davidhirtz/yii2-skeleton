@@ -75,6 +75,56 @@ class AdminContentLanguageTest extends TestCase
         self::assertSelectorExists('button.dropdown-option.selected[hx-vals=\'{"language":"de"}\']');
     }
 
+    public function testALinkSwitchesTheContentLanguageAndDropsTheParameter(): void
+    {
+        $this->login();
+        self::$client->followRedirects(false);
+
+        self::$crawler = self::$client->request('GET', 'https://www.test.localhost/admin/user/index?contentLanguage=de&q=' . urlencode('Ågot 東京'));
+
+        self::assertResponseStatusCodeSame(302);
+        $location = self::$client->getResponse()->getHeader('location');
+        self::assertIsString($location);
+        self::assertStringNotContainsString('contentLanguage', $location);
+        self::assertStringContainsString('q=' . urlencode('Ågot 東京'), $location);
+        self::assertSame('de', self::getAdminModule()->getSessionContentLanguage());
+    }
+
+    public function testAnHtmxLinkReloadsThePageOnlyForAnotherLanguage(): void
+    {
+        $this->login();
+        self::$client->followRedirects(false);
+
+        self::$crawler = self::$client->request('GET', 'https://www.test.localhost/admin/user/index?contentLanguage=de', [], [], ['HTTP_HX_REQUEST' => 'true']);
+        self::assertNotNull(self::$client->getResponse()->getHeader('hx-redirect'));
+
+        self::$crawler = self::$client->request('GET', 'https://www.test.localhost/admin/user/index?contentLanguage=de', [], [], ['HTTP_HX_REQUEST' => 'true']);
+        self::assertNull(self::$client->getResponse()->getHeader('hx-redirect'), 'The current content language needs no reload.');
+    }
+
+    public function testALinkToALanguageTheSiteDoesNotOfferOnlyDropsTheParameter(): void
+    {
+        $this->login();
+        self::$client->followRedirects(false);
+
+        self::$crawler = self::$client->request('GET', 'https://www.test.localhost/admin/user/index?contentLanguage=fr');
+
+        self::assertResponseStatusCodeSame(302);
+        self::assertNull(self::getAdminModule()->getSessionContentLanguage());
+    }
+
+    public function testAGuestKeepsTheParameterForAfterTheLogin(): void
+    {
+        $this->open('admin/account/login');
+        self::$client->followRedirects(false);
+        self::$crawler = self::$client->request('GET', 'https://www.test.localhost/admin/user/index?contentLanguage=de');
+
+        $location = self::$client->getResponse()->getHeader('location');
+        self::assertIsString($location);
+        self::assertStringContainsString('contentLanguage', urldecode($location));
+        self::assertNull(self::getAdminModule()->getSessionContentLanguage());
+    }
+
     public function testAContentLanguageTheSiteDoesNotOfferIsRefused(): void
     {
         $this->login();
