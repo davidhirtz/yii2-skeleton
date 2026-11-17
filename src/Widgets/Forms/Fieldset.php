@@ -106,12 +106,12 @@ class Fieldset extends Widget
             $isTranslated = $this->model->isI18nAttribute($attribute);
 
             foreach ($this->model->getI18nAttributeNames($attribute, $this->model->getI18nLanguages()) as $language => $property) {
-                $clone = (clone $field)
-                    ->language($language)
-                    ->property($property);
+                $clone = (clone $field)->property($property);
 
+                // An untranslated field keeps the content language; the key here is the application's.
                 if ($isTranslated) {
-                    $clone->addRowAttributes(['data-language' => $language]);
+                    $clone->language($language)
+                        ->addRowAttributes(['data-language' => $language]);
                 }
 
                 $rows[] = $clone;

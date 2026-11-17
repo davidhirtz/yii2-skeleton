@@ -108,7 +108,7 @@ class TinyMceFieldTest extends TestCase
             Yii::$container->clear(TinyMceField::class);
         }
 
-        self::assertStringEndsWith('/admin/link?tenant=2', (string)($config['linkDialogUrl'] ?? ''));
+        self::assertStringEndsWith('/admin/link?tenant=2&language=en-US', (string)($config['linkDialogUrl'] ?? ''));
         self::assertNotEmpty($config['linkDialogTitle'] ?? null);
         self::assertNotEmpty($config['linkDialogCloseLabel'] ?? null);
         self::assertNotContains('link', explode(' ', (string)($config['plugins'] ?? '')));

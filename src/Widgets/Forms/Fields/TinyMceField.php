@@ -143,7 +143,8 @@ class TinyMceField extends Field
     }
 
     /**
-     * The page `includes/linkDialog.ts` opens in a modal in place of the link plugin's dialog.
+     * The page `includes/linkDialog.ts` opens in a modal in place of the link plugin's dialog; a route gets the field's
+     * `language`.
      *
      * @param array<int|string, mixed>|string|null $linkDialogUrl
      */
@@ -448,7 +449,13 @@ class TinyMceField extends Field
             }
 
             if ($this->linkDialogUrl !== null) {
-                $this->clientOptions['linkDialogUrl'] ??= Url::to($this->linkDialogUrl);
+                $url = $this->linkDialogUrl;
+
+                if (is_array($url)) {
+                    $url['language'] ??= $this->language;
+                }
+
+                $this->clientOptions['linkDialogUrl'] ??= Url::to($url);
                 $this->clientOptions['linkDialogTitle'] ??= Yii::t('skeleton', 'LINK_DIALOG_TITLE');
                 $this->clientOptions['linkDialogCloseLabel'] ??= Yii::t('skeleton', 'MODAL_CLOSE_LABEL');
                 $this->clientOptions['linkDialogLabelFormat'] ??= Yii::t('skeleton', 'LINK_ARIA_FORMAT');
