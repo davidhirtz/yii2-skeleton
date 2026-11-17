@@ -1,6 +1,6 @@
 ## Unreleased
 
-- Added `I18nAttributeInterface::fillI18nSourceAttributes()`: a record whose languages leave out the source language copies its first language into the source columns before validation
+- Added `I18nAttributesTrait::fillI18nSourceAttributes()`
 - Added the admin content language: `UrlManager::getContentLanguage()`, picked per site in the navbar (`ContentLanguageDropdownButton`, `account/content-language`)
 - Changed admin URLs to carry no language prefix; a prefixed admin path redirects without it
 - Changed the logged-in admin language to the account's alone

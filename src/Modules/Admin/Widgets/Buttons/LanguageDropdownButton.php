@@ -61,11 +61,11 @@ class LanguageDropdownButton extends Widget
     }
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     protected function getLanguages(): array
     {
-        return static::getModule()->getLanguages();
+        return array_values(static::getModule()->getLanguages());
     }
 
     protected function getCurrentLanguage(): string

@@ -9,7 +9,6 @@ use Hirtz\Skeleton\Behaviors\AttributeTypecastBehavior;
 use Hirtz\Skeleton\Behaviors\SearchBehavior;
 use Hirtz\Skeleton\Db\Commands\BatchInsertQueryBuild;
 use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
-use Hirtz\Skeleton\Models\Interfaces\I18nAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\Interfaces\TranslationInterface;
 use Hirtz\Skeleton\Upload\Upload;
@@ -272,7 +271,8 @@ class ActiveRecord extends \yii\db\ActiveRecord
             $this->applyCustomAttributeDefaults();
         }
 
-        if ($this instanceof I18nAttributeInterface) {
+        // `I18nAttributesTrait`'s, so a class implementing the interface on its own needs none.
+        if (method_exists($this, 'fillI18nSourceAttributes')) {
             $this->fillI18nSourceAttributes();
         }
 

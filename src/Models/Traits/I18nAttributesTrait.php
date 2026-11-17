@@ -8,7 +8,6 @@ use Hirtz\Skeleton\Models\Interfaces\CustomAttributeInterface;
 use Hirtz\Skeleton\Models\Interfaces\VisibleAttributeInterface;
 use Hirtz\Skeleton\Validators\UniqueValidator;
 use Yii;
-use yii\db\BaseActiveRecord;
 use yii\validators\UniqueValidator as BaseUniqueValidator;
 
 trait I18nAttributesTrait
@@ -238,9 +237,9 @@ trait I18nAttributesTrait
     }
 
     /**
-     * Records whose languages leave out the source language keep its columns a copy of their first language, which
-     * the required rules and every fallback read. An empty one left unchanged copies nothing, so code writing the
-     * source column alone keeps it.
+     * Records whose languages leave out the source language fill its empty columns from their first language, which
+     * the required rules and every fallback read. A filled one is never overwritten: a record moved to such a tenant
+     * keeps the source content it had.
      */
     public function fillI18nSourceAttributes(): void
     {
@@ -254,11 +253,8 @@ trait I18nAttributesTrait
         $i18n = Yii::$app->getI18n();
 
         foreach ($attributes as $attribute) {
-            $name = $i18n->getAttributeName($attribute, $languages[0]);
-            $value = $this->$name;
-
-            if (($value !== null && $value !== '') || ($this instanceof BaseActiveRecord && $this->isAttributeChanged($name))) {
-                $this->$attribute = $value;
+            if ($this->$attribute === null || $this->$attribute === '') {
+                $this->$attribute = $this->{$i18n->getAttributeName($attribute, $languages[0])};
             }
         }
     }

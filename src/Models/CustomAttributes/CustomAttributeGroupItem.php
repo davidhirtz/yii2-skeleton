@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Models\Traits\CustomAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\I18nAttributesTrait;
 use Hirtz\Skeleton\Models\Traits\VisibleAttributeTrait;
 use Override;
+use Yii;
 use yii\base\Model;
 use yii\db\BaseActiveRecord;
 
@@ -87,10 +88,19 @@ class CustomAttributeGroupItem extends Model implements CustomAttributeInterface
         return $this->owner;
     }
 
+    public function getI18nLanguages(): array
+    {
+        return $this->owner instanceof I18nAttributeInterface
+            ? $this->owner->getI18nLanguages()
+            : Yii::$app->getI18n()->getLanguages();
+    }
+
     #[Override]
     public function beforeValidate(): bool
     {
         $this->applyCustomAttributeDefaults();
+        $this->ensureRequiredI18nAttributes();
+
         return parent::beforeValidate();
     }
 

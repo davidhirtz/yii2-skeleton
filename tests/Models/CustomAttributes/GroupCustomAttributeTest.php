@@ -342,6 +342,32 @@ class GroupCustomAttributeTest extends TestCase
 
         return json_decode((string)$value, true) ?? [];
     }
+
+    public function testAGroupRowOffersTheLanguagesOfItsRecord(): void
+    {
+        Yii::$app->getI18n()->setLanguages(['en-US', 'de', 'fr']);
+
+        $model = GermanGroupRecord::create();
+        $model->type = GroupRecord::TYPE_DEFAULT;
+        $model->links = [['label_de' => 'Eins Å 東京', 'url' => 'https://example.com']];
+
+        $item = $model->getCustomAttributeItems('links')[0] ?? self::fail('No row.');
+        self::assertSame(['de'], $item->getI18nLanguages());
+    }
+
+    public function testAGroupRowFillsItsSourceFromItsRecordsFirstLanguage(): void
+    {
+        Yii::$app->getI18n()->setLanguages(['en-US', 'de', 'fr']);
+
+        $model = GermanGroupRecord::create();
+        $model->type = GroupRecord::TYPE_DEFAULT;
+        $model->links = [['label_de' => 'Eins Å 東京', 'url' => 'https://example.com']];
+
+        self::assertTrue($model->save(), implode(' ', $model->getErrorSummary(true)));
+        $links = GermanGroupRecord::findOne($model->id)?->links;
+        self::assertIsArray($links);
+        self::assertSame('Eins Å 東京', $links[0]['label'] ?? null);
+    }
 }
 
 /**
@@ -441,5 +467,14 @@ class GroupRecord extends ActiveRecord implements
     public static function tableName(): string
     {
         return 'group_test';
+    }
+}
+
+class GermanGroupRecord extends GroupRecord
+{
+    #[Override]
+    public function getI18nLanguages(): array
+    {
+        return ['de'];
     }
 }
