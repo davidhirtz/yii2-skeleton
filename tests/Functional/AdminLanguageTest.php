@@ -226,6 +226,24 @@ class AdminLanguageTest extends TestCase
         self::assertNull(self::getAdminModule()->getSessionLanguage());
     }
 
+    /**
+     * Logged in, the navbar offers no admin language: the account's is the one, set on the account page.
+     */
+    public function testALoggedInPostLeavesTheAccountsLanguage(): void
+    {
+        $user = $this->getUserFromFixture('owner');
+        $user->updateAttributes(['language' => 'en-US']);
+        $this->login();
+
+        $this->postLanguage('de', ['HTTP_HX_REQUEST' => 'true']);
+        self::assertResponseHeaderSame('hx-refresh', 'true');
+
+        $this->open('admin/user/index');
+
+        self::assertLanguageSame('en');
+        self::assertSame('en-US', User::findOne($user->id)?->language);
+    }
+
     public function testTheAccountLanguageReplacesTheSessionLanguage(): void
     {
         $user = $this->login();
