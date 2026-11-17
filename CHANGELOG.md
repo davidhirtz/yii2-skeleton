@@ -1,4 +1,4 @@
-## Unreleased
+## 3.29.0 (November 17, 2026)
 
 - Added `I18nAttributesTrait::fillI18nSourceAttributes()`
 - Added the admin content language: `UrlManager::getContentLanguage()`, picked per site in the navbar (`ContentLanguageDropdownButton`, `account/content-language`)
