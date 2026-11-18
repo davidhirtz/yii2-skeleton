@@ -84,6 +84,9 @@ final class LoginHandoffTest extends TestCase
     {
         $user = $this->getUserFromFixture('owner');
         $callbackUrl = $this->getCallbackUrl($user);
+
+        $user->updateAttributes(['login_count' => 3]);
+        $lastLogin = User::findOne($user->id)?->last_login;
         $sessionId = $this->getWebSession()->getId();
 
         $this->request($callbackUrl);
@@ -93,42 +96,61 @@ final class LoginHandoffTest extends TestCase
         self::assertResponseHeaderSame('referrer-policy', 'no-referrer');
         self::assertSame($user->id, $this->getWebUser()->getId());
         self::assertNotSame($sessionId, $this->getWebSession()->getId());
-        self::assertSame(LoginHandoff::getTag($sessionId), $this->getWebSession()->get(LoginHandoff::create()->tagSessionParam));
+        self::assertSame($this->getQueryParam($callbackUrl, 'tag'), $this->getWebSession()->get(LoginHandoff::create()->tagSessionParam));
         self::assertNull(self::$client->getCookieJar()->get('_handoff', '/', 'www.test.localhost'));
 
-        $this->request($callbackUrl);
-        self::assertResponseStatusCodeSame(400);
+        // The login was counted on the auth host; the hand-off only records where it went.
+        $user = User::findOne($user->id) ?? self::fail('No user.');
+        self::assertSame(UserLogin::TYPE_HANDOFF, $this->getLastLoginType($user));
+        self::assertSame(3, $user->login_count);
+        self::assertEquals($lastLogin, $user->last_login);
     }
 
-    public function testAnExpiredTokenIsRefused(): void
+    /**
+     * The back button to a spent callback finds the user logged in already.
+     */
+    public function testASpentTokenLeadsALoggedInUserOn(): void
     {
         $callbackUrl = $this->getCallbackUrl($this->getUserFromFixture('owner'));
+
+        $this->request($callbackUrl);
+        $this->request($callbackUrl);
+
+        self::assertResponseStatusCodeSame(302);
+        self::assertResponseHeaderSame('location', self::RETURN_URL);
+    }
+
+    public function testAnExpiredTokenStartsTheHandOffOnce(): void
+    {
+        $callbackUrl = $this->getCallbackUrl($this->getUserFromFixture('owner'));
+        $this->getWebUser()->logout();
         UserToken::updateAll(['expires_at' => gmdate('Y-m-d H:i:s', time() - 1)], ['type' => UserToken::TYPE_LOGIN_HANDOFF]);
 
-        $this->request($callbackUrl);
-        self::assertResponseStatusCodeSame(400);
+        $this->assertCallbackRetries($callbackUrl);
     }
 
-    public function testATamperedReturnIsRefused(): void
+    public function testATamperedReturnLogsNobodyIn(): void
     {
         $callbackUrl = $this->getCallbackUrl($this->getUserFromFixture('owner'));
+        $this->getWebUser()->logout();
 
-        $this->request(str_replace(rawurlencode('update'), rawurlencode('delete'), $callbackUrl));
-        self::assertResponseStatusCodeSame(400);
+        $this->assertCallbackRetries(str_replace(rawurlencode('update'), rawurlencode('delete'), $callbackUrl));
     }
 
-    public function testAMissingOrForeignStateCookieIsRefused(): void
+    /**
+     * An expired state cookie, or a second tab's in its place.
+     */
+    public function testAMissingOrForeignStateCookieStartsTheHandOffAgain(): void
     {
         $callbackUrl = $this->getCallbackUrl($this->getUserFromFixture('owner'));
+        $this->getWebUser()->logout();
         $jar = self::$client->getCookieJar();
 
-        $jar->set(new Cookie('_handoff', $this->getSignedCookieValue('_handoff', 'another-browsers-state'), domain: 'www.test.localhost', secure: true));
-        $this->request($callbackUrl);
-        self::assertResponseStatusCodeSame(400);
+        $jar->set(new Cookie('_handoff', $this->getSignedCookieValue('_handoff', 'another-tabs-state'), domain: 'www.test.localhost', secure: true));
+        $this->assertCallbackRetries($callbackUrl);
 
         $jar->clear();
-        $this->request($callbackUrl);
-        self::assertResponseStatusCodeSame(400);
+        $this->assertCallbackRetries($callbackUrl);
     }
 
     public function testTheCallbackOnAnotherHostIsRefused(): void
@@ -147,10 +169,7 @@ final class LoginHandoffTest extends TestCase
         $this->getWebUser()->logout();
         $user->updateAttributes(['status' => User::STATUS_DISABLED]);
 
-        $this->request($callbackUrl);
-
-        self::assertResponseStatusCodeSame(400);
-        self::assertTrue($this->getWebUser()->getIsGuest());
+        $this->assertCallbackRetries($callbackUrl);
     }
 
     public function testAnUnknownReturnIsRefusedBeforeATokenExists(): void
@@ -182,13 +201,12 @@ final class LoginHandoffTest extends TestCase
     public function testTheLogoutEndsTheHandedOutSessionsOnly(): void
     {
         $user = $this->getUserFromFixture('owner');
-        $tag = LoginHandoff::getTag('auth-session');
+        $tag = str_repeat('t', 32);
 
         $this->insertSession('handed-out', $user, $tag);
         $this->insertSession('another-browser', $user, null);
 
-        $handoff = LoginHandoff::create();
-        $url = $handoff->getLogoutUrl($tag, self::HOST_INFO . '/admin/account/login');
+        $url = LoginHandoff::create()->getLogoutUrl($tag, $user->id, self::HOST_INFO . '/admin/account/login');
 
         $this->request(str_replace('signature=', 'signature=0', $url));
         self::assertResponseStatusCodeSame(400);
@@ -202,27 +220,55 @@ final class LoginHandoffTest extends TestCase
         self::assertTrue(Session::find()->where(['id' => 'another-browser'])->exists());
     }
 
-    public function testTheLogoutOnTheHandOffHostGoesThroughTheAuthHost(): void
+    /**
+     * A remember-me login renews the auth host's session id between the hand-off and the logout (#798).
+     */
+    public function testTheLogoutOnTheHandOffHostEndsTheRenewedAuthSession(): void
     {
-        $callbackUrl = $this->getCallbackUrl($this->getUserFromFixture('owner'));
-        $this->request($callbackUrl);
+        $user = $this->getUserFromFixture('owner');
+        $this->request($this->getCallbackUrl($user));
 
         $this->request(self::HOST_INFO . '/admin/account/logout', method: 'POST');
+        $logoutUrl = $this->getLocation();
+        self::assertStringStartsWith(self::AUTH_HOST_INFO . '/admin/sso/logout?', $logoutUrl);
+        self::assertTrue($this->getWebUser()->getIsGuest());
+
+        $this->getWebUser()->login($user);
+        $this->getWebSession()->regenerateID(true);
+
+        $this->request($logoutUrl);
 
         self::assertResponseStatusCodeSame(302);
-        self::assertStringStartsWith(self::AUTH_HOST_INFO . '/admin/sso/logout?', $this->getLocation());
         self::assertTrue($this->getWebUser()->getIsGuest());
     }
 
+    public function testTheLogoutLeavesAnotherAccountLoggedIn(): void
+    {
+        $owner = $this->getUserFromFixture('owner');
+        $admin = $this->getUserFromFixture('admin');
+
+        $this->getWebUser()->login($admin);
+        $this->request(LoginHandoff::create()->getLogoutUrl(str_repeat('t', 32), $owner->id, self::HOST_INFO . '/admin/account/login'));
+
+        self::assertSame($admin->id, $this->getWebUser()->getId());
+    }
+
+    /**
+     * The tag is the auth host's cookie, which outlives a renewed or expired session (#798).
+     */
     public function testTheAuthHostsLogoutEndsTheSessionsItHandedOut(): void
     {
         $user = $this->getUserFromFixture('owner');
+        $tag = $this->getQueryParam($this->getCallbackUrl($user), 'tag');
 
-        $this->getWebUser()->login($user);
-        $this->insertSession('handed-out', $user, LoginHandoff::getTag($this->getWebSession()->getId()));
+        $this->insertSession('handed-out', $user, $tag);
+        $this->getWebSession()->regenerateID(true);
 
-        $this->getWebUser()->logout();
+        // A page of the auth host first, which carries the CSRF cookie the logout is posted with
+        $this->request(self::AUTH_HOST_INFO . '/admin/account/update');
+        $this->request(self::AUTH_HOST_INFO . '/admin/account/logout', method: 'POST');
 
+        self::assertTrue($this->getWebUser()->getIsGuest());
         self::assertFalse(Session::find()->where(['id' => 'handed-out'])->exists());
     }
 
@@ -250,6 +296,31 @@ final class LoginHandoffTest extends TestCase
         self::assertStringStartsWith(self::HOST_INFO . '/admin/sso/callback?', $callbackUrl);
 
         return $callbackUrl;
+    }
+
+    /**
+     * A failed callback starts the hand-off again once, then gives up.
+     */
+    private function assertCallbackRetries(string $callbackUrl): void
+    {
+        $this->request($callbackUrl);
+
+        self::assertResponseStatusCodeSame(302);
+        self::assertStringStartsWith(self::HOST_INFO . '/admin/account/login?', $this->getLocation());
+        self::assertSame('1', $this->getQueryParam($this->getLocation(), 'retry'));
+        self::assertTrue($this->getWebUser()->getIsGuest());
+
+        $this->request("$callbackUrl&retry=1");
+        self::assertResponseStatusCodeSame(400);
+    }
+
+    private function getQueryParam(string $url, string $name): string
+    {
+        parse_str((string)parse_url($url, PHP_URL_QUERY), $params);
+        $value = $params[$name] ?? null;
+        self::assertIsString($value);
+
+        return $value;
     }
 
     private function request(string $uri, string $method = 'GET', bool $followRedirects = false): void

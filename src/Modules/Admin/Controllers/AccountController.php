@@ -269,21 +269,22 @@ class AccountController extends Controller
         // A cross-site navigation, which htmx cannot follow inside a request of its own.
         Application::current()->getResponse()->setHtmxReload();
 
-        return $this->redirect(LoginHandoff::create()->getStartUrl($returnUrl));
+        return $this->redirect(LoginHandoff::create()->getStartUrl($returnUrl, (bool)$this->request->get('retry')));
     }
 
     public function actionLogout(): Response|string
     {
         $handoff = LoginHandoff::create();
         $tag = Application::current()->getSession()->get($handoff->tagSessionParam);
+        $userId = $this->webuser->getIdentity()?->id;
 
         if (!$this->webuser->logout()) {
             return $this->redirect(['login']);
         }
 
         // The auth host would log the user straight back in.
-        if (is_string($tag) && $this->webuser->isHandoffRequired()) {
-            return $this->redirect($handoff->getLogoutUrl($tag, Url::to(['login'], true)));
+        if (is_string($tag) && is_int($userId) && $this->webuser->isHandoffRequired()) {
+            return $this->redirect($handoff->getLogoutUrl($tag, $userId, Url::to(['login'], true)));
         }
 
         $this->success(Yii::t('skeleton', 'ACCOUNT_LOGOUT_SUCCESS'));

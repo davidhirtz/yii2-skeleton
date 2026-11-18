@@ -31,9 +31,18 @@ class LoginHandoff
     public array $stateCookie = ['name' => '_handoff', 'httpOnly' => true, 'sameSite' => Cookie::SAME_SITE_LAX];
 
     /**
+     * A cookie, not the auth session, whose id every login renews and whose data expires with it.
+     *
+     * @var array<string, mixed>
+     */
+    public array $tagCookie = ['name' => '_handoffTag', 'httpOnly' => true, 'sameSite' => Cookie::SAME_SITE_LAX];
+
+    /**
      * Holds the auth host's tag in a session it handed out, for the logout.
      */
     public string $tagSessionParam = '__handoffTag';
+
+    private ?string $tag = null;
 
     public static function create(): static
     {
@@ -41,17 +50,45 @@ class LoginHandoff
     }
 
     /**
-     * A keyed hash, so a session row never holds another session's id.
+     * Renews the auth host's tag cookie, which lives as long as a remember-me login.
      */
-    public static function getTag(string $sessionId): string
+    public function getTag(): string
     {
-        return hash_hmac('sha256', "handoff|$sessionId", SecretKey::get());
+        $this->tag ??= $this->getCurrentTag() ?? Yii::$app->getSecurity()->generateRandomString();
+
+        Application::current()->getResponse()->getCookies()->add(Yii::$container->get(Cookie::class, [], [
+            ...$this->tagCookie,
+            'value' => $this->tag,
+            'expire' => time() + $this->getWebUser()->cookieLifetime,
+            'secure' => Application::current()->getRequest()->getIsSecureConnection(),
+        ]));
+
+        return $this->tag;
+    }
+
+    public function getCurrentTag(): ?string
+    {
+        $tag = $this->tag ?? Application::current()->getRequest()->getCookies()->getValue($this->tagCookie['name']);
+        return is_string($tag) && preg_match('/^[\w-]{32}$/', $tag) ? $tag : null;
+    }
+
+    public function removeTag(): void
+    {
+        $this->tag = null;
+
+        Application::current()->getResponse()->getCookies()->remove(Yii::$container->get(Cookie::class, [], [
+            ...$this->tagCookie,
+            'value' => '',
+        ]));
     }
 
     /**
      * Sets the state cookie on this host, the only one able to finish the hand-off.
      */
-    public function getStartUrl(string $return): string
+    /**
+     * A retry is the hand-off started again after a failed callback, which then gives up rather than loop.
+     */
+    public function getStartUrl(string $return, bool $retry = false): string
     {
         $state = Yii::$app->getSecurity()->generateRandomString();
         $request = Application::current()->getRequest();
@@ -63,20 +100,20 @@ class LoginHandoff
             'secure' => $request->getIsSecureConnection(),
         ]));
 
-        return $this->getAdminUrl($this->getWebUser()->getAuthHostInfo() ?? '', 'sso', [
+        return $this->getAdminUrl($this->getWebUser()->getAuthHostInfo() ?? '', 'sso', array_filter([
             'return' => $return,
             'state' => $state,
-        ]);
+            'retry' => $retry ? 1 : null,
+        ]));
     }
 
-    public function issue(User $user, string $return, string $state): string
+    public function issue(User $user, string $return, string $state, bool $retry = false): string
     {
         $session = Application::current()->getSession();
         $hostInfo = $this->getWebUser()->getHandoffHostInfo($return);
 
         if (
             !$session instanceof DbSession
-            || !$session->getIsActive()
             || $hostInfo === null
             || $hostInfo === Application::current()->getRequest()->getHostInfo()
             || !preg_match('/^[\w-]{32}$/', $state)
@@ -85,21 +122,22 @@ class LoginHandoff
         }
 
         $token = Yii::$app->getSecurity()->generateRandomString(48);
-        $tag = static::getTag($session->getId());
+        $tag = $this->getTag();
 
         UserToken::issue($user->id, UserToken::TYPE_LOGIN_HANDOFF, $this->getTokenValue($token, $state, $tag, $return), $this->tokenLifetime);
 
-        return $this->getAdminUrl($hostInfo, 'sso/callback', [
+        return $this->getAdminUrl($hostInfo, 'sso/callback', array_filter([
             'token' => $token,
             'tag' => $tag,
             'return' => $return,
-        ]);
+            'retry' => $retry ? 1 : null,
+        ]));
     }
 
     /**
-     * Single use: only the request deleting the row logs in.
+     * `null` for a token spent, expired or another browser's, which a back button or a second tab produce too.
      */
-    public function consume(string $token, string $tag, string $return): User
+    public function consume(string $token, string $tag, string $return): ?User
     {
         $request = Application::current()->getRequest();
         $state = $request->getCookies()->getValue($this->stateCookie['name']);
@@ -109,9 +147,11 @@ class LoginHandoff
             'value' => '',
         ]));
 
+        if (!str_starts_with($return, $request->getHostInfo() . '/') || !$this->getWebUser()->isHandoffUrl($return)) {
+            throw new BadRequestHttpException(Yii::t('skeleton', 'LOGIN_HANDOFF_ERROR'));
+        }
+
         $record = is_string($state)
-        && str_starts_with($return, $request->getHostInfo() . '/')
-        && $this->getWebUser()->isHandoffUrl($return)
             ? UserToken::find()
                 ->whereType(UserToken::TYPE_LOGIN_HANDOFF)
                 ->whereToken($this->getTokenValue($token, $state, $tag, $return))
@@ -128,32 +168,29 @@ class LoginHandoff
             && !$user->isDisabled()
             && (!$user->isUnconfirmed() || $webuser->isUnconfirmedEmailLoginEnabled());
 
-        if (!$isValid) {
-            throw new BadRequestHttpException(Yii::t('skeleton', 'LOGIN_HANDOFF_ERROR'));
-        }
-
-        return $user;
+        return $isValid ? $user : null;
     }
 
     /**
      * Signed, so no other site can end the auth host's session with a link.
      */
-    public function getLogoutUrl(string $tag, string $return): string
+    public function getLogoutUrl(string $tag, int $userId, string $return): string
     {
         $expires = time() + $this->logoutLifetime;
 
         return $this->getAdminUrl($this->getWebUser()->getAuthHostInfo() ?? '', 'sso/logout', [
             'tag' => $tag,
+            'user' => $userId,
             'expires' => $expires,
             'return' => $return,
-            'signature' => $this->getLogoutSignature($tag, $expires, $return),
+            'signature' => $this->getLogoutSignature($tag, $userId, $expires, $return),
         ]);
     }
 
-    public function validateLogout(string $tag, int $expires, string $return, string $signature): bool
+    public function validateLogout(string $tag, int $userId, int $expires, string $return, string $signature): bool
     {
         return $expires >= time()
-            && hash_equals($this->getLogoutSignature($tag, $expires, $return), $signature)
+            && hash_equals($this->getLogoutSignature($tag, $userId, $expires, $return), $signature)
             && $this->getWebUser()->isHandoffUrl($return);
     }
 
@@ -173,9 +210,9 @@ class LoginHandoff
         return "$token|$state|$tag|$return";
     }
 
-    protected function getLogoutSignature(string $tag, int $expires, string $return): string
+    protected function getLogoutSignature(string $tag, int $userId, int $expires, string $return): string
     {
-        return hash_hmac('sha256', "handoff-logout|$tag|$expires|$return", SecretKey::get());
+        return hash_hmac('sha256', "handoff-logout|$tag|$userId|$expires|$return", SecretKey::get());
     }
 
     protected function getWebUser(): \Hirtz\Skeleton\Web\User

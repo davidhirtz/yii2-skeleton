@@ -393,6 +393,14 @@ class User extends \yii\web\User
             ];
         }
 
+        // The login itself happened on the auth host, which counted it: a hand-off records where it went, no more.
+        if ($this->loginType === UserLogin::TYPE_HANDOFF && !$cookieBased) {
+            $this->insertLogin($identity, createdAt: new DateTime());
+            parent::afterLogin($identity, $cookieBased, $duration);
+
+            return;
+        }
+
         $identity->login_count++;
         $identity->last_login = new DateTime();
 
@@ -420,10 +428,17 @@ class User extends \yii\web\User
     #[Override]
     protected function beforeLogout($identity): bool
     {
-        $session = Application::current()->getSession();
+        $handoff = $this->enableSession ? LoginHandoff::create() : null;
+        $tag = $handoff?->getCurrentTag();
 
-        if ($this->enableSession && $session instanceof DbSession && $session->getIsActive()) {
-            $session->destroyTaggedSessions(LoginHandoff::getTag($session->getId()));
+        if ($handoff && $tag !== null) {
+            $session = Application::current()->getSession();
+
+            if ($session instanceof DbSession) {
+                $session->destroyTaggedSessions($tag);
+            }
+
+            $handoff->removeTag();
         }
 
         return parent::beforeLogout($identity);
