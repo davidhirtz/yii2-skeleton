@@ -166,6 +166,7 @@ trait ApplicationTrait
                             ],
                             'maskVars' => [
                                 '_GET.code',
+                                '_GET.token',
                                 // Apache prefixes `REDIRECT_` once per internal redirect, so a credential var
                                 // arrives as `HTTP_AUTHORIZATION`, `REDIRECT_HTTP_AUTHORIZATION` or any deeper
                                 // form — hence the leading wildcard, which `matchWildcard()` resolves.

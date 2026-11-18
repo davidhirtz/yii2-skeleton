@@ -19,6 +19,19 @@ class NavBar extends Widget
 {
     use TagAttributesTrait;
 
+    /**
+     * Shown before the language dropdown, added by bundles from an `EVENT_CONFIGURE` listener.
+     *
+     * @var list<Stringable>
+     */
+    protected array $items = [];
+
+    public function addItem(?Stringable ...$items): static
+    {
+        $this->items = [...$this->items, ...array_values(array_filter($items))];
+        return $this;
+    }
+
     #[Override]
     protected function renderContent(): Stringable|string
     {
@@ -36,6 +49,7 @@ class NavBar extends Widget
     {
         $content = implode('', array_map(strval(...), array_filter([
             $this->getSearchItem(),
+            ...$this->items,
             $this->getLanguageDropdownItem(),
             $this->getAsidePinItem(),
             $this->getMobileToggle(),

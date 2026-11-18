@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Added a central login: `Web\User::$authHostInfo` (`params.authHostInfo`) shows the login form, and hands the session to the hosts of `Web\User::$handoffHostInfos` (`Web\LoginHandoff`, `admin/sso`)
+- Added `Modules\Admin\Widgets\Navs\NavBar::addItem()`
 - Added `Modules\Admin\Module::$contentLanguageParam`, the query parameter that switches the admin's content language
 
 ## 3.29.0 (November 17, 2026)

@@ -71,6 +71,7 @@ answer `null` there instead.
 | `email` | `hostmaster@<host>` | the sender of every mail; the host is the request's, or under the console the one `hostInfo` (or `urlManager.hostInfo`) pins — without either, a console mail needs it set |
 | `mailerDsn` | `sendmail://default` | the Symfony mailer transport; any installed bridge's scheme (`resend+api://KEY@default` with `symfony/resend-mailer` and `symfony/http-client`); `native://default` where the host's `sendmail` has no `-bs` mode |
 | `cookieDomain` | none | the `Domain` of the session and auth cookies |
+| `authHostInfo` | `user.authHostInfo` | the one host showing the login form (`https://www.example.com`); every other host of `user.handoffHostInfos` sends a login there and gets the session back through `admin/sso`. Needs `DbSession` |
 | `cacheKeyPrefix` | none | `keyPrefix` of the cache component |
 | `sentryDsn` | none | adds `Log\SentryTarget` under `components.log.targets.sentry` |
 | `googleSearchConsoleProperty` | none | a dashboard shortcut to the Search Console property (`sc-domain:example.com`) |

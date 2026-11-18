@@ -23,4 +23,11 @@ class DbSession extends \yii\web\DbSession
             ->delete($this->sessionTable, $condition)
             ->execute();
     }
+
+    public function destroyTaggedSessions(string $handoffTag): int
+    {
+        return Instance::ensure($this->db, Connection::class)->createCommand()
+            ->delete($this->sessionTable, ['handoff_tag' => $handoffTag])
+            ->execute();
+    }
 }

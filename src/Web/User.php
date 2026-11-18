@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Web;
 
+use Closure;
 use Hirtz\Skeleton\Caching\CacheCounter;
 use Hirtz\Skeleton\Db\DateTime;
 use Hirtz\Skeleton\Helpers\CookieHelper;
@@ -95,6 +96,19 @@ class User extends \yii\web\User
      */
     public ?bool $cookieSecure = null;
 
+    /**
+     * The one host showing a login form; every other host of {@see $handoffHostInfos} is handed its session
+     * ({@see LoginHandoff}). `params.authHostInfo` wins.
+     *
+     * @var string|Closure(): (string|null)|null
+     */
+    public string|Closure|null $authHostInfo = null;
+
+    /**
+     * @var list<string>|Closure(): list<string>
+     */
+    public array|Closure $handoffHostInfos = [];
+
     public $enableAutoLogin = true;
     public $identityClass = \Hirtz\Skeleton\Models\User::class;
     /**
@@ -124,6 +138,8 @@ class User extends \yii\web\User
     private array $manageableUsers = [];
 
     private ?int $permissionCount = null;
+
+    private ?string $handoffTag = null;
 
     /**
      * The nonce by normalised address and cookie value, if the cookie is that account's.
@@ -201,7 +217,7 @@ class User extends \yii\web\User
     }
 
     /**
-     * A URL on this host or its draft host only, so the parameter cannot send a login anywhere else.
+     * A URL on this host, its draft host or a hand-off host only, so the parameter cannot send a login anywhere else.
      */
     public function isReturnUrl(string $url): bool
     {
@@ -213,7 +229,78 @@ class User extends \yii\web\User
 
         return Url::isLocalPath($url)
             || str_starts_with($url, $manager->getHostInfo() . '/')
-            || str_starts_with($url, $manager->getDraftHostInfo() . '/');
+            || str_starts_with($url, $manager->getDraftHostInfo() . '/')
+            || $this->isHandoffUrl($url);
+    }
+
+    public function getAuthHostInfo(): ?string
+    {
+        $hostInfo = Yii::$app->params['authHostInfo'] ?? null;
+        $hostInfo ??= $this->authHostInfo instanceof Closure ? ($this->authHostInfo)() : $this->authHostInfo;
+
+        return is_string($hostInfo) && $hostInfo !== '' ? rtrim($hostInfo, '/') : null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getHandoffHostInfos(): array
+    {
+        $hostInfos = $this->handoffHostInfos instanceof Closure ? ($this->handoffHostInfos)() : $this->handoffHostInfos;
+        return array_values(array_unique(array_map(fn (string $hostInfo) => rtrim($hostInfo, '/'), $hostInfos)));
+    }
+
+    public function isHandoffUrl(string $url): bool
+    {
+        return $this->getHandoffHostInfo($url) !== null;
+    }
+
+    /**
+     * Exact host infos, never the `fnmatch` patterns of `Request::$allowedHosts`.
+     */
+    public function getHandoffHostInfo(string $url): ?string
+    {
+        if (str_contains($url, '\\') || preg_match('/[\x00-\x1f]/', $url)) {
+            return null;
+        }
+
+        foreach ($this->getHandoffHostInfos() as $hostInfo) {
+            if (str_starts_with($url, "$hostInfo/")) {
+                return $hostInfo;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * A login on this host goes through the auth host, which needs `DbSession` to end the sessions it handed out.
+     */
+    public function isHandoffRequired(): bool
+    {
+        $authHostInfo = $this->getAuthHostInfo();
+        $hostInfo = Request::current()?->getHostInfo();
+
+        return $authHostInfo !== null
+            && $hostInfo !== null
+            && $hostInfo !== $authHostInfo
+            && in_array($hostInfo, $this->getHandoffHostInfos(), true)
+            && Application::current()->getSession() instanceof DbSession;
+    }
+
+    /**
+     * Tags the session with the auth host's, which ends it on logout.
+     */
+    public function loginByHandoff(\Hirtz\Skeleton\Models\User $identity, string $tag): bool
+    {
+        $this->loginType = UserLogin::TYPE_HANDOFF;
+        $this->handoffTag = $tag;
+
+        try {
+            return $this->login($identity);
+        } finally {
+            $this->handoffTag = null;
+        }
     }
 
     /**
@@ -297,9 +384,12 @@ class User extends \yii\web\User
         }
 
         if ($session instanceof MultiFieldSession) {
+            $handoffTag = $this->handoffTag;
+
             $session->writeCallback = fn () => [
                 'ip_address' => ($ipAddress = Application::current()->getRequest()->getUserIP()) ? inet_pton($ipAddress) : null,
                 'user_id' => $identity->id,
+                'handoff_tag' => $handoffTag,
             ];
         }
 
@@ -320,6 +410,23 @@ class User extends \yii\web\User
         $this->sendDeviceCookie($identity);
 
         parent::afterLogin($identity, $cookieBased, $duration);
+    }
+
+    /**
+     * On the auth host, the sessions it handed to other hosts end with its own.
+     *
+     * @param \Hirtz\Skeleton\Models\User $identity
+     */
+    #[Override]
+    protected function beforeLogout($identity): bool
+    {
+        $session = Application::current()->getSession();
+
+        if ($this->enableSession && $session instanceof DbSession && $session->getIsActive()) {
+            $session->destroyTaggedSessions(LoginHandoff::getTag($session->getId()));
+        }
+
+        return parent::beforeLogout($identity);
     }
 
     /**

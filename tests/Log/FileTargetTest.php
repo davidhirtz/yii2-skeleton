@@ -39,6 +39,17 @@ class FileTargetTest extends TestCase
         self::assertStringContainsString("'q' => 'search'", $context);
     }
 
+    public function testTheLoginHandoffTokenIsMasked(): void
+    {
+        $_SERVER['REQUEST_URI'] = '/admin/sso/callback?token=a-handoff-token&tag=t';
+        $_SERVER['QUERY_STRING'] = 'token=a-handoff-token&tag=t';
+
+        $context = $this->getContextMessage();
+
+        self::assertStringNotContainsString('a-handoff-token', $context);
+        self::assertStringContainsString('/admin/sso/callback?token=***&tag=t', $context);
+    }
+
     /**
      * The name is matched whole: a parameter that merely ends in one of them is not a credential.
      */

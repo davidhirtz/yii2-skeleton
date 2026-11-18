@@ -36,6 +36,7 @@ class UserToken extends ActiveRecord
     public const string TYPE_MCP_READ = 'mcp-read';
     public const string TYPE_MCP_WRITE = 'mcp-write';
     public const string TYPE_MCP_REFRESH = 'mcp-refresh';
+    public const string TYPE_LOGIN_HANDOFF = 'login-handoff';
 
     /**
      * A refresh token already exchanged, kept until it expires so that its reuse is noticed.

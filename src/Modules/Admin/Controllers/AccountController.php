@@ -21,6 +21,7 @@ use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Modules\ModuleTrait;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Web\Controller;
+use Hirtz\Skeleton\Web\LoginHandoff;
 use Override;
 use Yii;
 use yii\filters\AccessControl;
@@ -203,6 +204,10 @@ class AccountController extends Controller
             return $this->goHome();
         }
 
+        if ($this->webuser->isHandoffRequired()) {
+            return $this->startLoginHandoff();
+        }
+
         $form = LoginForm::create();
         $form->email = $this->request->get('email', Application::current()->getSession()->get('email'));
 
@@ -239,12 +244,49 @@ class AccountController extends Controller
         ]);
     }
 
-    public function actionLogout(): Response|string
+    /**
+     * Every login form is on the auth host, which sends the user back here with a token.
+     */
+    protected function startLoginHandoff(): Response
     {
-        if ($this->webuser->logout()) {
-            $this->success(Yii::t('skeleton', 'ACCOUNT_LOGOUT_SUCCESS'));
+        $returnUrl = $this->request->get($this->webuser->returnUrlQueryParam);
+
+        if (!is_string($returnUrl) || !$this->webuser->isReturnUrl($returnUrl)) {
+            $returnUrl = $this->webuser->getReturnUrl($this->module->getHomeRoute());
         }
 
+        $hostInfo = $this->request->getHostInfo();
+
+        if (Url::isLocalPath($returnUrl)) {
+            $returnUrl = $hostInfo . $returnUrl;
+        }
+
+        // The token logs in on this host alone.
+        if (!str_starts_with($returnUrl, "$hostInfo/")) {
+            $returnUrl = $hostInfo . Url::to($this->module->getHomeRoute());
+        }
+
+        // A cross-site navigation, which htmx cannot follow inside a request of its own.
+        Application::current()->getResponse()->setHtmxReload();
+
+        return $this->redirect(LoginHandoff::create()->getStartUrl($returnUrl));
+    }
+
+    public function actionLogout(): Response|string
+    {
+        $handoff = LoginHandoff::create();
+        $tag = Application::current()->getSession()->get($handoff->tagSessionParam);
+
+        if (!$this->webuser->logout()) {
+            return $this->redirect(['login']);
+        }
+
+        // The auth host would log the user straight back in.
+        if (is_string($tag) && $this->webuser->isHandoffRequired()) {
+            return $this->redirect($handoff->getLogoutUrl($tag, Url::to(['login'], true)));
+        }
+
+        $this->success(Yii::t('skeleton', 'ACCOUNT_LOGOUT_SUCCESS'));
         return $this->redirect(['login']);
     }
 

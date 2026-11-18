@@ -40,6 +40,7 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
     public const int TYPE_SIGNUP = 4;
     public const int TYPE_CONFIRM_EMAIL = 5;
     public const int TYPE_RESET_PASSWORD = 6;
+    public const int TYPE_HANDOFF = 7;
 
     #[Override]
     public function rules(): array
@@ -92,6 +93,9 @@ class UserLogin extends ActiveRecord implements TypeAttributeInterface
             Type::make(static::TYPE_RESET_PASSWORD)
                 ->name(Yii::t('skeleton', 'USER_LOGIN_TYPE_PASSWORD_NAME'))
                 ->icon('unlock'),
+            Type::make(static::TYPE_HANDOFF)
+                ->name(Yii::t('skeleton', 'USER_LOGIN_TYPE_HANDOFF_NAME'))
+                ->icon('exchange-alt'),
         ];
     }
 

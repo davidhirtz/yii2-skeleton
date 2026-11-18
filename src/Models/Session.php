@@ -13,6 +13,7 @@ use Override;
  * @property string|null $ip_address
  * @property int|null $expire
  * @property string|null $data
+ * @property string|null $handoff_tag
  */
 class Session extends ActiveRecord
 {

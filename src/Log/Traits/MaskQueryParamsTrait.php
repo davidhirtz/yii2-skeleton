@@ -12,7 +12,7 @@ trait MaskQueryParamsTrait
      *
      * @var list<string>
      */
-    public array $maskQueryParams = ['code'];
+    public array $maskQueryParams = ['code', 'token'];
 
     /**
      * Matched up to the next separator rather than parsed, so the subject may be a whole dump, and `passcode=` must not
