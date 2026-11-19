@@ -7,9 +7,11 @@ namespace Hirtz\Skeleton\Widgets;
 use Hirtz\Skeleton\Html\A;
 use Hirtz\Skeleton\Html\Traits\TagAttributesTrait;
 use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
+use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Widgets\Buttons\AdminButton;
 use Override;
 use Stringable;
+use Yii;
 
 /**
  * The `admin` class is what {@see AdminButton::registerCss()} positions and reveals, so an {@see AdminButton} has to be
@@ -40,7 +42,24 @@ class AdminLink extends Widget
     protected function renderContent(): string|Stringable
     {
         $route = $this->canUpdateModel() ? $this->model->getAdminRoute() : null;
-        return $route ? A::make()->attributes($this->attributes)->href($route) : '';
+        return $route ? A::make()->attributes($this->attributes)->href($this->withContentLanguage($route)) : '';
+    }
+
+    /**
+     * Always the page's language, never compared with the session's, so a cached page stays the same for everyone.
+     *
+     * @param array<array-key, mixed> $route
+     * @return array<array-key, mixed>
+     */
+    protected function withContentLanguage(array $route): array
+    {
+        $module = Module::current();
+
+        if ($module->hasContentLanguage(Yii::$app->language) && count($module->getContentLanguages()) > 1) {
+            $route[$module->contentLanguageParam] = Yii::$app->language;
+        }
+
+        return $route;
     }
 
     protected function canUpdateModel(): bool

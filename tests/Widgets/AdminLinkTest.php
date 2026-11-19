@@ -28,6 +28,35 @@ class AdminLinkTest extends TestCase
         self::assertStringContainsString('target="_blank"', $html);
     }
 
+    public function testTheLinkCarriesThePagesLanguageToTheAdmin(): void
+    {
+        $user = $this->login(User::AUTH_USER);
+        Yii::$app->getUrlManager()->languages = ['en-US' => 'en', 'de' => 'de'];
+        Yii::$app->language = 'de';
+
+        $url = Yii::$app->getUrlManager()->createUrl([...$user->getAdminRoute(), 'contentLanguage' => 'de']);
+
+        self::assertStringContainsString(htmlspecialchars($url), AdminLink::tag($user));
+    }
+
+    public function testASiteInOneLanguageLinksWithoutIt(): void
+    {
+        $user = $this->login(User::AUTH_USER);
+        Yii::$app->getUrlManager()->languages = ['de' => 'de'];
+        Yii::$app->language = 'de';
+
+        self::assertStringNotContainsString('contentLanguage', AdminLink::tag($user));
+    }
+
+    public function testALanguageTheSiteDoesNotOfferIsNotCarried(): void
+    {
+        $user = $this->login(User::AUTH_USER);
+        Yii::$app->getUrlManager()->languages = ['en-US' => 'en', 'fr' => 'fr'];
+        Yii::$app->language = 'de';
+
+        self::assertStringNotContainsString('contentLanguage', AdminLink::tag($user));
+    }
+
     public function testAGuestIsLinkedNowhere(): void
     {
         self::assertSame('', AdminLink::tag($this->getUserFromFixture('admin')));
