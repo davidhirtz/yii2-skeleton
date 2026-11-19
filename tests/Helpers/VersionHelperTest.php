@@ -89,6 +89,40 @@ class VersionHelperTest extends TestCase
         }
     }
 
+    public function testTheRepositoryIsTheOriginRemoteWithoutCredentials(): void
+    {
+        $root = (string)Yii::getAlias('@root');
+        $path = Yii::getAlias('@runtime') . '/version-helper-' . uniqid();
+
+        FileHelper::createDirectory("$path/.git");
+
+        try {
+            Yii::setAlias('@root', $path);
+            self::assertNull(VersionHelper::getApplicationRepository(), 'no config');
+
+            file_put_contents("$path/.git/config", <<<'INI'
+                [core]
+                	bare = false
+                [remote "upstream"]
+                	url = git@github.com:other/repo.git
+                [remote "origin"]
+                	url = https://x-access-token:secret@github.com/owner/repo.git
+                	fetch = +refs/heads/*:refs/remotes/origin/*
+                INI);
+
+            self::assertSame('https://github.com/owner/repo.git', VersionHelper::getApplicationRepository());
+
+            file_put_contents("$path/.git/config", "[remote \"origin\"]\n\turl = git@github.com:owner/repo.git\n");
+            self::assertSame('git@github.com:owner/repo.git', VersionHelper::getApplicationRepository());
+
+            file_put_contents("$path/.git/config", "[remote \"upstream\"]\n\turl = git@github.com:owner/repo.git\n");
+            self::assertNull(VersionHelper::getApplicationRepository(), 'no origin');
+        } finally {
+            Yii::setAlias('@root', $root);
+            FileHelper::removeDirectory($path);
+        }
+    }
+
     public function testTheInstalledExtensionsAreSortedAndVersioned(): void
     {
         $extensions = VersionHelper::getExtensions();

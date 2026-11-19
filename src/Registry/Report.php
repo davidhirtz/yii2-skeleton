@@ -55,6 +55,7 @@ class Report implements JsonSerializable
             'name' => VersionHelper::getApplicationName(),
             'version' => VersionHelper::getApplicationVersion(),
             'reference' => VersionHelper::getApplicationReference(),
+            'repository' => VersionHelper::getApplicationRepository(),
             'deployed_at' => VersionHelper::getApplicationUpdatedAt(),
             'hostname' => $this->getHostname(),
             'base_path' => Yii::$app->getBasePath(),

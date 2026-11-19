@@ -1,3 +1,7 @@
+## Unreleased
+
+- Added `Helpers\VersionHelper::getApplicationRepository()`, the checkout's `origin` remote without credentials, which the registry report carries as `repository`
+
 ## 3.30.0 (November 18, 2026)
 
 - Added a central login: `Web\User::$authHostInfo` (`params.authHostInfo`) shows the login form, and hands the session to the hosts of `Web\User::$handoffHostInfos` (`Web\LoginHandoff`, `admin/sso`)

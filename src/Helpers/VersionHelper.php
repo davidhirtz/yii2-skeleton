@@ -67,6 +67,35 @@ class VersionHelper
     }
 
     /**
+     * The `origin` remote of the checkout, credentials removed: a deploy pulling over HTTPS may have a token in it.
+     * `null` without a `.git` directory or an `origin`.
+     */
+    public static function getApplicationRepository(): ?string
+    {
+        $path = self::getGitPath();
+        $config = $path === null ? false : @file_get_contents(self::getGitCommonPath($path) . '/config');
+
+        if (!is_string($config)) {
+            return null;
+        }
+
+        $section = null;
+
+        foreach (preg_split('/\R/', $config) ?: [] as $line) {
+            $line = trim($line);
+
+            if (preg_match('/^\[\s*([^\]]+?)\s*\]$/', $line, $matches)) {
+                $section = $matches[1];
+            } elseif ($section === 'remote "origin"' && preg_match('/^url\s*=\s*(.+)$/', $line, $matches)) {
+                $url = preg_replace('#^([a-z][a-z0-9+.-]*://)[^@/]*@#i', '$1', trim($matches[1], " \t\""));
+                return is_string($url) && $url !== '' ? $url : null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * The commit's checkout time, or the last `composer install`.
      */
     public static function getApplicationUpdatedAt(): ?int
