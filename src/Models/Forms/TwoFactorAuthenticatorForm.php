@@ -139,6 +139,12 @@ class TwoFactorAuthenticatorForm extends Model
      */
     private function validateDeleteCode(): bool
     {
+        // Before the recovery code, which `beforeValidate()` would otherwise not stop
+        if (Application::current()->getUser()->isLoginAttemptLimitReached($this->user->email)) {
+            $this->addError('code', Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS_ERROR'));
+            return false;
+        }
+
         $isRecoveryCode = strlen((string)$this->code) === User::RECOVERY_CODE_LENGTH;
 
         return ($isRecoveryCode && $this->user->validateTwoFactorAuthenticationRecoveryCode($this->code))

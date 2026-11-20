@@ -33,7 +33,7 @@ readonly class AuthorizationRequest
             throw new OAuthException(OAuthException::INVALID_CLIENT, 'The client_id is not an HTTPS URL with a path.');
         }
 
-        if ($allowedClientIds && !array_filter($allowedClientIds, fn (string $prefix): bool => str_starts_with($clientId, $prefix))) {
+        if ($allowedClientIds && !array_filter($allowedClientIds, fn (string $prefix): bool => str_starts_with($clientId, rtrim($prefix, '/') . '/'))) {
             throw new OAuthException(OAuthException::INVALID_CLIENT, 'This client is not allowed.');
         }
 

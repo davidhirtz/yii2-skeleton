@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Controllers;
 
+use Hirtz\Skeleton\Models\Forms\AccountDeleteForm;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
@@ -32,5 +33,20 @@ class AccountDeleteControllerTest extends TestCase
 
         self::assertInstanceOf(Response::class, $response);
         self::assertStringEndsWith('/admin/account/login', (string)$response->getHeaders()->get('location'));
+    }
+
+    public function testThePasswordCountsAgainstTheLoginAttemptLimit(): void
+    {
+        $user = $this->getUserFromFixture('admin');
+
+        $webuser = $this->getWebUser();
+        $webuser->loginAttemptLimit = 2;
+
+        foreach (['wrong', 'wrong', 'password'] as $password) {
+            self::assertFalse(AccountDeleteForm::create(['user' => $user, 'value' => $password])->delete());
+        }
+
+        self::assertTrue($webuser->isLoginAttemptLimitReached($user->email));
+        self::assertNotNull(User::findOne($user->id));
     }
 }

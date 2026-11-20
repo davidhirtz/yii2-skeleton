@@ -97,9 +97,21 @@ class AccountCredentialsForm extends Model
         return true;
     }
 
+    /**
+     * Guessed against the login's attempt limit, as a hijacked session would.
+     */
     protected function validateOldPassword(): void
     {
+        $webuser = Application::current()->getUser();
+        $email = (string)($this->user->getOldAttribute('email') ?? $this->user->email);
+
+        if ($webuser->isLoginAttemptLimitReached($email)) {
+            $this->addError('oldPassword', Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS_ERROR'));
+            return;
+        }
+
         if (!$this->user->validatePassword((string)$this->oldPassword)) {
+            $webuser->addFailedLoginAttempt($email);
             $this->addInvalidAttributeError('oldPassword');
         }
     }

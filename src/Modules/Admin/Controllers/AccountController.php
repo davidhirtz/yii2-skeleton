@@ -194,7 +194,11 @@ class AccountController extends Controller
             return Application::current()->getResponse()->setHtmxReload();
         }
 
-        return $this->redirect($this->request->getReferrer() ?? $this->module->getHomeRoute());
+        $referrer = $this->request->getReferrer();
+
+        return $this->redirect($referrer !== null && $this->webuser->isReturnUrl($referrer)
+            ? $referrer
+            : $this->module->getHomeRoute());
     }
 
     public function actionLogin(): Response|string

@@ -158,8 +158,9 @@ class UserController extends Controller
         $user->setTwoFactorAuthenticationSecret(null);
 
         if ($user->update()) {
-            // A session opened behind the second factor must not outlive it.
+            // A session or agent let in behind the second factor must not outlive it.
             $this->webuser->revokeOtherSessions($user);
+            $user->revokeMcpAccess();
             $this->success(Yii::t('skeleton', 'USER_UPDATE_SUCCESS'));
         }
 

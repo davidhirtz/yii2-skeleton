@@ -47,6 +47,11 @@ class RedirectUriTest extends TestCase
         self::assertFalse(RedirectUri::isValid('https://claude.ai/callback#x'));
         self::assertFalse(RedirectUri::isValid('/callback'));
         self::assertFalse(RedirectUri::isValid('javascript:alert(1)'));
+
+        // `parse_url()` reads `localhost`, a browser `evil.example.com`
+        self::assertFalse(RedirectUri::isValid('http://evil.example.com\@localhost/callback'));
+        self::assertFalse(RedirectUri::isValid('http://user@localhost/callback'));
+        self::assertFalse(RedirectUri::isValid('https://user:pass@claude.ai/callback'));
     }
 
     public function testResourceEquality(): void

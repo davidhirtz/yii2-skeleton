@@ -41,13 +41,21 @@ class RedirectUri
     }
 
     /**
-     * A redirect URI a client may register: absolute, without a fragment, HTTPS unless it is a loopback address.
+     * A redirect URI a client may register: absolute, without a fragment, HTTPS unless it is a loopback address. A
+     * backslash or userinfo is refused, since a browser and `parse_url()` read another host out of it.
      */
     public static function isValid(string $uri): bool
     {
         $parts = parse_url($uri);
 
-        if (!is_array($parts) || !isset($parts['scheme'], $parts['host']) || isset($parts['fragment'])) {
+        if (
+            !is_array($parts)
+            || !isset($parts['scheme'], $parts['host'])
+            || isset($parts['fragment'])
+            || isset($parts['user'])
+            || isset($parts['pass'])
+            || str_contains($uri, '\\')
+        ) {
             return false;
         }
 

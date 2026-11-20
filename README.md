@@ -67,7 +67,7 @@ answer `null` there instead.
 | `secretKey` | `cookieValidationKey` | encrypts 2FA secrets and signs tokens |
 | `adminAlias` | `admin` | the URL prefix of the admin module |
 | `hostInfo` | none | the installation's canonical URL (`https://www.example.com`), pinned where `urlManager` configures none: absolute URLs never name the host a request claimed, and the console, which has no request, builds them (its `baseUrl` defaults to the root) and reports itself to the registry under it |
-| `allowedHosts` | none | comma-separated host names a request may carry (`fnmatch()` patterns: `www.example.com, *.example.com`); any other gets a 400 before routing, local hosts always pass. Without it, or a pinned `hostInfo`, links built from the request (password resets) name whatever host it claimed, and the admin says so |
+| `allowedHosts` | none | comma-separated host names a request may carry (`fnmatch()` patterns: `www.example.com, *.example.com`); any other gets a 400 before routing; local hosts pass only under `YII_ENV_DEV` (`Request::$allowLocalHosts`). Without it, or a pinned `hostInfo`, links built from the request (password resets) name whatever host it claimed, and the admin says so |
 | `email` | `hostmaster@<host>` | the sender of every mail; the host is the request's, or under the console the one `hostInfo` (or `urlManager.hostInfo`) pins — without either, a console mail needs it set |
 | `mailerDsn` | `sendmail://default` | the Symfony mailer transport; any installed bridge's scheme (`resend+api://KEY@default` with `symfony/resend-mailer` and `symfony/http-client`); `native://default` where the host's `sendmail` has no `-bs` mode |
 | `cookieDomain` | none | the `Domain` of the session and auth cookies |

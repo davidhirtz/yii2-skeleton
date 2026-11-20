@@ -30,6 +30,11 @@ class Request extends \yii\web\Request
     public array $allowedHosts = [];
 
     /**
+     * Decided by the application, never by the request: the host is the very value a request makes up.
+     */
+    public bool $allowLocalHosts = YII_ENV_DEV || YII_ENV_TEST;
+
+    /**
      * Also switches the admin's session language ({@see \Hirtz\Skeleton\Modules\Admin\Module::beforeAction()}).
      */
     public string $languageParam = 'language';
@@ -91,7 +96,7 @@ class Request extends \yii\web\Request
             return false;
         }
 
-        if (!$this->allowedHosts || $this->getEnvironment() === self::ENVIRONMENT_LOCAL) {
+        if (!$this->allowedHosts || ($this->allowLocalHosts && $this->getEnvironment() === self::ENVIRONMENT_LOCAL)) {
             return true;
         }
 

@@ -166,6 +166,26 @@ class AccountCredentialsFormTest extends TestCase
         self::assertSame([$form->user->id, $form->user->auth_key, 3600], json_decode($value, true));
     }
 
+    public function testTheOldPasswordCountsAgainstTheLoginAttemptLimit(): void
+    {
+        $webuser = $this->getWebUser();
+        $webuser->loginAttemptLimit = 2;
+
+        $form = $this->createForm();
+        $form->newPassword = $form->repeatPassword = 'Neues-Passwort-ü-1';
+
+        foreach (['wrong', 'wrong'] as $password) {
+            $form->oldPassword = $password;
+            self::assertFalse($form->save());
+        }
+
+        self::assertTrue($webuser->isLoginAttemptLimitReached($form->user->email));
+
+        $form->oldPassword = 'password';
+        self::assertFalse($form->save());
+        self::assertSame(Yii::t('skeleton', 'LOGIN_TOO_MANY_ATTEMPTS_ERROR'), $form->getFirstError('oldPassword'));
+    }
+
     protected function createForm(): AccountCredentialsForm
     {
         return AccountCredentialsForm::create([

@@ -32,6 +32,7 @@ class StreamUploadedFileIpTest extends TestCase
             'ipv4-mapped metadata' => ['::ffff:169.254.169.254'],
             'ipv4-compatible metadata' => ['::a9fe:a9fe'],
             'nat64 metadata' => ['64:ff9b::a9fe:a9fe'],
+            'ipv4-translated loopback' => ['::ffff:0:7f00:1'],
             'local-use nat64' => ['64:ff9b:1::8.8.8.8'],
             'invalid' => ['not-an-ip'],
         ];

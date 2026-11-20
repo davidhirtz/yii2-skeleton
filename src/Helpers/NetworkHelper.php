@@ -48,6 +48,7 @@ class NetworkHelper
                 $packed = substr($packed, 12);
             } elseif (
                 str_starts_with($packed, str_repeat("\0", 12))
+                || str_starts_with($packed, str_repeat("\0", 8) . "\xff\xff\0\0")
                 || str_starts_with($packed, "\0\x64\xff\x9b\0\x01")
                 || $packed[0] === "\xff"
                 || ($packed[0] === "\xfe" && (ord($packed[1]) & 0xc0) === 0xc0)

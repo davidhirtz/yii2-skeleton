@@ -26,6 +26,7 @@ use Hirtz\Skeleton\Models\Interfaces\AdminModelInterface;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Web\Request;
+use Hirtz\Skeleton\Web\User as WebUser;
 use Yii;
 use yii\base\Component;
 
@@ -78,7 +79,8 @@ class Mcp extends Component
     public int $refreshTokenLifetime = 2592000;
 
     /**
-     * Empty allows any client.
+     * `client_id` prefixes, matched up to a `/` so `https://claude.ai` admits no `https://claude.ai.example.com`. Empty
+     * allows any client.
      *
      * @var list<string>
      */
@@ -179,6 +181,10 @@ class Mcp extends Component
         $user = $record?->user;
 
         if ($user === null || ($user->isDisabled() && !$user->isOwner())) {
+            return null;
+        }
+
+        if ($user->isUnconfirmed() && !(WebUser::current()?->isUnconfirmedEmailLoginEnabled() ?? true)) {
             return null;
         }
 

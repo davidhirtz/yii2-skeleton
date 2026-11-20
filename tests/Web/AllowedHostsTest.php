@@ -66,9 +66,17 @@ class AllowedHostsTest extends TestCase
             ['draft.example.org', true],
             ['www.attacker.com', false],
             ['www.example.com.attacker.com', false],
-            // a local host never reaches a mailbox anyone else reads
+            // a local host passes under YII_ENV_DEV and YII_ENV_TEST
             ['www.test.localhost', true],
         ];
+    }
+
+    public function testALocalHostIsRefusedOutsideDevelopment(): void
+    {
+        $request = $this->getRequest('https://evil.localhost', ['www.example.com']);
+        $request->allowLocalHosts = false;
+
+        self::assertFalse($request->isAllowedHost());
     }
 
     public function testTheListDefaultsToTheCommaSeparatedParam(): void

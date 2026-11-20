@@ -357,6 +357,11 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
         $trail->model_id = (string)$this->id;
         $trail->insert();
 
+        $this->revokeMcpAccess();
+    }
+
+    public function revokeMcpAccess(): void
+    {
         OAuthGrant::deleteAll(['user_id' => $this->id]);
         UserToken::deleteAll(['user_id' => $this->id, 'type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]]);
     }

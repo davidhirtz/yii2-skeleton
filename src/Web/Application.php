@@ -235,9 +235,10 @@ class Application extends \yii\web\Application
             ];
 
             if ($domain = $this->params['cookieDomain'] ?? false) {
-                $hostInfo = trim((string)$domain, '.');
+                $suffix = strtolower(trim((string)$domain, '.'));
+                $host = strtolower((string)$this->getRequest()->getHostName());
 
-                if (str_ends_with((string)$this->getRequest()->getHostInfo(), $hostInfo)) {
+                if ($host === $suffix || str_ends_with($host, ".$suffix")) {
                     $config['domain'] = $domain;
                 }
             }

@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Mcp\OAuth;
 
 use Hirtz\Skeleton\Models\UserToken;
 use Yii;
+use yii\mutex\Mutex;
 
 /**
  * Kept in the cache under the code's HMAC: a code lives a minute and is spent on its first exchange, so nothing is
@@ -30,18 +31,33 @@ readonly class AuthorizationCode
         return $code;
     }
 
+    /**
+     * Spent under the mutex: `DbCache::delete()` answers `true` for an entry another request deleted first.
+     */
     public static function consume(string $code): ?self
     {
         $cache = Yii::$app->getCache();
+        $mutex = Yii::$app->has('mutex') ? Yii::$app->get('mutex') : null;
         $key = self::getCacheKey($code);
-        $value = $cache?->get($key);
+        $name = 'oauth-code-' . $key[1];
 
-        // Only one of two concurrent exchanges deletes the entry (`DbCache` answers `true` regardless)
-        if (!$value instanceof self || !$cache->delete($key)) {
+        if ($mutex instanceof Mutex && !$mutex->acquire($name, 5)) {
             return null;
         }
 
-        return $value;
+        try {
+            $value = $cache?->get($key);
+
+            if (!$value instanceof self || !$cache->delete($key)) {
+                return null;
+            }
+
+            return $value;
+        } finally {
+            if ($mutex instanceof Mutex) {
+                $mutex->release($name);
+            }
+        }
     }
 
     public function verifyCodeVerifier(string $verifier): bool

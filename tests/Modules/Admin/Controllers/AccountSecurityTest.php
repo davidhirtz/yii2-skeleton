@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Hirtz\Skeleton\Tests\Modules\Admin\Controllers;
 
 use Hirtz\Skeleton\Models\Forms\TwoFactorAuthenticatorForm;
+use Hirtz\Skeleton\Mcp\Mcp;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Models\UserToken;
 use Hirtz\Skeleton\Modules\Admin\Controllers\AccountController;
 use Hirtz\Skeleton\Test\TestCase;
 use Hirtz\Skeleton\Test\Traits\UserFixtureTrait;
@@ -256,6 +258,35 @@ class AccountSecurityTest extends TestCase
         $location = $this->getWebResponse()->getHeaders()->get('location');
 
         self::assertStringContainsString('account/login', (string)$location);
+    }
+
+    public function testARecoveryCodeIsRefusedOnceTheAttemptLimitIsReached(): void
+    {
+        $user = $this->login('admin');
+
+        $codes = $user->generateTwoFactorAuthenticationRecoveryCodes();
+        $user->update();
+
+        $webuser = $this->getWebUser();
+        $webuser->loginAttemptLimit = 1;
+        $webuser->addFailedLoginAttempt($user->email);
+
+        $this->post('admin/account/disable-authenticator', [
+            'GoogleAuthenticator' => ['code' => $codes[0]],
+        ]);
+
+        self::assertTrue(User::findOne($user->id)?->hasTwoFactorAuthentication());
+    }
+
+    public function testDisablingAnotherUsersAuthenticatorRevokesTheirMcpTokens(): void
+    {
+        $this->login('owner');
+        $admin = $this->getUserFromFixture('admin');
+        Mcp::getComponent()->issueToken($admin, false);
+
+        $this->post('admin/user/disable-authenticator', [], ['id' => $admin->id]);
+
+        self::assertFalse(UserToken::find()->where(['user_id' => $admin->id, 'type' => [UserToken::TYPE_MCP_READ, UserToken::TYPE_MCP_WRITE]])->exists());
     }
 
     private function getCode(string $secret): string
