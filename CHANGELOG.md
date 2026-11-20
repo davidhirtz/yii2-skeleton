@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Added a `tenant` filter to the admin search and `Modules\Admin\Widgets\Navs\SearchHeader`
+- Added `Search\SearchResult::$badge`, `withBadge()`, `withRoute()` and `SearchResultBuilder::createSearchResult()`
 - Added `Helpers\VersionHelper::getApplicationRepository()`, the checkout's `origin` remote without credentials, which the registry report carries as `repository`
 
 ## 3.30.0 (November 18, 2026)

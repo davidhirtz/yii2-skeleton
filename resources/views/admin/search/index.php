@@ -12,19 +12,17 @@ declare(strict_types=1);
  */
 
 use Hirtz\Skeleton\Modules\Admin\Controllers\SearchController;
+use Hirtz\Skeleton\Modules\Admin\Widgets\Navs\SearchHeader;
 use Hirtz\Skeleton\Search\SearchResult;
 use Hirtz\Skeleton\Web\View;
 use Hirtz\Skeleton\Widgets\Container;
 use Hirtz\Skeleton\Widgets\Grids\Pagers\LinkPager;
-use Hirtz\Skeleton\Widgets\Navs\Header;
 use Hirtz\Skeleton\Widgets\Panels\Card;
 use Hirtz\Skeleton\Widgets\Search\SearchResultList;
 use yii\data\Pagination;
 
-echo Header::make()
-    ->title($query !== ''
-        ? Yii::t('skeleton', 'SEARCH_RESULTS_TITLE', ['query' => $query])
-        : Yii::t('skeleton', 'SEARCH_TITLE'))
+echo SearchHeader::make()
+    ->query($query)
     ->pagination($pagination->getPage() + 1);
 
 echo Container::make()

@@ -126,6 +126,22 @@ class SearchControllerTest extends TestCase
         self::assertStringContainsString('hx-swap="innerHTML"', $html);
     }
 
+    public function testIndexFiltersByTenant(): void
+    {
+        $user = $this->loginUser(User::AUTH_USER);
+        $this->index($user);
+
+        $html = $this->createSearchController()->actionIndex($user->name, 987654);
+        self::assertIsString($html);
+        self::assertStringNotContainsString('/admin/user/update?id=' . $user->id, $html);
+
+        Search::updateAll(['tenant_id' => 987654], ['model_class' => User::class, 'model_id' => $user->id]);
+
+        $html = $this->createSearchController()->actionIndex($user->name, 987654);
+        self::assertIsString($html);
+        self::assertStringContainsString('/admin/user/update?id=' . $user->id, $html);
+    }
+
     /**
      * The pager counts in SQL, so the classes the user cannot see are left out there rather than after the fetch.
      */

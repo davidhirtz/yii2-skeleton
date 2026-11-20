@@ -21,6 +21,38 @@ final readonly class SearchResult
         public ?DateTime $updated = null,
         public array $subtitles = [],
         public ?string $type = null,
+        public ?string $badge = null,
     ) {
+    }
+
+    public function withBadge(string $badge): self
+    {
+        return $this->with(badge: $badge);
+    }
+
+    /**
+     * @param array<array-key, mixed>|false $route
+     */
+    public function withRoute(array|false $route): self
+    {
+        return $this->with(route: $route);
+    }
+
+    /**
+     * @param array<array-key, mixed>|false|null $route
+     */
+    private function with(array|false|null $route = null, ?string $badge = null): self
+    {
+        return new self(
+            $this->title,
+            $route ?? $this->route,
+            $this->description,
+            $this->url,
+            $this->icon,
+            $this->updated,
+            $this->subtitles,
+            $this->type,
+            $badge ?? $this->badge,
+        );
     }
 }

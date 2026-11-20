@@ -133,7 +133,7 @@ class SearchResultList extends Widget
             ->class('model-heading-title')
             ->content($this->markKeywords($result->title));
 
-        if (!$result->subtitles) {
+        if (!$result->subtitles && !$result->badge) {
             return $title;
         }
 
@@ -143,7 +143,8 @@ class SearchResultList extends Widget
 
         return Span::make()
             ->class('model-heading')
-            ->content($title, ...$subtitles);
+            ->content($title, ...$subtitles)
+            ->addContent($result->badge ? Span::make()->class('badge')->text($result->badge) : null);
     }
 
     protected function getEmptyItem(): Stringable

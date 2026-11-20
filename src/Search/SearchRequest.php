@@ -7,7 +7,7 @@ namespace Hirtz\Skeleton\Search;
 final readonly class SearchRequest
 {
     /**
-     * `$status` and `$tenantId` are frontend filters the admin never sets.
+     * `$status` is a frontend filter the admin never sets.
      *
      * @param list<string> $languages
      * @param list<class-string> $models

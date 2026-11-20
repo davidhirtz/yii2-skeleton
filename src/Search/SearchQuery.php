@@ -11,7 +11,7 @@ use yii\db\Expression;
 use yii\db\Query;
 
 /**
- * The admin never calls {@see static::tenant()} or `enabled()`, the frontend presets.
+ * The admin never calls `enabled()`, a frontend preset.
  *
  * @template T of Search
  * @extends ActiveQuery<T>

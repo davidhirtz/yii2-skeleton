@@ -24,6 +24,30 @@ class SearchResultListTest extends TestCase
         );
     }
 
+    public function testABadgeFollowsTheSubtitles(): void
+    {
+        $result = new SearchResult('About', route: ['/admin/a'], subtitles: ['Section 2/5']);
+        $html = (string)SearchResultList::make()->results([$result->withBadge('Shop')]);
+
+        self::assertStringContainsString(
+            '<span class="model-heading-subtitle">Section 2/5</span><span class="badge">Shop</span></span>',
+            $html
+        );
+
+        $html = (string)SearchResultList::make()->results([new SearchResult('About', badge: 'Shop')]);
+        self::assertStringContainsString('<span class="model-heading-title">About</span><span class="badge">Shop</span>', $html);
+    }
+
+    public function testACopyKeepsWhatItDoesNotReplace(): void
+    {
+        $result = (new SearchResult('About', route: ['/admin/a'], subtitles: ['Section 2/5'], badge: 'Shop'))
+            ->withRoute(['/admin/b']);
+
+        self::assertSame(['/admin/b'], $result->route);
+        self::assertSame(['Section 2/5'], $result->subtitles);
+        self::assertSame('Shop', $result->badge);
+    }
+
     public function testATitleWithoutSubtitlesStandsAlone(): void
     {
         $html = (string)SearchResultList::make()->results([new SearchResult('About')]);

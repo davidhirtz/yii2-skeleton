@@ -58,7 +58,7 @@ class SearchResultBuilder
 
         foreach ($hits as $hit) {
             $record = $records["$hit->modelClass#$hit->modelId"] ?? null;
-            $result = $record?->getSearchResult();
+            $result = $record ? $this->createSearchResult($record) : null;
 
             if ($result) {
                 $results[] = $result;
@@ -66,6 +66,11 @@ class SearchResultBuilder
         }
 
         return $results;
+    }
+
+    protected function createSearchResult(ActiveRecord&SearchableInterface $record): ?SearchResult
+    {
+        return $record->getSearchResult();
     }
 
     /**

@@ -20,8 +20,8 @@ use yii\web\Response;
 use Hirtz\Skeleton\Modules\Admin\Module;
 
 /**
- * Never scoped to a tenant, since users are not:
- * {@see \Hirtz\Skeleton\Models\Interfaces\SearchableInterface::getSearchResult()} filters instead.
+ * Scoped to a tenant only by the page's `tenant` filter, since users belong to none:
+ * {@see \Hirtz\Skeleton\Models\Interfaces\SearchableInterface::getSearchResult()} filters by permission instead.
  *
  * @extends Controller<Module>
  */
@@ -83,11 +83,11 @@ class SearchController extends Controller
             ->results($this->getResults($q, $this->suggestLimit));
     }
 
-    public function actionIndex(?string $q = null): Response|string
+    public function actionIndex(?string $q = null, ?int $tenant = null): Response|string
     {
         $q = trim((string)$q);
 
-        $request = $q !== '' ? $this->createRequest($q, 1) : null;
+        $request = $q !== '' ? $this->createRequest($q, 1, tenantId: $tenant) : null;
 
         $pagination = new Pagination([
             'pageSize' => $this->pageSize,
@@ -97,16 +97,21 @@ class SearchController extends Controller
         return $this->render('index', [
             'pagination' => $pagination,
             'query' => $q,
-            'results' => $this->getResults($q, $pagination->getLimit(), $pagination->getOffset(), false),
+            'results' => $this->getResults($q, $pagination->getLimit(), $pagination->getOffset(), false, $tenant),
         ]);
     }
 
     /**
      * @return list<SearchResult>
      */
-    protected function getResults(string $q, int $limit, int $offset = 0, bool $fill = true): array
-    {
-        $request = $q !== '' ? $this->createRequest($q, $limit, $offset) : null;
+    protected function getResults(
+        string $q,
+        int $limit,
+        int $offset = 0,
+        bool $fill = true,
+        ?int $tenantId = null,
+    ): array {
+        $request = $q !== '' ? $this->createRequest($q, $limit, $offset, $tenantId) : null;
 
         if (!$request) {
             return [];
@@ -121,13 +126,13 @@ class SearchController extends Controller
     /**
      * Limited to the classes the user sees, so the pager counts only hits a page can show.
      */
-    protected function createRequest(string $q, int $limit, int $offset = 0): ?SearchRequest
+    protected function createRequest(string $q, int $limit, int $offset = 0, ?int $tenantId = null): ?SearchRequest
     {
         $models = array_values(array_filter(
             Search::getComponent()->getModelClasses(),
             fn (string $class): bool => $class::isSearchResultClassVisible(),
         ));
 
-        return $models ? new SearchRequest(query: $q, models: $models, limit: $limit, offset: $offset) : null;
+        return $models ? new SearchRequest(query: $q, models: $models, tenantId: $tenantId, limit: $limit, offset: $offset) : null;
     }
 }
