@@ -27,6 +27,7 @@ class UserDisableAuthenticatorButton extends ConfirmButton
     {
         return $this->model->hasTwoFactorAuthentication()
             && $this->webuser->enableTwoFactorAuthentication
+            && !$this->model->isActingUser()
             && $this->webuser->can(User::AUTH_USER, ['user' => $this->model]);
     }
 

@@ -682,8 +682,17 @@ class User extends ActiveRecord implements CustomAttributeInterface, IdentityInt
     #[Override]
     public function isStatusUpdatable(): bool
     {
+        return !$this->isOwner() && !$this->isActingUser();
+    }
+
+    /**
+     * The acting user's own email, password, second factor and deletion go through the account pages, which ask for
+     * proof a session alone does not carry.
+     */
+    public function isActingUser(): bool
+    {
         $userId = WebUser::current()?->getId();
-        return !$this->isOwner() && ($userId === null || $this->id !== $userId);
+        return $userId !== null && $this->id === $userId;
     }
 
     /**

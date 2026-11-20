@@ -33,22 +33,4 @@ class AccountDeleteControllerTest extends TestCase
         self::assertInstanceOf(Response::class, $response);
         self::assertStringEndsWith('/admin/account/login', (string)$response->getHeaders()->get('location'));
     }
-
-    public function testDeletingTheOwnUserLeadsToTheLogin(): void
-    {
-        $this->getWebUser()->enableTwoFactorAuthentication = false;
-
-        $user = $this->getUserFromFixture('admin');
-        $this->assignPermission($user->id, User::AUTH_USER);
-        $this->getWebUser()->setIdentity($user);
-
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $request = $this->getWebRequest();
-        $request->setBodyParams(['value' => $user->email, $request->csrfParam => $request->getCsrfToken()]);
-
-        $response = Yii::$app->runAction('admin/user/delete', ['id' => $user->id]);
-
-        self::assertInstanceOf(Response::class, $response);
-        self::assertStringEndsWith('/admin/account/login', (string)$response->getHeaders()->get('location'));
-    }
 }

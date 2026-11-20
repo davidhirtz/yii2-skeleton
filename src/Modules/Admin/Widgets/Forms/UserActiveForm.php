@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Modules\Admin\Models\Forms\UserForm;
 use Hirtz\Skeleton\Modules\Admin\Widgets\Forms\Traits\UserActiveFormTrait;
 use Hirtz\Skeleton\Widgets\Forms\ActiveForm;
 use Hirtz\Skeleton\Widgets\Forms\Fields\CheckboxField;
+use Hirtz\Skeleton\Widgets\Forms\Fields\InputField;
 use Hirtz\Skeleton\Widgets\Forms\Footers\UpdatedAtFooterItem;
 use Hirtz\Skeleton\Widgets\Username;
 use Override;
@@ -68,6 +69,15 @@ class UserActiveForm extends ActiveForm
                 $this->sendEmailField(),
             ],
         ];
+    }
+
+    protected function getEmailField(): string|Stringable
+    {
+        return InputField::make()
+            ->model($this->model->user)
+            ->property('email')
+            ->type('email')
+            ->disabled($this->model->user->isActingUser());
     }
 
     protected function getUpdatedAtFooterItem(): Stringable

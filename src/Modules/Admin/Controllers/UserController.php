@@ -150,6 +150,11 @@ class UserController extends Controller
     public function actionDisableAuthenticator(int $id): Response|string
     {
         $user = $this->findUser($id, User::AUTH_USER);
+
+        if ($user->isActingUser()) {
+            throw new ForbiddenHttpException();
+        }
+
         $user->setTwoFactorAuthenticationSecret(null);
 
         if ($user->update()) {
@@ -196,7 +201,7 @@ class UserController extends Controller
             throw new NotFoundHttpException();
         }
 
-        if (!$this->webuser->can(User::AUTH_USER, ['user' => $user])) {
+        if ($user->isActingUser() || !$this->webuser->can(User::AUTH_USER, ['user' => $user])) {
             throw new ForbiddenHttpException();
         }
 
@@ -207,12 +212,6 @@ class UserController extends Controller
 
         if ($form->load($this->request->post()) && $form->delete()) {
             $this->success(Yii::t('skeleton', 'USER_DELETE_SUCCESS'));
-
-            if ($user->id === $this->webuser->id) {
-                $this->webuser->logout(false);
-                return $this->redirect(['account/login']);
-            }
-
             return $this->redirect(['index']);
         }
 

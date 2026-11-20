@@ -84,6 +84,26 @@ class UserForm extends Model
         ];
     }
 
+    #[Override]
+    public function safeAttributes(): array
+    {
+        $names = parent::safeAttributes();
+
+        return $this->user->isActingUser()
+            ? array_values(array_diff($names, ['newPassword', 'repeatPassword']))
+            : $names;
+    }
+
+    /**
+     * @return list<string>|null
+     */
+    protected function getUserAttributeNames(): ?array
+    {
+        return $this->user->isActingUser()
+            ? array_values(array_diff($this->user->safeAttributes(), ['email']))
+            : null;
+    }
+
     #[\Override]
     public function getScenario(): string
     {
@@ -125,16 +145,8 @@ class UserForm extends Model
     protected function afterSave(): void
     {
         if ($this->newPassword) {
-            $webuser = Application::current()->getUser();
-
             $this->user->afterPasswordChange();
-            $webuser->destroyOtherSessions($this->user);
-
-            // The own session keeps the auth key it was opened with, which the new password replaced.
-            if ((int)$webuser->getId() === $this->user->id) {
-                $webuser->setIdentity($this->user);
-                $webuser->resendIdentityCookie();
-            }
+            Application::current()->getUser()->destroyOtherSessions($this->user);
         }
 
         // The credentials email never carries the password, so it needs a reset link whether or not one was set

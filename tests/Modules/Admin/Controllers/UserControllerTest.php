@@ -54,22 +54,68 @@ class UserControllerTest extends TestCase
         self::assertSame($owner->email, User::findOne($owner->id)->email);
     }
 
-    public function testChangingTheOwnPasswordKeepsTheSession(): void
+    /**
+     * The account pages ask for the current password, which a session alone does not carry (#823).
+     */
+    public function testTheOwnRecordKeepsItsEmailAndPassword(): void
     {
-        $owner = $this->getUserFromFixture('owner');
-        $this->getWebUser()->login($owner);
+        foreach ([true, false] as $isOwner) {
+            $user = $isOwner ? $this->getUserFromFixture('owner') : $this->login();
+
+            if ($isOwner) {
+                $this->getWebUser()->login($user);
+            }
+
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+            $this->getWebRequest()->setBodyParams([
+                $user->formName() => ['email' => "new-{$user->id}@domain.com"],
+                'UserForm' => ['newPassword' => 'Neues-Passwort-ü-1', 'repeatPassword' => 'Neues-Passwort-ü-1'],
+            ]);
+
+            $this->createUserController()->actionUpdate($user->id);
+
+            $saved = User::findOne($user->id);
+            self::assertNotNull($saved);
+            self::assertSame($user->email, $saved->email);
+            self::assertSame($user->password_hash, $saved->password_hash);
+            self::assertSame($user->auth_key, $saved->auth_key);
+        }
+    }
+
+    public function testTheOwnRecordOffersNeitherPasswordNorDeletion(): void
+    {
+        $user = $this->login();
+
+        $html = $this->createUserController()->actionUpdate($user->id);
+
+        self::assertIsString($html);
+        self::assertStringNotContainsString('name="UserForm[newPassword]"', $html);
+        self::assertMatchesRegularExpression('/<input(?=[^>]*name="' . preg_quote($user->formName(), '/') . '\[email\]")[^>]*\bdisabled\b/u', $html);
+        self::assertStringNotContainsString('/admin/user/delete?id=' . $user->id, $html);
+        self::assertStringNotContainsString('/admin/user/disable-authenticator?id=' . $user->id, $html);
+    }
+
+    public function testTheOwnAuthenticatorIsNotDisabledHere(): void
+    {
+        $user = $this->login();
+
+        $this->expectException(ForbiddenHttpException::class);
+        $this->createUserController()->actionDisableAuthenticator($user->id);
+    }
+
+    public function testTheOwnAccountIsNotDeletedHere(): void
+    {
+        $user = $this->login();
 
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $this->getWebRequest()->setBodyParams([
-            'UserForm' => ['newPassword' => 'Neues-Passwort-ü-1', 'repeatPassword' => 'Neues-Passwort-ü-1'],
-        ]);
+        $this->getWebRequest()->setBodyParams(['value' => $user->email]);
 
-        $this->createUserController()->actionUpdate($owner->id);
-        self::assertNotEmpty($this->getWebSession()->getFlash('success'));
-
-        $authKey = User::findOne($owner->id)?->auth_key;
-        self::assertNotSame($owner->auth_key, $authKey);
-        self::assertSame($authKey, $this->getWebSession()->get($this->getWebUser()->authKeyParam));
+        try {
+            $this->createUserController()->actionDelete($user->id);
+            self::fail('The own account was deleted through the user admin.');
+        } catch (ForbiddenHttpException) {
+            self::assertNotNull(User::findOne($user->id));
+        }
     }
 
     public function testStatusCyclesTheUserThroughItsStatuses(): void
