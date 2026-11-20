@@ -11,6 +11,7 @@ use Hirtz\Skeleton\Models\Trail;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Modules\Admin\Module;
 use Hirtz\Skeleton\Web\Controller;
+use Hirtz\Skeleton\Web\ErrorAction;
 use Hirtz\Skeleton\Widgets\Panels\Dashboard;
 use Override;
 use yii\filters\AccessControl;
@@ -46,6 +47,21 @@ class DashboardController extends Controller
                         'roles' => $this->roles,
                     ],
                 ],
+            ],
+        ];
+    }
+
+    /**
+     * @see \Hirtz\Skeleton\Web\ErrorHandler::$adminErrorAction
+     */
+    #[Override]
+    public function actions(): array
+    {
+        return [
+            ...parent::actions(),
+            'error' => [
+                'class' => ErrorAction::class,
+                'view' => 'exception',
             ],
         ];
     }

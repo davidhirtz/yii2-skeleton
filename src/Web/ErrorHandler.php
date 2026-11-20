@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Web;
 
 use Hirtz\Skeleton\Models\Redirect;
 use Override;
+use Throwable;
 use Yii;
 use yii\db\Expression;
 use yii\web\HttpException;
@@ -15,6 +16,11 @@ class ErrorHandler extends \yii\web\ErrorHandler
     public $traceLine = '<a href="phpstorm://open?file={file}&line={line}">{html}</a>';
 
     public bool $enableRedirect = true;
+
+    /**
+     * Renders a 403 or 404 below the admin's path inside the admin's layout for a logged-in user.
+     */
+    public ?string $adminErrorAction = 'admin/dashboard/error';
 
     #[Override]
     protected function renderException($exception): void
@@ -28,7 +34,34 @@ class ErrorHandler extends \yii\web\ErrorHandler
             return;
         }
 
-        parent::renderException($exception);
+        $errorAction = $this->errorAction;
+
+        if ($this->isAdminException($exception)) {
+            $this->errorAction = $this->adminErrorAction;
+        }
+
+        try {
+            parent::renderException($exception);
+        } finally {
+            $this->errorAction = $errorAction;
+        }
+    }
+
+    protected function isAdminException(Throwable $exception): bool
+    {
+        if (
+            !$this->adminErrorAction
+            || !$exception instanceof HttpException
+            || !in_array($exception->statusCode, [403, 404], true)
+            || User::current()?->getIsGuest() !== false
+        ) {
+            return false;
+        }
+
+        $alias = Application::current()->getAdminAlias();
+        $path = trim(Application::current()->getRequest()->getPathInfo(), '/');
+
+        return str_starts_with("$path/", "$alias/");
     }
 
     /**

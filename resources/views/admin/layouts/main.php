@@ -41,7 +41,7 @@ $scriptErrorUrl = Application::current()->getUser()->getIsGuest() ? null : Url::
     <div class="wrap">
         <?= NavBar::make(); ?>
         <?= Flashes::make(); ?>
-        <div class="layout" id="wrap" data-depth="<?= $this->depth; ?>" hx-select-oob:inherited="#flashes:beforeend" hx-headers:inherited='{"X-CSRF-TOKEN":"<?= Application::current()->getRequest()->getCsrfToken(); ?>"}'>
+        <div class="layout" id="wrap" data-depth="<?= $this->depth; ?>" hx-select-oob:inherited="<?= Html::encode($this->getHtmxSelectOob()); ?>" hx-headers:inherited='{"X-CSRF-TOKEN":"<?= Application::current()->getRequest()->getCsrfToken(); ?>"}'>
             <?= AsideMenu::make(); ?>
             <?= TimezoneModal::make(); ?>
             <?= KeyboardShortcuts::make(); ?>

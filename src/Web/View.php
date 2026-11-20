@@ -42,6 +42,11 @@ class View extends \yii\web\View
      * @var array<int|string, array<string, mixed>>
      */
     protected array $structuredData = [];
+
+    /**
+     * @var list<string>
+     */
+    protected array $htmxSelectOob = ['#flashes:beforeend'];
     /**
      * @var non-empty-string
      */
@@ -59,6 +64,24 @@ class View extends \yii\web\View
     {
         parent::clear();
         $this->structuredData = [];
+        $this->htmxSelectOob = ['#flashes:beforeend'];
+    }
+
+    /**
+     * An element outside `#wrap` that a page swapped in replaces, such as a navbar link built from the page.
+     */
+    public function addHtmxSelectOob(string $selector): static
+    {
+        if (!in_array($selector, $this->htmxSelectOob, true)) {
+            $this->htmxSelectOob[] = $selector;
+        }
+
+        return $this;
+    }
+
+    public function getHtmxSelectOob(): string
+    {
+        return implode(',', $this->htmxSelectOob);
     }
 
     /**
