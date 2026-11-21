@@ -31,7 +31,8 @@ class DescribeResourceTool extends ResourceTool
         return 'Describes a resource: the JSON Schema of the attributes create_record and update_record take for a '
             . 'type, the types and statuses with their ids, and the content languages. A translated attribute has '
             . 'one property per language, the source language without a suffix (name, name_de, …). A readOnly '
-            . 'property is answered by get_record, a file as its URL, and never written.';
+            . 'property is answered by get_record, a file as its URL, and never written. Pass "id" or "parent" for '
+            . 'the languages that record shows on the website.';
     }
 
     #[Override]
@@ -44,6 +45,14 @@ class DescribeResourceTool extends ResourceTool
                 'type' => [
                     'type' => 'integer',
                     'description' => 'The type id, the default type when it is not given.',
+                ],
+                'id' => [
+                    'type' => 'integer',
+                    'description' => 'An existing record, described with its own type and languages.',
+                ],
+                'parent' => [
+                    'type' => 'integer',
+                    'description' => 'The id of the parent a new record would be created under.',
                 ],
             ],
             'required' => ['resource'],
@@ -66,12 +75,20 @@ class DescribeResourceTool extends ResourceTool
         $type = $arguments['type'] ?? $resource->getDefaultType();
         $types = is_subclass_of($modelClass, TypeAttributeInterface::class) ? $modelClass::getTypeDefinitions() : [];
 
-        if (is_int($type) && !isset($types[$type])) {
-            throw new ToolException("Unknown type $type for {$resource->getName()}.");
-        }
+        if (isset($arguments['id'])) {
+            $record = $this->findRecord($resource, $arguments['id']);
+        } else {
+            if (is_int($type) && !isset($types[$type])) {
+                throw new ToolException("Unknown type $type for {$resource->getName()}.");
+            }
 
-        $record = $resource->instantiate(is_int($type) ? $type : null);
-        $record->loadDefaultValues();
+            $record = $resource->instantiate(is_int($type) ? $type : null);
+            $record->loadDefaultValues();
+
+            if (isset($arguments['parent']) && $resource->getParentParam() !== null) {
+                $resource->populate($record, $this->findParent($resource, $arguments['parent']));
+            }
+        }
 
         $data = [
             'resource' => $resource->getName(),
@@ -110,7 +127,7 @@ class DescribeResourceTool extends ResourceTool
             $i18n = Yii::$app->getI18n();
             $data['languages'] = [];
 
-            foreach ($i18n->getLanguages() as $language) {
+            foreach ($record->getI18nLanguages() as $language) {
                 $data['languages'][] = [
                     'language' => $language,
                     'label' => $i18n->getLabel($language),

@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Changed the translation tabs of a form with more than two languages to toggle languages, so several show together
+- Added `id` and `parent` to the MCP `describe_resource`, which names that record's languages
 - Added `Web\Request::$allowLocalHosts` (development and test only) and `Models\User::revokeMcpAccess()`; `Mcp::$allowedClientIds` matches up to a `/`
 - Changed the admin user pages to leave the acting user's own email, password, second factor and deletion to the account pages (`Models\User::isActingUser()`)
 - Added the admin layout to a logged-in user's 403 and 404 below the admin path (`ErrorHandler::$adminErrorAction`)
