@@ -313,6 +313,7 @@ return [
     'REQUEST_ENVIRONMENT_STAGE_NAME' => 'Pré-produção',
     'SEARCH_EMPTY' => 'Não foram encontrados resultados.',
     'SEARCH_LABEL' => 'Pesquisa',
+    'SEARCH_MODEL_LABEL' => 'Recurso',
     'SEARCH_PLACEHOLDER' => 'Procurar …',
     'SEARCH_RESULTS_TITLE' => 'Resultados da pesquisa por “{query}”',
     'SEARCH_TITLE' => 'Pesquisa',

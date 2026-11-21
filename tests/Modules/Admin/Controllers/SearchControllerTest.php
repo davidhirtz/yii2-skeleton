@@ -142,6 +142,61 @@ class SearchControllerTest extends TestCase
         self::assertStringContainsString('/admin/user/update?id=' . $user->id, $html);
     }
 
+    public function testIndexFiltersByModel(): void
+    {
+        $user = $this->loginUser(User::AUTH_USER);
+        $this->registerSearchModels();
+        $this->index($user);
+        $this->indexAs($user, SearchControllerTestUser::class);
+
+        $url = '/admin/user/update?id=' . $user->id;
+
+        $html = $this->runIndex(['q' => $user->name]);
+        self::assertSame(2, substr_count($html, 'href="' . $url . '"'));
+        self::assertStringContainsString('class="grid-header"', $html);
+        self::assertStringContainsString('>Konto Å東京</a>', $html);
+
+        $html = $this->runIndex(['q' => $user->name, 'model' => 'search-controller-test-user']);
+        self::assertSame(1, substr_count($html, 'href="' . $url . '"'));
+        self::assertMatchesRegularExpression('/<a class="selected dropdown-option" href="[^"]*model=search-controller-test-user[^"]*">Konto Å東京<\/a>/u', $html);
+    }
+
+    /**
+     * A key is never a class name, so neither a class name nor a key the user does not see narrows the search.
+     */
+    public function testIndexIgnoresAnUnknownModel(): void
+    {
+        $user = $this->loginUser(User::AUTH_USER);
+        $this->registerSearchModels();
+        $this->index($user);
+        $this->indexAs($user, SearchControllerTestUser::class);
+
+        foreach (['unknown', User::class, SearchControllerTestUser::class] as $model) {
+            $html = $this->runIndex(['q' => $user->name, 'model' => $model]);
+            self::assertSame(2, substr_count($html, 'href="/admin/user/update?id=' . $user->id . '"'));
+        }
+    }
+
+    public function testTheModelFilterKeepsTheQueryAndTheTenantAndDropsThePage(): void
+    {
+        $user = $this->loginUser(User::AUTH_USER);
+        $this->registerSearchModels();
+        $html = $this->runIndex(['q' => $user->name, 'tenant' => '7', 'page' => '3']);
+        self::assertStringContainsString('href="/admin/search/index?q=' . urlencode($user->name) . '&amp;tenant=7&amp;model=user"', $html);
+    }
+
+    public function testASingleModelOffersNoFilter(): void
+    {
+        $user = $this->loginUser(User::AUTH_USER);
+        $this->index($user);
+
+        Yii::$app->set('search', ['class' => SearchComponent::class, 'models' => [User::class]]);
+
+        $html = $this->runIndex(['q' => $user->name]);
+        self::assertStringNotContainsString('grid-header', $html);
+        self::assertStringNotContainsString('model=', $html);
+    }
+
     /**
      * The pager counts in SQL, so the classes the user cannot see are left out there rather than after the fetch.
      */
@@ -185,6 +240,35 @@ class SearchControllerTest extends TestCase
         SearchComponent::getComponent()->index($model);
     }
 
+    /**
+     * @param class-string<SearchableInterface> $modelClass
+     */
+    private function indexAs(SearchableInterface $model, string $modelClass): void
+    {
+        SearchComponent::getComponent()->getDriver()->index(...$model->getSearchDocuments($modelClass));
+    }
+
+    /**
+     * @param array<string, string> $params
+     */
+    private function runIndex(array $params): string
+    {
+        $this->getWebRequest()->setQueryParams($params);
+
+        $html = Yii::$app->runAction('admin/search/index', $params);
+        self::assertIsString($html);
+
+        return $html;
+    }
+
+    private function registerSearchModels(): void
+    {
+        Yii::$app->set('search', [
+            'class' => SearchComponent::class,
+            'models' => [User::class, SearchControllerTestUser::class],
+        ]);
+    }
+
     private function loginUser(?string $permission = null): User
     {
         $user = $this->getUserFromFixture('admin');
@@ -204,5 +288,14 @@ class SearchControllerTest extends TestCase
         self::assertInstanceOf(SearchController::class, $controller);
 
         return $controller;
+    }
+}
+
+class SearchControllerTestUser extends User
+{
+    #[Override]
+    public function getAdminType(): string
+    {
+        return 'Konto Å東京';
     }
 }

@@ -313,6 +313,7 @@ return [
     'REQUEST_ENVIRONMENT_STAGE_NAME' => 'Stage',
     'SEARCH_EMPTY' => 'No results found.',
     'SEARCH_LABEL' => 'Search',
+    'SEARCH_MODEL_LABEL' => 'Resource',
     'SEARCH_PLACEHOLDER' => 'Search …',
     'SEARCH_RESULTS_TITLE' => 'Search results for “{query}”',
     'SEARCH_TITLE' => 'Search',

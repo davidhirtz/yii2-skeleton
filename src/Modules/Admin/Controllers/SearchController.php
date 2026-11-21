@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
+use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\User;
 use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Search\SearchRequest;
@@ -15,6 +16,8 @@ use Override;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
+use yii\helpers\Inflector;
+use yii\helpers\StringHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Hirtz\Skeleton\Modules\Admin\Module;
@@ -83,25 +86,32 @@ class SearchController extends Controller
             ->results($this->getResults($q, $this->suggestLimit));
     }
 
-    public function actionIndex(?string $q = null, ?int $tenant = null): Response|string
+    public function actionIndex(?string $q = null, ?int $tenant = null, ?string $model = null): Response|string
     {
         $q = trim((string)$q);
+        $visible = $this->getVisibleModelClasses();
+        $models = isset($visible[(string)$model]) ? [$visible[$model]] : array_values($visible);
 
-        $request = $q !== '' ? $this->createRequest($q, 1, tenantId: $tenant) : null;
+        $request = $q !== '' ? $this->createRequest($q, 1, tenantId: $tenant, models: $models) : null;
 
         $pagination = new Pagination([
             'pageSize' => $this->pageSize,
             'totalCount' => $request ? Search::getComponent()->count($request) : 0,
         ]);
 
+        $labels = array_map(fn (string $class): string => Yii::createObject($class)->getAdminType(), $visible);
+        uasort($labels, strnatcasecmp(...));
+
         return $this->render('index', [
+            'models' => $labels,
             'pagination' => $pagination,
             'query' => $q,
-            'results' => $this->getResults($q, $pagination->getLimit(), $pagination->getOffset(), false, $tenant),
+            'results' => $this->getResults($q, $pagination->getLimit(), $pagination->getOffset(), false, $tenant, $models),
         ]);
     }
 
     /**
+     * @param list<class-string<SearchableInterface>>|null $models
      * @return list<SearchResult>
      */
     protected function getResults(
@@ -110,8 +120,9 @@ class SearchController extends Controller
         int $offset = 0,
         bool $fill = true,
         ?int $tenantId = null,
+        ?array $models = null,
     ): array {
-        $request = $q !== '' ? $this->createRequest($q, $limit, $offset, $tenantId) : null;
+        $request = $q !== '' ? $this->createRequest($q, $limit, $offset, $tenantId, $models) : null;
 
         if (!$request) {
             return [];
@@ -125,14 +136,40 @@ class SearchController extends Controller
 
     /**
      * Limited to the classes the user sees, so the pager counts only hits a page can show.
+     *
+     * @param list<class-string<SearchableInterface>>|null $models
      */
-    protected function createRequest(string $q, int $limit, int $offset = 0, ?int $tenantId = null): ?SearchRequest
-    {
-        $models = array_values(array_filter(
-            Search::getComponent()->getModelClasses(),
-            fn (string $class): bool => $class::isSearchResultClassVisible(),
-        ));
+    protected function createRequest(
+        string $q,
+        int $limit,
+        int $offset = 0,
+        ?int $tenantId = null,
+        ?array $models = null,
+    ): ?SearchRequest {
+        $models ??= array_values($this->getVisibleModelClasses());
 
         return $models ? new SearchRequest(query: $q, models: $models, tenantId: $tenantId, limit: $limit, offset: $offset) : null;
+    }
+
+    /**
+     * Keyed by the short class name, so the `model` filter never takes a class name from the URL.
+     *
+     * @return array<string, class-string<SearchableInterface>>
+     */
+    protected function getVisibleModelClasses(): array
+    {
+        $models = [];
+
+        foreach (Search::getComponent()->getModelClasses() as $class) {
+            $key = Inflector::camel2id(StringHelper::basename($class));
+
+            while (isset($models[$key])) {
+                $key .= '-' . count($models);
+            }
+
+            $models[$key] = $class;
+        }
+
+        return array_filter($models, fn (string $class): bool => $class::isSearchResultClassVisible());
     }
 }
