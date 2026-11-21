@@ -28,11 +28,18 @@ class Header extends Widget
     use TitleTrait;
     use UrlTrait;
 
+    /**
+     * A grid's own swaps (sort, filter) carry the header and its "Page N" along by this id.
+     */
+    final public const string PAGINATED_ID = 'paginated-header';
+
+    protected bool $paginated = false;
     protected string|Stringable|null $subheading = null;
     protected ?string $subtitle = null;
 
     public function pagination(ActiveDataProvider|int|null $page): static
     {
+        $this->paginated = true;
         return $this->subtitle($this->getPaginationSubtitle($page));
     }
 
@@ -62,6 +69,10 @@ class Header extends Widget
             ->attributes($this->attributes)
             ->addAttributes(['data-sticky' => 'top'])
             ->addClass('header');
+
+        if ($this->paginated && !isset($this->attributes['id'])) {
+            $wrapper->addAttributes(['id' => self::PAGINATED_ID]);
+        }
 
         $wrapper->content(Div::make()
             ->class('header-content')

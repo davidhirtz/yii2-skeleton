@@ -10,6 +10,7 @@ use Hirtz\Skeleton\Widgets\Grids\GridView;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\FilterDropdown;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\StatusFilterDropdown;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\TypeFilterDropdown;
+use Hirtz\Skeleton\Widgets\Navs\Header;
 use Override;
 use Yii;
 use yii\base\Model;
@@ -56,6 +57,18 @@ class GridHeaderTest extends TestCase
         $html = $this->render([new Model()]);
 
         self::assertMatchesRegularExpression('/<tr hx-select:inherited="#(\w+)" hx-target:inherited="#\1"/', $html);
+    }
+
+    /**
+     * The page header's "Page N" sits outside the grid, so the grid's own swaps carry it along (#828).
+     */
+    public function testTheGridSwapsCarryThePaginatedHeader(): void
+    {
+        $html = $this->render([new Model()]);
+        $attribute = 'hx-select-oob:inherited:append="#' . Header::PAGINATED_ID . '"';
+
+        self::assertMatchesRegularExpression('/<div[^>]+class="grid-header"[^>]+' . preg_quote($attribute, '/') . '/', $html);
+        self::assertMatchesRegularExpression('/<tr [^>]*' . preg_quote($attribute, '/') . '/', $html);
     }
 
     public function testAFruitlessSearchKeepsTheToolbar(): void

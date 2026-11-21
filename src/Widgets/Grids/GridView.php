@@ -24,6 +24,7 @@ use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridFooter;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridHeader;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\FilterDropdown;
 use Hirtz\Skeleton\Widgets\Grids\Toolbars\GridSearchForm;
+use Hirtz\Skeleton\Widgets\Navs\Header;
 use Hirtz\Skeleton\Web\Application;
 use Hirtz\Skeleton\Widgets\Traits\ProviderTrait;
 use Hirtz\Skeleton\Widgets\Widget;
@@ -252,11 +253,13 @@ class GridView extends Widget
         $this->headerAttributes['hx-select:inherited'] ??= "#{$this->getId()}";
         $this->headerAttributes['hx-target:inherited'] ??= $this->headerAttributes['hx-select:inherited'];
         $this->headerAttributes['hx-boost:inherited'] ??= 'true';
+        $this->headerAttributes['hx-select-oob:inherited:append'] ??= '#' . Header::PAGINATED_ID;
 
         // The whole grid, not the table: the toolbar, the search form and the pager carry the sort too.
         $this->tableHeaderAttributes['hx-select:inherited'] ??= "#{$this->getId()}";
         $this->tableHeaderAttributes['hx-target:inherited'] ??= $this->tableHeaderAttributes['hx-select:inherited'];
         $this->tableHeaderAttributes['hx-boost:inherited'] ??= 'true';
+        $this->tableHeaderAttributes['hx-select-oob:inherited:append'] ??= '#' . Header::PAGINATED_ID;
 
         $this->columns ??= $this->getDefaultColumns();
 
