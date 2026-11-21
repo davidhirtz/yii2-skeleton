@@ -1,4 +1,4 @@
-## Unreleased
+## 3.31.0 (November 21, 2026)
 
 - Changed the translation tabs of a form with more than two languages to toggle languages, so several show together
 - Added `id` and `parent` to the MCP `describe_resource`, which names that record's languages
