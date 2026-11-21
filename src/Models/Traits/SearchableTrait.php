@@ -139,6 +139,7 @@ trait SearchableTrait
             updated: $updated instanceof DateTime ? $updated : null,
             subtitles: $chain->subtitles,
             type: $this->getAdminType(),
+            tenantId: $this->getSearchTenantId(),
         );
     }
 

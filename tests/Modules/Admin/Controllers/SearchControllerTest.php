@@ -113,11 +113,13 @@ class SearchControllerTest extends TestCase
         $user = $this->loginUser(User::AUTH_USER);
         $this->index($user);
 
-        $html = $this->createSearchController()->actionIndex($user->name);
+        $html = $this->runIndex(['q' => $user->name]);
 
-        self::assertIsString($html);
         self::assertStringContainsString('<mark>' . $user->name . '</mark>', $html);
         self::assertStringNotContainsString('role="option"', $html);
+
+        // The page header names the query, so no summary repeats it.
+        self::assertStringNotContainsString('data-alert="info"', $html);
 
         // The navbar is outside `#wrap`, so the input has to override the inherited htmx attributes itself.
         self::assertStringContainsString('class="navbar-search"', $html);
@@ -126,19 +128,27 @@ class SearchControllerTest extends TestCase
         self::assertStringContainsString('hx-swap="innerHTML"', $html);
     }
 
+    public function testIndexWithoutHitsSaysSoWithoutAResetButton(): void
+    {
+        $this->loginUser(User::AUTH_USER);
+
+        $html = $this->runIndex(['q' => 'Ålesund東京']);
+
+        self::assertMatchesRegularExpression('#<div class="alert"[^>]*><div class="alert-content">No results found.</div></div>#', $html);
+        self::assertStringNotContainsString('class="table ', $html);
+    }
+
     public function testIndexFiltersByTenant(): void
     {
         $user = $this->loginUser(User::AUTH_USER);
         $this->index($user);
 
-        $html = $this->createSearchController()->actionIndex($user->name, 987654);
-        self::assertIsString($html);
+        $html = $this->runIndex(['q' => $user->name, 'tenant' => '987654']);
         self::assertStringNotContainsString('/admin/user/update?id=' . $user->id, $html);
 
         Search::updateAll(['tenant_id' => 987654], ['model_class' => User::class, 'model_id' => $user->id]);
 
-        $html = $this->createSearchController()->actionIndex($user->name, 987654);
-        self::assertIsString($html);
+        $html = $this->runIndex(['q' => $user->name, 'tenant' => '987654']);
         self::assertStringContainsString('/admin/user/update?id=' . $user->id, $html);
     }
 
@@ -149,16 +159,39 @@ class SearchControllerTest extends TestCase
         $this->index($user);
         $this->indexAs($user, SearchControllerTestUser::class);
 
-        $url = '/admin/user/update?id=' . $user->id;
+        $url = 'class="search-result" href="/admin/user/update?id=' . $user->id . '"';
 
         $html = $this->runIndex(['q' => $user->name]);
-        self::assertSame(2, substr_count($html, 'href="' . $url . '"'));
+        self::assertSame(2, substr_count($html, $url));
         self::assertStringContainsString('class="grid-header"', $html);
         self::assertStringContainsString('>Konto Å東京</a>', $html);
 
         $html = $this->runIndex(['q' => $user->name, 'model' => 'search-controller-test-user']);
-        self::assertSame(1, substr_count($html, 'href="' . $url . '"'));
+        self::assertSame(1, substr_count($html, $url));
         self::assertMatchesRegularExpression('/<a class="selected dropdown-option" href="[^"]*model=search-controller-test-user[^"]*">Konto Å東京<\/a>/u', $html);
+    }
+
+    /**
+     * The page header reads the page before the grid counts, which must not clamp it to the first.
+     */
+    public function testIndexPaginates(): void
+    {
+        $user = $this->loginUser(User::AUTH_USER);
+        $this->registerSearchModels();
+        $this->index($user);
+        $this->indexAs($user, SearchControllerTestUser::class);
+
+        $module = Yii::$app->getModule('admin');
+        self::assertInstanceOf(Module::class, $module);
+        $module->controllerMap['search'] = ['class' => SearchController::class, 'pageSize' => 1];
+
+        $first = $this->runIndex(['q' => $user->name]);
+        $second = $this->runIndex(['q' => $user->name, 'page' => '2']);
+
+        self::assertSame(1, substr_count($first, 'class="search-result" href='));
+        self::assertSame(1, substr_count($second, 'class="search-result" href='));
+        self::assertStringContainsString('Page 2', $second);
+        self::assertNotSame($first, $second);
     }
 
     /**
@@ -173,7 +206,7 @@ class SearchControllerTest extends TestCase
 
         foreach (['unknown', User::class, SearchControllerTestUser::class] as $model) {
             $html = $this->runIndex(['q' => $user->name, 'model' => $model]);
-            self::assertSame(2, substr_count($html, 'href="/admin/user/update?id=' . $user->id . '"'));
+            self::assertSame(2, substr_count($html, 'class="search-result" href="/admin/user/update?id=' . $user->id . '"'));
         }
     }
 

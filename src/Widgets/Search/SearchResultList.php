@@ -32,6 +32,8 @@ class SearchResultList extends Widget
     protected ?string $emptyText = null;
     protected int $snippetLength = 160;
     protected bool $listbox = false;
+    protected bool $showBadges = true;
+    protected bool $showIcons = true;
 
     public function snippetLength(int $snippetLength): static
     {
@@ -57,6 +59,18 @@ class SearchResultList extends Widget
     public function emptyText(?string $emptyText): static
     {
         $this->emptyText = $emptyText;
+        return $this;
+    }
+
+    public function showBadges(bool $showBadges = true): static
+    {
+        $this->showBadges = $showBadges;
+        return $this;
+    }
+
+    public function showIcons(bool $showIcons = true): static
+    {
+        $this->showIcons = $showIcons;
         return $this;
     }
 
@@ -86,6 +100,14 @@ class SearchResultList extends Widget
 
     protected function getResultItem(SearchResult $result): Stringable
     {
+        return Li::make()
+            ->class('search-result-item')
+            ->addAttributes($this->listbox ? ['role' => 'none'] : [])
+            ->content($this->renderResult($result));
+    }
+
+    public function renderResult(SearchResult $result): A
+    {
         $link = A::make()
             ->class('search-result')
             ->href($result->route ?: $result->url);
@@ -95,7 +117,7 @@ class SearchResultList extends Widget
                 ->attribute('tabindex', '-1');
         }
 
-        if ($result->icon) {
+        if ($this->showIcons && $result->icon) {
             $link->addContent(Icon::make()
                 ->name($result->icon)
                 ->addClass('search-result-icon'));
@@ -116,12 +138,7 @@ class SearchResultList extends Widget
                 ->text($result->type));
         }
 
-        $link->addContent($text);
-
-        return Li::make()
-            ->class('search-result-item')
-            ->addAttributes($this->listbox ? ['role' => 'none'] : [])
-            ->content($link);
+        return $link->addContent($text);
     }
 
     /**
@@ -133,7 +150,9 @@ class SearchResultList extends Widget
             ->class('model-heading-title')
             ->content($this->markKeywords($result->title));
 
-        if (!$result->subtitles && !$result->badge) {
+        $badge = $this->showBadges ? $result->badge : null;
+
+        if (!$result->subtitles && !$badge) {
             return $title;
         }
 
@@ -144,7 +163,7 @@ class SearchResultList extends Widget
         return Span::make()
             ->class('model-heading')
             ->content($title, ...$subtitles)
-            ->addContent($result->badge ? Span::make()->class('badge')->text($result->badge) : null);
+            ->addContent($badge ? Span::make()->class('badge')->text($badge) : null);
     }
 
     protected function getEmptyItem(): Stringable

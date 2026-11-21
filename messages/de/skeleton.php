@@ -316,6 +316,7 @@ return [
     'SEARCH_MODEL_LABEL' => 'Bereich',
     'SEARCH_PLACEHOLDER' => 'Suchen …',
     'SEARCH_RESULTS_TITLE' => 'Suchergebnisse für „{query}“',
+    'SEARCH_RESULT_LABEL' => 'Ergebnis',
     'SEARCH_TITLE' => 'Suche',
     'SHORTCUT_ACTIONS_TEXT' => 'Zeigt an jeder Aktion im Seitenkopf den Buchstaben, der sie ausführt',
     'SHORTCUT_ASIDE_TEXT' => 'Zeigt an jedem Menüpunkt den Buchstaben, der ihn öffnet',

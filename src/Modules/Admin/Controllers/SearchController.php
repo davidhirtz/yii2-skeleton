@@ -6,6 +6,7 @@ namespace Hirtz\Skeleton\Modules\Admin\Controllers;
 
 use Hirtz\Skeleton\Models\Interfaces\SearchableInterface;
 use Hirtz\Skeleton\Models\User;
+use Hirtz\Skeleton\Modules\Admin\Data\SearchDataProvider;
 use Hirtz\Skeleton\Search\Search;
 use Hirtz\Skeleton\Search\SearchRequest;
 use Hirtz\Skeleton\Search\SearchResult;
@@ -14,7 +15,6 @@ use Hirtz\Skeleton\Web\Controller;
 use Hirtz\Skeleton\Widgets\Search\SearchResultList;
 use Override;
 use Yii;
-use yii\data\Pagination;
 use yii\filters\AccessControl;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
@@ -92,37 +92,30 @@ class SearchController extends Controller
         $visible = $this->getVisibleModelClasses();
         $models = isset($visible[(string)$model]) ? [$visible[$model]] : array_values($visible);
 
-        $request = $q !== '' ? $this->createRequest($q, 1, tenantId: $tenant, models: $models) : null;
-
-        $pagination = new Pagination([
-            'pageSize' => $this->pageSize,
-            'totalCount' => $request ? Search::getComponent()->count($request) : 0,
+        $provider = new SearchDataProvider([
+            'request' => $q !== '' ? $this->createRequest($q, $this->pageSize, tenantId: $tenant, models: $models) : null,
+            'pagination' => ['pageSize' => $this->pageSize],
         ]);
+
+        // The page header reads the page before the grid, and a page read before the count is clamped to the first.
+        $provider->prepare();
 
         $labels = array_map(fn (string $class): string => Yii::createObject($class)->getAdminType(), $visible);
         uasort($labels, strnatcasecmp(...));
 
         return $this->render('index', [
             'models' => $labels,
-            'pagination' => $pagination,
+            'provider' => $provider,
             'query' => $q,
-            'results' => $this->getResults($q, $pagination->getLimit(), $pagination->getOffset(), false, $tenant, $models),
         ]);
     }
 
     /**
-     * @param list<class-string<SearchableInterface>>|null $models
      * @return list<SearchResult>
      */
-    protected function getResults(
-        string $q,
-        int $limit,
-        int $offset = 0,
-        bool $fill = true,
-        ?int $tenantId = null,
-        ?array $models = null,
-    ): array {
-        $request = $q !== '' ? $this->createRequest($q, $limit, $offset, $tenantId, $models) : null;
+    protected function getResults(string $q, int $limit): array
+    {
+        $request = $q !== '' ? $this->createRequest($q, $limit) : null;
 
         if (!$request) {
             return [];
@@ -131,7 +124,7 @@ class SearchController extends Controller
         /** @var SearchResultBuilder $builder */
         $builder = Yii::createObject(SearchResultBuilder::class, [Search::getComponent()]);
 
-        return $builder->build($request, $fill);
+        return $builder->build($request);
     }
 
     /**

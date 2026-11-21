@@ -121,22 +121,11 @@
   }
 }
 
-// The search page's rows read like a grid's.
-.search-results-striped {
-  .search-result {
-    --dropdown-option-bg: var(--table-bg);
-    --dropdown-option-color: var(--table-color);
-    padding: 1rem;
-  }
-
-  > .search-result-item:nth-of-type(odd) > .search-result {
-    --dropdown-option-bg: var(--table-striped-bg);
-  }
-
-  > .search-result-item > .search-result:is(:hover, :focus) {
-    --dropdown-option-bg: var(--table-hover-bg);
-    --dropdown-option-color: var(--table-hover-color);
-  }
+// The search page's hits sit in a grid's cells, which pad and stripe them already.
+td > .search-result {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
 }
 
 .search-result-icon {

@@ -316,6 +316,7 @@ return [
     'SEARCH_MODEL_LABEL' => 'Recurso',
     'SEARCH_PLACEHOLDER' => 'Procurar …',
     'SEARCH_RESULTS_TITLE' => 'Resultados da pesquisa por “{query}”',
+    'SEARCH_RESULT_LABEL' => 'Resultado',
     'SEARCH_TITLE' => 'Pesquisa',
     'SHORTCUT_ACTIONS_TEXT' => 'Mostra em cada ação do cabeçalho a letra que a executa',
     'SHORTCUT_ASIDE_TEXT' => 'Mostra em cada item do menu a letra que o abre',

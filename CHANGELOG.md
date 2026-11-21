@@ -4,8 +4,9 @@
 - Changed the admin user pages to leave the acting user's own email, password, second factor and deletion to the account pages (`Models\User::isActingUser()`)
 - Added the admin layout to a logged-in user's 403 and 404 below the admin path (`ErrorHandler::$adminErrorAction`)
 - Added `Web\View::addHtmxSelectOob()`, which `#wrap`'s `hx-select-oob` names
-- Added `tenant` and `model` filters to the admin search (`SearchResultHeader`, `SearchModelFilterDropdown`) and `Modules\Admin\Widgets\Navs\SearchHeader`
-- Added `Search\SearchResult::$badge`, `withBadge()`, `withRoute()` and `SearchResultBuilder::createSearchResult()`
+- Added the admin search page's grid with `tenant` and `model` filters (`SearchResultGridView`, `Modules\Admin\Data\SearchDataProvider`, `SearchModelFilterDropdown`) and `Modules\Admin\Widgets\Navs\SearchHeader`
+- Added `Search\SearchResult::$badge`, `$tenantId`, `withBadge()`, `withRoute()` and `SearchResultBuilder::createSearchResult()`
+- Changed `GridToolbar` to render nothing when every item hides itself
 - Added `Helpers\VersionHelper::getApplicationRepository()`, the checkout's `origin` remote without credentials, which the registry report carries as `repository`
 
 ## 3.30.0 (November 18, 2026)

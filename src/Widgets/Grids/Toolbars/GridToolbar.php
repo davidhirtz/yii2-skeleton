@@ -27,13 +27,18 @@ class GridToolbar extends Widget
         parent::configure();
     }
 
+    /**
+     * Dropped when every item hides itself, like a filter with a single option.
+     */
     #[Override]
     protected function renderContent(): string|Stringable
     {
-        return $this->content
+        $content = array_values(array_filter(array_map(strval(...), $this->content)));
+
+        return $content
             ? Div::make()
                 ->attributes($this->attributes)
-                ->content(...$this->content)
+                ->content(...$content)
             : '';
     }
 }

@@ -22,6 +22,7 @@ final readonly class SearchResult
         public array $subtitles = [],
         public ?string $type = null,
         public ?string $badge = null,
+        public ?int $tenantId = null,
     ) {
     }
 
@@ -53,6 +54,7 @@ final readonly class SearchResult
             $this->subtitles,
             $this->type,
             $badge ?? $this->badge,
+            $this->tenantId,
         );
     }
 }
