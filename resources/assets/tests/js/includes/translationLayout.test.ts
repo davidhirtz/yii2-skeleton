@@ -150,4 +150,91 @@ describe('translationLayout', () => {
 
         expect(active()).toEqual(['DE']);
     });
+
+    describe('with more than two languages', () => {
+        const renderThree = (content = 'en-US', layout = 'tabs', invalid = '') => {
+            document.body.innerHTML = `<form data-translation-layout="${layout}">
+                <ul data-translation-toolbar data-translation-multiple data-content-language="${content}">
+                    <li><button data-translation-all>All fields</button></li>
+                    <li><button data-translation-language="en-US">EN</button></li>
+                    <li><button data-translation-language="de">DE</button></li>
+                    <li><button data-translation-language="fr">FR</button></li>
+                </ul>
+                <div id="name" data-language="en-US"><input></div>
+                <div id="name-de" data-language="de"><input></div>
+                <div id="name-fr" data-language="fr"><input ${invalid}></div>
+            </form>`;
+
+            translationLayout(document.querySelector('form')!);
+        };
+
+        it('adds and removes a language with a click', () => {
+            renderThree();
+            expect(active()).toEqual(['EN']);
+
+            click('[data-translation-language="de"]');
+
+            expect(active()).toEqual(['EN', 'DE']);
+            expect(hidden('name')).toBe(false);
+            expect(hidden('name-de')).toBe(false);
+            expect(hidden('name-fr')).toBe(true);
+            expect(document.querySelector('form')!.dataset.translationChoice).toBe('en-US de');
+
+            click('[data-translation-language="en-US"]');
+
+            expect(active()).toEqual(['DE']);
+            expect(hidden('name')).toBe(true);
+        });
+
+        it('shows every field when the last language is left out or every one is picked', () => {
+            renderThree();
+            click('[data-translation-language="en-US"]');
+
+            expect(active()).toEqual(['All fields']);
+
+            click('[data-translation-language="fr"]');
+            expect(active()).toEqual(['FR']);
+
+            click('[data-translation-language="de"]');
+            click('[data-translation-language="en-US"]');
+
+            expect(active()).toEqual(['All fields']);
+            expect(hidden('name-fr')).toBe(false);
+        });
+
+        it('resets the selection with "All fields"', () => {
+            renderThree();
+            click('[data-translation-language="de"]');
+            click('[data-translation-all]');
+
+            expect(active()).toEqual(['All fields']);
+            expect(hidden('name-de')).toBe(false);
+            expect(hidden('name-fr')).toBe(false);
+        });
+
+        it('remembers a selection, as far as the next form offers it', () => {
+            renderThree();
+            click('[data-translation-language="fr"]');
+
+            renderThree('de');
+            expect(active()).toEqual(['EN', 'FR']);
+
+            // A single remembered language opens on the content language, as with two.
+            window.localStorage.setItem('translationLanguage', 'fr');
+            renderThree('de');
+            expect(active()).toEqual(['DE']);
+
+            // Two languages show tabs only: a remembered selection opens on the content language.
+            window.localStorage.setItem('translationLanguage', 'en-US,de');
+            render('inline', '', 'de');
+            expect(active()).toEqual(['DE']);
+        });
+
+        it('shows every field while a rejected one is not selected', () => {
+            window.localStorage.setItem('translationLanguage', 'en-US,de');
+            renderThree('en-US', 'tabs', 'aria-invalid="true"');
+
+            expect(active()).toEqual(['All fields']);
+        });
+    });
 });

@@ -341,6 +341,7 @@ class ActiveForm extends Widget
         }
 
         $i18n = Yii::$app->getI18n();
+        $languages = $this->model->getI18nLanguages();
         $missing = $this->model->getMissingTranslationLanguages();
 
         $items = [
@@ -352,7 +353,7 @@ class ActiveForm extends Widget
                     ->text(Yii::t('skeleton', 'FORM_TRANSLATION_ALL_LABEL'))),
         ];
 
-        foreach ($this->model->getI18nLanguages() as $language) {
+        foreach ($languages as $language) {
             $isMissing = in_array($language, $missing, true);
 
             $button = Button::make()
@@ -370,6 +371,7 @@ class ActiveForm extends Widget
             ->class('nav tabs translation-tabs')
             ->attribute('id', $this->getTranslationTabsId())
             ->attribute('data-translation-toolbar', $this->getId())
+            ->attribute('data-translation-multiple', count($languages) > 2 ? true : null)
             ->attribute('data-content-language', $i18n->getContentLanguage())
             ->attribute('aria-label', Yii::t('skeleton', 'FORM_TRANSLATION_LABEL'))
             ->content(...$items);

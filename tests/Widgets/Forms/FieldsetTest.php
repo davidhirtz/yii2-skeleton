@@ -100,6 +100,7 @@ class FieldsetTest extends TestCase
         self::assertMatchesRegularExpression('/data-translation-language="en-US"[^>]*>EN</', $html);
         self::assertMatchesRegularExpression('/data-translation-language="de" data-missing><div class="icon-text"><span class="fas fa-exclamation-triangle"><\/span><div>DE</', $html);
         self::assertStringContainsString('data-content-language="en-US"', $html);
+        self::assertStringNotContainsString('data-translation-multiple', $html, 'Two languages are plain tabs.');
 
         // The tabs open on the admin's content language.
         Yii::$app->getUrlManager()->setContentLanguage('de');
@@ -136,6 +137,13 @@ class FieldsetTest extends TestCase
         self::assertStringNotContainsString('name_fr', $html);
         self::assertStringContainsString('data-translation-language="de"', $html);
         self::assertStringNotContainsString('data-translation-language="fr"', $html);
+        self::assertStringNotContainsString('data-translation-multiple', $html);
+
+        $model->i18nLanguages = null;
+        $html = ActiveForm::make()->model($model)->rows(['name'])->render();
+
+        self::assertStringContainsString('data-translation-toolbar="test-active-record" data-translation-multiple', $html);
+        self::assertStringContainsString('name="TestActiveRecord[name_fr]"', $html);
 
         $model->i18nLanguages = ['en-US'];
 
