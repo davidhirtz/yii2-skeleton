@@ -1,4 +1,4 @@
-## Unreleased
+## 3.32.0 (November 24, 2026)
 
 - Changed `CheckboxField` to take its checked and unchecked values from the property's `BooleanValidator` unless set
 
