@@ -94,10 +94,13 @@ class CheckboxFieldTest extends TestCase
         $content = CheckboxField::make()
             ->model($this->createBooleanModel(['trueValue' => 'yes', 'falseValue' => 'no']))
             ->property('consent')
-            ->checkedValue('yes')
+            ->checkedValue('on')
             ->render();
 
-        self::assertStringNotContainsString('type="hidden"', $content);
+        self::assertStringContainsString(
+            '<input type="hidden" name="F[consent]" value="no"><input type="checkbox" id="f-consent" class="input" name="F[consent]" value="on">',
+            $content,
+        );
     }
 
     /**

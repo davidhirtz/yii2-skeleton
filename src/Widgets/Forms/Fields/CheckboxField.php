@@ -22,12 +22,13 @@ class CheckboxField extends Field
     protected string|int $checkedValue = '1';
     protected string|int|null $uncheckedValue = null;
 
-    protected bool $hasExplicitValues = false;
+    protected bool $hasCheckedValue = false;
+    protected bool $hasUncheckedValue = false;
 
     public function checkedValue(string|int $checkedValue): static
     {
         $this->checkedValue = $checkedValue;
-        $this->hasExplicitValues = true;
+        $this->hasCheckedValue = true;
         return $this;
     }
 
@@ -35,19 +36,25 @@ class CheckboxField extends Field
     public function uncheckedValue(string|int|null $uncheckedValue): static
     {
         $this->uncheckedValue = $uncheckedValue;
-        $this->hasExplicitValues = true;
+        $this->hasUncheckedValue = true;
         return $this;
     }
 
     #[Override]
     protected function configure(): void
     {
-        if (!$this->hasExplicitValues && $this->model && $this->property) {
+        if ((!$this->hasCheckedValue || !$this->hasUncheckedValue) && $this->model && $this->property) {
             foreach ($this->model->getActiveValidators($this->property) as $validator) {
                 if ($validator instanceof BooleanValidator) {
-                    // Both from the rule, or the field posts what that same rule refuses.
-                    $this->checkedValue = $this->getCheckboxValue($validator->trueValue) ?? '1';
-                    $this->uncheckedValue = $this->getCheckboxValue($validator->falseValue);
+                    // From the rule, or the field posts what that same rule refuses.
+                    if (!$this->hasCheckedValue) {
+                        $this->checkedValue = $this->getCheckboxValue($validator->trueValue) ?? '1';
+                    }
+
+                    if (!$this->hasUncheckedValue) {
+                        $this->uncheckedValue = $this->getCheckboxValue($validator->falseValue);
+                    }
+
                     break;
                 }
             }
