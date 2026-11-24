@@ -34,6 +34,6 @@ class BooleanCustomAttribute extends CustomAttribute
     #[Override]
     public function createField(Model $owner): Field
     {
-        return $this->configureField(CheckboxField::make()->uncheckedValue('0'), $owner);
+        return $this->configureField(CheckboxField::make(), $owner);
     }
 }

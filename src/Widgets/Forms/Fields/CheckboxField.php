@@ -12,6 +12,7 @@ use Hirtz\Skeleton\Widgets\Forms\FormRow;
 use Hirtz\Skeleton\Widgets\Traits\TooltipAttributeTrait;
 use Override;
 use Stringable;
+use yii\validators\BooleanValidator;
 
 class CheckboxField extends Field
 {
@@ -21,16 +22,44 @@ class CheckboxField extends Field
     protected string|int $checkedValue = '1';
     protected string|int|null $uncheckedValue = null;
 
+    protected bool $hasExplicitValues = false;
+
     public function checkedValue(string|int $checkedValue): static
     {
         $this->checkedValue = $checkedValue;
+        $this->hasExplicitValues = true;
         return $this;
     }
 
+    /** `null` renders no hidden input, so an unticked box posts nothing. */
     public function uncheckedValue(string|int|null $uncheckedValue): static
     {
         $this->uncheckedValue = $uncheckedValue;
+        $this->hasExplicitValues = true;
         return $this;
+    }
+
+    #[Override]
+    protected function configure(): void
+    {
+        if (!$this->hasExplicitValues && $this->model && $this->property) {
+            foreach ($this->model->getActiveValidators($this->property) as $validator) {
+                if ($validator instanceof BooleanValidator) {
+                    // Both from the rule, or the field posts what that same rule refuses.
+                    $this->checkedValue = $this->getCheckboxValue($validator->trueValue) ?? '1';
+                    $this->uncheckedValue = $this->getCheckboxValue($validator->falseValue);
+                    break;
+                }
+            }
+        }
+
+        parent::configure();
+    }
+
+    /** {@see BooleanValidator}'s values are untyped, and one a checkbox cannot carry has no place in it. */
+    protected function getCheckboxValue(mixed $value): string|int|null
+    {
+        return is_string($value) || is_int($value) ? $value : null;
     }
 
     #[Override]

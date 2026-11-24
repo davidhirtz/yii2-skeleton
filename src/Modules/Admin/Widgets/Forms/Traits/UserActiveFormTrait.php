@@ -102,15 +102,11 @@ trait UserActiveFormTrait
             ->prompt(Yii::t('skeleton', 'USER_COLOR_SCHEME_PROMPT'));
     }
 
-    /**
-     * An unchecked checkbox posts nothing, so the stored `1` would survive the save without the hidden input.
-     */
     protected function getShowHintsField(): string|Stringable
     {
         return CheckboxField::make()
             ->model($this->model->user)
-            ->property('show_hints')
-            ->uncheckedValue('0');
+            ->property('show_hints');
     }
 
     protected function getKeyboardShortcutsField(): string|Stringable
@@ -120,7 +116,6 @@ trait UserActiveFormTrait
             ->property('keyboard_shortcuts')
             ->hint(Span::make()->content(Yii::t('skeleton', 'USER_KEYBOARD_SHORTCUTS_HINT', [
                 'key' => Kbd::make()->content('?'),
-            ])))
-            ->uncheckedValue('0');
+            ])));
     }
 }

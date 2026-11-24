@@ -1,3 +1,7 @@
+## Unreleased
+
+- Changed `CheckboxField` to take its checked and unchecked values from the property's `BooleanValidator` unless set
+
 ## 3.31.0 (November 21, 2026)
 
 - Changed the translation tabs of a form with more than two languages to toggle languages, so several show together
